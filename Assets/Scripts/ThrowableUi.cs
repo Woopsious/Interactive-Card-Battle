@@ -36,16 +36,12 @@ public class ThrowUiObject : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
-		Debug.LogError("trigger enter");
-
 		if (other.GetComponent<CardDeckManagerUi>() != null)
 			cardDeckManagerUi = other.GetComponent<CardDeckManagerUi>();
 	}
 
 	void OnTriggerExit2D(Collider2D other)
 	{
-		Debug.LogError("trigger exit");
-
 		if (other.GetComponent<CardDeckManagerUi>() != null)
 			cardDeckManagerUi = null;
 	}
@@ -72,13 +68,10 @@ public class ThrowUiObject : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 	{
 		isBeingDragged = false;
 
-		if (mouseVelocity ==  Vector3.zero)
-		{
+		if (cardDeckManagerUi != null || mouseVelocity == Vector3.zero)
 			CardDeckManagerUi.instance.AddCardToDeck(card);
-		}
-		else
+		else //throw card
 		{
-			//throw card
 			rb.MoveRotation(Quaternion.LookRotation(Vector3.forward, mouseVelocity));
 			rb.AddForce(mouseVelocity * 10, ForceMode2D.Impulse);
 		}
