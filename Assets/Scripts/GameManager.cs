@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
 
 	public Camera uiCamera;
 
+	public GameObject PlayerLocation;
+
 	private void Awake()
 	{
 		instance = this;
