@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c884579dafdc2754d85de74e4ad7743a, type: 3}
-  m_Name: Shoot
+  m_Name: Heal
   m_EditorClassIdentifier: 
-  cardName: Shoot
-  cardDescription: Shoot at enemy
-  damage: 18
-  damageType: 2
+  cardName: Heal
+  cardDescription: Heals Damage
+  damage: 15
+  damageType: 1

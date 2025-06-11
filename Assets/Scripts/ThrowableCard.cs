@@ -4,9 +4,12 @@ using UnityEngine.EventSystems;
 
 public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
+	Bounds bounds;
 	CardDeckManagerUi cardDeckManagerUi;
 
+	Entity cardOwner;
 	CardUi card;
+	BoxCollider2D boxCollider;
 	Rigidbody2D rb;
 
 	bool isBeingDragged;
@@ -22,16 +25,26 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 	void Awake()
 	{
 		card = GetComponent<CardUi>();
+		boxCollider = GetComponent<BoxCollider2D>();
 		rb = GetComponent<Rigidbody2D>();
 		isBeingDragged = false;
 		inThrownCardsArea = true;
 		wasThrown = false;
+
+		bounds = new()
+		{
+			center = new Vector2(Screen.width / 2, Screen.height / 2),
+			extents = new Vector3((Screen.width / 2) + 100, (Screen.height / 2) + 100, 0)
+		};
 	}
 
 	void Update()
 	{
 		if (isBeingDragged)
 			FollowMouseCursor();
+
+		if (wasThrown)
+			CheckIfCardMissed();
 
 		//if (wasThrown) disabled atm
 			//card.UpdateDamageWithVelocity(rb.linearVelocity.magnitude);
@@ -79,7 +92,8 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
 	void ApplyDamage(Entity entity)
 	{
-		entity.RecieveDamage(card.Damage);
+		entity.OnHit(new(card.CardData, card.PlayerCard));
+		DestoryCard();
 	}
 
 	//player mouse events
@@ -108,6 +122,7 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 	//player card actions
 	void PlayerSelectCard()
 	{
+		cardOwner = TurnOrderManager.Instance.playerEntity;
 		OnCardPickUp?.Invoke(true);
 
 		transform.SetParent(CardDeckManagerUi.instance.movingCardsTransform);
@@ -146,12 +161,30 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 	}
 	void BlockEnemyThrownCard()
 	{
-
+		DestoryCard();
 	}
 
 	//enemy card actions
-	public void EnemyThrowCard()
+	public void EnemyThrowCard(Entity entity)
 	{
 		inThrownCardsArea = false; //doesnt start off in area so reset to false
+		cardOwner = entity;
+	}
+
+	void CheckIfCardMissed()
+	{
+		if (!bounds.Contains(transform.position))
+			DestoryCard();
+	}
+	void DestoryCard()
+	{
+		cardOwner.EndTurn();
+		Destroy(gameObject);
+	}
+
+	void OnDrawGizmosSelected()
+	{
+		Gizmos.color = Color.red;
+		Gizmos.DrawWireCube(bounds.center, bounds.size);
 	}
 }

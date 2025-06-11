@@ -13,16 +13,20 @@ public class CardData : ScriptableObject
 	public DamageType damageType;
 	public enum DamageType
 	{
-		physical
+		block, heal, physical
 	}
 
 	public string CreateDescription()
 	{
 		string cardDescription = this.cardDescription;
-		cardDescription += "\n\nDeals ";
+		cardDescription += "\n\n";
 
-		if (damageType == DamageType.physical)
-			cardDescription += damage + " physical damage";
+		if (damageType == DamageType.block)
+			cardDescription += "Blocks " + damage + " damage";
+		else if (damageType == DamageType.heal)
+			cardDescription += "Heals " + damage + " damage";
+		else if (damageType == DamageType.physical)
+			cardDescription += "Deals " + damage + " physical damage";
 
 		return cardDescription;
 	}

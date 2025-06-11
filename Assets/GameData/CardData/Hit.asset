@@ -15,4 +15,4 @@ MonoBehaviour:
   cardName: Hit
   cardDescription: Hit enemy
   damage: 12
-  damageType: 0
+  damageType: 2

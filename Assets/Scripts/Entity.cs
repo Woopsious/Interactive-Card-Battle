@@ -1,5 +1,7 @@
+using System;
 using TMPro;
 using UnityEngine;
+using static CardData;
 
 public class Entity : MonoBehaviour, IDamagable
 {
@@ -7,12 +9,25 @@ public class Entity : MonoBehaviour, IDamagable
 
 	public TMP_Text entityNameText;
 	public TMP_Text entityHealthText;
+	public TMP_Text entityblockText;
 
 	int health;
+	public int block;
+
+	public static event Action<Entity> OnTurnEndEvent;
 
 	void Start()
 	{
 		SetupEntity();
+	}
+
+	void OnEnable()
+	{
+		TurnOrderManager.OnNewTurnEvent += StartTurn;
+	}
+	void OnDisable()
+	{
+		TurnOrderManager.OnNewTurnEvent -= StartTurn;
 	}
 
 	void SetupEntity()
@@ -23,24 +38,87 @@ public class Entity : MonoBehaviour, IDamagable
 			return;
 		}
 
-		string cardName = entityData.entityName + Random.Range(1000, 9999);
+		string cardName = entityData.entityName + UnityEngine.Random.Range(1000, 9999);
 		gameObject.name = cardName;
 		entityNameText.text = cardName;
 		health = entityData.maxHealth;
-		UpdateHealthUi();
+		block = 0;
+		UpdateUi();
 	}
 
-	public void RecieveDamage(int damage)
+	//start/end turn events
+	void StartTurn(Entity entity)
 	{
-		health -= damage;
-		UpdateHealthUi();
+		if (entity != this) return; //not this entities turn
+		if (entityData.isPlayer) return; //if is player shouldnt need to do anything else as other scripts handle it
 
+		//if is non player atm choose random card to use + show player the card enemy will use
+		//wait a few seconds then throw card at player, wait till card hits player/gets blocked then end turn
+		AttackPlayerWithRandomCard();
+	}
+	public void EndTurn()
+	{
+		OnTurnEndEvent?.Invoke(this);
+	}
+
+	//enemy entity attacks
+	public void AttackPlayerWithRandomCard()
+	{
+
+	}
+
+	//entity hits via cards
+	public void OnHit(DamageData damageData)
+	{
+		if (damageData.DamageType == DamageType.block)
+			AddBlock(damageData.Damage);
+		else if (damageData.DamageType == DamageType.heal)
+			RecieveHealing(damageData.Damage);
+		else if (damageData.DamageType == DamageType.physical)
+			RecieveDamage(damageData.Damage);
+		else
+			Debug.LogError("no hit type set up");
+	}
+	void AddBlock(int block)
+	{
+		this.block += block;
+		UpdateUi();
+	}
+	void RecieveHealing(int healing)
+	{
+		health += healing;
+		if (health > entityData.maxHealth)
+			health = entityData.maxHealth;
+
+		UpdateUi();
+	}
+	void RecieveDamage(int damage)
+	{
+		damage = GetBlockedDamage(damage);
+		health -= damage;
+		UpdateUi();
 		OnDeath();
 	}
+	int GetBlockedDamage(int damage)
+	{
+		if (block > damage)
+		{
+			block -= damage;
+			damage = 0;
+		}
+		else
+		{
+			damage -= block;
+			block = 0;
+		}
 
-	void UpdateHealthUi()
+		return damage;
+	}
+
+	void UpdateUi()
 	{
 		entityHealthText.text = "HEALTH\n" + health + "/" + entityData.maxHealth;
+		entityblockText.text = "Block\n" + block;
 	}
 
 	void OnDeath()
