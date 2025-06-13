@@ -15,6 +15,8 @@ public class Entity : MonoBehaviour, IDamagable
 	int health;
 	public int block;
 
+	public static event Action<CardData> OnCardChosen;
+
 	public static event Action<Entity> OnTurnEndEvent;
 
 	void Start()
@@ -25,10 +27,12 @@ public class Entity : MonoBehaviour, IDamagable
 	void OnEnable()
 	{
 		TurnOrderManager.OnNewTurnEvent += StartTurn;
+		ShowPlayedCardUi.OnThrowCardAfterShown += ThrowCardAtPlayer;
 	}
 	void OnDisable()
 	{
 		TurnOrderManager.OnNewTurnEvent -= StartTurn;
+		ShowPlayedCardUi.OnThrowCardAfterShown -= ThrowCardAtPlayer;
 	}
 
 	void SetupEntity()
@@ -59,7 +63,10 @@ public class Entity : MonoBehaviour, IDamagable
 
 		//if is non player atm choose random card to use + show player the card enemy will use
 		//wait a few seconds then throw card at player, wait till card hits player/gets blocked then end turn
-		AttackPlayerWithRandomCard();
+
+
+		PickCardToPlay();
+		//ThrowCardAtPlayer(GameManager.instance.GetDamageCard(entityData.cards));
 	}
 	public void EndTurn()
 	{
@@ -67,9 +74,18 @@ public class Entity : MonoBehaviour, IDamagable
 	}
 
 	//enemy entity attacks
-	public void AttackPlayerWithRandomCard()
+	void PickCardToPlay()
 	{
-		CardUi card = GameManager.instance.SpawnDamageCard(this);
+		CardData chosenCard = GameManager.instance.GetDamageCard(entityData.cards);
+		OnCardChosen?.Invoke(chosenCard);
+	}
+
+	void ThrowCardAtPlayer(CardData cardData)
+	{
+		if (TurnOrderManager.Instance.currentEntityTurn != this) return;
+
+		CardUi card = GameManager.instance.SpawnCard();
+		card.SetupCard(cardData, false);
 		card.GetComponent<ThrowableCard>().EnemyThrowCard(this, TurnOrderManager.Instance.playerEntity.transform.localPosition);
 	}
 

@@ -40,7 +40,8 @@ public class CardDeckManagerUi : MonoBehaviour
 	//spawn card in player deck
 	void SpawnNewPlayerCard(bool makeSelectable)
 	{
-		CardUi card = GameManager.instance.SpawnRandomCard(TurnOrderManager.Instance.playerEntity);
+		CardUi card = GameManager.instance.SpawnCard();
+		card.SetupCard(GameManager.instance.GetRandomCard(TurnOrderManager.Instance.playerEntity.entityData.cards), true);
 		AddCardToPlayerDeck(card);
 		card.selectable = makeSelectable;
 	}
