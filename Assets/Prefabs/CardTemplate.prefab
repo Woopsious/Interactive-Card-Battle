@@ -438,6 +438,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59db4b4da9468b7418c9274fd577c53a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectable: 0
   cardNametext: {fileID: 3002484041902367330}
   cardDescriptiontext: {fileID: 2297873378167699421}
 --- !u!114 &544923856939001221

@@ -6,8 +6,9 @@ public class CardUi : MonoBehaviour
 	public CardData CardData { get; private set; }
 
 	public bool PlayerCard { get; private set; }
-
 	public int Damage { get; private set; }
+
+	public bool selectable;
 
 	public TMP_Text cardNametext;
 	public TMP_Text cardDescriptiontext;

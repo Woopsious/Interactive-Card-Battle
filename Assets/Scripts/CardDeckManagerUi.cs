@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using static UnityEngine.Rendering.GPUSort;
 
 public class CardDeckManagerUi : MonoBehaviour
@@ -9,17 +10,16 @@ public class CardDeckManagerUi : MonoBehaviour
 	public Transform movingCardsTransform;
 
 	public List<CardUi> cards;
-
-	public GameObject cardPrefab;
 	public GameObject[] cardSlots = new GameObject[5];
 
-	public CardData[] cardDataList;
-
-	private void Awake()
+	void Awake()
 	{
 		instance = this;
 		cards = new List<CardUi>();
-		SpawnNewPlayerCard();
+	}
+	void Start()
+	{
+		SpawnInitialCards();
 	}
 
 	void OnEnable()
@@ -31,42 +31,34 @@ public class CardDeckManagerUi : MonoBehaviour
 		TurnOrderManager.OnNewTurnEvent -= OnNewTurnStart;
 	}
 
-	//card creation
-	void SpawnNewPlayerCard()
+	void SpawnInitialCards()
 	{
-		CardUi card = Instantiate(cardPrefab).GetComponent<CardUi>();
+		while (cards.Count < 5)
+			SpawnNewPlayerCard(true);
+	}
+
+	//spawn card in player deck
+	void SpawnNewPlayerCard(bool makeSelectable)
+	{
+		CardUi card = GameManager.instance.SpawnRandomCard(TurnOrderManager.Instance.playerEntity);
 		AddCardToPlayerDeck(card);
-		card.SetupCard(SetRandomCardData(), true);
-
-		if (ShouldSpawnNewPlayerCard())
-			SpawnNewPlayerCard();
-	}
-	bool ShouldSpawnNewPlayerCard()
-	{
-		if (cards.Count < 5)
-			return true;
-		else
-			return false;
-	}
-
-	CardData SetRandomCardData()
-	{
-		CardData cardData = cardDataList[Random.Range(0, cardDataList.Length)];
-		return cardData;
+		card.selectable = makeSelectable;
 	}
 
 	//show/hide cards on turn start
 	void OnNewTurnStart(Entity entity)
 	{
 		if (entity.entityData.isPlayer)
-			ShowCards();
+			ShowAndEnableCards();
 		else
-			HideCards();
+			HideAndDisableCards();
 	}
-	void ShowCards()
+	void ShowAndEnableCards()
 	{
 		for (int i = 0; i < cardSlots.Length; i++)
 		{
+			cards[i].selectable = true;
+
 			switch (i)
 			{
 				case 0:
@@ -92,10 +84,11 @@ public class CardDeckManagerUi : MonoBehaviour
 			}
 		}
 	}
-	void HideCards()
+	void HideAndDisableCards()
 	{
 		for (int i = 0; i < cardSlots.Length; i++)
 		{
+			cards[i].selectable = false;
 			cardSlots[i].transform.localRotation = Quaternion.Euler(0, 0, 0);
 
 			switch (i)
@@ -119,15 +112,11 @@ public class CardDeckManagerUi : MonoBehaviour
 		}
 	}
 
-	/// <summary>
-	/// also need code to disable interacting with cards on the deck
-	/// </summary>
-
 	//add/remove cards from player deck
 	public void RemoveCardFromPlayerDeck(CardUi card)
 	{
 		cards.Remove(card);
-		SpawnNewPlayerCard();
+		SpawnNewPlayerCard(false);
 	}
 	public void AddCardToPlayerDeck(CardUi card)
 	{

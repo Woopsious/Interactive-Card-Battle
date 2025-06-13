@@ -2,6 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 using static CardData;
+using static UnityEngine.Rendering.GPUSort;
 
 public class Entity : MonoBehaviour, IDamagable
 {
@@ -50,6 +51,10 @@ public class Entity : MonoBehaviour, IDamagable
 	void StartTurn(Entity entity)
 	{
 		if (entity != this) return; //not this entities turn
+
+		block = 0;
+		UpdateUi();
+
 		if (entityData.isPlayer) return; //if is player shouldnt need to do anything else as other scripts handle it
 
 		//if is non player atm choose random card to use + show player the card enemy will use
@@ -64,7 +69,8 @@ public class Entity : MonoBehaviour, IDamagable
 	//enemy entity attacks
 	public void AttackPlayerWithRandomCard()
 	{
-
+		CardUi card = GameManager.instance.SpawnDamageCard(this);
+		card.GetComponent<ThrowableCard>().EnemyThrowCard(this, TurnOrderManager.Instance.playerEntity.transform.localPosition);
 	}
 
 	//entity hits via cards

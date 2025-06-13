@@ -9,7 +9,6 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
 	Entity cardOwner;
 	CardUi card;
-	BoxCollider2D boxCollider;
 	Rigidbody2D rb;
 
 	bool isBeingDragged;
@@ -21,11 +20,11 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 	Vector3 mouseVelocity;
 
 	public static event Action<bool> OnCardPickUp;
+	public static event Action<bool> OnEnemyThrowCard;
 
 	void Awake()
 	{
 		card = GetComponent<CardUi>();
-		boxCollider = GetComponent<BoxCollider2D>();
 		rb = GetComponent<Rigidbody2D>();
 		isBeingDragged = false;
 		inThrownCardsArea = true;
@@ -44,7 +43,7 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 			FollowMouseCursor();
 
 		if (wasThrown)
-			CheckIfCardMissed();
+			CheckIfCardOutOfBounds();
 
 		//if (wasThrown) disabled atm
 			//card.UpdateDamageWithVelocity(rb.linearVelocity.magnitude);
@@ -57,7 +56,7 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 		else if (other.GetComponent<ThrowableCardArea>() != null)
 			ThrowableCardAreaEnter();
 		else if (wasThrown && other.GetComponent<Entity>() != null)
-			ApplyDamage(other.GetComponent<Entity>());
+			OnEntityHit(other.GetComponent<Entity>());
 	}
 	void OnTriggerExit2D(Collider2D other)
 	{
@@ -90,10 +89,47 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 		transform.localScale = new Vector2(0.5f, 0.5f);
 	}
 
-	void ApplyDamage(Entity entity)
+	void OnEntityHit(Entity entity)
 	{
+		if (!CardCanHitEntity(entity)) return;
+
 		entity.OnHit(new(card.CardData, card.PlayerCard));
 		DestoryCard();
+	}
+	bool CardCanHitEntity(Entity entity)
+	{
+		if (card.CardData.damageType == CardData.DamageType.block)
+		{
+			if (entity.entityData.isPlayer && card.PlayerCard)
+				return true;
+			else if (!entity.entityData.isPlayer && !card.PlayerCard)
+				return true;
+			else
+				return false;
+		}
+		else if (card.CardData.damageType == CardData.DamageType.heal)
+		{
+			if (entity.entityData.isPlayer && card.PlayerCard)
+				return true;
+			else if (!entity.entityData.isPlayer && !card.PlayerCard)
+				return true;
+			else
+				return false;
+		}
+		else if (card.CardData.damageType == CardData.DamageType.physical)
+		{
+			if (entity.entityData.isPlayer && card.PlayerCard)
+				return false;
+			else if (!entity.entityData.isPlayer && !card.PlayerCard)
+				return false;
+			else
+				return true;
+		}
+		else
+		{
+			Debug.LogError("card damage type has no match");
+			return false;
+		}
 	}
 
 	//player mouse events
@@ -107,28 +143,32 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
 	public void OnPointerDown(PointerEventData eventData)
 	{
+		if (!card.selectable) return;
+
 		if (card.PlayerCard && wasThrown)
 			return;
 		else if (card.PlayerCard && !wasThrown)
 			PlayerSelectCard();
-		else if (!card.PlayerCard && wasThrown)
+		else if (!card.PlayerCard && wasThrown && inThrownCardsArea)
 			BlockEnemyThrownCard();
 	}
 	public void OnPointerUp(PointerEventData eventData)
 	{
+		if (!card.selectable) return;
+
 		PlayerDeselectCard();
 	}
 
 	//player card actions
 	void PlayerSelectCard()
 	{
-		cardOwner = TurnOrderManager.Instance.playerEntity;
 		OnCardPickUp?.Invoke(true);
+		isBeingDragged = true;
 
+		cardOwner = TurnOrderManager.Instance.playerEntity;
 		transform.SetParent(CardDeckManagerUi.instance.movingCardsTransform);
 		transform.rotation = new Quaternion(0, 0, 0, 0);
 
-		isBeingDragged = true;
 		mousePos = Input.mousePosition;
 		lastMousePos = Input.mousePosition;
 	}
@@ -144,11 +184,10 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 	}
 	void PlayerThrowCard()
 	{
-		rb.MoveRotation(Quaternion.LookRotation(Vector3.forward, mouseVelocity));
+		CardDeckManagerUi.instance.RemoveCardFromPlayerDeck(card);
+		transform.rotation = Quaternion.LookRotation(Vector3.forward, mouseVelocity);
 		rb.AddForce(mouseVelocity.normalized * 500, ForceMode2D.Impulse);
 		wasThrown = true;
-
-		CardDeckManagerUi.instance.RemoveCardFromPlayerDeck(card);
 	}
 	//func to throw card harder or slower based on mouse velocity to increase damage (unused)
 	void PlayerThrowCardBasedOnMouseMovement()
@@ -165,19 +204,40 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 	}
 
 	//enemy card actions
-	public void EnemyThrowCard(Entity entity)
+	public void EnemyThrowCard(Entity entity, Vector3 playerPosition)
 	{
+		OnEnemyThrowCard?.Invoke(true);
+		card.selectable = true;
 		inThrownCardsArea = false; //doesnt start off in area so reset to false
+
+		//set transform data
 		cardOwner = entity;
+		transform.SetParent(CardDeckManagerUi.instance.movingCardsTransform);
+		transform.position = entity.transform.position;
+		transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+
+		//reuse to throw card at player pos
+		mousePos = playerPosition;
+		lastMousePos = entity.transform.localPosition;
+		mouseVelocity = mousePos - lastMousePos;
+
+		//throw card
+		transform.rotation = Quaternion.LookRotation(Vector3.forward, mouseVelocity);
+		rb.AddForce(mouseVelocity.normalized * 500, ForceMode2D.Impulse);
+		wasThrown = true;
 	}
 
-	void CheckIfCardMissed()
+	//card removal
+	void CheckIfCardOutOfBounds()
 	{
 		if (!bounds.Contains(transform.position))
 			DestoryCard();
 	}
 	void DestoryCard()
 	{
+		if (!card.PlayerCard)
+			OnEnemyThrowCard?.Invoke(false);
+
 		cardOwner.EndTurn();
 		Destroy(gameObject);
 	}

@@ -119,6 +119,81 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &13837408
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 13837409}
+  - component: {fileID: 13837411}
+  - component: {fileID: 13837410}
+  m_Layer: 5
+  m_Name: BlockHighlightArea
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &13837409
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 13837408}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 200219526}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1920, y: 700}
+  m_Pivot: {x: 0.5, y: 0}
+--- !u!114 &13837410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 13837408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.78431374, g: 0, b: 0, a: 0.09803922}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &13837411
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 13837408}
+  m_CullTransparentMesh: 1
 --- !u!1 &122295288
 GameObject:
   m_ObjectHideFlags: 0
@@ -339,6 +414,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 449629905}
+  - {fileID: 13837409}
   m_Father: {fileID: 122295292}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
@@ -428,6 +504,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   throwableCardAreaHighlight: {fileID: 449629904}
+  blockableCardAreaHighlight: {fileID: 13837408}
 --- !u!114 &200219530
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -886,7 +963,7 @@ GameObject:
   - component: {fileID: 449629907}
   - component: {fileID: 449629906}
   m_Layer: 5
-  m_Name: HighlightArea
+  m_Name: ThrowHighlightArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1145,8 +1222,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3429212f6c2aea4f8958d80d174c551, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiCamera: {fileID: 0}
-  PlayerLocation: {fileID: 0}
+  cardPrefab: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
 --- !u!4 &1044647554
 Transform:
   m_ObjectHideFlags: 0
@@ -1828,18 +1904,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movingCardsTransform: {fileID: 200219526}
   cards: []
-  cardPrefab: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
   cardSlots:
   - {fileID: 1864193365}
   - {fileID: 2028291408}
   - {fileID: 363745427}
   - {fileID: 1151057484}
   - {fileID: 1378400489}
-  cardDataList:
-  - {fileID: 11400000, guid: 62474bf50c1dbb442a88b7c8da1396b7, type: 2}
-  - {fileID: 11400000, guid: 9bbaeb946f209cd4dbf3e190922933d8, type: 2}
-  - {fileID: 11400000, guid: 1c3e7a5c1c7b07147819620cf6fd6cc9, type: 2}
-  - {fileID: 11400000, guid: 3356e19e03239af48bc775f10b061cd4, type: 2}
 --- !u!114 &1995304743
 MonoBehaviour:
   m_ObjectHideFlags: 0

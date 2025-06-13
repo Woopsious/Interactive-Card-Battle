@@ -14,6 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: Enemy
   entityDescription: An Enemy
+  isPlayer: 0
   maxHealth: 50
   cards:
+  - {fileID: 11400000, guid: 62474bf50c1dbb442a88b7c8da1396b7, type: 2}
+  - {fileID: 11400000, guid: 9bbaeb946f209cd4dbf3e190922933d8, type: 2}
   - {fileID: 11400000, guid: 1c3e7a5c1c7b07147819620cf6fd6cc9, type: 2}
+  - {fileID: 11400000, guid: 3356e19e03239af48bc775f10b061cd4, type: 2}
