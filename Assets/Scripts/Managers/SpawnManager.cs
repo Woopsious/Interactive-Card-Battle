@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.LightTransport;
 
 public class SpawnManager : MonoBehaviour
 {
@@ -15,6 +17,7 @@ public class SpawnManager : MonoBehaviour
 	public List<EntityData> entityDataTypes = new();
 
 	public int numberOfEnemiesToSpawn;
+	private float widthOfEntities;
 
 	public static event Action OnStartGame;
 
@@ -24,6 +27,7 @@ public class SpawnManager : MonoBehaviour
 	void Awake()
 	{
 		instance = this;
+		widthOfEntities = EntityPrefab.GetComponent<RectTransform>().sizeDelta.x;
 		if (canvas == null)
 			Debug.LogError("canvas ref null, assign it in scene");
 	}
@@ -43,34 +47,21 @@ public class SpawnManager : MonoBehaviour
 	}
 	void SpawnEnemies()
 	{
-		float spacing = GetSpacing();
+		float spacing = (Screen.width - numberOfEnemiesToSpawn * widthOfEntities) / (numberOfEnemiesToSpawn + 1);
 
 		for (int i = 0; i < numberOfEnemiesToSpawn; i++)
 		{
 			Entity spawnedEntity = Instantiate(EntityPrefab, canvas.transform).GetComponent<Entity>();
 			spawnedEntity.entityData = GetRandomEnemyToSpawn();
-			SetEnemyPosition(spawnedEntity.GetComponent<RectTransform>(), spacing, i);
+			SetEnemyPosition(spawnedEntity.GetComponent<RectTransform>(), spacing, i + 1);
 			OnEnemySpawned?.Invoke(spawnedEntity);
 		}
 	}
 
 	void SetEnemyPosition(RectTransform rectTransform, float spacing, int index)
 	{
-		rectTransform.anchoredPosition = new Vector2(spacing * index, 400);
-	}
-
-	float GetSpacing()
-	{
-		float widthOfEnemy = 125f;
-		float remaningSpace = Screen.width - (numberOfEnemiesToSpawn * widthOfEnemy);
-
-		Debug.LogError("remaning space: " + remaningSpace);
-
-		float spacing = (remaningSpace + widthOfEnemy) / (numberOfEnemiesToSpawn - 1);
-
-		Debug.LogError("spacing: " + spacing);
-
-		return spacing;
+		float offset = widthOfEntities * (index - 1);
+		rectTransform.anchoredPosition = new Vector2(spacing * index + offset, 400);
 	}
 
 	EntityData GetRandomEnemyToSpawn()
