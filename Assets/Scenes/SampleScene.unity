@@ -1164,6 +1164,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyTemplate (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 5386469954458961082, guid: 475796d2f04fe6342981a1397dbdddda, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5611256917527611009, guid: 475796d2f04fe6342981a1397dbdddda, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1303,17 +1307,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &878710310 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3525811030106715706, guid: 475796d2f04fe6342981a1397dbdddda, type: 3}
-  m_PrefabInstance: {fileID: 654929777}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57c51a11268decc47804a877d9050a56, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &958631303
 GameObject:
   m_ObjectHideFlags: 0
@@ -1401,6 +1394,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1044647554}
   - component: {fileID: 1044647553}
+  - component: {fileID: 1044647556}
   - component: {fileID: 1044647555}
   m_Layer: 0
   m_Name: GameManager
@@ -1450,12 +1444,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turnOrder: []
-  playerEntity: {fileID: 1722463743}
-  enemyEntities:
-  - {fileID: 1589897268}
-  - {fileID: 878710310}
-  - {fileID: 1826611105}
+  playerEntity: {fileID: 0}
+  enemyEntities: []
   currentEntityTurn: {fileID: 0}
+--- !u!114 &1044647556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1044647552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea70b512182de3f41b4bb99eb240ce09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvas: {fileID: 122295291}
+  EntityPrefab: {fileID: 5386469954458961082, guid: 475796d2f04fe6342981a1397dbdddda, type: 3}
+  PlayerPrefab: {fileID: 5386469954458961082, guid: b8dfed3810454c34a80836219dde1249, type: 3}
+  entityDataTypes:
+  - {fileID: 11400000, guid: 8f00ad6d0c1b4ea48a698c9156e31c71, type: 2}
+  numberOfEnemiesToSpawn: 4
 --- !u!1 &1151057484
 GameObject:
   m_ObjectHideFlags: 0
@@ -1639,6 +1648,10 @@ PrefabInstance:
     - target: {fileID: 5386469954458961082, guid: 475796d2f04fe6342981a1397dbdddda, type: 3}
       propertyPath: m_Name
       value: EnemyTemplate (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5386469954458961082, guid: 475796d2f04fe6342981a1397dbdddda, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5611256917527611009, guid: 475796d2f04fe6342981a1397dbdddda, type: 3}
       propertyPath: m_Pivot.x
@@ -1917,6 +1930,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyTemplate
       objectReference: {fileID: 0}
+    - target: {fileID: 5386469954458961082, guid: 475796d2f04fe6342981a1397dbdddda, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5611256917527611009, guid: 475796d2f04fe6342981a1397dbdddda, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2007,17 +2024,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5611256917527611009, guid: 475796d2f04fe6342981a1397dbdddda, type: 3}
   m_PrefabInstance: {fileID: 1589897266}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1589897268 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3525811030106715706, guid: 475796d2f04fe6342981a1397dbdddda, type: 3}
-  m_PrefabInstance: {fileID: 1589897266}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57c51a11268decc47804a877d9050a56, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1722463741
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2033,6 +2039,10 @@ PrefabInstance:
     - target: {fileID: 5386469954458961082, guid: b8dfed3810454c34a80836219dde1249, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 5386469954458961082, guid: b8dfed3810454c34a80836219dde1249, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5611256917527611009, guid: b8dfed3810454c34a80836219dde1249, type: 3}
       propertyPath: m_Pivot.x
@@ -2124,28 +2134,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5611256917527611009, guid: b8dfed3810454c34a80836219dde1249, type: 3}
   m_PrefabInstance: {fileID: 1722463741}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1722463743 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3525811030106715706, guid: b8dfed3810454c34a80836219dde1249, type: 3}
-  m_PrefabInstance: {fileID: 1722463741}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57c51a11268decc47804a877d9050a56, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1826611105 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3525811030106715706, guid: 475796d2f04fe6342981a1397dbdddda, type: 3}
-  m_PrefabInstance: {fileID: 1202124326}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57c51a11268decc47804a877d9050a56, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1864193365
 GameObject:
   m_ObjectHideFlags: 0
@@ -2239,12 +2227,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movingCardsTransform: {fileID: 200219526}
   cards: []
-  cardSlots:
-  - {fileID: 1864193365}
-  - {fileID: 2028291408}
-  - {fileID: 363745427}
-  - {fileID: 1151057484}
-  - {fileID: 1378400489}
+  cardSlotRectTransforms:
+  - {fileID: 1864193366}
+  - {fileID: 2028291409}
+  - {fileID: 363745428}
+  - {fileID: 1151057485}
+  - {fileID: 1378400490}
 --- !u!114 &1995304743
 MonoBehaviour:
   m_ObjectHideFlags: 0

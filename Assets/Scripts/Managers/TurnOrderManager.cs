@@ -8,7 +8,7 @@ public class TurnOrderManager : MonoBehaviour
 
 	public List<Entity> turnOrder = new();
 
-	public Entity playerEntity;
+	public PlayerEntity playerEntity;
 
 	public List<Entity> enemyEntities = new();
 
@@ -20,15 +20,20 @@ public class TurnOrderManager : MonoBehaviour
 	private void Awake()
 	{
 		Instance = this;
-		CreateTurnOrder();
 	}
 
 	void OnEnable()
 	{
+		SpawnManager.OnStartGame += CreateTurnOrder;
+		SpawnManager.OnPlayerSpawned += SetPlayer;
+		SpawnManager.OnEnemySpawned += AddEnemyToList;
 		Entity.OnTurnEndEvent += StartNewTurn;
 	}
 	void OnDisable()
 	{
+		SpawnManager.OnStartGame -= CreateTurnOrder;
+		SpawnManager.OnPlayerSpawned -= SetPlayer;
+		SpawnManager.OnEnemySpawned -= AddEnemyToList;
 		Entity.OnTurnEndEvent -= StartNewTurn;
 	}
 
@@ -36,7 +41,6 @@ public class TurnOrderManager : MonoBehaviour
 	void CreateTurnOrder()
 	{
 		turnOrder.Clear();
-
 		turnOrder.Add(playerEntity);
 
 		foreach (var entity in enemyEntities)
@@ -53,7 +57,7 @@ public class TurnOrderManager : MonoBehaviour
 			OnPlayerTurnStartEvent?.Invoke(currentEntityTurn);
 	}
 
-	//add/remove as turns happen
+	//add/remove entities as turns happen
 	public void AddEntityToTurnOrder(Entity entity)
 	{
 		turnOrder.Insert(turnOrder.Count, entity);
@@ -74,6 +78,16 @@ public class TurnOrderManager : MonoBehaviour
 
 		if (currentEntityTurn.entityData.isPlayer)
 			OnPlayerTurnStartEvent?.Invoke(currentEntityTurn);
+	}
+
+	//set refs for turn order creation
+	void SetPlayer(PlayerEntity playerEntity)
+	{
+		this.playerEntity = playerEntity;
+	}
+	void AddEnemyToList(Entity entity)
+	{
+		enemyEntities.Add(entity);
 	}
 
 	//button click
