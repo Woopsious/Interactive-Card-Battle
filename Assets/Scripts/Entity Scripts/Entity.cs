@@ -1,8 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using static CardData;
-using static UnityEngine.Rendering.GPUSort;
+using static DamageData;
 
 public class Entity : MonoBehaviour, IDamagable
 {
@@ -15,7 +16,12 @@ public class Entity : MonoBehaviour, IDamagable
 	int health;
 	public int block;
 
-	public static event Action<CardData> OnCardChosen;
+	public List<AttackAvailable> attacksAvailable = new();
+	public AttackData previousUsedAttack;
+	public int previousUsedAttackIndex;
+
+	public static event Action<AttackData> OnEnemyAttackFound;
+	public static event Action OnEnemyAttack;
 
 	public static event Action<Entity> OnTurnEndEvent;
 
@@ -26,13 +32,13 @@ public class Entity : MonoBehaviour, IDamagable
 
 	void OnEnable()
 	{
+		TurnOrderManager.OnNewRoundStartEvent += NewRoundStart;
 		TurnOrderManager.OnNewTurnEvent += StartTurn;
-		ShowPlayedCardUi.OnThrowCardAfterShown += ThrowCardAtPlayer;
 	}
 	void OnDisable()
 	{
+		TurnOrderManager.OnNewRoundStartEvent -= NewRoundStart;
 		TurnOrderManager.OnNewTurnEvent -= StartTurn;
-		ShowPlayedCardUi.OnThrowCardAfterShown -= ThrowCardAtPlayer;
 	}
 
 	void SetupEntity()
@@ -49,6 +55,32 @@ public class Entity : MonoBehaviour, IDamagable
 		health = entityData.maxHealth;
 		block = 0;
 		UpdateUi();
+
+		if (entityData.isPlayer) return;
+
+		SetupEnemyAttacks();
+	}
+	void SetupEnemyAttacks()
+	{
+		if (entityData.attacks.Count == 0)
+		{
+			Debug.LogError("Entity attack data count 0");
+			return;
+		}
+
+		previousUsedAttack = null;
+		previousUsedAttackIndex = -1;
+		attacksAvailable.Clear();
+
+		foreach(AttackData attackData in entityData.attacks)
+			attacksAvailable.Add(new AttackAvailable(attackData));
+	}
+
+	//start new round event
+	void NewRoundStart()
+	{
+		foreach (AttackAvailable attack in attacksAvailable)
+			attack.NewRound();
 	}
 
 	//start/end turn events
@@ -61,43 +93,91 @@ public class Entity : MonoBehaviour, IDamagable
 
 		if (entityData.isPlayer) return; //if is player shouldnt need to do anything else as other scripts handle it
 
-		//if is non player atm choose random card to use + show player the card enemy will use
-		//wait a few seconds then throw card at player, wait till card hits player/gets blocked then end turn
-
-
-		PickCardToPlay();
-		//ThrowCardAtPlayer(GameManager.instance.GetDamageCard(entityData.cards));
+		PickNextAttack();
 	}
 	public void EndTurn()
 	{
 		OnTurnEndEvent?.Invoke(this);
 	}
 
-	//enemy entity attacks
-	void PickCardToPlay()
+	//new enemy entity attacks
+	async void PickNextAttack()
 	{
-		CardData chosenCard = GameManager.instance.GetDamageCard(entityData.cards);
-		OnCardChosen?.Invoke(chosenCard);
-	}
+		int nextAttackIndex = previousUsedAttackIndex + 1;
 
-	void ThrowCardAtPlayer(CardData cardData)
+		Debug.LogError("next attack index: " + nextAttackIndex + " | attacks count: " + attacksAvailable.Count);
+
+		if (nextAttackIndex >= attacksAvailable.Count) //end of attack queue, loop back
+		{
+			Debug.LogError("end of attack queue");
+
+			previousUsedAttackIndex = -1;
+			PickNextAttack();
+			return;
+		}
+
+
+		if (attacksAvailable[nextAttackIndex].CanUseAttack())
+		{
+			Debug.LogError("using attack");
+
+			await UseAttack(nextAttackIndex);
+			return;
+		}
+		else if (HasAnAttackAvailable()) //try next attack
+		{
+			Debug.LogError("has attack trying next");
+
+			previousUsedAttackIndex++;
+			PickNextAttack();
+			return;
+		}
+		else //end turn if no next attack available to avoid endless loop
+		{
+			Debug.LogError("end turn");
+
+			EndTurn();
+			return;
+		}
+	}
+	bool HasAnAttackAvailable()
 	{
-		if (TurnOrderManager.Instance.currentEntityTurn != this) return;
+		foreach (AttackAvailable attack in attacksAvailable)
+		{
+			if (attack.CanUseAttack())
+				return true;
+		}
+
+		return false;
+	}
+	async Task UseAttack(int nextAttackIndex)
+	{
+		AttackData attackToUse = attacksAvailable[nextAttackIndex].attackData;
+
+		previousUsedAttackIndex = nextAttackIndex;
+		previousUsedAttack = attackToUse;
+
+		attacksAvailable[previousUsedAttackIndex].UseAttack();
+		OnEnemyAttackFound?.Invoke(attackToUse);
+
+		await Task.Delay(3000);
 
 		CardUi card = GameManager.instance.SpawnCard();
-		card.SetupCard(cardData, false);
+		card.SetupCard(attackToUse);
 		card.GetComponent<ThrowableCard>().EnemyThrowCard(this, TurnOrderManager.Instance.playerEntity.transform.localPosition);
+
+		OnEnemyAttack?.Invoke();
 	}
 
 	//entity hits via cards
 	public void OnHit(DamageData damageData)
 	{
-		if (damageData.DamageType == DamageType.block)
-			AddBlock(damageData.Damage);
-		else if (damageData.DamageType == DamageType.heal)
-			RecieveHealing(damageData.Damage);
-		else if (damageData.DamageType == DamageType.physical)
-			RecieveDamage(damageData.Damage);
+		if (damageData.damageType == DamageType.block)
+			AddBlock(damageData.damage);
+		else if (damageData.damageType == DamageType.heal)
+			RecieveHealing(damageData.damage);
+		else if (damageData.damageType == DamageType.physical)
+			RecieveDamage(damageData.damage);
 		else
 			Debug.LogError("no hit type set up");
 	}

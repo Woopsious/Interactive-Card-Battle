@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static DamageData;
 
 public class GameManager : MonoBehaviour
 {
@@ -44,7 +45,7 @@ public class GameManager : MonoBehaviour
 
 		foreach(CardData card in cardDataList)
 		{
-			if (card.damageType == CardData.DamageType.physical)
+			if (card.damageType == DamageType.physical)
 				offensiveCards.Add(card);
 			else
 				continue;

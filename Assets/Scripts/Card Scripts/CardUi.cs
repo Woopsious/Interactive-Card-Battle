@@ -1,12 +1,12 @@
 using TMPro;
 using UnityEngine;
+using static DamageData;
 
 public class CardUi : MonoBehaviour
 {
-	public CardData CardData { get; private set; }
-
 	public bool PlayerCard { get; private set; }
 	public int Damage { get; private set; }
+	public DamageType DamageType { get; private set; }
 
 	public bool selectable;
 
@@ -18,29 +18,37 @@ public class CardUi : MonoBehaviour
 		gameObject.name = "Card" + Random.Range(1000, 9999);
 	}
 
-	public void SetupCard(CardData CardData, bool PlayerCard)
+	public void SetupCard(CardData CardData)
 	{
 		if (CardData == null)
 		{
 			Debug.LogError("Card data null");
 			return;
 		}
-		this.PlayerCard = PlayerCard;
-		this.CardData = CardData;
+		PlayerCard = true;
 
 		string cardName = CardData.cardName + Random.Range(1000, 9999);
 		gameObject.name = cardName;
 		cardNametext.text = cardName;
 		cardDescriptiontext.text = CardData.CreateDescription();
 		Damage = CardData.damage;
+		DamageType = CardData.damageType;
 	}
 
-	//func to make damage scale with card speed (unused)
-	public void UpdateDamageWithVelocity(float velocity)
+	public void SetupCard(AttackData AttackData)
 	{
-		float baseDamage = CardData.damage;
-		float newDamage = baseDamage + (velocity / 100);
+		if (AttackData == null)
+		{
+			Debug.LogError("Attack data null");
+			return;
+		}
+		PlayerCard = false;
 
-		Damage = (int)newDamage;
+		string cardName = AttackData.attackName + Random.Range(1000, 9999);
+		gameObject.name = cardName;
+		cardNametext.text = cardName;
+		cardDescriptiontext.text = AttackData.CreateDescription();
+		Damage = AttackData.damage;
+		DamageType = AttackData.damageType;
 	}
 }

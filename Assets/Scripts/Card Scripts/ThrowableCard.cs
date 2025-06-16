@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static DamageData;
 
 public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
@@ -44,9 +45,6 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
 		if (wasThrown)
 			CheckIfCardOutOfBounds();
-
-		//if (wasThrown) disabled atm
-			//card.UpdateDamageWithVelocity(rb.linearVelocity.magnitude);
 	}
 
 	void OnTriggerEnter2D(Collider2D other)
@@ -93,12 +91,12 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 	{
 		if (!CardCanHitEntity(entity)) return;
 
-		entity.OnHit(new(card.CardData, card.PlayerCard));
+		entity.OnHit(new(card.Damage, card.DamageType));
 		DestoryCard();
 	}
 	bool CardCanHitEntity(Entity entity)
 	{
-		if (card.CardData.damageType == CardData.DamageType.block)
+		if (card.DamageType == DamageType.block)
 		{
 			if (entity.entityData.isPlayer && card.PlayerCard)
 				return true;
@@ -107,7 +105,7 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 			else
 				return false;
 		}
-		else if (card.CardData.damageType == CardData.DamageType.heal)
+		else if (card.DamageType == DamageType.heal)
 		{
 			if (entity.entityData.isPlayer && card.PlayerCard)
 				return true;
@@ -116,7 +114,7 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 			else
 				return false;
 		}
-		else if (card.CardData.damageType == CardData.DamageType.physical)
+		else if (card.DamageType == DamageType.physical)
 		{
 			if (entity.entityData.isPlayer && card.PlayerCard)
 				return false;
@@ -188,15 +186,6 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 		transform.rotation = Quaternion.LookRotation(Vector3.forward, mouseVelocity);
 		rb.AddForce(mouseVelocity.normalized * 500, ForceMode2D.Impulse);
 		wasThrown = true;
-	}
-	//func to throw card harder or slower based on mouse velocity to increase damage (unused)
-	void PlayerThrowCardBasedOnMouseMovement()
-	{
-		rb.MoveRotation(Quaternion.LookRotation(Vector3.forward, mouseVelocity));
-		rb.AddForce(mouseVelocity * 20, ForceMode2D.Impulse);
-		wasThrown = true;
-
-		CardDeckManagerUi.instance.RemoveCardFromPlayerDeck(card);
 	}
 	void BlockEnemyThrownCard()
 	{

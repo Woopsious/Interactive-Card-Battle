@@ -12,8 +12,13 @@ public class TurnOrderManager : MonoBehaviour
 
 	public List<Entity> enemyEntities = new();
 
+	//round/turn tracking
 	public Entity currentEntityTurn;
+	private Entity entityToStartNewRoundOn;
+	public int currentRound;
 
+	//events
+	public static event Action OnNewRoundStartEvent;
 	public static event Action<Entity> OnNewTurnEvent;
 	public static event Action<Entity> OnPlayerTurnStartEvent;
 
@@ -51,7 +56,11 @@ public class TurnOrderManager : MonoBehaviour
 	void StartInitialTurn(Entity entity)
 	{
 		currentEntityTurn = entity;
+		entityToStartNewRoundOn = entity;
+		currentRound = 1;
+
 		OnNewTurnEvent?.Invoke(currentEntityTurn);
+		OnNewRoundStartEvent?.Invoke();
 
 		if (currentEntityTurn.entityData.isPlayer)
 			OnPlayerTurnStartEvent?.Invoke(currentEntityTurn);
@@ -74,11 +83,21 @@ public class TurnOrderManager : MonoBehaviour
 		AddEntityToTurnOrder(entity);
 
 		currentEntityTurn = turnOrder[0];
+
+		ShouldStartNewRound();
 		OnNewTurnEvent?.Invoke(currentEntityTurn);
 
 		if (currentEntityTurn.entityData.isPlayer)
 			OnPlayerTurnStartEvent?.Invoke(currentEntityTurn);
 	}
+	void ShouldStartNewRound()
+	{
+		if (currentEntityTurn == entityToStartNewRoundOn)
+		{
+			currentRound += 1;
+			OnNewRoundStartEvent?.Invoke();
+		}
+    }
 
 	//set refs for turn order creation
 	void SetPlayer(PlayerEntity playerEntity)

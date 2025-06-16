@@ -1,4 +1,5 @@
 using UnityEngine;
+using static DamageData;
 
 [CreateAssetMenu(fileName = "CardData", menuName = "ScriptableObjects/Card")]
 public class CardData : ScriptableObject
@@ -11,10 +12,6 @@ public class CardData : ScriptableObject
 	public int damage;
 
 	public DamageType damageType;
-	public enum DamageType
-	{
-		block, heal, physical
-	}
 
 	public string CreateDescription()
 	{

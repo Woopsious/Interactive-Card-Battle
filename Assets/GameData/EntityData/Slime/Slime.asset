@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 862c4da70e93762488b165155f5dd2cb, type: 3}
-  m_Name: Enemy
+  m_Name: Slime
   m_EditorClassIdentifier: 
-  entityName: Enemy
-  entityDescription: An Enemy
+  entityName: Slime
+  entityDescription: A slime
   isPlayer: 0
-  maxHealth: 50
-  cards:
-  - {fileID: 11400000, guid: 62474bf50c1dbb442a88b7c8da1396b7, type: 2}
-  - {fileID: 11400000, guid: 9bbaeb946f209cd4dbf3e190922933d8, type: 2}
-  - {fileID: 11400000, guid: 1c3e7a5c1c7b07147819620cf6fd6cc9, type: 2}
-  - {fileID: 11400000, guid: 3356e19e03239af48bc775f10b061cd4, type: 2}
+  maxHealth: 60
+  cards: []
+  attacks:
+  - {fileID: 11400000, guid: 50e0f1da25711444cb4629cde7ed84dc, type: 2}
+  - {fileID: 11400000, guid: c9249d4850e94eb4aaf9dcbc4a67c413, type: 2}
+  - {fileID: 11400000, guid: 767f38c6cba8aed46bf252b18dd22e07, type: 2}

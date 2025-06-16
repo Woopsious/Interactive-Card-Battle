@@ -13,6 +13,9 @@ public class EntityData : ScriptableObject
 	[Header("Entity Health")]
 	public int maxHealth;
 
-	[Header("Entity Cards")]
+	[Header("Player Only Cards")]
 	public List<CardData> cards = new();
+
+	[Header("Enemy Attacks + Order")]
+	public List<AttackData> attacks = new();
 }

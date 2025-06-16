@@ -9,40 +9,27 @@ public class ShowPlayedCardUi : MonoBehaviour
 	public GameObject PlayedCardUi;
 	public CardUi cardUi;
 
-	public int TimeToDisplayCardMiliseconds {  get; private set; }
-
-	public static event Action<CardData> OnThrowCardAfterShown;
-
 	void Awake()
 	{
 		instance = this;
-		TimeToDisplayCardMiliseconds = 3000;
 	}
 
 	void OnEnable()
 	{
-		Entity.OnCardChosen += ShowPlayedCard;
+		Entity.OnEnemyAttackFound += ShowPlayedCard;
+		Entity.OnEnemyAttack += HidePlayedCard;
 	}
 
 	void OnDisable()
 	{
-		Entity.OnCardChosen -= ShowPlayedCard;
+		Entity.OnEnemyAttackFound -= ShowPlayedCard;
+		Entity.OnEnemyAttack -= HidePlayedCard;
 	}
 
-	async void ShowPlayedCard(CardData data)
+	void ShowPlayedCard(AttackData data)
 	{
-		cardUi.SetupCard(data, false);
+		cardUi.SetupCard(data);
 		PlayedCardUi.SetActive(true);
-
-		await DisplayCard();
-
-		OnThrowCardAfterShown?.Invoke(data);
-		HidePlayedCard();
-	}
-
-	async Task DisplayCard()
-	{
-		await Task.Delay(TimeToDisplayCardMiliseconds);
 	}
 
 

@@ -1333,6 +1333,7 @@ MonoBehaviour:
   playerEntity: {fileID: 0}
   enemyEntities: []
   currentEntityTurn: {fileID: 0}
+  currentRound: 0
 --- !u!114 &1044647556
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1349,7 +1350,7 @@ MonoBehaviour:
   EntityPrefab: {fileID: 5386469954458961082, guid: 475796d2f04fe6342981a1397dbdddda, type: 3}
   PlayerPrefab: {fileID: 5386469954458961082, guid: b8dfed3810454c34a80836219dde1249, type: 3}
   entityDataTypes:
-  - {fileID: 11400000, guid: 8f00ad6d0c1b4ea48a698c9156e31c71, type: 2}
+  - {fileID: 11400000, guid: 5baca6f3bb74e38429fe4ee1430435fb, type: 2}
   numberOfEnemiesToSpawn: 3
 --- !u!1 &1151057484
 GameObject:
