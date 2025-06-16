@@ -16,5 +16,5 @@ MonoBehaviour:
   attackDescription: Slime splits in half
   damage: 12
   damageType: 0
-  attackCooldownTurns: 3
+  attackCooldownTurns: 5
   attackUseChance: 0.2

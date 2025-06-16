@@ -182,7 +182,6 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 	}
 	void PlayerThrowCard()
 	{
-		CardDeckManagerUi.instance.RemoveCardFromPlayerDeck(card);
 		transform.rotation = Quaternion.LookRotation(Vector3.forward, mouseVelocity);
 		rb.AddForce(mouseVelocity.normalized * 500, ForceMode2D.Impulse);
 		wasThrown = true;
@@ -224,10 +223,17 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 	}
 	void DestoryCard()
 	{
-		if (!card.PlayerCard)
+		if (card.PlayerCard)
+		{
+			PlayerEntity player = cardOwner as PlayerEntity;
+			player.UpdateCardsUsed(card.DamageType);
+		}
+		else
+		{
 			OnEnemyThrowCard?.Invoke(false);
+			cardOwner.EndTurn();
+		}
 
-		cardOwner.EndTurn();
 		Destroy(gameObject);
 	}
 

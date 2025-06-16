@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.LightTransport;
@@ -32,20 +33,22 @@ public class SpawnManager : MonoBehaviour
 			Debug.LogError("canvas ref null, assign it in scene");
 	}
 
-	private void Start()
+	private async void Start()
 	{
-		SpawnEnemies();
-		SpawnPlayer();
+		await SpawnEnemies();
+		await SpawnPlayer();
 
 		OnStartGame?.Invoke();
 	}
 
-	void SpawnPlayer()
+	Task SpawnPlayer()
 	{
 		PlayerEntity player = Instantiate(PlayerPrefab, canvas.transform).GetComponent<PlayerEntity>();
 		OnPlayerSpawned?.Invoke(player);
+
+		return Task.CompletedTask;
 	}
-	void SpawnEnemies()
+	Task SpawnEnemies()
 	{
 		float spacing = (Screen.width - numberOfEnemiesToSpawn * widthOfEntities) / (numberOfEnemiesToSpawn + 1);
 
@@ -56,6 +59,8 @@ public class SpawnManager : MonoBehaviour
 			SetEnemyPosition(spawnedEntity.GetComponent<RectTransform>(), spacing, i + 1);
 			OnEnemySpawned?.Invoke(spawnedEntity);
 		}
+
+		return Task.CompletedTask;
 	}
 
 	void SetEnemyPosition(RectTransform rectTransform, float spacing, int index)

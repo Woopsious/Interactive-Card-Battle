@@ -84,7 +84,7 @@ public class Entity : MonoBehaviour, IDamagable
 	}
 
 	//start/end turn events
-	void StartTurn(Entity entity)
+	protected virtual void StartTurn(Entity entity)
 	{
 		if (entity != this) return; //not this entities turn
 
@@ -95,7 +95,7 @@ public class Entity : MonoBehaviour, IDamagable
 
 		PickNextAttack();
 	}
-	public void EndTurn()
+	public virtual void EndTurn()
 	{
 		OnTurnEndEvent?.Invoke(this);
 	}
