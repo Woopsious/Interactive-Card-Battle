@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Shoot
   cardDescription: Shoot at enemy
+  offensive: 1
   damage: 18
   damageType: 2

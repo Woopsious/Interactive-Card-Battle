@@ -8,6 +8,8 @@ public class CardData : ScriptableObject
 	public string cardName;
 	public string cardDescription;
 
+	public bool offensive;
+
 	[Header("Card damage")]
 	public int damage;
 

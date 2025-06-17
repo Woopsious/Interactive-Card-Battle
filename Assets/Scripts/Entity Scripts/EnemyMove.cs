@@ -1,11 +1,13 @@
+using System.Collections.Generic;
 using UnityEngine;
-public class AttackAvailable
+
+public class EnemyMove
 {
 	public readonly AttackData attackData;
 
 	int cooldownTimer;
 
-	public AttackAvailable(AttackData attackData)
+	public EnemyMove(AttackData attackData)
 	{
 		this.attackData = attackData;
 		cooldownTimer = 0;

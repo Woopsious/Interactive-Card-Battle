@@ -17,6 +17,7 @@ public class EntityData : ScriptableObject
 	public int maxCardsUsedPerTurn;
 	public int maxDamageCardsUsedPerTurn;
 	public int maxNonDamageCardsUsedPerTurn;
+	public int maxReplaceableCardsPerTurn;
 
 	public List<CardData> cards = new();
 

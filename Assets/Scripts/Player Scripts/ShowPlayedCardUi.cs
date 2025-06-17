@@ -16,13 +16,13 @@ public class ShowPlayedCardUi : MonoBehaviour
 
 	void OnEnable()
 	{
-		Entity.OnEnemyAttackFound += ShowPlayedCard;
+		Entity.OnEnemyMoveFound += ShowPlayedCard;
 		Entity.OnEnemyAttack += HidePlayedCard;
 	}
 
 	void OnDisable()
 	{
-		Entity.OnEnemyAttackFound -= ShowPlayedCard;
+		Entity.OnEnemyMoveFound -= ShowPlayedCard;
 		Entity.OnEnemyAttack -= HidePlayedCard;
 	}
 

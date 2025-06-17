@@ -9,8 +9,10 @@ public class PlayerEntity : Entity
 	int cardsUsedThisTurn;
 	int damageCardsUsedThisTurn;
 	int nonDamageCardsUsedThisTurn;
+	int cardsReplacedThisTurn;
 
-	public static event Action<bool> HideCardsWithDamageType;
+	public static event Action<bool> HideOffensiveCards;
+	public static event Action HideReplaceCardsButton;
 
 	void Awake()
 	{
@@ -20,11 +22,13 @@ public class PlayerEntity : Entity
 	void OnEnable()
 	{
 		TurnOrderManager.OnNewTurnEvent += StartTurn;
+		CardUi.OnCardReplace += OnReplaceCard;
 	}
 
 	void OnDisable()
 	{
 		TurnOrderManager.OnNewTurnEvent -= StartTurn;
+		CardUi.OnCardReplace -= OnReplaceCard;
 	}
 
 	protected override void StartTurn(Entity entity)
@@ -39,21 +43,17 @@ public class PlayerEntity : Entity
 		cardsUsedThisTurn = 0;
 		damageCardsUsedThisTurn = 0;
 		nonDamageCardsUsedThisTurn = 0;
+		cardsReplacedThisTurn = 0;
 	}
 
-	public void UpdateCardsUsed(DamageType damageType)
+	public void UpdateCardsUsed(bool offensiveCard)
 	{
 		cardsUsedThisTurn++;
 
-		if (damageType == DamageType.block || damageType == DamageType.heal)
-			nonDamageCardsUsedThisTurn++;
-		else if (damageType == DamageType.physical)
+		if (offensiveCard)
 			damageCardsUsedThisTurn++;
 		else
-		{
-			Debug.LogError("card damage type has no matches");
-			return;
-		}
+			nonDamageCardsUsedThisTurn++;
 
 		if (cardsUsedThisTurn == entityData.maxCardsUsedPerTurn)
 		{
@@ -63,12 +63,26 @@ public class PlayerEntity : Entity
 
 		if (damageCardsUsedThisTurn == entityData.maxDamageCardsUsedPerTurn)
 		{
-			HideCardsWithDamageType?.Invoke(true);
+			HideOffensiveCards?.Invoke(true);
 		}
 		if (nonDamageCardsUsedThisTurn == entityData.maxNonDamageCardsUsedPerTurn)
 		{
-			HideCardsWithDamageType?.Invoke(false);
+			HideOffensiveCards?.Invoke(false);
 		}
 	}
 
+	void OnReplaceCard(CardUi card)
+	{
+		cardsReplacedThisTurn++;
+
+		if (HasReachedReplaceCardsLimit())
+			HideReplaceCardsButton?.Invoke();
+	}
+	public bool HasReachedReplaceCardsLimit()
+	{
+		if (cardsReplacedThisTurn >= entityData.maxReplaceableCardsPerTurn)
+			return true;
+		else
+			return false;
+	}
 }

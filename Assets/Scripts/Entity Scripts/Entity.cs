@@ -16,11 +16,11 @@ public class Entity : MonoBehaviour, IDamagable
 	int health;
 	public int block;
 
-	public List<AttackAvailable> attacksAvailable = new();
-	public AttackData previousUsedAttack;
-	public int previousUsedAttackIndex;
+	public List<EnemyMove> enemyMovesList = new();
+	public AttackData previousUsedMove;
+	public int previousUsedMoveIndex;
 
-	public static event Action<AttackData> OnEnemyAttackFound;
+	public static event Action<AttackData> OnEnemyMoveFound;
 	public static event Action OnEnemyAttack;
 
 	public static event Action<Entity> OnTurnEndEvent;
@@ -68,18 +68,18 @@ public class Entity : MonoBehaviour, IDamagable
 			return;
 		}
 
-		previousUsedAttack = null;
-		previousUsedAttackIndex = -1;
-		attacksAvailable.Clear();
+		previousUsedMove = null;
+		previousUsedMoveIndex = -1;
+		enemyMovesList.Clear();
 
 		foreach(AttackData attackData in entityData.attacks)
-			attacksAvailable.Add(new AttackAvailable(attackData));
+			enemyMovesList.Add(new EnemyMove(attackData));
 	}
 
 	//start new round event
 	void NewRoundStart()
 	{
-		foreach (AttackAvailable attack in attacksAvailable)
+		foreach (EnemyMove attack in enemyMovesList)
 			attack.NewRound();
 	}
 
@@ -103,32 +103,32 @@ public class Entity : MonoBehaviour, IDamagable
 	//new enemy entity attacks
 	async void PickNextAttack()
 	{
-		int nextAttackIndex = previousUsedAttackIndex + 1;
+		int nextMoveIndex = previousUsedMoveIndex + 1;
 
-		Debug.LogError("next attack index: " + nextAttackIndex + " | attacks count: " + attacksAvailable.Count);
+		Debug.LogError("next attack index: " + nextMoveIndex + " | attacks count: " + enemyMovesList.Count);
 
-		if (nextAttackIndex >= attacksAvailable.Count) //end of attack queue, loop back
+		if (nextMoveIndex >= enemyMovesList.Count) //end of attack queue, loop back
 		{
 			Debug.LogError("end of attack queue");
 
-			previousUsedAttackIndex = -1;
+			previousUsedMoveIndex = -1;
 			PickNextAttack();
 			return;
 		}
 
 
-		if (attacksAvailable[nextAttackIndex].CanUseAttack())
+		if (enemyMovesList[nextMoveIndex].CanUseAttack())
 		{
 			Debug.LogError("using attack");
 
-			await UseAttack(nextAttackIndex);
+			await UseAttack(nextMoveIndex);
 			return;
 		}
 		else if (HasAnAttackAvailable()) //try next attack
 		{
 			Debug.LogError("has attack trying next");
 
-			previousUsedAttackIndex++;
+			previousUsedMoveIndex++;
 			PickNextAttack();
 			return;
 		}
@@ -142,28 +142,28 @@ public class Entity : MonoBehaviour, IDamagable
 	}
 	bool HasAnAttackAvailable()
 	{
-		foreach (AttackAvailable attack in attacksAvailable)
+		foreach (EnemyMove move in enemyMovesList)
 		{
-			if (attack.CanUseAttack())
+			if (move.CanUseAttack())
 				return true;
 		}
 
 		return false;
 	}
-	async Task UseAttack(int nextAttackIndex)
+	async Task UseAttack(int nextMoveIndex)
 	{
-		AttackData attackToUse = attacksAvailable[nextAttackIndex].attackData;
+		AttackData moveData = enemyMovesList[nextMoveIndex].attackData;
 
-		previousUsedAttackIndex = nextAttackIndex;
-		previousUsedAttack = attackToUse;
+		previousUsedMoveIndex = nextMoveIndex;
+		previousUsedMove = moveData;
 
-		attacksAvailable[previousUsedAttackIndex].UseAttack();
-		OnEnemyAttackFound?.Invoke(attackToUse);
+		enemyMovesList[previousUsedMoveIndex].UseAttack();
+		OnEnemyMoveFound?.Invoke(moveData);
 
 		await Task.Delay(3000);
 
 		CardUi card = GameManager.instance.SpawnCard();
-		card.SetupCard(attackToUse);
+		card.SetupCard(moveData);
 		card.GetComponent<ThrowableCard>().EnemyThrowCard(this, TurnOrderManager.Instance.playerEntity.transform.localPosition);
 
 		OnEnemyAttack?.Invoke();

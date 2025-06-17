@@ -8,6 +8,8 @@ public class AttackData : ScriptableObject
 	public string attackName;
 	public string attackDescription;
 
+	public bool offensive;
+
 	[Header("Attack damage")]
 	public int damage;
 

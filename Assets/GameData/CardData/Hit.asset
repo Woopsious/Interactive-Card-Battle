@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Hit
   cardDescription: Hit enemy
+  offensive: 1
   damage: 12
   damageType: 2

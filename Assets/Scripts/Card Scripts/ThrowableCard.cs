@@ -6,7 +6,7 @@ using static DamageData;
 public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
 	Bounds bounds;
-	CardDeckManagerUi cardDeckManagerUi;
+	CardDeckUi cardDeckManagerUi;
 
 	Entity cardOwner;
 	CardUi card;
@@ -49,8 +49,8 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
-		if (other.GetComponent<CardDeckManagerUi>() != null)
-			CardDeckTriggerEnter(other.GetComponent<CardDeckManagerUi>());
+		if (other.GetComponent<CardDeckUi>() != null)
+			CardDeckTriggerEnter(other.GetComponent<CardDeckUi>());
 		else if (other.GetComponent<ThrowableCardArea>() != null)
 			ThrowableCardAreaEnter();
 		else if (wasThrown && other.GetComponent<Entity>() != null)
@@ -58,7 +58,7 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 	}
 	void OnTriggerExit2D(Collider2D other)
 	{
-		if (other.GetComponent<CardDeckManagerUi>() != null)
+		if (other.GetComponent<CardDeckUi>() != null)
 			CardDeckTriggerExit();
 		else if (other.GetComponent<ThrowableCardArea>() != null)
 			ThrowableCardAreaExit();
@@ -74,7 +74,7 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 		inThrownCardsArea = false;
 	}
 
-	void CardDeckTriggerEnter(CardDeckManagerUi cardDeckManagerUi)
+	void CardDeckTriggerEnter(CardDeckUi cardDeckManagerUi)
 	{
 		if (wasThrown) return;
         this.cardDeckManagerUi = cardDeckManagerUi;
@@ -96,25 +96,7 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 	}
 	bool CardCanHitEntity(Entity entity)
 	{
-		if (card.DamageType == DamageType.block)
-		{
-			if (entity.entityData.isPlayer && card.PlayerCard)
-				return true;
-			else if (!entity.entityData.isPlayer && !card.PlayerCard)
-				return true;
-			else
-				return false;
-		}
-		else if (card.DamageType == DamageType.heal)
-		{
-			if (entity.entityData.isPlayer && card.PlayerCard)
-				return true;
-			else if (!entity.entityData.isPlayer && !card.PlayerCard)
-				return true;
-			else
-				return false;
-		}
-		else if (card.DamageType == DamageType.physical)
+		if (card.Offensive)
 		{
 			if (entity.entityData.isPlayer && card.PlayerCard)
 				return false;
@@ -125,8 +107,12 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 		}
 		else
 		{
-			Debug.LogError("card damage type has no match");
-			return false;
+			if (entity.entityData.isPlayer && card.PlayerCard)
+				return true;
+			else if (!entity.entityData.isPlayer && !card.PlayerCard)
+				return true;
+			else
+				return false;
 		}
 	}
 
@@ -164,11 +150,13 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 		isBeingDragged = true;
 
 		cardOwner = TurnOrderManager.Instance.playerEntity;
-		transform.SetParent(CardDeckManagerUi.instance.movingCardsTransform);
+		transform.SetParent(CardDeckUi.instance.movingCardsTransform);
 		transform.rotation = new Quaternion(0, 0, 0, 0);
 
 		mousePos = Input.mousePosition;
 		lastMousePos = Input.mousePosition;
+
+		card.replaceCardButtonObj.SetActive(false);
 	}
 	void PlayerDeselectCard()
 	{
@@ -176,7 +164,10 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 		isBeingDragged = false;
 
 		if (!inThrownCardsArea || cardDeckManagerUi != null || mouseVelocity == Vector3.zero)
-			CardDeckManagerUi.instance.AddCardToPlayerDeck(card);
+		{
+			card.replaceCardButtonObj.SetActive(true);
+			CardDeckUi.instance.AddCardToPlayerDeck(card);
+		}
 		else
 			PlayerThrowCard();
 	}
@@ -200,7 +191,7 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
 		//set transform data
 		cardOwner = entity;
-		transform.SetParent(CardDeckManagerUi.instance.movingCardsTransform);
+		transform.SetParent(CardDeckUi.instance.movingCardsTransform);
 		transform.position = entity.transform.position;
 		transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
 
@@ -226,7 +217,7 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 		if (card.PlayerCard)
 		{
 			PlayerEntity player = cardOwner as PlayerEntity;
-			player.UpdateCardsUsed(card.DamageType);
+			player.UpdateCardsUsed(card.Offensive);
 		}
 		else
 		{

@@ -1,11 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using static DamageData;
 
-public class CardDeckManagerUi : MonoBehaviour
+public class CardDeckUi : MonoBehaviour
 {
-	public static CardDeckManagerUi instance;
+	public static CardDeckUi instance;
 
 	public Transform movingCardsTransform;
 
@@ -25,13 +23,17 @@ public class CardDeckManagerUi : MonoBehaviour
 	{
 		SpawnManager.OnPlayerSpawned += SpawnInitialCards;
 		TurnOrderManager.OnNewTurnEvent += OnNewTurnStart;
-		PlayerEntity.HideCardsWithDamageType += HideMatchingCardDamageTypes;
+		PlayerEntity.HideOffensiveCards += HideMatchingCards;
+		PlayerEntity.HideReplaceCardsButton += HideReplaceCardsButton;
+		CardUi.OnCardReplace += ReplaceCardInDeck;
 	}
 	void OnDisable()
 	{
 		SpawnManager.OnPlayerSpawned -= SpawnInitialCards;
 		TurnOrderManager.OnNewTurnEvent -= OnNewTurnStart;
-		PlayerEntity.HideCardsWithDamageType -= HideMatchingCardDamageTypes;
+		PlayerEntity.HideOffensiveCards -= HideMatchingCards;
+		PlayerEntity.HideReplaceCardsButton -= HideReplaceCardsButton;
+		CardUi.OnCardReplace -= ReplaceCardInDeck;
 	}
 
 	void SpawnInitialCards(PlayerEntity player)
@@ -49,112 +51,10 @@ public class CardDeckManagerUi : MonoBehaviour
 		card.selectable = true;
 	}
 
-	//show/hide deck + cards event listeners
-	void OnNewTurnStart(Entity entity)
+	//replace card
+	public void ReplaceCardInDeck(CardUi card)
 	{
-		if (entity.entityData.isPlayer)
-		{
-			RemoveNullCardsFromPlayerDeck();
-			while (cards.Count < 5)
-				SpawnNewPlayerCard();
-			ShowCardDeck();
-		}
-		else
-			HideCardDeck();
-	}
-	void HideMatchingCardDamageTypes(bool hideDamageCards)
-	{
-		Debug.LogError("hide damage cards:" + hideDamageCards);
-
-		for (int i = 0; i < cards.Count; i++)
-		{
-			if (hideDamageCards)
-			{
-				Debug.LogError("card damage type: " + cards[i].DamageType);
-
-				if (cards[i].DamageType == DamageType.physical)
-					HideCard(i);
-			}
-			else
-			{
-				Debug.LogError("card damage type: " + cards[i].DamageType);
-
-				if (cards[i].DamageType == DamageType.block || cards[i].DamageType == DamageType.heal)
-					HideCard(i);
-			}
-		}
-	}
-
-	//show/hide deck + all cards
-	void ShowCardDeck()
-	{
-		cardDeckRectTransform.anchoredPosition = Vector2.zero;
-
-		for (int i = 0; i < cardSlotRectTransforms.Length; i++)
-		{
-			ShowCard(i);
-		}
-	}
-	void HideCardDeck()
-	{
-		cardDeckRectTransform.anchoredPosition = Vector2.zero;
-
-		for (int i = 0; i < cardSlotRectTransforms.Length; i++)
-			HideCard(i);
-	}
-
-	//show/hide individual cards
-	void ShowCard(int i)
-	{
-		cards[i].selectable = true;
-
-		switch (i)
-		{
-			case 0:
-			cardSlotRectTransforms[i].anchoredPosition = new Vector2(-300, 40);
-			cardSlotRectTransforms[i].transform.localRotation = Quaternion.Euler(0, 0, 15);
-			break;
-			case 1:
-			cardSlotRectTransforms[i].anchoredPosition = new Vector2(-150, 70);
-			cardSlotRectTransforms[i].transform.localRotation = Quaternion.Euler(0, 0, 5);
-			break;
-			case 2:
-			cardSlotRectTransforms[i].anchoredPosition = new Vector2(0, 75);
-			cardSlotRectTransforms[i].transform.localRotation = Quaternion.Euler(0, 0, 0);
-			break;
-			case 3:
-			cardSlotRectTransforms[i].anchoredPosition = new Vector2(150, 70);
-			cardSlotRectTransforms[i].transform.localRotation = Quaternion.Euler(0, 0, -5);
-			break;
-			case 4:
-			cardSlotRectTransforms[i].anchoredPosition = new Vector2(300, 40);
-			cardSlotRectTransforms[i].transform.localRotation = Quaternion.Euler(0, 0, -15);
-			break;
-		}
-	}
-	void HideCard(int i)
-	{
-		cards[i].selectable = false;
-		cardSlotRectTransforms[i].transform.localRotation = Quaternion.Euler(0, 0, 0);
-
-		switch (i)
-		{
-			case 0:
-			cardSlotRectTransforms[i].anchoredPosition = new Vector2(-300, -50);
-			break;
-			case 1:
-			cardSlotRectTransforms[i].anchoredPosition = new Vector2(-150, -50);
-			break;
-			case 2:
-			cardSlotRectTransforms[i].anchoredPosition = new Vector2(0, -50);
-			break;
-			case 3:
-			cardSlotRectTransforms[i].anchoredPosition = new Vector2(150, -50);
-			break;
-			case 4:
-			cardSlotRectTransforms[i].anchoredPosition = new Vector2(300, -50);
-			break;
-		}
+		card.SetupCard(GameManager.instance.GetRandomCard(TurnOrderManager.Instance.playerEntity.entityData.cards));
 	}
 
 	//add/remove cards from player deck
@@ -183,6 +83,120 @@ public class CardDeckManagerUi : MonoBehaviour
 			}
 			else
 				Debug.LogError("child count of card slots incorrect: " + cardSlotRectTransform.transform.childCount);
+		}
+	}
+
+	//UI
+	//show/hide deck + cards event listeners
+	void OnNewTurnStart(Entity entity)
+	{
+		if (entity.entityData.isPlayer)
+		{
+			RemoveNullCardsFromPlayerDeck();
+			while (cards.Count < 5)
+				SpawnNewPlayerCard();
+			ShowCardDeck();
+		}
+		else
+			HideCardDeck();
+	}
+	void HideMatchingCards(bool hideDamageCards)
+	{
+		Debug.LogError("hide damage cards:" + hideDamageCards);
+
+		for (int i = 0; i < cards.Count; i++)
+		{
+			if (hideDamageCards && cards[i].Offensive)
+			{
+				Debug.LogError("hidden offensive card");
+				HideCard(i);
+			}
+			else if (!hideDamageCards && !cards[i].Offensive)
+			{
+				Debug.LogError("hidden non offensive card");
+				HideCard(i);
+			}
+		}
+	}
+	void HideReplaceCardsButton()
+	{
+		for (int i = 0; i < cards.Count; i++)
+		{
+			if (cards[i] == null) continue;
+			cards[i].replaceCardButtonObj.SetActive(false);
+		}
+	}
+
+	//show/hide deck + all cards
+	void ShowCardDeck()
+	{
+		cardDeckRectTransform.anchoredPosition = Vector2.zero;
+
+		for (int i = 0; i < cardSlotRectTransforms.Length; i++)
+		{
+			ShowCard(i);
+		}
+	}
+	void HideCardDeck()
+	{
+		cardDeckRectTransform.anchoredPosition = new Vector2(0, -50);
+
+		for (int i = 0; i < cardSlotRectTransforms.Length; i++)
+			HideCard(i);
+	}
+
+	//show/hide individual cards
+	void ShowCard(int i)
+	{
+		cards[i].selectable = true;
+		cards[i].replaceCardButtonObj.SetActive(true);
+
+		switch (i)
+		{
+			case 0:
+			cardSlotRectTransforms[i].anchoredPosition = new Vector2(-300, 31);
+			cardSlotRectTransforms[i].transform.localRotation = Quaternion.Euler(0, 0, 20);
+			break;
+			case 1:
+			cardSlotRectTransforms[i].anchoredPosition = new Vector2(-150, 66);
+			cardSlotRectTransforms[i].transform.localRotation = Quaternion.Euler(0, 0, 8);
+			break;
+			case 2:
+			cardSlotRectTransforms[i].anchoredPosition = new Vector2(0, 75);
+			cardSlotRectTransforms[i].transform.localRotation = Quaternion.Euler(0, 0, 0);
+			break;
+			case 3:
+			cardSlotRectTransforms[i].anchoredPosition = new Vector2(150, 66);
+			cardSlotRectTransforms[i].transform.localRotation = Quaternion.Euler(0, 0, -8);
+			break;
+			case 4:
+			cardSlotRectTransforms[i].anchoredPosition = new Vector2(300, 31);
+			cardSlotRectTransforms[i].transform.localRotation = Quaternion.Euler(0, 0, -20);
+			break;
+		}
+	}
+	void HideCard(int i)
+	{
+		cards[i].selectable = false;
+		cardSlotRectTransforms[i].transform.localRotation = Quaternion.Euler(0, 0, 0);
+
+		switch (i)
+		{
+			case 0:
+			cardSlotRectTransforms[i].anchoredPosition = new Vector2(-300, -50);
+			break;
+			case 1:
+			cardSlotRectTransforms[i].anchoredPosition = new Vector2(-150, -50);
+			break;
+			case 2:
+			cardSlotRectTransforms[i].anchoredPosition = new Vector2(0, -50);
+			break;
+			case 3:
+			cardSlotRectTransforms[i].anchoredPosition = new Vector2(150, -50);
+			break;
+			case 4:
+			cardSlotRectTransforms[i].anchoredPosition = new Vector2(300, -50);
+			break;
 		}
 	}
 }

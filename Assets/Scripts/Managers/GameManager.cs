@@ -39,21 +39,6 @@ public class GameManager : MonoBehaviour
 	}
 
 	//types of cards to get
-	public CardData GetDamageCard(List<CardData> cardDataList)
-	{
-		List<CardData> offensiveCards = new();
-
-		foreach(CardData card in cardDataList)
-		{
-			if (card.damageType == DamageType.physical)
-				offensiveCards.Add(card);
-			else
-				continue;
-		}
-
-		CardData cardData = offensiveCards[Random.Range(0, offensiveCards.Count)];
-		return cardData;
-	}
 	public CardData GetRandomCard(List<CardData> cardDataList)
 	{
 		CardData cardData = cardDataList[Random.Range(0, cardDataList.Count)];
