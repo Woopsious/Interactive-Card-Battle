@@ -574,7 +574,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardNametext: {fileID: 3002484041902367330}
   cardDescriptiontext: {fileID: 2297873378167699421}
-  replaceCardButtonObj: {fileID: 2131565804935074571}
+  replaceCardButton: {fileID: 7861012406906965966}
   selectable: 0
 --- !u!114 &544923856939001221
 MonoBehaviour:

@@ -21,6 +21,6 @@ public class EntityData : ScriptableObject
 
 	public List<CardData> cards = new();
 
-	[Header("Enemy Attacks + Order")]
-	public List<AttackData> attacks = new();
+	[Header("Enemy Move Set Order")]
+	public List<MoveSetData> moveSetOrder = new();
 }

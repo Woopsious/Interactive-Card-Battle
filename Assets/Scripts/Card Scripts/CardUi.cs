@@ -7,7 +7,7 @@ public class CardUi : MonoBehaviour
 {
 	public TMP_Text cardNametext;
 	public TMP_Text cardDescriptiontext;
-	public GameObject replaceCardButtonObj;
+	public RectTransform replaceCardButton;
 
 	public bool PlayerCard { get; private set; }
 	public bool Offensive { get; private set; }
@@ -36,7 +36,7 @@ public class CardUi : MonoBehaviour
 		Damage = CardData.damage;
 		DamageType = CardData.damageType;
 
-		replaceCardButtonObj.SetActive(true);
+		replaceCardButton.gameObject.SetActive(true);
 	}
 
 	public void SetupCard(AttackData AttackData)
@@ -57,7 +57,7 @@ public class CardUi : MonoBehaviour
 		Damage = AttackData.damage;
 		DamageType = AttackData.damageType;
 
-		replaceCardButtonObj.SetActive(false);
+		replaceCardButton.gameObject.SetActive(false);
 	}
 
 	public void ReplaceCard()

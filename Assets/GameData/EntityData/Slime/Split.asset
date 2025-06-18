@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackName: Split
   attackDescription: Slime splits in half
+  offensive: 0
   damage: 12
   damageType: 0
-  attackCooldownTurns: 5
+  attackCooldownTurns: 3
   attackUseChance: 0.2

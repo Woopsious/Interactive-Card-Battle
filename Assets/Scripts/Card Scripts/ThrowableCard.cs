@@ -156,7 +156,7 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 		mousePos = Input.mousePosition;
 		lastMousePos = Input.mousePosition;
 
-		card.replaceCardButtonObj.SetActive(false);
+		card.replaceCardButton.gameObject.SetActive(false);
 	}
 	void PlayerDeselectCard()
 	{
@@ -165,7 +165,7 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
 		if (!inThrownCardsArea || cardDeckManagerUi != null || mouseVelocity == Vector3.zero)
 		{
-			card.replaceCardButtonObj.SetActive(true);
+			card.replaceCardButton.gameObject.SetActive(true);
 			CardDeckUi.instance.AddCardToPlayerDeck(card);
 		}
 		else

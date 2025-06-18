@@ -9,6 +9,9 @@ public class CardDeckUi : MonoBehaviour
 
 	public List<CardUi> cards;
 
+	bool damageCardsHidden;
+	bool nonDamageCardsHidden;
+
 	private RectTransform cardDeckRectTransform;
 	public RectTransform[] cardSlotRectTransforms = new RectTransform[5];
 
@@ -52,9 +55,21 @@ public class CardDeckUi : MonoBehaviour
 	}
 
 	//replace card
-	public void ReplaceCardInDeck(CardUi card)
+	public void ReplaceCardInDeck(CardUi cardToReplace)
 	{
-		card.SetupCard(GameManager.instance.GetRandomCard(TurnOrderManager.Instance.playerEntity.entityData.cards));
+		cardToReplace.SetupCard(GameManager.instance.GetRandomCard(TurnOrderManager.Instance.playerEntity.entityData.cards));
+
+        for (int i = 0; i < cards.Count; i++)
+        {
+			if (cards[i] != cardToReplace) continue;
+
+			if (damageCardsHidden && cardToReplace.Offensive)
+				HideCard(i);
+			else if (nonDamageCardsHidden && !cardToReplace.Offensive)
+				HideCard(i);
+			else
+				ShowCard(i);
+		}
 	}
 
 	//add/remove cards from player deck
@@ -92,6 +107,9 @@ public class CardDeckUi : MonoBehaviour
 	{
 		if (entity.entityData.isPlayer)
 		{
+			damageCardsHidden = false;
+			nonDamageCardsHidden = false;
+
 			RemoveNullCardsFromPlayerDeck();
 			while (cards.Count < 5)
 				SpawnNewPlayerCard();
@@ -102,19 +120,26 @@ public class CardDeckUi : MonoBehaviour
 	}
 	void HideMatchingCards(bool hideDamageCards)
 	{
-		Debug.LogError("hide damage cards:" + hideDamageCards);
-
-		for (int i = 0; i < cards.Count; i++)
+		if (hideDamageCards)
 		{
-			if (hideDamageCards && cards[i].Offensive)
+			Debug.LogError("hiding Damage Cards");
+			damageCardsHidden = true;
+
+			for (int i = 0; i < cards.Count; i++)
 			{
-				Debug.LogError("hidden offensive card");
-				HideCard(i);
+				if (cards[i].Offensive)
+					HideCard(i);
 			}
-			else if (!hideDamageCards && !cards[i].Offensive)
+		}
+		else
+		{
+			Debug.LogError("hiding Non Damage Cards");
+			nonDamageCardsHidden = true;
+
+			for (int i = 0; i < cards.Count; i++)
 			{
-				Debug.LogError("hidden non offensive card");
-				HideCard(i);
+				if (!cards[i].Offensive)
+					HideCard(i);
 			}
 		}
 	}
@@ -123,7 +148,7 @@ public class CardDeckUi : MonoBehaviour
 		for (int i = 0; i < cards.Count; i++)
 		{
 			if (cards[i] == null) continue;
-			cards[i].replaceCardButtonObj.SetActive(false);
+			cards[i].replaceCardButton.gameObject.SetActive(false);
 		}
 	}
 
@@ -148,8 +173,12 @@ public class CardDeckUi : MonoBehaviour
 	//show/hide individual cards
 	void ShowCard(int i)
 	{
-		cards[i].selectable = true;
-		cards[i].replaceCardButtonObj.SetActive(true);
+		if (cards[i] != null)
+		{
+			cards[i].selectable = true;
+			cards[i].replaceCardButton.anchoredPosition = new Vector2(0, 5);
+			cards[i].replaceCardButton.gameObject.SetActive(true);
+		}
 
 		switch (i)
 		{
@@ -177,7 +206,12 @@ public class CardDeckUi : MonoBehaviour
 	}
 	void HideCard(int i)
 	{
-		cards[i].selectable = false;
+		if (cards[i] != null)
+		{
+			cards[i].selectable = false;
+			cards[i].replaceCardButton.anchoredPosition = new Vector2(0, 230);
+		}
+
 		cardSlotRectTransforms[i].transform.localRotation = Quaternion.Euler(0, 0, 0);
 
 		switch (i)
