@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using static DamageData;
 
@@ -6,18 +7,9 @@ public class GameManager : MonoBehaviour
 {
 	/// <summary>
 	/// TODO:
-	/// on players turn push forward card deck ui and player.
-	/// on enemies turn push back card deck ui and player to give more room.
-	/// 
-	/// DISPALY OPPENENT PLAYED CARD TO PLAYER:
-	/// one enemies turn pick card to use then show ui and display card chosen to player for x seconds (5s)
-	/// after x seconds is up hide ui and then get enemy to throw the actual card (use Tasks and await for this)
-	/// 
 	/// possibly turn cards like block/heal into instant use cards instead of throwing them at urself.
 	/// 
 	/// add a simple brain to enemies to work out what type of card they should play.
-	/// 
-	/// add support to play multiple cards in a turn, eg: 1 offensive card 1 defensive card etc...
 	/// 
 	/// CARD DECK MANAGER REFACTOR:
 	/// </summary>
@@ -25,10 +17,38 @@ public class GameManager : MonoBehaviour
 	public static GameManager instance;
 
 	public GameObject cardPrefab;
+	public TMP_Text fpsCounter;
+
+	int framerateCounter = 0;
+	float timeCounter = 0.0f;
+	float lastFramerate = 0.0f;
+	public float refreshTime = 0.5f;
 
 	private void Awake()
 	{
 		instance = this;
+	}
+
+	private void Update()
+	{
+		GetFps();
+	}
+
+	void GetFps()
+	{
+		if (timeCounter < refreshTime)
+		{
+			timeCounter += Time.deltaTime;
+			framerateCounter++;
+		}
+		else
+		{
+			//This code will break if you set your m_refreshTime to 0, which makes no sense.
+			lastFramerate = framerateCounter / timeCounter;
+			framerateCounter = 0;
+			timeCounter = 0.0f;
+		}
+		fpsCounter.text = "FPS: " + (int)lastFramerate;
 	}
 
 	//card spawning
