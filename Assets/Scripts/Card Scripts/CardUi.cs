@@ -5,6 +5,8 @@ using static DamageData;
 
 public class CardUi : MonoBehaviour
 {
+	[HideInInspector] public ThrowableCard throwableCard;
+
 	public TMP_Text cardNametext;
 	public TMP_Text cardDescriptiontext;
 	public RectTransform replaceCardButton;
@@ -17,6 +19,11 @@ public class CardUi : MonoBehaviour
 	public bool selectable;
 
 	public static event Action<CardUi> OnCardReplace;
+
+	void Awake()
+	{
+		throwableCard = GetComponent<ThrowableCard>();
+	}
 
 	public void SetupCard(CardData CardData)
 	{

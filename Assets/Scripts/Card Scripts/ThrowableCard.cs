@@ -12,6 +12,7 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 	CardUi card;
 	Rigidbody2D rb;
 
+	public PlayerEntity PlayerRef { get; private set; }
 	bool isBeingDragged;
 	bool inThrownCardsArea;
 	bool wasThrown;
@@ -20,13 +21,14 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 	Vector3 lastMousePos;
 	Vector3 mouseVelocity;
 
-	public static event Action<bool> OnCardPickUp;
+	public static event Action<CardUi> OnCardPickUp;
 	public static event Action<bool> OnEnemyThrowCard;
 
 	void Awake()
 	{
 		card = GetComponent<CardUi>();
 		rb = GetComponent<Rigidbody2D>();
+
 		isBeingDragged = false;
 		inThrownCardsArea = true;
 		wasThrown = false;
@@ -49,7 +51,9 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
-		if (other.GetComponent<CardDeckUi>() != null)
+		if (!wasThrown && other.GetComponent<PlayerEntity>() != null)
+			PlayerEntityTriggerEnter(other.GetComponent<PlayerEntity>());
+		else if (other.GetComponent<CardDeckUi>() != null)
 			CardDeckTriggerEnter(other.GetComponent<CardDeckUi>());
 		else if (other.GetComponent<ThrowableCardArea>() != null)
 			ThrowableCardAreaEnter();
@@ -58,20 +62,22 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 	}
 	void OnTriggerExit2D(Collider2D other)
 	{
-		if (other.GetComponent<CardDeckUi>() != null)
+		if (!wasThrown && other.GetComponent<PlayerEntity>() != null)
+			PlayerEntityTriggerExit();
+		else if (other.GetComponent<CardDeckUi>() != null)
 			CardDeckTriggerExit();
 		else if (other.GetComponent<ThrowableCardArea>() != null)
 			ThrowableCardAreaExit();
 	}
 
-	//trigger funcs
-	void ThrowableCardAreaEnter()
+	//trigger enter/exit funcs
+	void PlayerEntityTriggerEnter(PlayerEntity entity)
 	{
-		inThrownCardsArea = true;
+		PlayerRef = entity;
 	}
-	void ThrowableCardAreaExit()
+	void PlayerEntityTriggerExit()
 	{
-		inThrownCardsArea = false;
+		PlayerRef = null;
 	}
 
 	void CardDeckTriggerEnter(CardDeckUi cardDeckManagerUi)
@@ -85,6 +91,15 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 		if (wasThrown) return;
 		cardDeckManagerUi = null;
 		transform.localScale = new Vector2(0.5f, 0.5f);
+	}
+
+	void ThrowableCardAreaEnter()
+	{
+		inThrownCardsArea = true;
+	}
+	void ThrowableCardAreaExit()
+	{
+		inThrownCardsArea = false;
 	}
 
 	void OnEntityHit(Entity entity)
@@ -146,7 +161,7 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 	//player card actions
 	void PlayerSelectCard()
 	{
-		OnCardPickUp?.Invoke(true);
+		OnCardPickUp?.Invoke(card);
 		isBeingDragged = true;
 
 		cardOwner = TurnOrderManager.Instance.playerEntity;
@@ -160,16 +175,23 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 	}
 	void PlayerDeselectCard()
 	{
-		OnCardPickUp?.Invoke(false);
+		OnCardPickUp?.Invoke(null);
 		isBeingDragged = false;
 
-		if (!inThrownCardsArea || cardDeckManagerUi != null || mouseVelocity == Vector3.zero)
+		if (card.Offensive)
 		{
-			card.replaceCardButton.gameObject.SetActive(true);
-			CardDeckUi.instance.AddCardToPlayerDeck(card);
+			if (inThrownCardsArea && cardDeckManagerUi == null && mouseVelocity != Vector3.zero)
+				PlayerThrowCard();
+			else
+				CardDeckUi.instance.AddCardToPlayerDeck(card);
 		}
 		else
-			PlayerThrowCard();
+		{
+			if (PlayerRef != null && !card.Offensive)
+				OnEntityHit(PlayerRef);
+			else
+				CardDeckUi.instance.AddCardToPlayerDeck(card);
+		}
 	}
 	void PlayerThrowCard()
 	{

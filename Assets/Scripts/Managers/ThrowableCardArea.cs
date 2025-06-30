@@ -17,10 +17,15 @@ public class ThrowableCardArea : MonoBehaviour
 		ThrowableCard.OnEnemyThrowCard -= OnEnemyCardThrown;
 	}
 
-	void OnCardPickUp(bool wasPickedUp)
+	void OnCardPickUp(CardUi card)
 	{
-		if (wasPickedUp)
-			throwableCardAreaHighlight.SetActive(true);
+		if (card != null)
+		{
+			if (card.Offensive)
+				throwableCardAreaHighlight.SetActive(true);
+			else
+				throwableCardAreaHighlight.SetActive(false);
+		}
 		else
 			throwableCardAreaHighlight.SetActive(false);
 	}

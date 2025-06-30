@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -22,8 +23,11 @@ public class Entity : MonoBehaviour, IDamagable
 
 	public static event Action<AttackData> OnEnemyMoveFound;
 	public static event Action OnEnemyAttack;
+	public static event Action OnEnemyAttackCancel;
 
 	public static event Action<Entity> OnTurnEndEvent;
+
+	readonly CancellationTokenSource cancellationToken = new();
 
 	void Start()
 	{
@@ -99,6 +103,7 @@ public class Entity : MonoBehaviour, IDamagable
 	public virtual void EndTurn()
 	{
 		OnTurnEndEvent?.Invoke(this);
+		cancellationToken.Cancel();
 	}
 
 	//new enemy entity attacks
@@ -117,12 +122,11 @@ public class Entity : MonoBehaviour, IDamagable
 			return;
 		}
 
-
 		if (enemyMovesList[nextMoveIndex].CanUseMoveFromMoveSet())
 		{
 			Debug.LogError("using attack");
 
-			await UseMove(nextMoveIndex);
+			await UseMove(cancellationToken.Token, nextMoveIndex);
 			return;
 		}
 		else if (HasMoveAvailable()) //try next move set
@@ -151,7 +155,7 @@ public class Entity : MonoBehaviour, IDamagable
 
 		return false;
 	}
-	async Task UseMove(int nextMoveIndex)
+	async Task UseMove(CancellationToken token, int nextMoveIndex)
 	{
 		AttackData attackData = enemyMovesList[nextMoveIndex].UseMove().attackData;
 
@@ -160,8 +164,13 @@ public class Entity : MonoBehaviour, IDamagable
 		OnEnemyMoveFound?.Invoke(attackData);
 
 		await Task.Delay(3000);
+		if (token.IsCancellationRequested)
+		{
+			OnEnemyAttackCancel?.Invoke();
+			return;
+		}
 
-		CardUi card = GameManager.instance.SpawnCard();
+		CardUi card = SpawnManager.SpawnCard();
 		card.SetupCard(attackData);
 		card.GetComponent<ThrowableCard>().EnemyThrowCard(this, TurnOrderManager.Instance.playerEntity.transform.localPosition);
 

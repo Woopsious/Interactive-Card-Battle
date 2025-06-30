@@ -18,12 +18,14 @@ public class ShowPlayedCardUi : MonoBehaviour
 	{
 		Entity.OnEnemyMoveFound += ShowPlayedCard;
 		Entity.OnEnemyAttack += HidePlayedCard;
+		Entity.OnEnemyAttackCancel += HidePlayedCard;
 	}
 
 	void OnDisable()
 	{
 		Entity.OnEnemyMoveFound -= ShowPlayedCard;
 		Entity.OnEnemyAttack -= HidePlayedCard;
+		Entity.OnEnemyAttackCancel -= HidePlayedCard;
 	}
 
 	void ShowPlayedCard(AttackData data)
@@ -31,7 +33,6 @@ public class ShowPlayedCardUi : MonoBehaviour
 		cardUi.SetupCard(data);
 		PlayedCardUi.SetActive(true);
 	}
-
 
 	void HidePlayedCard()
 	{

@@ -30,15 +30,15 @@ public class TurnOrderManager : MonoBehaviour
 	void OnEnable()
 	{
 		SpawnManager.OnStartGame += CreateTurnOrder;
-		SpawnManager.OnPlayerSpawned += SetPlayer;
-		SpawnManager.OnEnemySpawned += AddEnemyToList;
+		SpawnManager.OnPlayerSpawned += AddPlayerOnSpawnComplete;
+		SpawnManager.OnEnemySpawned += AddEnemyOnSpawnComplete;
 		Entity.OnTurnEndEvent += StartNewTurn;
 	}
 	void OnDisable()
 	{
 		SpawnManager.OnStartGame -= CreateTurnOrder;
-		SpawnManager.OnPlayerSpawned -= SetPlayer;
-		SpawnManager.OnEnemySpawned -= AddEnemyToList;
+		SpawnManager.OnPlayerSpawned -= AddPlayerOnSpawnComplete;
+		SpawnManager.OnEnemySpawned -= AddEnemyOnSpawnComplete;
 		Entity.OnTurnEndEvent -= StartNewTurn;
 	}
 
@@ -100,11 +100,11 @@ public class TurnOrderManager : MonoBehaviour
     }
 
 	//set refs for turn order creation
-	void SetPlayer(PlayerEntity playerEntity)
+	void AddPlayerOnSpawnComplete(PlayerEntity playerEntity)
 	{
 		this.playerEntity = playerEntity;
 	}
-	void AddEnemyToList(Entity entity)
+	void AddEnemyOnSpawnComplete(Entity entity)
 	{
 		enemyEntities.Add(entity);
 	}
@@ -112,6 +112,7 @@ public class TurnOrderManager : MonoBehaviour
 	//button click
 	public void DebugForceNextTurn()
 	{
-		StartNewTurn(turnOrder[0]);
+		currentEntityTurn.EndTurn();
+		//StartNewTurn(turnOrder[0]);
 	}
 }

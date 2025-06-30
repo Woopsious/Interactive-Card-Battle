@@ -1,9 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CardDeckUi : MonoBehaviour
 {
 	public static CardDeckUi instance;
+
+	Image imageHighlight;
+	Color colorGrey = new(0.3921569f, 0.3921569f, 0.3921569f, 1);
+
+	private RectTransform cardDeckRectTransform;
+	public RectTransform[] cardSlotRectTransforms = new RectTransform[5];
 
 	public Transform movingCardsTransform;
 
@@ -11,15 +18,14 @@ public class CardDeckUi : MonoBehaviour
 
 	bool damageCardsHidden;
 	bool nonDamageCardsHidden;
-
-	private RectTransform cardDeckRectTransform;
-	public RectTransform[] cardSlotRectTransforms = new RectTransform[5];
+	bool playerPickedUpCard;
 
 	void Awake()
 	{
 		instance = this;
 		cards = new List<CardUi>();
 		cardDeckRectTransform = GetComponent<RectTransform>();
+		imageHighlight = GetComponent<Image>();
 	}
 
 	void OnEnable()
@@ -29,6 +35,7 @@ public class CardDeckUi : MonoBehaviour
 		PlayerEntity.HideOffensiveCards += HideMatchingCards;
 		PlayerEntity.HideReplaceCardsButton += HideReplaceCardsButton;
 		CardUi.OnCardReplace += ReplaceCardInDeck;
+		ThrowableCard.OnCardPickUp += OnCardPicked;
 	}
 	void OnDisable()
 	{
@@ -37,6 +44,18 @@ public class CardDeckUi : MonoBehaviour
 		PlayerEntity.HideOffensiveCards -= HideMatchingCards;
 		PlayerEntity.HideReplaceCardsButton -= HideReplaceCardsButton;
 		CardUi.OnCardReplace -= ReplaceCardInDeck;
+		ThrowableCard.OnCardPickUp -= OnCardPicked;
+	}
+
+	void OnTriggerEnter2D(Collider2D other)
+	{
+		if (other.GetComponent<CardUi>() != null)
+			ThrowableCardEnter();
+	}
+	void OnTriggerExit2D(Collider2D other)
+	{
+		if (other.GetComponent<CardUi>() != null)
+			ThrowableCardExit();
 	}
 
 	void SpawnInitialCards(PlayerEntity player)
@@ -48,8 +67,8 @@ public class CardDeckUi : MonoBehaviour
 	//spawn card in player deck
 	void SpawnNewPlayerCard()
 	{
-		CardUi card = GameManager.instance.SpawnCard();
-		card.SetupCard(GameManager.instance.GetRandomCard(TurnOrderManager.Instance.playerEntity.entityData.cards));
+		CardUi card = SpawnManager.SpawnCard();
+		card.SetupCard(SpawnManager.GetRandomCard(TurnOrderManager.Instance.playerEntity.entityData.cards));
 		AddCardToPlayerDeck(card);
 		card.selectable = true;
 	}
@@ -57,7 +76,7 @@ public class CardDeckUi : MonoBehaviour
 	//replace card
 	public void ReplaceCardInDeck(CardUi cardToReplace)
 	{
-		cardToReplace.SetupCard(GameManager.instance.GetRandomCard(TurnOrderManager.Instance.playerEntity.entityData.cards));
+		cardToReplace.SetupCard(SpawnManager.GetRandomCard(TurnOrderManager.Instance.playerEntity.entityData.cards));
 
         for (int i = 0; i < cards.Count; i++)
         {
@@ -83,6 +102,8 @@ public class CardDeckUi : MonoBehaviour
 	}
 	public void AddCardToPlayerDeck(CardUi card)
 	{
+		card.replaceCardButton.gameObject.SetActive(true);
+
 		if (!cards.Contains(card))
 			cards.Add(card);
 
@@ -152,19 +173,44 @@ public class CardDeckUi : MonoBehaviour
 		}
 	}
 
+	//update image border highlight
+	void OnCardPicked(CardUi card)
+	{
+		if (card != null)
+		{
+			playerPickedUpCard = true;
+			imageHighlight.color = Color.red;
+		}
+		else
+		{
+			playerPickedUpCard = false;
+			imageHighlight.color = colorGrey;
+		}
+	}
+	void ThrowableCardEnter()
+	{
+		if (!playerPickedUpCard) return;
+		imageHighlight.color = Color.cyan;
+	}
+	void ThrowableCardExit()
+	{
+		if (!playerPickedUpCard) return;
+		imageHighlight.color = Color.red;
+	}
+
 	//show/hide deck + all cards
 	void ShowCardDeck()
 	{
 		cardDeckRectTransform.anchoredPosition = Vector2.zero;
+		imageHighlight.color = colorGrey;
 
 		for (int i = 0; i < cardSlotRectTransforms.Length; i++)
-		{
 			ShowCard(i);
-		}
 	}
 	void HideCardDeck()
 	{
 		cardDeckRectTransform.anchoredPosition = new Vector2(0, -50);
+		imageHighlight.color = colorGrey;
 
 		for (int i = 0; i < cardSlotRectTransforms.Length; i++)
 			HideCard(i);

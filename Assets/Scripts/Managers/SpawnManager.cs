@@ -11,6 +11,7 @@ public class SpawnManager : MonoBehaviour
 
 	public GameObject EntityPrefab;
 	public GameObject PlayerPrefab;
+	public GameObject cardPrefab;
 
 	public List<EntityData> entityDataTypes = new();
 
@@ -38,6 +39,7 @@ public class SpawnManager : MonoBehaviour
 		OnStartGame?.Invoke();
 	}
 
+	//entity spawning
 	Task SpawnPlayer()
 	{
 		PlayerEntity player = Instantiate(PlayerPrefab, canvas.transform).GetComponent<PlayerEntity>();
@@ -70,5 +72,19 @@ public class SpawnManager : MonoBehaviour
 	{
 		EntityData entityData = entityDataTypes[UnityEngine.Random.Range(0, entityDataTypes.Count)];
 		return entityData;
+	}
+
+	//card spawning
+	public static CardUi SpawnCard()
+	{
+		CardUi card = Instantiate(instance.cardPrefab).GetComponent<CardUi>();
+		return card;
+	}
+
+	//types of cards to get
+	public static CardData GetRandomCard(List<CardData> cardDataList)
+	{
+		CardData cardData = cardDataList[UnityEngine.Random.Range(0, cardDataList.Count)];
+		return cardData;
 	}
 }

@@ -16,7 +16,6 @@ public class GameManager : MonoBehaviour
 
 	public static GameManager instance;
 
-	public GameObject cardPrefab;
 	public TMP_Text fpsCounter;
 
 	int framerateCounter = 0;
@@ -49,19 +48,5 @@ public class GameManager : MonoBehaviour
 			timeCounter = 0.0f;
 		}
 		fpsCounter.text = "FPS: " + (int)lastFramerate;
-	}
-
-	//card spawning
-	public CardUi SpawnCard()
-	{
-		CardUi card = Instantiate(cardPrefab).GetComponent<CardUi>();
-		return card;
-	}
-
-	//types of cards to get
-	public CardData GetRandomCard(List<CardData> cardDataList)
-	{
-		CardData cardData = cardDataList[Random.Range(0, cardDataList.Count)];
-		return cardData;
 	}
 }
