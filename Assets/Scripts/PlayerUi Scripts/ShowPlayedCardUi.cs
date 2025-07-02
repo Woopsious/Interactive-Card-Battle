@@ -12,10 +12,12 @@ public class ShowPlayedCardUi : MonoBehaviour
 	void Awake()
 	{
 		instance = this;
+		PlayedCardUi.SetActive(false);
 	}
 
 	void OnEnable()
 	{
+		GameManager.OnStartCardCombatEvent += HidePlayedCard;
 		Entity.OnEnemyMoveFound += ShowPlayedCard;
 		Entity.OnEnemyAttack += HidePlayedCard;
 		Entity.OnEnemyAttackCancel += HidePlayedCard;
@@ -23,6 +25,7 @@ public class ShowPlayedCardUi : MonoBehaviour
 
 	void OnDisable()
 	{
+		GameManager.OnStartCardCombatEvent -= HidePlayedCard;
 		Entity.OnEnemyMoveFound -= ShowPlayedCard;
 		Entity.OnEnemyAttack -= HidePlayedCard;
 		Entity.OnEnemyAttackCancel -= HidePlayedCard;

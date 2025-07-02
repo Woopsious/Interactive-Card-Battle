@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -23,6 +24,9 @@ public class GameManager : MonoBehaviour
 	float lastFramerate = 0.0f;
 	public float refreshTime = 0.5f;
 
+	public static event Action OnStartCardCombatEvent;
+	public static event Action<bool> OnEndCardCombatEvent;
+
 	private void Awake()
 	{
 		instance = this;
@@ -31,6 +35,15 @@ public class GameManager : MonoBehaviour
 	private void Update()
 	{
 		GetFps();
+	}
+
+	void OnEnable()
+	{
+		Entity.OnEntityDeath += EndCardCombat;
+	}
+	void OnDisable()
+	{
+		Entity.OnEntityDeath += EndCardCombat;
 	}
 
 	void GetFps()
@@ -48,5 +61,33 @@ public class GameManager : MonoBehaviour
 			timeCounter = 0.0f;
 		}
 		fpsCounter.text = "FPS: " + (int)lastFramerate;
+	}
+
+	//start/end card combat
+	public static void BeginCardCombat()
+	{
+		PauseGame(false);
+		OnStartCardCombatEvent?.Invoke();
+	}
+
+	void EndCardCombat(Entity entity)
+	{
+		if (TurnOrderManager.Player() == entity)
+		{
+			PauseGame(true);
+			OnEndCardCombatEvent?.Invoke(false); //end on lose of player dies
+		}
+
+		if (TurnOrderManager.EnemyEntities().Count > 0) return;
+
+		OnEndCardCombatEvent?.Invoke(true); //end on win if no enemies left alive
+	}
+
+	public static void PauseGame(bool pause)
+	{
+		if (pause)
+			Time.timeScale = 0f;
+		else
+			Time.timeScale = 1f;
 	}
 }

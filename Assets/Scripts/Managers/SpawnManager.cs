@@ -9,16 +9,17 @@ public class SpawnManager : MonoBehaviour
 
 	public Canvas canvas;
 
+	[Header("Object Prefabs")]
 	public GameObject EntityPrefab;
 	public GameObject PlayerPrefab;
 	public GameObject cardPrefab;
 
+	[Header("Scriptable Object Data")]
 	public List<EntityData> entityDataTypes = new();
 
+	[Header("Enemies To Spawn")]
 	public int numberOfEnemiesToSpawn;
 	private float widthOfEntities;
-
-	public static event Action OnStartGame;
 
 	public static event Action<PlayerEntity> OnPlayerSpawned;
 	public static event Action<Entity> OnEnemySpawned;
@@ -31,31 +32,23 @@ public class SpawnManager : MonoBehaviour
 			Debug.LogError("canvas ref null, assign it in scene");
 	}
 
-	private async void Start()
-	{
-		await SpawnEnemies();
-		await SpawnPlayer();
-
-		OnStartGame?.Invoke();
-	}
-
 	//entity spawning
-	Task SpawnPlayer()
+	public static Task SpawnPlayer()
 	{
-		PlayerEntity player = Instantiate(PlayerPrefab, canvas.transform).GetComponent<PlayerEntity>();
+		PlayerEntity player = Instantiate(instance.PlayerPrefab, instance.canvas.transform).GetComponent<PlayerEntity>();
 		OnPlayerSpawned?.Invoke(player);
 
 		return Task.CompletedTask;
 	}
-	Task SpawnEnemies()
+	public static Task SpawnEnemies()
 	{
-		float spacing = (Screen.width - numberOfEnemiesToSpawn * widthOfEntities) / (numberOfEnemiesToSpawn + 1);
+		float spacing = (Screen.width - instance.numberOfEnemiesToSpawn * instance.widthOfEntities) / (instance.numberOfEnemiesToSpawn + 1);
 
-		for (int i = 0; i < numberOfEnemiesToSpawn; i++)
+		for (int i = 0; i < instance.numberOfEnemiesToSpawn; i++)
 		{
-			Entity spawnedEntity = Instantiate(EntityPrefab, canvas.transform).GetComponent<Entity>();
-			spawnedEntity.entityData = GetRandomEnemyToSpawn();
-			SetEnemyPosition(spawnedEntity.GetComponent<RectTransform>(), spacing, i + 1);
+			Entity spawnedEntity = Instantiate(instance.EntityPrefab, instance.canvas.transform).GetComponent<Entity>();
+			spawnedEntity.entityData = instance.GetRandomEnemyToSpawn();
+			instance.SetEnemyPosition(spawnedEntity.GetComponent<RectTransform>(), spacing, i + 1);
 			OnEnemySpawned?.Invoke(spawnedEntity);
 		}
 

@@ -68,7 +68,7 @@ public class CardDeckUi : MonoBehaviour
 	void SpawnNewPlayerCard()
 	{
 		CardUi card = SpawnManager.SpawnCard();
-		card.SetupCard(SpawnManager.GetRandomCard(TurnOrderManager.Instance.playerEntity.entityData.cards));
+		card.SetupCard(SpawnManager.GetRandomCard(TurnOrderManager.Player().entityData.cards));
 		AddCardToPlayerDeck(card);
 		card.selectable = true;
 	}
@@ -76,7 +76,7 @@ public class CardDeckUi : MonoBehaviour
 	//replace card
 	public void ReplaceCardInDeck(CardUi cardToReplace)
 	{
-		cardToReplace.SetupCard(SpawnManager.GetRandomCard(TurnOrderManager.Instance.playerEntity.entityData.cards));
+		cardToReplace.SetupCard(SpawnManager.GetRandomCard(TurnOrderManager.Player().entityData.cards));
 
         for (int i = 0; i < cards.Count; i++)
         {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class TurnOrderManager : MonoBehaviour
@@ -8,7 +9,7 @@ public class TurnOrderManager : MonoBehaviour
 
 	public List<Entity> turnOrder = new();
 
-	public PlayerEntity playerEntity;
+	protected PlayerEntity playerEntity;
 
 	public List<Entity> enemyEntities = new();
 
@@ -29,22 +30,29 @@ public class TurnOrderManager : MonoBehaviour
 
 	void OnEnable()
 	{
-		SpawnManager.OnStartGame += CreateTurnOrder;
+		GameManager.OnStartCardCombatEvent += CreateTurnOrder;
 		SpawnManager.OnPlayerSpawned += AddPlayerOnSpawnComplete;
 		SpawnManager.OnEnemySpawned += AddEnemyOnSpawnComplete;
 		Entity.OnTurnEndEvent += StartNewTurn;
+		Entity.OnEntityDeath += RemoveEntityFromTurnOrder;
 	}
 	void OnDisable()
 	{
-		SpawnManager.OnStartGame -= CreateTurnOrder;
+		GameManager.OnStartCardCombatEvent -= CreateTurnOrder;
 		SpawnManager.OnPlayerSpawned -= AddPlayerOnSpawnComplete;
 		SpawnManager.OnEnemySpawned -= AddEnemyOnSpawnComplete;
 		Entity.OnTurnEndEvent -= StartNewTurn;
+		Entity.OnEntityDeath -= RemoveEntityFromTurnOrder;
 	}
 
 	//create and start initial turn order
-	void CreateTurnOrder()
+	async void CreateTurnOrder()
 	{
+		RemoveAllEntities();
+
+		await SpawnManager.SpawnPlayer();
+		await SpawnManager.SpawnEnemies();
+
 		turnOrder.Clear();
 		turnOrder.Add(playerEntity);
 
@@ -52,6 +60,19 @@ public class TurnOrderManager : MonoBehaviour
 			turnOrder.Add(entity);
 
 		StartInitialTurn(turnOrder[0]);
+	}
+	void RemoveAllEntities()
+	{
+		if (playerEntity != null)
+			Destroy(playerEntity.gameObject);
+
+		if (enemyEntities.Count > 0)
+		{
+			for (int i = enemyEntities.Count - 1; i >= 0; i--)
+				Destroy(enemyEntities[i].gameObject);
+
+			enemyEntities.Clear();
+		}
 	}
 	void StartInitialTurn(Entity entity)
 	{
@@ -76,7 +97,7 @@ public class TurnOrderManager : MonoBehaviour
 		turnOrder.Remove(entity);
 	}
 
-	//start new turns
+	//start new turns/rounds
 	void StartNewTurn(Entity entity)
 	{
 		RemoveEntityFromTurnOrder(entity); //remove from front of queue then add at back
@@ -109,10 +130,23 @@ public class TurnOrderManager : MonoBehaviour
 		enemyEntities.Add(entity);
 	}
 
-	//button click
-	public void DebugForceNextTurn()
+	//get instanced refs
+	public static Entity Player()
 	{
-		currentEntityTurn.EndTurn();
-		//StartNewTurn(turnOrder[0]);
+		return Instance.playerEntity;
+	}
+	public static Entity CurrentEntitiesTurn()
+	{
+		return Instance.currentEntityTurn;
+	}
+	public static List<Entity> EnemyEntities()
+	{
+		return Instance.enemyEntities;
+	}
+
+	//end instanced enemies turn
+	public static void SkipCurrentEntitiesTurn()
+	{
+		Instance.currentEntityTurn.EndTurn();
 	}
 }

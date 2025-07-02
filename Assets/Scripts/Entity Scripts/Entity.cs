@@ -26,8 +26,9 @@ public class Entity : MonoBehaviour, IDamagable
 	public static event Action OnEnemyAttackCancel;
 
 	public static event Action<Entity> OnTurnEndEvent;
+	public static event Action<Entity> OnEntityDeath;
 
-	readonly CancellationTokenSource cancellationToken = new();
+	CancellationTokenSource cancellationToken = new();
 
 	void Start()
 	{
@@ -93,6 +94,7 @@ public class Entity : MonoBehaviour, IDamagable
 	{
 		if (entity != this) return; //not this entities turn
 
+		cancellationToken = new CancellationTokenSource();
 		block = 0;
 		UpdateUi();
 
@@ -170,9 +172,11 @@ public class Entity : MonoBehaviour, IDamagable
 			return;
 		}
 
+		if (TurnOrderManager.Player() == null) return;
+
 		CardUi card = SpawnManager.SpawnCard();
 		card.SetupCard(attackData);
-		card.GetComponent<ThrowableCard>().EnemyThrowCard(this, TurnOrderManager.Instance.playerEntity.transform.localPosition);
+		card.GetComponent<ThrowableCard>().EnemyThrowCard(this, TurnOrderManager.Player().transform.localPosition);
 
 		OnEnemyAttack?.Invoke();
 	}
@@ -224,18 +228,18 @@ public class Entity : MonoBehaviour, IDamagable
 
 		return damage;
 	}
+	void OnDeath()
+	{
+		if (health <= 0)
+		{
+			OnEntityDeath?.Invoke(this);
+			Destroy(gameObject);
+		}
+	}
 
 	void UpdateUi()
 	{
 		entityHealthText.text = "HEALTH\n" + health + "/" + entityData.maxHealth;
 		entityblockText.text = "Block\n" + block;
-	}
-
-	void OnDeath()
-	{
-		if (health >= 0)
-		{
-			//entity died
-		}
 	}
 }

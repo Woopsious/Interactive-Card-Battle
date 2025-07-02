@@ -164,7 +164,7 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 		OnCardPickUp?.Invoke(card);
 		isBeingDragged = true;
 
-		cardOwner = TurnOrderManager.Instance.playerEntity;
+		cardOwner = TurnOrderManager.Player();
 		transform.SetParent(CardDeckUi.instance.movingCardsTransform);
 		transform.rotation = new Quaternion(0, 0, 0, 0);
 
