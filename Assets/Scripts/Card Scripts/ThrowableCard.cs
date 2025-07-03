@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using static DamageData;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
@@ -58,7 +59,7 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 		else if (other.GetComponent<ThrowableCardArea>() != null)
 			ThrowableCardAreaEnter();
 		else if (wasThrown && other.GetComponent<Entity>() != null)
-			OnEntityHit(other.GetComponent<Entity>());
+			UseCard(other.GetComponent<Entity>());
 	}
 	void OnTriggerExit2D(Collider2D other)
 	{
@@ -100,35 +101,6 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 	void ThrowableCardAreaExit()
 	{
 		inThrownCardsArea = false;
-	}
-
-	void OnEntityHit(Entity entity)
-	{
-		if (!CardCanHitEntity(entity)) return;
-
-		entity.OnHit(new(card.Damage, card.DamageType));
-		DestoryCard();
-	}
-	bool CardCanHitEntity(Entity entity)
-	{
-		if (card.Offensive)
-		{
-			if (entity.entityData.isPlayer && card.PlayerCard)
-				return false;
-			else if (!entity.entityData.isPlayer && !card.PlayerCard)
-				return false;
-			else
-				return true;
-		}
-		else
-		{
-			if (entity.entityData.isPlayer && card.PlayerCard)
-				return true;
-			else if (!entity.entityData.isPlayer && !card.PlayerCard)
-				return true;
-			else
-				return false;
-		}
 	}
 
 	//player mouse events
@@ -181,23 +153,17 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 		if (card.Offensive)
 		{
 			if (inThrownCardsArea && cardDeckManagerUi == null && mouseVelocity != Vector3.zero)
-				PlayerThrowCard();
+				ThrowCard();
 			else
 				CardDeckUi.instance.AddCardToPlayerDeck(card);
 		}
 		else
 		{
-			if (PlayerRef != null && !card.Offensive)
-				OnEntityHit(PlayerRef);
+			if (PlayerRef != null)
+				UseCard(PlayerRef);
 			else
 				CardDeckUi.instance.AddCardToPlayerDeck(card);
 		}
-	}
-	void PlayerThrowCard()
-	{
-		transform.rotation = Quaternion.LookRotation(Vector3.forward, mouseVelocity);
-		rb.AddForce(mouseVelocity.normalized * 500, ForceMode2D.Impulse);
-		wasThrown = true;
 	}
 	void BlockEnemyThrownCard()
 	{
@@ -222,10 +188,51 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 		lastMousePos = entity.transform.localPosition;
 		mouseVelocity = mousePos - lastMousePos;
 
-		//throw card
+		ThrowCard();
+	}
+	public void EnemyUseCard(Entity entity)
+	{
+		cardOwner = entity;
+		UseCard(entity);
+	}
+
+	//shared actions
+	void ThrowCard()
+	{
 		transform.rotation = Quaternion.LookRotation(Vector3.forward, mouseVelocity);
 		rb.AddForce(mouseVelocity.normalized * 500, ForceMode2D.Impulse);
 		wasThrown = true;
+	}
+	void UseCard(Entity entity)
+	{
+		if (!CardCanHitEntity(entity)) return;
+
+		if (card.AlsoHeals)
+			cardOwner.OnHit(new(card.Damage, DamageType.heal));
+
+		entity.OnHit(new(card.Damage, card.DamageType));
+		DestoryCard();
+	}
+	bool CardCanHitEntity(Entity entity)
+	{
+		if (card.Offensive)
+		{
+			if (entity.entityData.isPlayer && card.PlayerCard)
+				return false;
+			else if (!entity.entityData.isPlayer && !card.PlayerCard)
+				return false;
+			else
+				return true;
+		}
+		else
+		{
+			if (entity.entityData.isPlayer && card.PlayerCard)
+				return true;
+			else if (!entity.entityData.isPlayer && !card.PlayerCard)
+				return true;
+			else
+				return false;
+		}
 	}
 
 	//card removal
@@ -243,8 +250,8 @@ public class ThrowableCard : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 		}
 		else
 		{
-			OnEnemyThrowCard?.Invoke(false);
 			cardOwner.EndTurn();
+			OnEnemyThrowCard?.Invoke(false);
 		}
 
 		Destroy(gameObject);

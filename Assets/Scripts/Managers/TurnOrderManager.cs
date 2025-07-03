@@ -49,9 +49,7 @@ public class TurnOrderManager : MonoBehaviour
 	async void CreateTurnOrder()
 	{
 		RemoveAllEntities();
-
-		await SpawnManager.SpawnPlayer();
-		await SpawnManager.SpawnEnemies();
+		await SpawnManager.SpawnEntitiesForCardBattle();
 
 		turnOrder.Clear();
 		turnOrder.Add(playerEntity);

@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
-  m_Name: Spit
+  m_Name: Defend
   m_EditorClassIdentifier: 
-  attackName: Spit
-  attackDescription: Slime spits acid
-  offensive: 1
-  damage: 8
-  damageType: 2
-  attackCooldownTurns: 1
-  attackUseChance: 0.8
+  attackName: Defend Self
+  attackDescription: Skeleton defends itself
+  offensive: 0
+  damage: 16
+  damageType: 0
+  attackCooldownTurns: 3
+  attackUseChance: 0.5

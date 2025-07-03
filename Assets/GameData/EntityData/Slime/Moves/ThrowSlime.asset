@@ -15,7 +15,7 @@ MonoBehaviour:
   attackName: ThrowSlime
   attackDescription: Throw slime at enemy
   offensive: 1
-  damage: 16
+  damage: 12
   damageType: 2
   attackCooldownTurns: 3
   attackUseChance: 0.4

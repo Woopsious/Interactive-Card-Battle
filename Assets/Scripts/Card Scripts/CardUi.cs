@@ -13,6 +13,7 @@ public class CardUi : MonoBehaviour
 
 	public bool PlayerCard { get; private set; }
 	public bool Offensive { get; private set; }
+	public bool AlsoHeals { get; private set; }
 	public int Damage { get; private set; }
 	public DamageType DamageType { get; private set; }
 
@@ -34,6 +35,7 @@ public class CardUi : MonoBehaviour
 		}
 
 		PlayerCard = true;
+		AlsoHeals = CardData.alsoHeals;
 		Offensive = CardData.offensive;
 
 		string cardName = CardData.cardName + UnityEngine.Random.Range(1000, 9999);
@@ -55,9 +57,10 @@ public class CardUi : MonoBehaviour
 		}
 
 		PlayerCard = false;
+		AlsoHeals = AttackData.alsoHeals;
 		Offensive = AttackData.offensive;
 
-		string cardName = AttackData.attackName + UnityEngine.Random.Range(1000, 9999);
+		string cardName = AttackData.attackName;
 		gameObject.name = cardName;
 		cardNametext.text = cardName;
 		cardDescriptiontext.text = AttackData.CreateDescription();
@@ -67,6 +70,7 @@ public class CardUi : MonoBehaviour
 		replaceCardButton.gameObject.SetActive(false);
 	}
 
+	//button call
 	public void ReplaceCard()
 	{
 		OnCardReplace?.Invoke(this);

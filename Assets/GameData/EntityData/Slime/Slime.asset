@@ -15,7 +15,8 @@ MonoBehaviour:
   entityName: Slime
   entityDescription: A slime
   isPlayer: 0
-  maxHealth: 60
+  maxHealth: 40
+  minHealPercentage: 0.5
   maxCardsUsedPerTurn: 0
   maxDamageCardsUsedPerTurn: 0
   maxNonDamageCardsUsedPerTurn: 0
@@ -24,7 +25,11 @@ MonoBehaviour:
   moveSetOrder:
   - moveSetMoves:
     - {fileID: 11400000, guid: 50e0f1da25711444cb4629cde7ed84dc, type: 2}
+    - {fileID: 11400000, guid: c9249d4850e94eb4aaf9dcbc4a67c413, type: 2}
   - moveSetMoves:
+    - {fileID: 11400000, guid: 50e0f1da25711444cb4629cde7ed84dc, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: 50e0f1da25711444cb4629cde7ed84dc, type: 2}
     - {fileID: 11400000, guid: c9249d4850e94eb4aaf9dcbc4a67c413, type: 2}
     - {fileID: 11400000, guid: 5010d8dd1d4958e4899dbb2fbb94b0be, type: 2}
   - moveSetMoves:

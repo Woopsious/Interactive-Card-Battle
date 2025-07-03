@@ -12,6 +12,9 @@ public class EntityData : ScriptableObject
 
 	[Header("Entity Health")]
 	public int maxHealth;
+	[Range(0f, 1f)]
+	[Tooltip("If health percentage drops below, entity will use heal over other moves in its move set")] 
+	public float minHealPercentage;
 
 	[Header("Player Only Cards")]
 	public int maxCardsUsedPerTurn;

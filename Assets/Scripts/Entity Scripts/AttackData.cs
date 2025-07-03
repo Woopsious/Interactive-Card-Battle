@@ -10,6 +10,7 @@ public class AttackData : ScriptableObject
 	public string attackDescription;
 
 	public bool offensive;
+	public bool alsoHeals;
 
 	[Header("Attack damage")]
 	public int damage;

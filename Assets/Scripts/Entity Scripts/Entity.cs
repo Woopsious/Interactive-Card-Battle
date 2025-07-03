@@ -113,11 +113,11 @@ public class Entity : MonoBehaviour, IDamagable
 	{
 		int nextMoveIndex = previousUsedMoveIndex + 1;
 
-		Debug.LogError("next attack index: " + nextMoveIndex + " | attacks count: " + enemyMovesList.Count);
+		//Debug.LogError("next attack index: " + nextMoveIndex + " | attacks count: " + enemyMovesList.Count);
 
 		if (nextMoveIndex >= enemyMovesList.Count) //end of attack queue, loop back
 		{
-			Debug.LogError("end of attack queue");
+			//Debug.LogError("end of attack queue");
 
 			previousUsedMoveIndex = -1;
 			PickNextMove();
@@ -126,14 +126,14 @@ public class Entity : MonoBehaviour, IDamagable
 
 		if (enemyMovesList[nextMoveIndex].CanUseMoveFromMoveSet())
 		{
-			Debug.LogError("using attack");
+			//Debug.LogError("using attack");
 
 			await UseMove(cancellationToken.Token, nextMoveIndex);
 			return;
 		}
 		else if (HasMoveAvailable()) //try next move set
 		{
-			Debug.LogError("has attack trying next");
+			//Debug.LogError("has attack trying next");
 
 			previousUsedMoveIndex++;
 			PickNextMove();
@@ -141,7 +141,7 @@ public class Entity : MonoBehaviour, IDamagable
 		}
 		else //end turn if no moves available in move sets to avoid endless loop
 		{
-			Debug.LogError("end turn");
+			//Debug.LogError("end turn");
 
 			EndTurn();
 			return;
@@ -159,6 +159,7 @@ public class Entity : MonoBehaviour, IDamagable
 	}
 	async Task UseMove(CancellationToken token, int nextMoveIndex)
 	{
+		await Task.Delay(100);
 		AttackData attackData = enemyMovesList[nextMoveIndex].UseMove().attackData;
 
 		previousUsedMoveIndex = nextMoveIndex;
@@ -176,7 +177,11 @@ public class Entity : MonoBehaviour, IDamagable
 
 		CardUi card = SpawnManager.SpawnCard();
 		card.SetupCard(attackData);
-		card.GetComponent<ThrowableCard>().EnemyThrowCard(this, TurnOrderManager.Player().transform.localPosition);
+
+		if (card.Offensive)
+			card.throwableCard.EnemyThrowCard(this, TurnOrderManager.Player().transform.localPosition);
+		else
+			card.throwableCard.EnemyUseCard(this);
 
 		OnEnemyAttack?.Invoke();
 	}

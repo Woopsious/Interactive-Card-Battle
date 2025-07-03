@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using static DamageData;
 
 public class EnemyMoveSet
@@ -23,7 +24,7 @@ public class EnemyMoveSet
 		{
 			if (move.CanUseMove())
 			{
-				if (move.attackData.damageType == DamageType.heal && NeedsHealing(move))
+				if (move.attackData.damageType == DamageType.heal && NeedsHealing())
 					return true;
 				else if (move.attackData.damageType != DamageType.heal)
 					return true;
@@ -31,21 +32,25 @@ public class EnemyMoveSet
 					return false;
 			}
 		}
-		//no attack found in move
+		//no usable moves found in move set
 		return false;
 	}
 
 	//use move (should never return null)
 	public EnemyMove UseMove()
 	{
-		EnemyMove moveToUse = HasHealOptionAndNeedsHeal();
+		EnemyMove moveToUse = HasHealOptionAndNeedsHeal(); //always priorities healing
 
 		if (moveToUse == null)
 		{
+			/*
 			List<EnemyMove> moveOptions = GetAvailableMoveOptions();
 
 			if (moveOptions != null)
 				moveToUse = PickRandomMoveFromList(moveOptions);
+			*/
+
+			moveToUse = PickRandomMoveFromList(moves);
 		}
 
 		moveToUse.UseAttack();
@@ -59,17 +64,17 @@ public class EnemyMoveSet
 		{
 			if (move.attackData.damageType != DamageType.heal) continue;
 
-			if (NeedsHealing(move))
+			if (NeedsHealing())
 				return move;
 		}
 
 		return null;
 	}
-	bool NeedsHealing(EnemyMove move)
+	bool NeedsHealing()
 	{
-		int missingHealh = entity.entityData.maxHealth - entity.health;
+		float HealthPercentage = (float)entity.health / entity.entityData.maxHealth * 100;
 
-		if (missingHealh > move.attackData.damage * 0.5f)
+		if (HealthPercentage <= 0.5f)
 			return true;
 		else
 			return false;

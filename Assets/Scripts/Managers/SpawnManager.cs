@@ -32,6 +32,19 @@ public class SpawnManager : MonoBehaviour
 			Debug.LogError("canvas ref null, assign it in scene");
 	}
 
+	//card battle setup
+	public static async Task SpawnEntitiesForCardBattle()
+	{
+		instance.RandomizeEnemySpawnAmount();
+
+		await SpawnPlayer();
+		await SpawnEnemies();
+	}
+	void RandomizeEnemySpawnAmount()
+	{
+		numberOfEnemiesToSpawn = UnityEngine.Random.Range(2, 5);
+	}
+
 	//entity spawning
 	public static Task SpawnPlayer()
 	{
@@ -60,7 +73,6 @@ public class SpawnManager : MonoBehaviour
 		float offset = widthOfEntities * (index - 1);
 		rectTransform.anchoredPosition = new Vector2(spacing * index + offset, 400);
 	}
-
 	EntityData GetRandomEnemyToSpawn()
 	{
 		EntityData entityData = entityDataTypes[UnityEngine.Random.Range(0, entityDataTypes.Count)];

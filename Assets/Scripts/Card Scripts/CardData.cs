@@ -9,6 +9,7 @@ public class CardData : ScriptableObject
 	public string cardDescription;
 
 	public bool offensive;
+	public bool alsoHeals;
 
 	[Header("Card damage")]
 	public int damage;
