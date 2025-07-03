@@ -2057,7 +2057,7 @@ MonoBehaviour:
   PlayerPrefab: {fileID: 5386469954458961082, guid: b8dfed3810454c34a80836219dde1249, type: 3}
   cardPrefab: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
   entityDataTypes:
-  - {fileID: 11400000, guid: f32bae752b8881c498ab069d5db55a4e, type: 2}
+  - {fileID: 11400000, guid: b1f5e72def15b49449f3393518ec0963, type: 2}
   numberOfEnemiesToSpawn: 3
 --- !u!1 &1151057484
 GameObject:

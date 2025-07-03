@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
   m_Name: EatFlesh
   m_EditorClassIdentifier: 
-  attackName: Hit
-  attackDescription: Zombie hits you
+  attackName: Eat Flesh
+  attackDescription: Zombie eats your flesh
   offensive: 1
-  damage: 6
+  alsoHeals: 1
+  damage: 10
   damageType: 2
   attackCooldownTurns: 1
   attackUseChance: 0.8

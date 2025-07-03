@@ -15,7 +15,7 @@ MonoBehaviour:
   entityName: Slime
   entityDescription: A slime
   isPlayer: 0
-  maxHealth: 40
+  maxHealth: 50
   minHealPercentage: 0.5
   maxCardsUsedPerTurn: 0
   maxDamageCardsUsedPerTurn: 0

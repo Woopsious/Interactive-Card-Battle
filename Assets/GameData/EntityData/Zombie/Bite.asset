@@ -15,7 +15,8 @@ MonoBehaviour:
   attackName: Bite
   attackDescription: Zombie bites you
   offensive: 1
+  alsoHeals: 0
   damage: 10
   damageType: 2
-  attackCooldownTurns: 2
+  attackCooldownTurns: 1
   attackUseChance: 0.6

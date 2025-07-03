@@ -22,4 +22,10 @@ MonoBehaviour:
   maxNonDamageCardsUsedPerTurn: 0
   maxReplaceableCardsPerTurn: 0
   cards: []
-  moveSetOrder: []
+  moveSetOrder:
+  - moveSetMoves:
+    - {fileID: 11400000, guid: abb9df0e663c8f346a7a4e462fb774bf, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: 86569415213146a46b46d636642953fc, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: c8557c16267056343b464e4af9e7004c, type: 2}
