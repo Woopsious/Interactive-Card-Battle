@@ -2,43 +2,46 @@ using System;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class ShowPlayedCardUi : MonoBehaviour
+namespace Woopsious
 {
-	public static ShowPlayedCardUi instance;
-
-	public GameObject PlayedCardUi;
-	public CardUi cardUi;
-
-	void Awake()
+	public class ShowPlayedCardUi : MonoBehaviour
 	{
-		instance = this;
-		PlayedCardUi.SetActive(false);
-	}
+		public static ShowPlayedCardUi instance;
 
-	void OnEnable()
-	{
-		GameManager.OnStartCardCombatEvent += HidePlayedCard;
-		Entity.OnEnemyMoveFound += ShowPlayedCard;
-		Entity.OnEnemyAttack += HidePlayedCard;
-		Entity.OnEnemyAttackCancel += HidePlayedCard;
-	}
+		public GameObject PlayedCardUi;
+		public CardUi cardUi;
 
-	void OnDisable()
-	{
-		GameManager.OnStartCardCombatEvent -= HidePlayedCard;
-		Entity.OnEnemyMoveFound -= ShowPlayedCard;
-		Entity.OnEnemyAttack -= HidePlayedCard;
-		Entity.OnEnemyAttackCancel -= HidePlayedCard;
-	}
+		void Awake()
+		{
+			instance = this;
+			PlayedCardUi.SetActive(false);
+		}
 
-	void ShowPlayedCard(AttackData data)
-	{
-		cardUi.SetupCard(data);
-		PlayedCardUi.SetActive(true);
-	}
+		void OnEnable()
+		{
+			GameManager.OnStartCardCombatEvent += HidePlayedCard;
+			Entity.OnEnemyMoveFound += ShowPlayedCard;
+			Entity.OnEnemyAttack += HidePlayedCard;
+			Entity.OnEnemyAttackCancel += HidePlayedCard;
+		}
 
-	void HidePlayedCard()
-	{
-		PlayedCardUi.SetActive(false);
+		void OnDisable()
+		{
+			GameManager.OnStartCardCombatEvent -= HidePlayedCard;
+			Entity.OnEnemyMoveFound -= ShowPlayedCard;
+			Entity.OnEnemyAttack -= HidePlayedCard;
+			Entity.OnEnemyAttackCancel -= HidePlayedCard;
+		}
+
+		void ShowPlayedCard(AttackData data)
+		{
+			cardUi.SetupCard(data);
+			PlayedCardUi.SetActive(true);
+		}
+
+		void HidePlayedCard()
+		{
+			PlayedCardUi.SetActive(false);
+		}
 	}
 }

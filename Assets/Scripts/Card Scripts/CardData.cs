@@ -1,33 +1,36 @@
 using UnityEngine;
-using static DamageData;
+using static Woopsious.DamageData;
 
-[CreateAssetMenu(fileName = "CardData", menuName = "ScriptableObjects/Card")]
-public class CardData : ScriptableObject
+namespace Woopsious
 {
-	[Header("Card Info")]
-	public string cardName;
-	public string cardDescription;
-
-	public bool offensive;
-	public bool alsoHeals;
-
-	[Header("Card damage")]
-	public int damage;
-
-	public DamageType damageType;
-
-	public string CreateDescription()
+	[CreateAssetMenu(fileName = "CardData", menuName = "ScriptableObjects/Card")]
+	public class CardData : ScriptableObject
 	{
-		string cardDescription = this.cardDescription;
-		cardDescription += "\n\n";
+		[Header("Card Info")]
+		public string cardName;
+		public string cardDescription;
 
-		if (damageType == DamageType.block)
-			cardDescription += "Blocks " + damage + " damage";
-		else if (damageType == DamageType.heal)
-			cardDescription += "Heals " + damage + " damage";
-		else if (damageType == DamageType.physical)
-			cardDescription += "Deals " + damage + " physical damage";
+		public bool offensive;
+		public bool alsoHeals;
 
-		return cardDescription;
+		[Header("Card damage")]
+		public int damage;
+
+		public DamageType damageType;
+
+		public string CreateDescription()
+		{
+			string cardDescription = this.cardDescription;
+			cardDescription += "\n\n";
+
+			if (damageType == DamageType.block)
+				cardDescription += "Blocks " + damage + " damage";
+			else if (damageType == DamageType.heal)
+				cardDescription += "Heals " + damage + " damage";
+			else if (damageType == DamageType.physical)
+				cardDescription += "Deals " + damage + " physical damage";
+
+			return cardDescription;
+		}
 	}
 }

@@ -2,7 +2,9 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerEntity : Entity
+namespace Woopsious
+{
+	public class PlayerEntity : Entity
 {
 	RectTransform rectTransform;
 	Image imageHighlight;
@@ -135,4 +137,5 @@ public class PlayerEntity : Entity
 		else
 			return false;
 	}
+}
 }

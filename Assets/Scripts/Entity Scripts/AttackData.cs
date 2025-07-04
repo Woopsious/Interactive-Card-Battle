@@ -1,39 +1,42 @@
 using System;
 using UnityEngine;
-using static DamageData;
+using static Woopsious.DamageData;
 
-[CreateAssetMenu(fileName = "AttackData", menuName = "ScriptableObjects/AttackData")]
-public class AttackData : ScriptableObject
+namespace Woopsious
 {
-	[Header("Attack Info")]
-	public string attackName;
-	public string attackDescription;
-
-	public bool offensive;
-	public bool alsoHeals;
-
-	[Header("Attack damage")]
-	public int damage;
-
-	public DamageType damageType;
-
-	[Header("Attack use rules")]
-	public int attackCooldownTurns;
-	[Range(0f, 1f)]
-	public float attackUseChance;
-
-	public string CreateDescription()
+	[CreateAssetMenu(fileName = "AttackData", menuName = "ScriptableObjects/AttackData")]
+	public class AttackData : ScriptableObject
 	{
-		string attackDescription = this.attackDescription;
-		attackDescription += "\n\n";
+		[Header("Attack Info")]
+		public string attackName;
+		public string attackDescription;
 
-		if (damageType == DamageType.block)
-			attackDescription += "Blocks " + damage + " damage";
-		else if (damageType ==DamageType.heal)
-			attackDescription += "Heals " + damage + " damage";
-		else if (damageType == DamageType.physical)
-			attackDescription += "Deals " + damage + " physical damage";
+		public bool offensive;
+		public bool alsoHeals;
 
-		return attackDescription;
+		[Header("Attack damage")]
+		public int damage;
+
+		public DamageType damageType;
+
+		[Header("Attack use rules")]
+		public int attackCooldownTurns;
+		[Range(0f, 1f)]
+		public float attackUseChance;
+
+		public string CreateDescription()
+		{
+			string attackDescription = this.attackDescription;
+			attackDescription += "\n\n";
+
+			if (damageType == DamageType.block)
+				attackDescription += "Blocks " + damage + " damage";
+			else if (damageType == DamageType.heal)
+				attackDescription += "Heals " + damage + " damage";
+			else if (damageType == DamageType.physical)
+				attackDescription += "Deals " + damage + " physical damage";
+
+			return attackDescription;
+		}
 	}
 }

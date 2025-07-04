@@ -2,94 +2,97 @@ using System;
 using TMPro;
 using UnityEngine;
 
-public class CardCombatUi : MonoBehaviour
+namespace Woopsious
 {
-	public static CardCombatUi instance;
-
-	[Header("Ui Panels")]
-	public GameObject CardDeckUi;
-	public GameObject PlayedCardUi;
-	public GameObject MovingCardsArea;
-
-	public TMP_Text winLooseText;
-	public GameObject StartCombatButtonObj;
-
-	public GameObject EndPlayerTurnButtonObj;
-	public GameObject DebugEndTurnButtonObj;
-
-	void Awake()
+	public class CardCombatUi : MonoBehaviour
 	{
-		instance = this;
+		public static CardCombatUi instance;
 
-		CardDeckUi.SetActive(false);
-		PlayedCardUi.SetActive(false);
-		MovingCardsArea.SetActive(false);
+		[Header("Ui Panels")]
+		public GameObject CardDeckUi;
+		public GameObject PlayedCardUi;
+		public GameObject MovingCardsArea;
 
-		winLooseText.gameObject.SetActive(false);
-		StartCombatButtonObj.SetActive(true);
-		EndPlayerTurnButtonObj.SetActive(false);
-		DebugEndTurnButtonObj.SetActive(false);
-	}
+		public TMP_Text winLooseText;
+		public GameObject StartCombatButtonObj;
 
-	void OnEnable()
-	{
-		GameManager.OnEndCardCombatEvent += EndCardCombat;
-		TurnOrderManager.OnNewTurnEvent += ShowHideEndPlayerTurnButton;
-	}
+		public GameObject EndPlayerTurnButtonObj;
+		public GameObject DebugEndTurnButtonObj;
 
-	void OnDisable()
-	{
-		GameManager.OnEndCardCombatEvent -= EndCardCombat;
-		TurnOrderManager.OnNewTurnEvent -= ShowHideEndPlayerTurnButton;
-	}
+		void Awake()
+		{
+			instance = this;
 
-	//UI UPDATES
-	void ShowHideEndPlayerTurnButton(Entity entity)
-	{
-		if (TurnOrderManager.Player() == entity)
-			EndPlayerTurnButtonObj.SetActive(true);
-		else
+			CardDeckUi.SetActive(false);
+			PlayedCardUi.SetActive(false);
+			MovingCardsArea.SetActive(false);
+
+			winLooseText.gameObject.SetActive(false);
+			StartCombatButtonObj.SetActive(true);
 			EndPlayerTurnButtonObj.SetActive(false);
-	}
-
-	void EndCardCombat(bool playerWon)
-	{
-		if (playerWon)
-		{
-			winLooseText.text = "Player Won";
-		}
-		else
-		{
-			winLooseText.text = "Player Lost";
+			DebugEndTurnButtonObj.SetActive(false);
 		}
 
-		StartCombatButtonObj.SetActive(true);
-		winLooseText.gameObject.SetActive(true);
-	}
+		void OnEnable()
+		{
+			GameManager.OnEndCardCombatEvent += EndCardCombat;
+			TurnOrderManager.OnNewTurnEvent += ShowHideEndPlayerTurnButton;
+		}
 
-	//BUTTON CALLS
-	public void BeginCardCombat()
-	{
-		CardDeckUi.SetActive(true);
-		PlayedCardUi.SetActive(true);
-		MovingCardsArea.SetActive(true);
+		void OnDisable()
+		{
+			GameManager.OnEndCardCombatEvent -= EndCardCombat;
+			TurnOrderManager.OnNewTurnEvent -= ShowHideEndPlayerTurnButton;
+		}
 
-		winLooseText.gameObject.SetActive(false);
-		StartCombatButtonObj.SetActive(false);
-		EndPlayerTurnButtonObj.SetActive(true);
-		DebugEndTurnButtonObj.SetActive(true);
+		//UI UPDATES
+		void ShowHideEndPlayerTurnButton(Entity entity)
+		{
+			if (TurnOrderManager.Player() == entity)
+				EndPlayerTurnButtonObj.SetActive(true);
+			else
+				EndPlayerTurnButtonObj.SetActive(false);
+		}
 
-		GameManager.BeginCardCombat();
-	}
+		void EndCardCombat(bool playerWon)
+		{
+			if (playerWon)
+			{
+				winLooseText.text = "Player Won";
+			}
+			else
+			{
+				winLooseText.text = "Player Lost";
+			}
 
-	public void SkipPlayerTurn()
-	{
-		if (TurnOrderManager.CurrentEntitiesTurn() == TurnOrderManager.Player())
+			StartCombatButtonObj.SetActive(true);
+			winLooseText.gameObject.SetActive(true);
+		}
+
+		//BUTTON CALLS
+		public void BeginCardCombat()
+		{
+			CardDeckUi.SetActive(true);
+			PlayedCardUi.SetActive(true);
+			MovingCardsArea.SetActive(true);
+
+			winLooseText.gameObject.SetActive(false);
+			StartCombatButtonObj.SetActive(false);
+			EndPlayerTurnButtonObj.SetActive(true);
+			DebugEndTurnButtonObj.SetActive(true);
+
+			GameManager.BeginCardCombat();
+		}
+
+		public void SkipPlayerTurn()
+		{
+			if (TurnOrderManager.CurrentEntitiesTurn() == TurnOrderManager.Player())
+				TurnOrderManager.SkipCurrentEntitiesTurn();
+		}
+
+		public void DebugSkipTurn()
+		{
 			TurnOrderManager.SkipCurrentEntitiesTurn();
-	}
-
-	public void DebugSkipTurn()
-	{
-		TurnOrderManager.SkipCurrentEntitiesTurn();
+		}
 	}
 }

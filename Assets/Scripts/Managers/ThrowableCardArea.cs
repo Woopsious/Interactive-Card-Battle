@@ -1,40 +1,43 @@
 using UnityEngine;
 
-public class ThrowableCardArea : MonoBehaviour
+namespace Woopsious
 {
-	public GameObject throwableCardAreaHighlight;
-	public GameObject blockableCardAreaHighlight;
-
-	void OnEnable()
+	public class ThrowableCardArea : MonoBehaviour
 	{
-		ThrowableCard.OnCardPickUp += OnCardPickUp;
-		ThrowableCard.OnEnemyThrowCard += OnEnemyCardThrown;
-	}
+		public GameObject throwableCardAreaHighlight;
+		public GameObject blockableCardAreaHighlight;
 
-	void OnDisable()
-	{
-		ThrowableCard.OnCardPickUp -= OnCardPickUp;
-		ThrowableCard.OnEnemyThrowCard -= OnEnemyCardThrown;
-	}
-
-	void OnCardPickUp(CardUi card)
-	{
-		if (card != null)
+		void OnEnable()
 		{
-			if (card.Offensive)
-				throwableCardAreaHighlight.SetActive(true);
+			ThrowableCard.OnCardPickUp += OnCardPickUp;
+			ThrowableCard.OnEnemyThrowCard += OnEnemyCardThrown;
+		}
+
+		void OnDisable()
+		{
+			ThrowableCard.OnCardPickUp -= OnCardPickUp;
+			ThrowableCard.OnEnemyThrowCard -= OnEnemyCardThrown;
+		}
+
+		void OnCardPickUp(CardUi card)
+		{
+			if (card != null)
+			{
+				if (card.Offensive)
+					throwableCardAreaHighlight.SetActive(true);
+				else
+					throwableCardAreaHighlight.SetActive(false);
+			}
 			else
 				throwableCardAreaHighlight.SetActive(false);
 		}
-		else
-			throwableCardAreaHighlight.SetActive(false);
-	}
 
-	void OnEnemyCardThrown(bool wasThrown)
-	{
-		if (wasThrown)
-			blockableCardAreaHighlight.SetActive(true);
-		else
-			blockableCardAreaHighlight.SetActive(false);
+		void OnEnemyCardThrown(bool wasThrown)
+		{
+			if (wasThrown)
+				blockableCardAreaHighlight.SetActive(true);
+			else
+				blockableCardAreaHighlight.SetActive(false);
+		}
 	}
 }

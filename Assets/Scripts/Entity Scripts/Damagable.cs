@@ -1,23 +1,26 @@
 using System;
 using UnityEngine;
 
-public class DamageData
+namespace Woopsious
 {
-	public readonly int damage;
-	public readonly DamageType damageType;
-	public enum DamageType
+	public class DamageData
 	{
-		block, heal, physical
+		public readonly int damage;
+		public readonly DamageType damageType;
+		public enum DamageType
+		{
+			block, heal, physical
+		}
+
+		public DamageData(int damage, DamageType damageType)
+		{
+			this.damage = damage;
+			this.damageType = damageType;
+		}
 	}
 
-	public DamageData(int damage, DamageType damageType)
+	public interface IDamagable
 	{
-		this.damage = damage;
-		this.damageType = damageType;
+		void OnHit(DamageData damageData);
 	}
-}
-
-public interface IDamagable
-{
-	void OnHit(DamageData damageData);
 }
