@@ -9,7 +9,6 @@ namespace Woopsious
 		[Header("Entity Info")]
 		public string entityName;
 		public string entityDescription;
-
 		public bool isPlayer;
 
 		[Header("Entity Health")]
@@ -26,8 +25,9 @@ namespace Woopsious
 
 		public List<CardData> cards = new();
 
+		public CardData cardData;
+
 		[Header("Enemy Move Set Order")]
 		public List<MoveSetData> moveSetOrder = new();
 	}
-
 }

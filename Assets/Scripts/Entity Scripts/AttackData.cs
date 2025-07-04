@@ -5,6 +5,7 @@ using static Woopsious.DamageData;
 namespace Woopsious
 {
 	[CreateAssetMenu(fileName = "AttackData", menuName = "ScriptableObjects/AttackData")]
+	[Serializable]
 	public class AttackData : ScriptableObject
 	{
 		[Header("Attack Info")]
