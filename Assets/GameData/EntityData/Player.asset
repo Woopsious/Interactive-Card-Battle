@@ -16,6 +16,7 @@ MonoBehaviour:
   entityDescription: The Player
   isPlayer: 1
   maxHealth: 100
+  minHealPercentage: 0
   maxCardsUsedPerTurn: 3
   maxDamageCardsUsedPerTurn: 2
   maxNonDamageCardsUsedPerTurn: 2
@@ -25,4 +26,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9bbaeb946f209cd4dbf3e190922933d8, type: 2}
   - {fileID: 11400000, guid: 1c3e7a5c1c7b07147819620cf6fd6cc9, type: 2}
   - {fileID: 11400000, guid: 3356e19e03239af48bc775f10b061cd4, type: 2}
-  attacks: []
+  moveSetOrder: []
