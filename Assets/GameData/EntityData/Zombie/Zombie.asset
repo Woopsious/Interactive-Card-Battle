@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Zombie
   m_EditorClassIdentifier: 
   entityName: Zombie
-  entityDescription: A human just smells bad
+  entityDescription: A human that just smells bad
   isPlayer: 0
   maxHealth: 50
   minHealPercentage: 0

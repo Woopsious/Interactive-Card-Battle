@@ -17,15 +17,15 @@ namespace Woopsious
 		[Tooltip("If health percentage drops below, entity will use heal over other moves in its move set")]
 		public float minHealPercentage;
 
-		[Header("Player Cards")]
-		public int maxCardsUsedPerTurn;
-		public int maxDamageCardsUsedPerTurn;
-		public int maxNonDamageCardsUsedPerTurn;
-		public int maxReplaceableCardsPerTurn;
+		[Header("Player Cards")] //shown as player
+		[HideInInspector] public int maxCardsUsedPerTurn;
+		[HideInInspector] public int maxDamageCardsUsedPerTurn;
+		[HideInInspector] public int maxNonDamageCardsUsedPerTurn;
+		[HideInInspector] public int maxReplaceableCardsPerTurn;
 
 		public List<CardData> cards = new();
 
-		[Header("Enemy Move Set Order")]
+		[Header("Enemy Move Set Order")] //shown as non player
 		public List<MoveSetData> moveSetOrder = new();
 	}
 }
