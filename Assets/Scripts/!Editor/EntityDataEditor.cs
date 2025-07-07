@@ -1,21 +1,26 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
 namespace Woopsious
 {
-	[CustomEditor(typeof(EntityData))]
+	[CustomEditor(typeof(EntityData), true)]
 	public class EntityDataEditor : Editor
 	{
-		public EntityData data;
+		EntityData data;
 
-		public List<MoveSetData> moveSetData;
+		Editor attackDataEditor;
+
+		SerializedProperty attackData;
+
+		bool showAttackData = false;
 
 		void OnEnable()
 		{
 			data = (EntityData)target;
-			moveSetData = data.moveSetOrder;
+			attackData = serializedObject.FindProperty(nameof(data.attackData));
 		}
 
 		public override void OnInspectorGUI()
@@ -43,6 +48,31 @@ namespace Woopsious
             else
 			{
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.moveSetOrder)), true);
+				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.attackData)), true);
+
+				if (attackData.objectReferenceValue != null)
+				{
+					if (attackDataEditor == null || attackDataEditor.target != attackData.objectReferenceValue)
+						attackDataEditor = CreateEditor(attackData.objectReferenceValue);
+
+					//grab attack name to set as fold out label
+					AttackData data = attackData.objectReferenceValue as AttackData;
+					string labelName = !string.IsNullOrEmpty(data.attackName)? data.attackName + " " : "";
+					showAttackData = EditorGUILayout.Foldout(showAttackData, labelName + "Attack Data", true);
+
+					//add indented box
+					EditorGUILayout.BeginVertical("box");
+					EditorGUI.indentLevel++;
+
+					if (showAttackData)
+					{
+						EditorGUILayout.LabelField(labelName + "Attack Data", EditorStyles.boldLabel);
+						attackDataEditor.OnInspectorGUI();
+					}
+
+					EditorGUI.indentLevel--;
+					EditorGUILayout.EndVertical();
+				}
 			}
 
 			// Write back changed values

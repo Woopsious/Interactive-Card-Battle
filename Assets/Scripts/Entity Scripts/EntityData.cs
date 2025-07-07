@@ -27,5 +27,7 @@ namespace Woopsious
 
 		[Header("Enemy Move Set Order")] //shown as non player
 		public List<MoveSetData> moveSetOrder = new();
+
+		public AttackData attackData;
 	}
 }
