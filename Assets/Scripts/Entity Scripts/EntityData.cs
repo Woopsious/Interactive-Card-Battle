@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,7 +28,11 @@ namespace Woopsious
 
 		[Header("Enemy Move Set Order")] //shown as non player
 		public List<MoveSetData> moveSetOrder = new();
+	}
 
-		public AttackData attackData;
+	[Serializable]
+	public class MoveSetData
+	{
+		public List<AttackData> moveSetMoves = new();
 	}
 }

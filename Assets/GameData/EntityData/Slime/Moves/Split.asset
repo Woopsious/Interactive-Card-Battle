@@ -18,5 +18,5 @@ MonoBehaviour:
   alsoHeals: 0
   damage: 10
   damageType: 0
-  attackCooldownTurns: 8
-  attackUseChance: 0.5
+  attackCooldownTurns: 4
+  attackUseChance: 0.25

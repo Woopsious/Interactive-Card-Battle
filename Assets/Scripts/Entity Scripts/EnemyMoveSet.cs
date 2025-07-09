@@ -162,10 +162,4 @@ namespace Woopsious
 			cooldownTimer--;
 		}
 	}
-
-	[Serializable]
-	public class MoveSetData
-	{
-		public List<AttackData> moveSetMoves = new();
-	}
 }

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.UIElements;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Woopsious
@@ -11,16 +12,15 @@ namespace Woopsious
 	{
 		EntityData data;
 
-		Editor attackDataEditor;
-
-		SerializedProperty attackData;
-
-		bool showAttackData = false;
+		//move set attack data
+		List<List<SerializedProperty>> attackDataList = new();
+		List<List<Editor>> attackDataEditorList = new();
+		List<List<bool>> showAttackDataList = new();
 
 		void OnEnable()
 		{
 			data = (EntityData)target;
-			attackData = serializedObject.FindProperty(nameof(data.attackData));
+			BuildNestedLists();
 		}
 
 		public override void OnInspectorGUI()
@@ -48,82 +48,79 @@ namespace Woopsious
             else
 			{
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.moveSetOrder)), true);
-				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.attackData)), true);
 
-				if (attackData.objectReferenceValue != null)
-				{
-					if (attackDataEditor == null || attackDataEditor.target != attackData.objectReferenceValue)
-						attackDataEditor = CreateEditor(attackData.objectReferenceValue);
-
-					//grab attack name to set as fold out label
-					AttackData data = attackData.objectReferenceValue as AttackData;
-					string labelName = !string.IsNullOrEmpty(data.attackName)? data.attackName + " " : "";
-					showAttackData = EditorGUILayout.Foldout(showAttackData, labelName + "Attack Data", true);
-
-					//add indented box
-					EditorGUILayout.BeginVertical("box");
-					EditorGUI.indentLevel++;
-
-					if (showAttackData)
-					{
-						EditorGUILayout.LabelField(labelName + "Attack Data", EditorStyles.boldLabel);
-						attackDataEditor.OnInspectorGUI();
-					}
-
-					EditorGUI.indentLevel--;
-					EditorGUILayout.EndVertical();
-				}
+				BuildMoveSetEditorUi();
 			}
 
 			// Write back changed values
 			// This also handles all marking dirty, saving, undo/redo etc
 			serializedObject.ApplyModifiedProperties();
 		}
-	}
 
-	/*
-	[CustomPropertyDrawer(typeof(AttackData), true)]
-	public class AttackDataDrawerUIE : PropertyDrawer
-	{
-		public override VisualElement CreatePropertyGUI(SerializedProperty property)
+		void BuildNestedLists()
 		{
-			return BuildUi(property);
+			attackDataList.Clear();
+			attackDataEditorList.Clear();
+			showAttackDataList.Clear();
+
+			SerializedProperty moveSetOrderProp = serializedObject.FindProperty(nameof(data.moveSetOrder));
+
+			for (int i = 0; i < moveSetOrderProp.arraySize; i++) //build nested lists
+			{
+				SerializedProperty moveSetDataProp = moveSetOrderProp.GetArrayElementAtIndex(i);
+				SerializedProperty moveSetMovesProp = moveSetDataProp.FindPropertyRelative("moveSetMoves");
+
+				List<SerializedProperty> nestedAttackDataList = new();
+				List<Editor> nestedAttackDataEditorList = new();
+				List<bool> nestedShowAttackDataList = new();
+
+				for (int j = 0; j < moveSetMovesProp.arraySize; j++) //populate nested lists
+				{
+					nestedAttackDataList.Add(moveSetMovesProp.GetArrayElementAtIndex(j));
+					nestedAttackDataEditorList.Add(null);
+					nestedShowAttackDataList.Add(false);
+				}
+
+				attackDataList.Add(nestedAttackDataList);
+				attackDataEditorList.Add(nestedAttackDataEditorList);
+				showAttackDataList.Add(nestedShowAttackDataList);
+			}
 		}
 
-		private VisualElement BuildUi(SerializedProperty property)
+		void BuildMoveSetEditorUi()
 		{
-			var container = new VisualElement();
-			var DamageContainer = new VisualElement();
-			var attackContainer = new VisualElement();
+			for (int i = 0; i < data.moveSetOrder.Count; i++) //loop through move sets
+			{
+				MoveSetData moveSetData = data.moveSetOrder[i];
 
-			// Create property fields.
-			var nameField = new PropertyField(property.FindPropertyRelative("attackName"));
-			var descriptionField = new PropertyField(property.FindPropertyRelative("attackDescription"));
+				for (int j = 0; j < moveSetData.moveSetMoves.Count; j++) //loop through moves in move set to build ui
+					BuildAttackDataUi(i, j);
+			}
+		}
+		void BuildAttackDataUi(int i, int j)
+		{
+			if (attackDataList[i][j].objectReferenceValue == null) return;
 
-			var offensiveField = new PropertyField(property.FindPropertyRelative("offensive"));
-			var alsoHealsField = new PropertyField(property.FindPropertyRelative("alsoHeals"));
+			if (attackDataEditorList[i][j] == null || attackDataEditorList[i][j].target != attackDataList[i][j].objectReferenceValue)
+				attackDataEditorList[i][j] = CreateEditor(attackDataList[i][j].objectReferenceValue);
 
-			var damageField = new PropertyField(property.FindPropertyRelative("damage"));
-			var damageTypeField = new PropertyField(property.FindPropertyRelative("damageType"));
+			//grab attack name to set as fold out label
+			AttackData data = attackDataList[i][j].objectReferenceValue as AttackData;
+			string labelName = !string.IsNullOrEmpty(data.attackName) ? data.attackName + " " : "";
+			showAttackDataList[i][j] = EditorGUILayout.Foldout(showAttackDataList[i][j], labelName + "Attack Data", true);
 
-			var attackCooldownTurnsField = new PropertyField(property.FindPropertyRelative("attackCooldownTurns"));
-			var attackUseChanceField = new PropertyField(property.FindPropertyRelative("attackUseChance"));
+			//add indented box
+			EditorGUILayout.BeginVertical("box");
+			EditorGUI.indentLevel++;
 
-			// Add fields to the container.
-			container.Add(nameField);
-			container.Add(descriptionField);
+			if (showAttackDataList[i][j])
+			{
+				EditorGUILayout.LabelField(labelName + "Attack Data", EditorStyles.boldLabel);
+				attackDataEditorList[i][j].OnInspectorGUI();
+			}
 
-			container.Add(offensiveField);
-			container.Add(alsoHealsField);
-
-			DamageContainer.Add(damageField);
-			DamageContainer.Add(damageTypeField);
-
-			attackContainer.Add(attackCooldownTurnsField);
-			attackContainer.Add(attackUseChanceField);
-
-			return container;
+			EditorGUI.indentLevel--;
+			EditorGUILayout.EndVertical();
 		}
 	}
-	*/
 }
