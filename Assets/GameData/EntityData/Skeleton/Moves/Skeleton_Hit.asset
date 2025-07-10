@@ -15,6 +15,7 @@ MonoBehaviour:
   attackName: Hit
   attackDescription: Skeleton hits you
   offensive: 1
+  alsoHeals: 0
   damage: 8
   damageType: 2
   attackCooldownTurns: 1

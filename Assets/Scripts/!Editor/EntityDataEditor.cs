@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -48,6 +49,12 @@ namespace Woopsious
 			}
             else
 			{
+				GUILayout.Space(10);
+				EditorGUILayout.LabelField("Create New Move For Entity", EditorStyles.boldLabel);
+				if (GUILayout.Button("Create New Move AttackData"))
+					CreateAttackDataScriptableObject();
+				GUILayout.Space(10);
+
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.moveSetOrder)), true);
 
 				BuildAttackEditorUi();
@@ -58,6 +65,28 @@ namespace Woopsious
 			serializedObject.ApplyModifiedProperties();
 		}
 
+		void CreateAttackDataScriptableObject()
+		{
+			AttackData asset = CreateInstance<AttackData>();
+
+			// Choose path to save
+			string currentAssetPath = Path.GetDirectoryName(AssetDatabase.GetAssetPath(data));
+			string newPath = currentAssetPath + "/Moves";
+
+			if (!AssetDatabase.IsValidFolder(newPath))
+				AssetDatabase.CreateFolder(currentAssetPath, "Moves");
+
+			newPath = AssetDatabase.GenerateUniqueAssetPath(newPath + "/NewAttackData.asset");
+
+			// Save asset to the project
+			AssetDatabase.CreateAsset(asset, newPath);
+			AssetDatabase.SaveAssets();
+			AssetDatabase.Refresh();
+
+			// Select it in the Project window
+			EditorUtility.FocusProjectWindow();
+			Selection.activeObject = asset;
+		}
 		void BuildLists()
 		{
 			attackDataList.Clear();
@@ -82,7 +111,6 @@ namespace Woopsious
 				}
 			}
 		}
-
 		void BuildAttackEditorUi()
 		{
 			for (int i = 0; i < attackDataList.Count; i++)
