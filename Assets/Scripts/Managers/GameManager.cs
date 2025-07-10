@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 namespace Woopsious
 {
@@ -10,11 +8,13 @@ namespace Woopsious
 	{
 		/// <summary>
 		/// TODO:
-		/// possibly turn cards like block/heal into instant use cards instead of throwing them at urself.
+		/// create a map ui where player moves across it from left to right through nodes that are semi randomly generated
+		/// player is given a choice of 1 to 3 nodes they can move to that starts a combat fight.
 		/// 
-		/// add a simple brain to enemies to work out what type of card they should play.
+		/// add a system where player can upgrade there cards (more damage/heal/block) from a PlayerCardDeckManager
 		/// 
-		/// CARD DECK MANAGER REFACTOR:
+		/// add difficulty scale, enemies get harder the more fights player does till they die and get a final score etc...
+		/// 
 		/// </summary>
 
 		public static GameManager instance;
