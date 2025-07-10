@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
-  m_Name: Hit
+  m_Name: Skeleton_Hit
   m_EditorClassIdentifier: 
   attackName: Hit
   attackDescription: Skeleton hits you

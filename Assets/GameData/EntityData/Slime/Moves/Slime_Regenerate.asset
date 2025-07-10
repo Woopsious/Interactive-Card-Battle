@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
-  m_Name: ThrowSlime
+  m_Name: Slime_Regenerate
   m_EditorClassIdentifier: 
-  attackName: ThrowSlime
-  attackDescription: Throw slime at enemy
-  offensive: 1
-  damage: 12
-  damageType: 2
-  attackCooldownTurns: 3
-  attackUseChance: 0.4
+  attackName: Regenerate
+  attackDescription: Regenerate health
+  offensive: 0
+  damage: 15
+  damageType: 1
+  attackCooldownTurns: 5
+  attackUseChance: 1

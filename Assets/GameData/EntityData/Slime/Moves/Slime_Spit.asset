@@ -10,13 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
-  m_Name: EatFlesh
+  m_Name: Slime_Spit
   m_EditorClassIdentifier: 
-  attackName: Eat Flesh
-  attackDescription: Zombie eats your flesh
+  attackName: Spit
+  attackDescription: Slime spits acid
   offensive: 1
-  alsoHeals: 1
-  damage: 10
+  damage: 6
   damageType: 2
   attackCooldownTurns: 1
-  attackUseChance: 0.8
+  attackUseChance: 0.75

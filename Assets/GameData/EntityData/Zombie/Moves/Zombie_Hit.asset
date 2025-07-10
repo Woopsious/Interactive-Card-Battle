@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
-  m_Name: Spit
+  m_Name: Zombie_Hit
   m_EditorClassIdentifier: 
-  attackName: Spit
-  attackDescription: Slime spits acid
+  attackName: Hit
+  attackDescription: Zombie hits you
   offensive: 1
   damage: 6
   damageType: 2
   attackCooldownTurns: 1
-  attackUseChance: 0.75
+  attackUseChance: 0.8

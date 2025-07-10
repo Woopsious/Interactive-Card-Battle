@@ -30,4 +30,3 @@ MonoBehaviour:
   - moveSetMoves:
     - {fileID: 11400000, guid: c1ce9e36293543449b18e723dc544802, type: 2}
     - {fileID: 11400000, guid: b615aca36621f6249a3d2b3e239e0b25, type: 2}
-  attackData: {fileID: 11400000, guid: 5010d8dd1d4958e4899dbb2fbb94b0be, type: 2}
