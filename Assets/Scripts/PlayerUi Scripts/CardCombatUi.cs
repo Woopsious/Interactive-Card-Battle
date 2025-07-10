@@ -13,6 +13,9 @@ namespace Woopsious
 		public GameObject PlayedCardUi;
 		public GameObject MovingCardsArea;
 
+		[Header("Ui Elements")]
+		public TMP_Text currentRoundInfoText;
+		public TMP_Text currentTurnInfoText;
 		public TMP_Text winLooseText;
 		public GameObject StartCombatButtonObj;
 
@@ -27,6 +30,8 @@ namespace Woopsious
 			PlayedCardUi.SetActive(false);
 			MovingCardsArea.SetActive(false);
 
+			currentRoundInfoText.gameObject.SetActive(false);
+			currentTurnInfoText.gameObject.SetActive(false);
 			winLooseText.gameObject.SetActive(false);
 			StartCombatButtonObj.SetActive(true);
 			EndPlayerTurnButtonObj.SetActive(false);
@@ -36,16 +41,38 @@ namespace Woopsious
 		void OnEnable()
 		{
 			GameManager.OnEndCardCombatEvent += EndCardCombat;
-			TurnOrderManager.OnNewTurnEvent += ShowHideEndPlayerTurnButton;
+			TurnOrderManager.OnNewRoundStartEvent += OnNewRound;
+			TurnOrderManager.OnNewTurnEvent += OnNewTurn;
 		}
 
 		void OnDisable()
 		{
 			GameManager.OnEndCardCombatEvent -= EndCardCombat;
-			TurnOrderManager.OnNewTurnEvent -= ShowHideEndPlayerTurnButton;
+			TurnOrderManager.OnNewRoundStartEvent -= OnNewRound;
+			TurnOrderManager.OnNewTurnEvent -= OnNewTurn;
 		}
 
+		//Event Listeners
+		void OnNewRound(int currentRound)
+		{
+			UpdateCurrentRoundText(currentRound);
+		}
+		void OnNewTurn(Entity entity)
+		{
+			ShowHideEndPlayerTurnButton(entity);
+			UpdateCurrentTurnText(entity);
+		}
+
+
 		//UI UPDATES
+		void UpdateCurrentRoundText(int currentRound)
+		{
+			currentRoundInfoText.text = "Round: " + currentRound;
+		}
+		void UpdateCurrentTurnText(Entity entity)
+		{
+			currentTurnInfoText.text = entity.entityData.entityName + "'s turn";
+		}
 		void ShowHideEndPlayerTurnButton(Entity entity)
 		{
 			if (TurnOrderManager.Player() == entity)
@@ -76,6 +103,8 @@ namespace Woopsious
 			PlayedCardUi.SetActive(true);
 			MovingCardsArea.SetActive(true);
 
+			currentRoundInfoText.gameObject.SetActive(true);
+			currentTurnInfoText.gameObject.SetActive(true);
 			winLooseText.gameObject.SetActive(false);
 			StartCombatButtonObj.SetActive(false);
 			EndPlayerTurnButtonObj.SetActive(true);

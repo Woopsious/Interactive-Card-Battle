@@ -21,7 +21,7 @@ namespace Woopsious
 		public int currentRound;
 
 		//events
-		public static event Action OnNewRoundStartEvent;
+		public static event Action<int> OnNewRoundStartEvent;
 		public static event Action<Entity> OnNewTurnEvent;
 		public static event Action<Entity> OnPlayerTurnStartEvent;
 
@@ -80,8 +80,8 @@ namespace Woopsious
 			entityToStartNewRoundOn = entity;
 			currentRound = 1;
 
+			OnNewRoundStartEvent?.Invoke(currentRound);
 			OnNewTurnEvent?.Invoke(currentEntityTurn);
-			OnNewRoundStartEvent?.Invoke();
 
 			if (currentEntityTurn.entityData.isPlayer)
 				OnPlayerTurnStartEvent?.Invoke(currentEntityTurn);
@@ -115,8 +115,8 @@ namespace Woopsious
 		{
 			if (currentEntityTurn == entityToStartNewRoundOn)
 			{
-				currentRound += 1;
-				OnNewRoundStartEvent?.Invoke();
+				currentRound ++;
+				OnNewRoundStartEvent?.Invoke(currentRound);
 			}
 		}
 

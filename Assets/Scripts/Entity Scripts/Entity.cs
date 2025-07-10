@@ -15,6 +15,7 @@ namespace Woopsious
 		public TMP_Text entityNameText;
 		public TMP_Text entityHealthText;
 		public TMP_Text entityblockText;
+		public GameObject turnIndicator;
 
 		public int health;
 		public int block;
@@ -85,7 +86,7 @@ namespace Woopsious
 		}
 
 		//start new round event
-		void NewRoundStart()
+		void NewRoundStart(int currentRound)
 		{
 			foreach (EnemyMoveSet move in enemyMovesList)
 				move.NewRound();
@@ -102,10 +103,12 @@ namespace Woopsious
 
 			if (entityData.isPlayer) return; //if is player shouldnt need to do anything else as other scripts handle it
 
+			turnIndicator.SetActive(true);
 			PickNextMove();
 		}
 		public virtual void EndTurn()
 		{
+			turnIndicator.SetActive(false);
 			OnTurnEndEvent?.Invoke(this);
 			cancellationToken.Cancel();
 		}
