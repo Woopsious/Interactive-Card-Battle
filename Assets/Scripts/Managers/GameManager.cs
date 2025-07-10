@@ -8,12 +8,23 @@ namespace Woopsious
 	{
 		/// <summary>
 		/// TODO:
+		/// MAP NODES SYSTEM:
 		/// create a map ui where player moves across it from left to right through nodes that are semi randomly generated
 		/// player is given a choice of 1 to 3 nodes they can move to that starts a combat fight.
+		/// nodes will store the next nodes they link to + there travel state (locked, canTravel, currentlyAt) to allow player to move about
+		/// settings to dictate what type of enemies spawn on them, there difficulty (harder enemy variants/higher level) and a budget limit, 
+		/// a node will randomly spawn enemies that match type they spawn till they run out of budget.
 		/// 
-		/// add a system where player can upgrade there cards (more damage/heal/block) from a PlayerCardDeckManager
+		/// PLAYER CARD DECK UPGRADE SYSTEM:
+		/// increase base health of player or other unique gimmicks (ignore x% of damage for x rounds/turns etc...)
+		/// increase total amount of cards that can be played per turn + amount of offensive/non offensive cards types that can be played per turn
+		/// increase amount of replace card actions a player has per turn, increasing amount of card options given besides the defult current 5.
+		/// add a system where player can upgrade there cards (more damage/heal/block)
 		/// 
-		/// add difficulty scale, enemies get harder the more fights player does till they die and get a final score etc...
+		/// DIFFICULTY SCALING:
+		/// difficulty scales up with the more fights player wins. leading to higher level enemies or harder/elite versions of regular enemies (or both)
+		/// 
+		/// keep track of a score so once player dies they can see what they scored (currently dont have an end)
 		/// 
 		/// </summary>
 
