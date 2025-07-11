@@ -20,8 +20,8 @@ namespace Woopsious
 			none = 0, grassland = 1, forest = 2, mountains = 4, caves = 8, ruins = 16
 		}
 
-		public NodeInteractType nodeType;
-		public enum NodeInteractType
+		public NodeEncounterType nodeType;
+		public enum NodeEncounterType
 		{
 			basicFight, eliteFight, bossFight, eliteBossFight, freeCardUpgrade
 		}
