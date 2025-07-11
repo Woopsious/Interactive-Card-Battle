@@ -10,12 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 862c4da70e93762488b165155f5dd2cb, type: 3}
-  m_Name: Zombie
+  m_Name: Wolf
   m_EditorClassIdentifier: 
-  entityName: Zombie
-  entityDescription: A human that just smells bad
+  entityName: Wolf
+  entityDescription: An Aggressive wolf
   isPlayer: 0
-  maxHealth: 50
+  entityCost: 0
+  enemyType: 2
+  foundInLandTypes: 3
+  eliteEnemy: 0
+  maxHealth: 30
   minHealPercentage: 0
   maxCardsUsedPerTurn: 0
   maxDamageCardsUsedPerTurn: 0
@@ -24,8 +28,10 @@ MonoBehaviour:
   cards: []
   moveSetOrder:
   - moveSetMoves:
-    - {fileID: 11400000, guid: abb9df0e663c8f346a7a4e462fb774bf, type: 2}
+    - {fileID: 11400000, guid: 74c10a3cdde7ad14ab5f6a38437fb1ac, type: 2}
   - moveSetMoves:
-    - {fileID: 11400000, guid: 86569415213146a46b46d636642953fc, type: 2}
+    - {fileID: 11400000, guid: bba5404a514a38444b0afe3411fbed61, type: 2}
   - moveSetMoves:
-    - {fileID: 11400000, guid: c8557c16267056343b464e4af9e7004c, type: 2}
+    - {fileID: 11400000, guid: 33ed35b19e1fac54ab38c83e229e21da, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: bba5404a514a38444b0afe3411fbed61, type: 2}

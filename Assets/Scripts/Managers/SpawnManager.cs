@@ -26,6 +26,9 @@ namespace Woopsious
 		public static event Action<PlayerEntity> OnPlayerSpawned;
 		public static event Action<Entity> OnEnemySpawned;
 
+		[Header("Debug Spawn Enemites")]
+		public List<EntityData> debugSpawnEntities = new();
+
 		void Awake()
 		{
 			instance = this;
@@ -45,6 +48,22 @@ namespace Woopsious
 		void RandomizeEnemySpawnAmount()
 		{
 			numberOfEnemiesToSpawn = UnityEngine.Random.Range(2, 5);
+		}
+		public static async Task DebugSpawnAllEntities()
+		{
+			await SpawnPlayer();
+
+			float spacing = (Screen.width - instance.debugSpawnEntities.Count * instance.widthOfEntities) / (instance.debugSpawnEntities.Count + 1);
+
+			for (int i = 0; i < instance.debugSpawnEntities.Count; i++)
+			{
+				Entity spawnedEntity = Instantiate(instance.EntityPrefab, instance.canvas.transform).GetComponent<Entity>();
+				spawnedEntity.entityData = instance.debugSpawnEntities[i];
+				instance.SetEnemyPosition(spawnedEntity.GetComponent<RectTransform>(), spacing, i + 1);
+				OnEnemySpawned?.Invoke(spawnedEntity);
+
+				Debug.LogError(spawnedEntity.entityData.entityName + " cost: " + spawnedEntity.entityData.GetEntityCost());
+			}
 		}
 
 		//entity spawning

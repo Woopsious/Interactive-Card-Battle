@@ -1,0 +1,42 @@
+using UnityEngine;
+using static Woopsious.EntityData;
+
+namespace Woopsious
+{
+	[CreateAssetMenu(fileName = "MapNodeData", menuName = "ScriptableObjects/MapNode")]
+	public class MapNodeData : ScriptableObject
+	{
+		public string nodeName;
+		public enum NodeState
+		{
+			locked, canTravel, currentlyAt
+		}
+
+		[Header("Node Basic Settings")]
+		public LandTypes landTypes;
+		[System.Flags]
+		public enum LandTypes : int
+		{
+			none = 0, grassland = 1, forest = 2, mountains = 4, caves = 8, ruins = 16
+		}
+
+		public NodeInteractType nodeType;
+		public enum NodeInteractType
+		{
+			basicFight, eliteFight, bossFight, eliteBossFight, freeCardUpgrade
+		}
+
+		public int entityBudget;
+
+		[Header("Chance Modifiers")]
+		[Tooltip("Base Value: 5%")]
+		[Range(0f, 100f)]
+		public float chanceOfRuins;
+		[Range(0f, 100f)]
+		[Tooltip("Base Value: 5%")]
+		public float chanceOfEliteFight;
+		[Range(0f, 100f)]
+		[Tooltip("Base Value: 5%")]
+		public float chanceOfFreeCardUpgrade;
+	}
+}

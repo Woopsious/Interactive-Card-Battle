@@ -9,14 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
-  m_Name: Skeleton_Hit
+  m_Script: {fileID: 11500000, guid: 4f033c656ca190f478155417260a6d26, type: 3}
+  m_Name: Caves_Boss
   m_EditorClassIdentifier: 
-  attackName: Hit
-  attackDescription: Skeleton hits you
-  offensive: 1
-  alsoHeals: 0
-  damage: 8
-  damageType: 2
-  attackCooldownTurns: 1
-  attackUseChance: 0.8
+  nodeName: Caves
+  nodeState: 0
+  landTypes: 8
+  nodeType: 2
+  entityBudget: 200
+  chanceOfRuins: 0
+  chanceOfEliteFight: 8
+  chanceOfFreeCardUpgrade: 0

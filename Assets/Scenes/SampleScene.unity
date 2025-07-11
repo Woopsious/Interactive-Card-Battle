@@ -2063,6 +2063,14 @@ MonoBehaviour:
   entityDataTypes:
   - {fileID: 11400000, guid: b1f5e72def15b49449f3393518ec0963, type: 2}
   numberOfEnemiesToSpawn: 3
+  debugSpawnEntities:
+  - {fileID: 11400000, guid: 95cdd6d927b786649bb02094693953d3, type: 2}
+  - {fileID: 11400000, guid: f32bae752b8881c498ab069d5db55a4e, type: 2}
+  - {fileID: 11400000, guid: b1f5e72def15b49449f3393518ec0963, type: 2}
+  - {fileID: 11400000, guid: 5baca6f3bb74e38429fe4ee1430435fb, type: 2}
+  - {fileID: 11400000, guid: 75c5b9a050f932a4e9a15618d4e885d1, type: 2}
+  - {fileID: 11400000, guid: 7137b459ef50c8e4fb24d92bcac95b77, type: 2}
+  - {fileID: 11400000, guid: cc5943bd26369e54787a9c60e55ffb14, type: 2}
 --- !u!1 &1151057484
 GameObject:
   m_ObjectHideFlags: 0

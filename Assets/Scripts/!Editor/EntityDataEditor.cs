@@ -46,6 +46,10 @@ namespace Woopsious
 			}
             else
 			{
+				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.enemyType)));
+				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.foundInLandTypes)));
+				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.eliteEnemy)));
+
 				GUILayout.Space(10);
 				EditorGUILayout.LabelField("Create New Move For Entity", EditorStyles.boldLabel);
 				if (GUILayout.Button("Create New Move AttackData"))

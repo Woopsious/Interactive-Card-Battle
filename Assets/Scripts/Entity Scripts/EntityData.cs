@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static Woopsious.MapNodeData;
 
 namespace Woopsious
 {
@@ -11,6 +12,16 @@ namespace Woopsious
 		public string entityName;
 		public string entityDescription;
 		public bool isPlayer;
+
+		[Header("Entity Special Info")]
+		public EnemyTypes enemyType;
+		[Flags]
+		public enum EnemyTypes : int
+		{
+			none = 0, slime = 1, beast = 2, humanoid = 4, construct = 8, undead = 16, Abberrations = 32
+		}
+		public LandTypes foundInLandTypes;
+		public bool eliteEnemy;
 
 		[Header("Entity Health")]
 		public int maxHealth;
@@ -28,6 +39,40 @@ namespace Woopsious
 
 		[Header("Enemy Move Set Order")] //shown as non player
 		public List<MoveSetData> moveSetOrder = new();
+
+		public int GetEntityCost()
+		{
+			int entityCost = (int)(maxHealth * GetEnemyTypeCostModifier(enemyType));
+
+			if (eliteEnemy)
+				entityCost = (int)(entityCost * 1.25f);
+
+			return entityCost;
+		}
+		float GetEnemyTypeCostModifier(EnemyTypes enemyType)
+		{
+			switch (enemyType)
+			{
+				case EnemyTypes.none:
+				Debug.LogError("enemy type not set");
+				return 1f;
+				case EnemyTypes.slime:
+				return 1f;
+				case EnemyTypes.beast:
+				return 1.1f;
+				case EnemyTypes.humanoid:
+				return 1.2f;
+				case EnemyTypes.construct:
+				return 1.3f;
+				case EnemyTypes.undead:
+				return 1.5f;
+				case EnemyTypes.Abberrations:
+				return 1.75f;
+				default:
+				Debug.LogError("failed to match enemy type");
+				return 1f;
+			}
+		}
 	}
 
 	[Serializable]

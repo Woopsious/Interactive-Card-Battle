@@ -51,7 +51,8 @@ namespace Woopsious
 		async void CreateTurnOrder()
 		{
 			RemoveAllEntities();
-			await SpawnManager.SpawnEntitiesForCardBattle();
+			await SpawnManager.DebugSpawnAllEntities();
+			//await SpawnManager.SpawnEntitiesForCardBattle();
 
 			turnOrder.Clear();
 			turnOrder.Add(playerEntity);
