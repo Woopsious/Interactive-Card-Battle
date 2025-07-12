@@ -2,7 +2,7 @@ using UnityEngine;
 using static Woopsious.MapNodeData;
 using static Woopsious.EntityData;
 using TMPro;
-using System.Collections.Generic;
+using UnityEngine.UI;
 
 namespace Woopsious
 {
@@ -12,6 +12,7 @@ namespace Woopsious
 		public TMP_Text encounterTitleText;
 		public TMP_Text encounterModifiersText;
 		public TMP_Text encounterEnemiesText;
+		public Button startEncounterButton;
 
 		//runtime data
 		public MapNodeData mapNodeData;
@@ -21,15 +22,22 @@ namespace Woopsious
 		public LandTypes landTypes;
 		public NodeEncounterType nodeType;
 
+		/// <summary>
+		/// add colours to background image and text to signify things like node state, encouter type and land type
+		/// </summary>
+
+
 		void Start()
 		{
+			startEncounterButton.onClick.AddListener(delegate { BeginEncounter(); });
+
 			if (mapNodeData != null)
-				Initilize(mapNodeData);
+				Initilize(mapNodeData, true);
 			else
 				Debug.LogWarning("Map node data not set, ignore if intended");
 		}
 
-		public void Initilize(MapNodeData mapNodeData)
+		public void Initilize(MapNodeData mapNodeData, bool startingNode)
 		{
 			this.mapNodeData = mapNodeData;
 			entityBudget = mapNodeData.entityBudget;
@@ -51,6 +59,17 @@ namespace Woopsious
 			UpdateEncounterTitle();
 			UpdateEncounterModifiers();
 			UpdateEncounterEnemies();
+
+			if (startingNode)
+				CanTravelToNode();
+			else
+				LockNode();
+		}
+
+		//start encounter
+		void BeginEncounter()
+		{
+			GameManager.BeginCardCombat();
 		}
 
 		//update node runtime data
@@ -79,6 +98,23 @@ namespace Woopsious
 		float GetRandomNumber()
 		{
 			return Random.Range(0f, 100f);
+		}
+
+		//update node state
+		public void LockNode()
+		{
+			nodeState = NodeState.locked;
+			startEncounterButton.gameObject.SetActive(false);
+		}
+		public void CanTravelToNode()
+		{
+			nodeState = NodeState.canTravel;
+			startEncounterButton.gameObject.SetActive(true);
+		}
+		public void CurrentlyAtNode()
+		{
+			nodeState = NodeState.currentlyAt;
+			startEncounterButton.gameObject.SetActive(false);
 		}
 
 		//update ui

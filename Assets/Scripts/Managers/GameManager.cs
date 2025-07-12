@@ -39,10 +39,15 @@ namespace Woopsious
 
 		public static event Action OnStartCardCombatEvent;
 		public static event Action<bool> OnEndCardCombatEvent;
+		public static event Action OnShowMapEvent;
 
 		private void Awake()
 		{
 			instance = this;
+		}
+		private void Start()
+		{
+			ShowMap();
 		}
 
 		private void Update()
@@ -56,7 +61,7 @@ namespace Woopsious
 		}
 		void OnDisable()
 		{
-			Entity.OnEntityDeath += EndCardCombat;
+			Entity.OnEntityDeath -= EndCardCombat;
 		}
 
 		void GetFps()
@@ -82,7 +87,6 @@ namespace Woopsious
 			PauseGame(false);
 			OnStartCardCombatEvent?.Invoke();
 		}
-
 		void EndCardCombat(Entity entity)
 		{
 			if (TurnOrderManager.Player() == entity)
@@ -94,6 +98,10 @@ namespace Woopsious
 			if (TurnOrderManager.EnemyEntities().Count > 0) return;
 
 			OnEndCardCombatEvent?.Invoke(true); //end on win if no enemies left alive
+		}
+		public static void ShowMap()
+		{
+			OnShowMapEvent?.Invoke();
 		}
 
 		public static void PauseGame(bool pause)

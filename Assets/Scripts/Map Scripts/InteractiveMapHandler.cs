@@ -1,51 +1,64 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Woopsious;
 
-public class InteractiveMapHandler : MonoBehaviour, IPointerDownHandler, IDragHandler
+public class InteractiveMapHandler : MonoBehaviour, IDragHandler
 {
-	public Canvas canvas;
-	private RectTransform rectTransform;
+	public Camera mapCamera;
 
-	readonly float zoomSpeed = 0.5f;
-	readonly float maxMapScale = 3f;
-	readonly float minMapScale = 0.5f;
+	readonly Vector2 maxCameraPosition = new(Screen.width * 2.5f, Screen.height * 2.5f);
+	readonly Vector2 minCameraPosition = new(-Screen.width * 2.5f, -Screen.height * 2.5f);
 
-	private Vector2 offset;
+	readonly float cameraBaseOrthoSize = 540;
+	readonly float maxCameraOrthoSize = 540 * 4;
+	readonly float minCameraOrthoSize = 540 / 4;
 
-	private void Awake()
+	readonly float zoomSpeed = 500;
+
+	void Start()
 	{
-		rectTransform = GetComponent<RectTransform>();
+		mapCamera.gameObject.SetActive(true);
+		mapCamera.orthographicSize = cameraBaseOrthoSize;
+	}
+
+	void OnEnable()
+	{
+		mapCamera.gameObject.SetActive(true);
+	}
+	void OnDisable()
+	{
+		mapCamera.gameObject.SetActive(false);
 	}
 
 	private void Update()
 	{
-		MapScroll();
+		MapZoom();
 	}
 
-	void MapScroll()
+	void GenerateMapNodes()
 	{
-		float scroll = Input.GetAxis("Mouse ScrollWheel");
-		Vector3 localScale = rectTransform.localScale + new Vector3(scroll * zoomSpeed, scroll * zoomSpeed, 1);
-
-		localScale.x = Mathf.Clamp(localScale.x, minMapScale, maxMapScale);
-		localScale.y = Mathf.Clamp(localScale.y, minMapScale, maxMapScale);
-		localScale.z = Mathf.Clamp01(1f);
-
-		rectTransform.localScale = localScale;
+		//use similar logic when placing down enemies to build pick where to place nodes instead of using unities grid layout group comp
+		//spawn and initilize the nodes then activate the first node
 	}
 
-	public void OnPointerDown(PointerEventData eventData)
+	//map drag and zoom
+	void MapZoom()
 	{
-		// Calculate offset from the pointer to the element’s pivot
-		RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, eventData.position, eventData.pressEventCamera, out offset);
+		mapCamera.orthographicSize -= Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
+		mapCamera.orthographicSize = Mathf.Clamp(mapCamera.orthographicSize, minCameraOrthoSize, maxCameraOrthoSize);
 	}
-
 	public void OnDrag(PointerEventData eventData)
 	{
-		if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
-			canvas.transform as RectTransform, eventData.position, eventData.pressEventCamera, out Vector2 localPoint))
-		{
-			rectTransform.localPosition = localPoint - offset;
-		}
+		MapDrag(eventData);
+	}
+	void MapDrag(PointerEventData eventData)
+	{
+		Vector3 movement = new Vector3(eventData.delta.x, eventData.delta.y, 0) * 2;
+		Vector3 cameraMovePos = mapCamera.transform.position - movement;
+
+		cameraMovePos.x = Mathf.Clamp(cameraMovePos.x, minCameraPosition.x, maxCameraPosition.x);
+		cameraMovePos.y = Mathf.Clamp(cameraMovePos.y, minCameraPosition.y, maxCameraPosition.y);
+
+		mapCamera.transform.position = cameraMovePos;
 	}
 }

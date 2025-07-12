@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Woopsious
 {
@@ -17,36 +18,28 @@ namespace Woopsious
 		public TMP_Text currentRoundInfoText;
 		public TMP_Text currentTurnInfoText;
 		public TMP_Text winLooseText;
-		public GameObject StartCombatButtonObj;
 
+		public GameObject returnToMapButtonObj;
+		public GameObject DebugReturnToMapButtonObj;
 		public GameObject EndPlayerTurnButtonObj;
 		public GameObject DebugEndTurnButtonObj;
 
 		void Awake()
 		{
 			instance = this;
-
-			CardDeckUi.SetActive(false);
-			PlayedCardUi.SetActive(false);
-			MovingCardsArea.SetActive(false);
-
-			currentRoundInfoText.gameObject.SetActive(false);
-			currentTurnInfoText.gameObject.SetActive(false);
-			winLooseText.gameObject.SetActive(false);
-			StartCombatButtonObj.SetActive(true);
-			EndPlayerTurnButtonObj.SetActive(false);
-			DebugEndTurnButtonObj.SetActive(false);
 		}
-
 		void OnEnable()
 		{
+			GameManager.OnShowMapEvent += ShowMap;
+			GameManager.OnStartCardCombatEvent += StartCardCombat;
 			GameManager.OnEndCardCombatEvent += EndCardCombat;
 			TurnOrderManager.OnNewRoundStartEvent += OnNewRound;
 			TurnOrderManager.OnNewTurnEvent += OnNewTurn;
 		}
-
 		void OnDisable()
 		{
+			GameManager.OnShowMapEvent -= ShowMap;
+			GameManager.OnStartCardCombatEvent -= StartCardCombat;
 			GameManager.OnEndCardCombatEvent -= EndCardCombat;
 			TurnOrderManager.OnNewRoundStartEvent -= OnNewRound;
 			TurnOrderManager.OnNewTurnEvent -= OnNewTurn;
@@ -81,6 +74,39 @@ namespace Woopsious
 				EndPlayerTurnButtonObj.SetActive(false);
 		}
 
+		//event listeners
+		void ShowMap()
+		{
+			CardDeckUi.SetActive(false);
+			PlayedCardUi.SetActive(false);
+			MovingCardsArea.SetActive(false);
+
+			currentRoundInfoText.gameObject.SetActive(false);
+			currentTurnInfoText.gameObject.SetActive(false);
+
+			winLooseText.gameObject.SetActive(false);
+			returnToMapButtonObj.SetActive(false);
+			DebugReturnToMapButtonObj.SetActive(false);
+
+			EndPlayerTurnButtonObj.SetActive(false);
+			DebugEndTurnButtonObj.SetActive(false);
+		}
+		void StartCardCombat()
+		{
+			CardDeckUi.SetActive(true);
+			PlayedCardUi.SetActive(true);
+			MovingCardsArea.SetActive(true);
+
+			currentRoundInfoText.gameObject.SetActive(true);
+			currentTurnInfoText.gameObject.SetActive(true);
+
+			winLooseText.gameObject.SetActive(false);
+			returnToMapButtonObj.SetActive(false);
+			DebugReturnToMapButtonObj.SetActive(true);
+
+			EndPlayerTurnButtonObj.SetActive(true);
+			DebugEndTurnButtonObj.SetActive(true);
+		}
 		void EndCardCombat(bool playerWon)
 		{
 			if (playerWon)
@@ -92,33 +118,20 @@ namespace Woopsious
 				winLooseText.text = "Player Lost";
 			}
 
-			StartCombatButtonObj.SetActive(true);
 			winLooseText.gameObject.SetActive(true);
+			returnToMapButtonObj.SetActive(true);
 		}
 
 		//BUTTON CALLS
-		public void BeginCardCombat()
+		public void ReturnToMap()
 		{
-			CardDeckUi.SetActive(true);
-			PlayedCardUi.SetActive(true);
-			MovingCardsArea.SetActive(true);
-
-			currentRoundInfoText.gameObject.SetActive(true);
-			currentTurnInfoText.gameObject.SetActive(true);
-			winLooseText.gameObject.SetActive(false);
-			StartCombatButtonObj.SetActive(false);
-			EndPlayerTurnButtonObj.SetActive(true);
-			DebugEndTurnButtonObj.SetActive(true);
-
-			GameManager.BeginCardCombat();
+			GameManager.ShowMap();
 		}
-
 		public void SkipPlayerTurn()
 		{
 			if (TurnOrderManager.CurrentEntitiesTurn() == TurnOrderManager.Player())
 				TurnOrderManager.SkipCurrentEntitiesTurn();
 		}
-
 		public void DebugSkipTurn()
 		{
 			TurnOrderManager.SkipCurrentEntitiesTurn();

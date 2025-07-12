@@ -32,6 +32,7 @@ namespace Woopsious
 
 		void OnEnable()
 		{
+			GameManager.OnShowMapEvent += ResetListsAndEntities;
 			GameManager.OnStartCardCombatEvent += CreateTurnOrder;
 			SpawnManager.OnPlayerSpawned += AddPlayerOnSpawnComplete;
 			SpawnManager.OnEnemySpawned += AddEnemyOnSpawnComplete;
@@ -40,6 +41,7 @@ namespace Woopsious
 		}
 		void OnDisable()
 		{
+			GameManager.OnShowMapEvent -= ResetListsAndEntities;
 			GameManager.OnStartCardCombatEvent -= CreateTurnOrder;
 			SpawnManager.OnPlayerSpawned -= AddPlayerOnSpawnComplete;
 			SpawnManager.OnEnemySpawned -= AddEnemyOnSpawnComplete;
@@ -50,7 +52,6 @@ namespace Woopsious
 		//create and start initial turn order
 		async void CreateTurnOrder()
 		{
-			RemoveAllEntities();
 			await SpawnManager.DebugSpawnAllEntities();
 			//await SpawnManager.SpawnEntitiesForCardBattle();
 
@@ -61,19 +62,6 @@ namespace Woopsious
 				turnOrder.Add(entity);
 
 			StartInitialTurn(turnOrder[0]);
-		}
-		void RemoveAllEntities()
-		{
-			if (playerEntity != null)
-				Destroy(playerEntity.gameObject);
-
-			if (enemyEntities.Count > 0)
-			{
-				for (int i = enemyEntities.Count - 1; i >= 0; i--)
-					Destroy(enemyEntities[i].gameObject);
-
-				enemyEntities.Clear();
-			}
 		}
 		void StartInitialTurn(Entity entity)
 		{
@@ -86,6 +74,19 @@ namespace Woopsious
 
 			if (currentEntityTurn.entityData.isPlayer)
 				OnPlayerTurnStartEvent?.Invoke(currentEntityTurn);
+		}
+		void ResetListsAndEntities()
+		{
+			if (playerEntity != null)
+				Destroy(playerEntity.gameObject);
+
+			if (enemyEntities.Count > 0)
+			{
+				for (int i = enemyEntities.Count - 1; i >= 0; i--)
+					Destroy(enemyEntities[i].gameObject);
+
+				enemyEntities.Clear();
+			}
 		}
 
 		//add/remove entities as turns happen
