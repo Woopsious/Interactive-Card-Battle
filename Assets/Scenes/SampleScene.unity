@@ -556,6 +556,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: MapNode (24)
       objectReference: {fileID: 0}
+    - target: {fileID: 6938525707124995970, guid: 2d74d413fc0140b4aa70249b5a68c327, type: 3}
+      propertyPath: mapNodeData
+      value: 
+      objectReference: {fileID: 11400000, guid: 6dc2cd0f661560a48a837d701499b6bd, type: 2}
+    - target: {fileID: 6938525707124995970, guid: 2d74d413fc0140b4aa70249b5a68c327, type: 3}
+      propertyPath: forceEncounterType
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2672,6 +2680,18 @@ PrefabInstance:
     - target: {fileID: 6702147471770271347, guid: 2d74d413fc0140b4aa70249b5a68c327, type: 3}
       propertyPath: m_Name
       value: MapNode (23)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6938525707124995970, guid: 2d74d413fc0140b4aa70249b5a68c327, type: 3}
+      propertyPath: mapNodeData
+      value: 
+      objectReference: {fileID: 11400000, guid: 2a3a9e37f60c5364d883e05c0b679e95, type: 2}
+    - target: {fileID: 6938525707124995970, guid: 2d74d413fc0140b4aa70249b5a68c327, type: 3}
+      propertyPath: debugForceRuins
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6938525707124995970, guid: 2d74d413fc0140b4aa70249b5a68c327, type: 3}
+      propertyPath: debugForceEliteFight
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4910,6 +4930,22 @@ PrefabInstance:
     - target: {fileID: 6702147471770271347, guid: 2d74d413fc0140b4aa70249b5a68c327, type: 3}
       propertyPath: m_Name
       value: MapNode (25)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6938525707124995970, guid: 2d74d413fc0140b4aa70249b5a68c327, type: 3}
+      propertyPath: mapNodeData
+      value: 
+      objectReference: {fileID: 11400000, guid: 26585cf900f18fb4eb633ae045018aae, type: 2}
+    - target: {fileID: 6938525707124995970, guid: 2d74d413fc0140b4aa70249b5a68c327, type: 3}
+      propertyPath: debugForceRuins
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6938525707124995970, guid: 2d74d413fc0140b4aa70249b5a68c327, type: 3}
+      propertyPath: forceEncounterType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6938525707124995970, guid: 2d74d413fc0140b4aa70249b5a68c327, type: 3}
+      propertyPath: debugForceEliteFight
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7749,8 +7785,8 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 250, y: 250}
-  m_Spacing: {x: 550, y: 720}
+  m_CellSize: {x: 300, y: 300}
+  m_Spacing: {x: 495, y: 650}
   m_Constraint: 0
   m_ConstraintCount: 2
 --- !u!114 &1480236300

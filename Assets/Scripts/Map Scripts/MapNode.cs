@@ -3,6 +3,7 @@ using static Woopsious.MapNodeData;
 using static Woopsious.EntityData;
 using TMPro;
 using UnityEngine.UI;
+using Unity.VisualScripting;
 
 namespace Woopsious
 {
@@ -14,18 +15,24 @@ namespace Woopsious
 		public TMP_Text encounterEnemiesText;
 		public Button startEncounterButton;
 
-		//runtime data
+		public Image backgroundImage;
+
+		[Header("Runtime data")]
 		public MapNodeData mapNodeData;
 		public int entityBudget;
 		public NodeState nodeState;
 		public EnemyTypes enemyTypes;
 		public LandTypes landTypes;
-		public NodeEncounterType nodeType;
+		public NodeEncounterType nodeEncounterType;
 
-		/// <summary>
-		/// add colours to background image and text to signify things like node state, encouter type and land type
-		/// </summary>
-
+		[Header("Debug options")]
+		public ForceEncounterType forceEncounterType;
+		public enum ForceEncounterType
+		{
+			noForceEncounter, forceCardUpgrade, forceBossFight
+		}
+		public bool debugForceEliteFight;
+		public bool debugForceRuins;
 
 		void Start()
 		{
@@ -43,18 +50,10 @@ namespace Woopsious
 			entityBudget = mapNodeData.entityBudget;
 			nodeState = NodeState.locked;
 			landTypes = mapNodeData.landTypes;
+			nodeEncounterType = mapNodeData.nodeType;
 
-			if (GetRandomNumber() < mapNodeData.chanceOfFreeCardUpgrade)
-			{
-				SetNodeInteractTypeToFreeCardUpgrade();
-				return;
-			}
-
-			if (GetRandomNumber() < mapNodeData.chanceOfRuins)
-				landTypes = AddRuinsLandType();
-
-			if (GetRandomNumber() < mapNodeData.chanceOfEliteFight)
-				nodeType = MakeEncounterElite();
+			ApplyRandomizedSettings();
+			CheckAndForceDebugSettings();
 
 			UpdateEncounterTitle();
 			UpdateEncounterModifiers();
@@ -72,22 +71,58 @@ namespace Woopsious
 			GameManager.BeginCardCombat();
 		}
 
-		//update node runtime data
+		//UPDATE NODE SETTINGS AT RUNTIME
+		void CheckAndForceDebugSettings()
+		{
+			switch (forceEncounterType)
+			{
+				case ForceEncounterType.noForceEncounter:
+				break;
+				case ForceEncounterType.forceCardUpgrade:
+				nodeEncounterType = NodeEncounterType.freeCardUpgrade;
+				break;
+				case ForceEncounterType.forceBossFight:
+				nodeEncounterType = NodeEncounterType.bossFight;
+				break;
+			}
+
+			if (debugForceEliteFight)
+				nodeEncounterType = MakeEncounterElite();
+
+			if (debugForceRuins)
+				landTypes = AddRuinsLandType();
+		}
+		void ApplyRandomizedSettings()
+		{
+			if (GetRandomNumber() < mapNodeData.chanceOfFreeCardUpgrade)
+			{
+				SetNodeInteractTypeToFreeCardUpgrade();
+				return;
+			}
+
+			if (GetRandomNumber() < mapNodeData.chanceOfRuins)
+				landTypes = AddRuinsLandType();
+
+			if (GetRandomNumber() < mapNodeData.chanceOfEliteFight)
+				nodeEncounterType = MakeEncounterElite();
+		}
+
+		//sub funcs
 		void SetNodeInteractTypeToFreeCardUpgrade()
 		{
 			enemyTypes = EnemyTypes.none;
-			nodeType = NodeEncounterType.freeCardUpgrade;
+			nodeEncounterType = NodeEncounterType.freeCardUpgrade;
 		}
 		NodeEncounterType MakeEncounterElite()
 		{
-			if (nodeType == NodeEncounterType.basicFight)
+			if (nodeEncounterType == NodeEncounterType.basicFight)
 				return NodeEncounterType.eliteFight;
-			else if (nodeType == NodeEncounterType.bossFight)
+			else if (nodeEncounterType == NodeEncounterType.bossFight)
 				return NodeEncounterType.eliteBossFight;
 			else
 			{
 				Debug.LogError("no elite version of encounter found cancelling");
-				return nodeType;
+				return nodeEncounterType;
 			}
 		}
 		LandTypes AddRuinsLandType()
@@ -122,22 +157,22 @@ namespace Woopsious
 		{
 			string encounterTitle = "";
 
-			switch (nodeType)
+			switch (nodeEncounterType)
 			{
 				case NodeEncounterType.basicFight:
 				encounterTitle = "Basic Fight";
 				break;
 				case NodeEncounterType.eliteFight:
-				encounterTitle = "Elite Fight";
+				encounterTitle = "<color=purple>Elite Fight</color>";
 				break;
 				case NodeEncounterType.bossFight:
-				encounterTitle = "Boss Fight";
+				encounterTitle = "<color=red>Boss Fight</color>";
 				break;
 				case NodeEncounterType.eliteBossFight:
-				encounterTitle = "Elite Boss Fight";
+				encounterTitle = "<color=purple>Elite Boss Fight</color>";
 				break;
 				case NodeEncounterType.freeCardUpgrade:
-				encounterTitle = "Free Card Upgrade";
+				encounterTitle = "<color=#00FFFF>Free Card Upgrade</color>"; //Cyan
 				break;
 			}
 
@@ -147,24 +182,20 @@ namespace Woopsious
 		{
 			string encounterModifiers = "Enviroment: \n";
 
-			switch (landTypes)
-			{
-				case LandTypes.grassland:
-				encounterModifiers += "Grasslands";
-				break;
-				case LandTypes.forest:
-				encounterModifiers += "Forest";
-				break;
-				case LandTypes.mountains:
-				encounterModifiers += "Mountains";
-				break;
-				case LandTypes.caves:
-				encounterModifiers += "Caves";
-				break;
-			}
+			if (landTypes.HasFlag(LandTypes.grassland))
+				encounterModifiers += "<color=green>Grasslands</color>";
+			else if (landTypes.HasFlag(LandTypes.forest))
+				encounterModifiers += "<color=#006400>Forest</color>"; //Gray
+			else if (landTypes.HasFlag(LandTypes.mountains))
+				encounterModifiers += "<color=grey>Mountains</color>";
+			else if (landTypes.HasFlag(LandTypes.caves))
+				encounterModifiers += "<color=black>Caves</color>";
 
 			if (landTypes.HasFlag(LandTypes.ruins))
-				encounterModifiers += " with Ruins";
+			{
+				encounterModifiers += " with <color=#00FFFF>Ruins</color>"; //Cyan
+				Debug.LogError("node has ruins: " + landTypes.ToString());
+			}
 
 			encounterModifiersText.text = encounterModifiers;
 		}
@@ -172,12 +203,40 @@ namespace Woopsious
 		{
 			string encounterEnemies = "Possible Enemies: \n";
 
+			if (nodeEncounterType == NodeEncounterType.freeCardUpgrade)
+			{
+				encounterEnemies += "None";
+				encounterEnemiesText.text = encounterEnemies;
+				return;
+			}
+
 			foreach (EntityData entity in SpawnManager.instance.debugSpawnEntities)
 			{
 				if ((landTypes & entity.foundInLandTypes) != LandTypes.none) //check if any land type flags match
-					encounterEnemies += entity.name + ", ";
+				{
+					switch (entity.enemyType)
+					{
+						case EnemyTypes.slime:
+						encounterEnemies += "<color=#90EE90>" + entity.name + "</color>" + ", "; //light green
+						break;
+						case EnemyTypes.beast:
+						encounterEnemies += "<color=#8B4513>" + entity.name + "</color>" + ", "; //Earthy Brown
+						break;
+						case EnemyTypes.humanoid:
+						encounterEnemies += "" + entity.name + "" + ", "; //
+						break;
+						case EnemyTypes.construct:
+						encounterEnemies += "<color=#2a3439>" + entity.name + "</color>" + ", "; //Gun Metal
+						break;
+						case EnemyTypes.undead:
+						encounterEnemies += "<color=#2F4F4F>" + entity.name + "</color>" + ", "; //Bloodless Gray
+						break;
+						case EnemyTypes.Abberrations:
+						encounterEnemies += "<color=#800080>" + entity.name + "</color>" + ", "; //Eldritch Purple
+						break;
+					}
+				}
 			}
-
 			encounterEnemiesText.text = encounterEnemies;
 		}
 	}
