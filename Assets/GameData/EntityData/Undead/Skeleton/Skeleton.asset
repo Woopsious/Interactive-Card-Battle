@@ -15,7 +15,7 @@ MonoBehaviour:
   entityName: Skeleton
   entityDescription: A normal human but just the bones
   isPlayer: 0
-  enemyType: 8
+  enemyType: 16
   foundInLandTypes: 27
   eliteEnemy: 0
   maxHealth: 40

@@ -9,12 +9,12 @@ public class MapUiHandler : MonoBehaviour
 	void OnEnable()
 	{
 		GameManager.OnShowMapEvent += ShowMap;
-		GameManager.OnStartCardCombatEvent += HideMap;
+		GameManager.OnStartCardCombatUiEvent += HideMap;
 	}
 	void OnDisable()
 	{
 		GameManager.OnShowMapEvent -= ShowMap;
-		GameManager.OnStartCardCombatEvent -= HideMap;
+		GameManager.OnStartCardCombatUiEvent -= HideMap;
 	}
 
 	void ShowMap()

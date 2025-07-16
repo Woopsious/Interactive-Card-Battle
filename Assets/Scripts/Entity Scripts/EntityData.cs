@@ -21,6 +21,8 @@ namespace Woopsious
 			none = 0, slime = 1, beast = 2, humanoid = 4, construct = 8, undead = 16, Abberrations = 32
 		}
 		public LandTypes foundInLandTypes;
+		[Range(0f, 100f)]
+		public float entitySpawnChance;
 		public bool eliteEnemy;
 
 		[Header("Entity Health")]

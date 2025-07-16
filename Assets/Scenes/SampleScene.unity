@@ -350,12 +350,12 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 37824101}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 716455668}
+  m_Father: {fileID: 215461738}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -1317,6 +1317,7 @@ GameObject:
   - component: {fileID: 215461737}
   - component: {fileID: 215461736}
   - component: {fileID: 215461735}
+  - component: {fileID: 215461739}
   m_Layer: 5
   m_Name: CardCombatCanvas
   m_TagString: Untagged
@@ -1399,7 +1400,16 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 716455668}
+  - {fileID: 37824104}
+  - {fileID: 2072515820}
+  - {fileID: 366729781}
+  - {fileID: 1524205310}
+  - {fileID: 603425595}
+  - {fileID: 1553117978}
+  - {fileID: 1076092764}
+  - {fileID: 546958708}
+  - {fileID: 626761060}
+  - {fileID: 812837358}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1407,6 +1417,28 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &215461739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 215461734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff6e2c756c7de9945b6d8df437ab08dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CardDeckUi: {fileID: 366729774}
+  PlayedCardUi: {fileID: 1524205307}
+  MovingCardsArea: {fileID: 603425589}
+  currentRoundInfoText: {fileID: 37824102}
+  currentTurnInfoText: {fileID: 2072515818}
+  winLooseText: {fileID: 1553117976}
+  returnToMapButtonObj: {fileID: 1076092763}
+  DebugReturnToMapButtonObj: {fileID: 546958707}
+  EndPlayerTurnButtonObj: {fileID: 626761056}
+  DebugEndTurnButtonObj: {fileID: 812837357}
 --- !u!1001 &264633531
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2029,7 +2061,7 @@ RectTransform:
   - {fileID: 717966400}
   - {fileID: 1161063816}
   - {fileID: 1074873369}
-  m_Father: {fileID: 716455668}
+  m_Father: {fileID: 215461738}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -2735,7 +2767,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1706509155}
-  m_Father: {fileID: 716455668}
+  m_Father: {fileID: 215461738}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -2786,7 +2818,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 716455669}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Woopsious.CardCombatUi, Assembly-CSharp
         m_MethodName: ReturnToMap
         m_Mode: 1
@@ -3319,7 +3351,7 @@ RectTransform:
   m_Children:
   - {fileID: 1361113272}
   - {fileID: 1790221915}
-  m_Father: {fileID: 716455668}
+  m_Father: {fileID: 215461738}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -3389,7 +3421,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 716455669}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: CardCombatUi, Assembly-CSharp
         m_MethodName: SkipPlayerTurn
         m_Mode: 1
@@ -3452,81 +3484,13 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1305434356}
-  m_Father: {fileID: 716455668}
+  m_Father: {fileID: 215461738}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -25, y: 120}
   m_SizeDelta: {x: 200, y: 60}
   m_Pivot: {x: 1, y: 0}
---- !u!1 &716455667
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 716455668}
-  - component: {fileID: 716455669}
-  m_Layer: 5
-  m_Name: CardCombatUi
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &716455668
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 716455667}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 37824104}
-  - {fileID: 2072515820}
-  - {fileID: 366729781}
-  - {fileID: 1524205310}
-  - {fileID: 603425595}
-  - {fileID: 1553117978}
-  - {fileID: 1076092764}
-  - {fileID: 546958708}
-  - {fileID: 626761060}
-  - {fileID: 812837358}
-  m_Father: {fileID: 215461738}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &716455669
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 716455667}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff6e2c756c7de9945b6d8df437ab08dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CardDeckUi: {fileID: 366729774}
-  PlayedCardUi: {fileID: 1524205307}
-  MovingCardsArea: {fileID: 603425589}
-  currentRoundInfoText: {fileID: 37824102}
-  currentTurnInfoText: {fileID: 2072515818}
-  winLooseText: {fileID: 1553117976}
-  returnToMapButtonObj: {fileID: 1076092763}
-  DebugReturnToMapButtonObj: {fileID: 546958707}
-  EndPlayerTurnButtonObj: {fileID: 626761056}
-  DebugEndTurnButtonObj: {fileID: 812837357}
 --- !u!1 &717966399
 GameObject:
   m_ObjectHideFlags: 0
@@ -3699,56 +3663,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!1 &750825598
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 750825599}
-  - component: {fileID: 750825600}
-  m_Layer: 5
-  m_Name: MapUi
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &750825599
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 750825598}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1480236296}
-  m_Father: {fileID: 1606297254}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &750825600
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 750825598}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5bc6dee4698266040926c3e3e7862cda, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mapUi: {fileID: 1480236295}
 --- !u!1001 &757174319
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4077,7 +3991,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1176618939}
-  m_Father: {fileID: 716455668}
+  m_Father: {fileID: 215461738}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -4128,7 +4042,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 716455669}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: CardCombatUi, Assembly-CSharp
         m_MethodName: DebugSkipTurn
         m_Mode: 1
@@ -5430,7 +5344,19 @@ MonoBehaviour:
   EntityPrefab: {fileID: 5386469954458961082, guid: 475796d2f04fe6342981a1397dbdddda, type: 3}
   PlayerPrefab: {fileID: 5386469954458961082, guid: b8dfed3810454c34a80836219dde1249, type: 3}
   cardPrefab: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
+  MapNodeDataTypes:
+  - {fileID: 11400000, guid: 0b6c6a0cf04cc6f42a84557dd8dfff46, type: 2}
+  - {fileID: 11400000, guid: 2a3a9e37f60c5364d883e05c0b679e95, type: 2}
+  - {fileID: 11400000, guid: 6dc2cd0f661560a48a837d701499b6bd, type: 2}
+  - {fileID: 11400000, guid: 26585cf900f18fb4eb633ae045018aae, type: 2}
+  MapNodeBossDataTypes: []
   entityDataTypes:
+  - {fileID: 11400000, guid: cc5943bd26369e54787a9c60e55ffb14, type: 2}
+  - {fileID: 11400000, guid: 95cdd6d927b786649bb02094693953d3, type: 2}
+  - {fileID: 11400000, guid: f32bae752b8881c498ab069d5db55a4e, type: 2}
+  - {fileID: 11400000, guid: 5baca6f3bb74e38429fe4ee1430435fb, type: 2}
+  - {fileID: 11400000, guid: 7137b459ef50c8e4fb24d92bcac95b77, type: 2}
+  - {fileID: 11400000, guid: 75c5b9a050f932a4e9a15618d4e885d1, type: 2}
   - {fileID: 11400000, guid: b1f5e72def15b49449f3393518ec0963, type: 2}
   numberOfEnemiesToSpawn: 3
   debugSpawnEntities:
@@ -5439,8 +5365,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b1f5e72def15b49449f3393518ec0963, type: 2}
   - {fileID: 11400000, guid: 5baca6f3bb74e38429fe4ee1430435fb, type: 2}
   - {fileID: 11400000, guid: 75c5b9a050f932a4e9a15618d4e885d1, type: 2}
-  - {fileID: 11400000, guid: 7137b459ef50c8e4fb24d92bcac95b77, type: 2}
   - {fileID: 11400000, guid: cc5943bd26369e54787a9c60e55ffb14, type: 2}
+  - {fileID: 11400000, guid: 7137b459ef50c8e4fb24d92bcac95b77, type: 2}
 --- !u!224 &1071552323 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3454814259182032011, guid: 2d74d413fc0140b4aa70249b5a68c327, type: 3}
@@ -5564,7 +5490,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 570668561}
-  m_Father: {fileID: 716455668}
+  m_Father: {fileID: 215461738}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -5615,7 +5541,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 716455669}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Woopsious.CardCombatUi, Assembly-CSharp
         m_MethodName: ReturnToMap
         m_Mode: 1
@@ -7665,7 +7591,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1480236295}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -7720,7 +7646,7 @@ RectTransform:
   - {fileID: 449678357}
   - {fileID: 1705264708}
   - {fileID: 174311983}
-  m_Father: {fileID: 750825599}
+  m_Father: {fileID: 1606297254}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -7870,7 +7796,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 119345592}
-  m_Father: {fileID: 716455668}
+  m_Father: {fileID: 215461738}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
@@ -8103,12 +8029,12 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1553117975}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 716455668}
+  m_Father: {fileID: 215461738}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -8137,6 +8063,7 @@ GameObject:
   - component: {fileID: 1606297253}
   - component: {fileID: 1606297252}
   - component: {fileID: 1606297251}
+  - component: {fileID: 1606297255}
   m_Layer: 5
   m_Name: InteractiveMapCanvas
   m_TagString: Untagged
@@ -8220,7 +8147,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1358297752}
-  - {fileID: 750825599}
+  - {fileID: 1480236296}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -8228,6 +8155,19 @@ RectTransform:
   m_AnchoredPosition: {x: 960, y: 540}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1606297255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1606297250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bc6dee4698266040926c3e3e7862cda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapUi: {fileID: 1480236295}
 --- !u!224 &1610444759 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3454814259182032011, guid: 2d74d413fc0140b4aa70249b5a68c327, type: 3}
@@ -9514,12 +9454,12 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2072515817}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 716455668}
+  m_Father: {fileID: 215461738}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Woopsious
 {
@@ -16,7 +17,11 @@ namespace Woopsious
 		public GameObject PlayerPrefab;
 		public GameObject cardPrefab;
 
-		[Header("Scriptable Object Data")]
+		[Header("Map Node Scriptable Objects")]
+		public List<MapNodeData> MapNodeDataTypes = new();
+		private int totalMapNodeSpawnChance;
+
+		[Header("Entity Scriptable Objects")]
 		public List<EntityData> entityDataTypes = new();
 
 		[Header("Enemies To Spawn")]
@@ -26,24 +31,24 @@ namespace Woopsious
 		public static event Action<PlayerEntity> OnPlayerSpawned;
 		public static event Action<Entity> OnEnemySpawned;
 
-		[Header("Debug Spawn Enemites")]
-		public List<EntityData> debugSpawnEntities = new();
-
 		void Awake()
 		{
 			instance = this;
 			widthOfEntities = EntityPrefab.GetComponent<RectTransform>().sizeDelta.x;
 			if (canvas == null)
 				Debug.LogError("canvas ref null, assign it in scene");
+
+			foreach (MapNodeData node in MapNodeDataTypes)
+				totalMapNodeSpawnChance += (int)node.nodeSpawnChance;
 		}
 
 		//card battle setup
-		public static async Task SpawnEntitiesForCardBattle()
+		public static async Task SpawnEntitiesForCardBattle(MapNode mapNode)
 		{
 			instance.RandomizeEnemySpawnAmount();
 
 			await SpawnPlayer();
-			await SpawnEnemies();
+			await SpawnEnemies(mapNode);
 		}
 		void RandomizeEnemySpawnAmount()
 		{
@@ -53,12 +58,12 @@ namespace Woopsious
 		{
 			await SpawnPlayer();
 
-			float spacing = (Screen.width - instance.debugSpawnEntities.Count * instance.widthOfEntities) / (instance.debugSpawnEntities.Count + 1);
+			float spacing = (Screen.width - instance.entityDataTypes.Count * instance.widthOfEntities) / (instance.entityDataTypes.Count + 1);
 
-			for (int i = 0; i < instance.debugSpawnEntities.Count; i++)
+			for (int i = 0; i < instance.entityDataTypes.Count; i++)
 			{
 				Entity spawnedEntity = Instantiate(instance.EntityPrefab, instance.canvas.transform).GetComponent<Entity>();
-				spawnedEntity.entityData = instance.debugSpawnEntities[i];
+				spawnedEntity.entityData = instance.entityDataTypes[i];
 				instance.SetEnemyPosition(spawnedEntity.GetComponent<RectTransform>(), spacing, i + 1);
 				OnEnemySpawned?.Invoke(spawnedEntity);
 
@@ -74,30 +79,54 @@ namespace Woopsious
 
 			return Task.CompletedTask;
 		}
-		public static Task SpawnEnemies()
+		public static async Task SpawnEnemies(MapNode mapNode)
 		{
-			float spacing = (Screen.width - instance.numberOfEnemiesToSpawn * instance.widthOfEntities) / (instance.numberOfEnemiesToSpawn + 1);
+			List<Entity> spawnedEntites = new();
 
-			for (int i = 0; i < instance.numberOfEnemiesToSpawn; i++)
+			bool spawnEnemies = true;
+			while (spawnEnemies)
 			{
 				Entity spawnedEntity = Instantiate(instance.EntityPrefab, instance.canvas.transform).GetComponent<Entity>();
-				spawnedEntity.entityData = instance.GetRandomEnemyToSpawn();
-				instance.SetEnemyPosition(spawnedEntity.GetComponent<RectTransform>(), spacing, i + 1);
+				spawnedEntity.entityData = instance.GetWeightedEntitySpawn(mapNode);
+
+				await mapNode.BuyEnemy(spawnedEntity.entityData);
+				spawnedEntites.Add(spawnedEntity);
 				OnEnemySpawned?.Invoke(spawnedEntity);
+
+				if (spawnedEntites.Count >= 5 || mapNode.entityBudget < mapNode.cheapistEnemyCost)
+					spawnEnemies = false;
 			}
 
-			return Task.CompletedTask;
+			instance.SetEnemyPositions(spawnedEntites);
+		}
+		EntityData GetWeightedEntitySpawn(MapNode mapNode)
+		{
+			float roll = UnityEngine.Random.Range(0, mapNode.totalPossibleEntitiesSpawnChance);
+			float cumulativeChance = 0;
+
+			foreach (EntityData entity in mapNode.PossibleEntities)
+			{
+				cumulativeChance += entity.entitySpawnChance;
+
+				if (roll <= cumulativeChance)
+					return entity;
+			}
+
+			Debug.LogError("Failed to get weighted enemy to spawn, spawning default");
+			return entityDataTypes[0];
 		}
 
+		void SetEnemyPositions(List<Entity> entities)
+		{
+			float spacing = (Screen.width - entities.Count * instance.widthOfEntities) / (entities.Count + 1);
+
+			for (int i = 0; i < entities.Count; i++)
+				instance.SetEnemyPosition(entities[i].GetComponent<RectTransform>(), spacing, i + 1);
+		}
 		void SetEnemyPosition(RectTransform rectTransform, float spacing, int index)
 		{
 			float offset = widthOfEntities * (index - 1);
 			rectTransform.anchoredPosition = new Vector2(spacing * index + offset, 400);
-		}
-		EntityData GetRandomEnemyToSpawn()
-		{
-			EntityData entityData = entityDataTypes[UnityEngine.Random.Range(0, entityDataTypes.Count)];
-			return entityData;
 		}
 
 		//card spawning

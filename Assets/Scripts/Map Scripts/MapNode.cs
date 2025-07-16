@@ -4,6 +4,9 @@ using static Woopsious.EntityData;
 using TMPro;
 using UnityEngine.UI;
 using Unity.VisualScripting;
+using System.Collections.Generic;
+using static UnityEngine.EventSystems.EventTrigger;
+using System.Threading.Tasks;
 
 namespace Woopsious
 {
@@ -25,26 +28,32 @@ namespace Woopsious
 		public LandTypes landTypes;
 		public NodeEncounterType nodeEncounterType;
 
+		[Header("Runtime Spawn Table")]
+		public List<EntityData> PossibleEntities = new();
+		public int totalPossibleEntitiesSpawnChance;
+		public int cheapistEnemyCost;
+
 		[Header("Debug options")]
+		public bool DisplayEncounterEnemies;
 		public ForceEncounterType forceEncounterType;
 		public enum ForceEncounterType
 		{
-			noForceEncounter, forceCardUpgrade, forceBossFight
+			noForceEncounter, forceBossFight, forceCardUpgrade
 		}
-		public bool debugForceEliteFight;
-		public bool debugForceRuins;
+		public bool forceEliteFight;
+		public bool forceRuins;
 
 		void Start()
 		{
 			startEncounterButton.onClick.AddListener(delegate { BeginEncounter(); });
 
 			if (mapNodeData != null)
-				Initilize(mapNodeData, true);
+				Initilize(mapNodeData, true, false);
 			else
 				Debug.LogWarning("Map node data not set, ignore if intended");
 		}
 
-		public void Initilize(MapNodeData mapNodeData, bool startingNode)
+		public void Initilize(MapNodeData mapNodeData, bool startingNode, bool bossFightNode)
 		{
 			this.mapNodeData = mapNodeData;
 			entityBudget = mapNodeData.entityBudget;
@@ -52,12 +61,13 @@ namespace Woopsious
 			landTypes = mapNodeData.landTypes;
 			nodeEncounterType = mapNodeData.nodeType;
 
-			ApplyRandomizedSettings();
+			ApplyRandomizedSettings(bossFightNode);
 			CheckAndForceDebugSettings();
+			SetEnemyTypes();
 
-			UpdateEncounterTitle();
-			UpdateEncounterModifiers();
-			UpdateEncounterEnemies();
+			UpdateEncounterTitleUi();
+			UpdateEncounterModifiersUi();
+			UpdateEncounterEnemiesUi();
 
 			if (startingNode)
 				CanTravelToNode();
@@ -68,37 +78,20 @@ namespace Woopsious
 		//start encounter
 		void BeginEncounter()
 		{
-			GameManager.BeginCardCombat();
+			GameManager.BeginCardCombat(this);
 		}
 
 		//UPDATE NODE SETTINGS AT RUNTIME
-		void CheckAndForceDebugSettings()
-		{
-			switch (forceEncounterType)
-			{
-				case ForceEncounterType.noForceEncounter:
-				break;
-				case ForceEncounterType.forceCardUpgrade:
-				nodeEncounterType = NodeEncounterType.freeCardUpgrade;
-				break;
-				case ForceEncounterType.forceBossFight:
-				nodeEncounterType = NodeEncounterType.bossFight;
-				break;
-			}
-
-			if (debugForceEliteFight)
-				nodeEncounterType = MakeEncounterElite();
-
-			if (debugForceRuins)
-				landTypes = AddRuinsLandType();
-		}
-		void ApplyRandomizedSettings()
+		void ApplyRandomizedSettings(bool bossFightNode)
 		{
 			if (GetRandomNumber() < mapNodeData.chanceOfFreeCardUpgrade)
 			{
-				SetNodeInteractTypeToFreeCardUpgrade();
+				MakeEncounterFreeCardUpgrade();
 				return;
 			}
+
+			if (bossFightNode)
+				nodeEncounterType = MakeEncounterBossFight();
 
 			if (GetRandomNumber() < mapNodeData.chanceOfRuins)
 				landTypes = AddRuinsLandType();
@@ -106,12 +99,66 @@ namespace Woopsious
 			if (GetRandomNumber() < mapNodeData.chanceOfEliteFight)
 				nodeEncounterType = MakeEncounterElite();
 		}
+		void CheckAndForceDebugSettings()
+		{
+			switch (forceEncounterType)
+			{
+				case ForceEncounterType.noForceEncounter:
+				break;
+				case ForceEncounterType.forceBossFight:
+				nodeEncounterType = MakeEncounterBossFight();
+				break;
+				case ForceEncounterType.forceCardUpgrade:
+				nodeEncounterType = MakeEncounterFreeCardUpgrade();
+				break;
+			}
+
+			if (forceEliteFight)
+				nodeEncounterType = MakeEncounterElite();
+
+			if (forceRuins)
+				landTypes = AddRuinsLandType();
+		}
+		void SetEnemyTypes()
+		{
+			cheapistEnemyCost = 100000;
+
+			foreach (EntityData entity in SpawnManager.instance.entityDataTypes)
+			{
+				if ((landTypes & entity.foundInLandTypes) != LandTypes.none) //toggle flag if land types match
+				{
+					PossibleEntities.Add(entity);
+					totalPossibleEntitiesSpawnChance += (int)entity.entitySpawnChance;
+					enemyTypes |= entity.enemyType;
+
+					int entityCost = entity.GetEntityCost();
+					if (entityCost < cheapistEnemyCost)
+						cheapistEnemyCost = entityCost;
+				}
+			}
+		}
+
+		public Task BuyEnemy(EntityData spawnedEntity)
+		{
+			entityBudget -= spawnedEntity.GetEntityCost();
+
+			for (int i = PossibleEntities.Count - 1;  i > 0; i--)
+			{
+				if (entityBudget < PossibleEntities[i].GetEntityCost())
+					PossibleEntities.Remove(PossibleEntities[i]);
+			}
+
+			return Task.CompletedTask;
+		}
 
 		//sub funcs
-		void SetNodeInteractTypeToFreeCardUpgrade()
+		NodeEncounterType MakeEncounterFreeCardUpgrade()
 		{
-			enemyTypes = EnemyTypes.none;
-			nodeEncounterType = NodeEncounterType.freeCardUpgrade;
+			return NodeEncounterType.freeCardUpgrade;
+		}
+		NodeEncounterType MakeEncounterBossFight()
+		{
+			return NodeEncounterType.bossFight;
 		}
 		NodeEncounterType MakeEncounterElite()
 		{
@@ -153,7 +200,7 @@ namespace Woopsious
 		}
 
 		//update ui
-		void UpdateEncounterTitle()
+		void UpdateEncounterTitleUi()
 		{
 			string encounterTitle = "";
 
@@ -178,7 +225,7 @@ namespace Woopsious
 
 			encounterTitleText.text = encounterTitle;
 		}
-		void UpdateEncounterModifiers()
+		void UpdateEncounterModifiersUi()
 		{
 			string encounterModifiers = "Enviroment: \n";
 
@@ -199,7 +246,7 @@ namespace Woopsious
 
 			encounterModifiersText.text = encounterModifiers;
 		}
-		void UpdateEncounterEnemies()
+		void UpdateEncounterEnemiesUi()
 		{
 			string encounterEnemies = "Possible Enemies: \n";
 
@@ -210,7 +257,18 @@ namespace Woopsious
 				return;
 			}
 
-			foreach (EntityData entity in SpawnManager.instance.debugSpawnEntities)
+			if (DisplayEncounterEnemies)
+				encounterEnemies += DisplayEncouterEnemiesIndividualy();
+			else
+				encounterEnemies += DisplayEncouterEnemeyTypes();
+
+			encounterEnemiesText.text = encounterEnemies;
+		}
+		string DisplayEncouterEnemiesIndividualy()
+		{
+			string encounterEnemies = "";
+
+			foreach (EntityData entity in SpawnManager.instance.entityDataTypes)
 			{
 				if ((landTypes & entity.foundInLandTypes) != LandTypes.none) //check if any land type flags match
 				{
@@ -237,7 +295,27 @@ namespace Woopsious
 					}
 				}
 			}
-			encounterEnemiesText.text = encounterEnemies;
+
+			return encounterEnemies;
+		}
+		string DisplayEncouterEnemeyTypes()
+		{
+			string encounterEnemies = "";
+
+			if (enemyTypes.HasFlag(EnemyTypes.slime))
+				encounterEnemies += "<color=#90EE90>Slimes</color>" + ", "; //light green
+			if (enemyTypes.HasFlag(EnemyTypes.beast))
+				encounterEnemies += "<color=#8B4513>Beasts</color>" + ", "; //Earthy Brown
+			if (enemyTypes.HasFlag(EnemyTypes.humanoid))
+				encounterEnemies += "Humanoids" + ", "; //
+			if (enemyTypes.HasFlag(EnemyTypes.construct))
+				encounterEnemies += "<color=#2a3439>Constructs</color>" + ", "; //Gun Metal
+			if (enemyTypes.HasFlag(EnemyTypes.undead))
+				encounterEnemies += "<color=#2F4F4F>Undead</color>" + ", "; //Bloodless Gray
+			if (enemyTypes.HasFlag(EnemyTypes.Abberrations))
+				encounterEnemies += "<color=#800080>Abberrations</color>" + ", "; //Eldritch Purple
+
+			return encounterEnemies;
 		}
 	}
 }

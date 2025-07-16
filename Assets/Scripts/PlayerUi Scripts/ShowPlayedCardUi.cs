@@ -19,7 +19,7 @@ namespace Woopsious
 
 		void OnEnable()
 		{
-			GameManager.OnStartCardCombatEvent += HidePlayedCard;
+			GameManager.OnStartCardCombatUiEvent += HidePlayedCard;
 			Entity.OnEnemyMoveFound += ShowPlayedCard;
 			Entity.OnEnemyAttack += HidePlayedCard;
 			Entity.OnEnemyAttackCancel += HidePlayedCard;
@@ -27,7 +27,7 @@ namespace Woopsious
 
 		void OnDisable()
 		{
-			GameManager.OnStartCardCombatEvent -= HidePlayedCard;
+			GameManager.OnStartCardCombatUiEvent -= HidePlayedCard;
 			Entity.OnEnemyMoveFound -= ShowPlayedCard;
 			Entity.OnEnemyAttack -= HidePlayedCard;
 			Entity.OnEnemyAttackCancel -= HidePlayedCard;
@@ -38,7 +38,6 @@ namespace Woopsious
 			cardUi.SetupCard(data);
 			PlayedCardUi.SetActive(true);
 		}
-
 		void HidePlayedCard()
 		{
 			PlayedCardUi.SetActive(false);

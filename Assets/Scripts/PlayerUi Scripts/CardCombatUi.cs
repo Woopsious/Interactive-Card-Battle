@@ -31,7 +31,7 @@ namespace Woopsious
 		void OnEnable()
 		{
 			GameManager.OnShowMapEvent += ShowMap;
-			GameManager.OnStartCardCombatEvent += StartCardCombat;
+			GameManager.OnStartCardCombatUiEvent += StartCardCombat;
 			GameManager.OnEndCardCombatEvent += EndCardCombat;
 			TurnOrderManager.OnNewRoundStartEvent += OnNewRound;
 			TurnOrderManager.OnNewTurnEvent += OnNewTurn;
@@ -39,7 +39,7 @@ namespace Woopsious
 		void OnDisable()
 		{
 			GameManager.OnShowMapEvent -= ShowMap;
-			GameManager.OnStartCardCombatEvent -= StartCardCombat;
+			GameManager.OnStartCardCombatUiEvent -= StartCardCombat;
 			GameManager.OnEndCardCombatEvent -= EndCardCombat;
 			TurnOrderManager.OnNewRoundStartEvent -= OnNewRound;
 			TurnOrderManager.OnNewTurnEvent -= OnNewTurn;

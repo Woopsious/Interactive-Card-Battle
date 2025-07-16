@@ -37,7 +37,8 @@ namespace Woopsious
 		float lastFramerate = 0.0f;
 		public float refreshTime = 0.5f;
 
-		public static event Action OnStartCardCombatEvent;
+		public static event Action<MapNode> OnStartCardCombatEvent;
+		public static event Action OnStartCardCombatUiEvent;
 		public static event Action<bool> OnEndCardCombatEvent;
 		public static event Action OnShowMapEvent;
 
@@ -82,10 +83,11 @@ namespace Woopsious
 		}
 
 		//start/end card combat
-		public static void BeginCardCombat()
+		public static void BeginCardCombat(MapNode mapNode)
 		{
 			PauseGame(false);
-			OnStartCardCombatEvent?.Invoke();
+			OnStartCardCombatEvent?.Invoke(mapNode);
+			OnStartCardCombatUiEvent?.Invoke();
 		}
 		void EndCardCombat(Entity entity)
 		{

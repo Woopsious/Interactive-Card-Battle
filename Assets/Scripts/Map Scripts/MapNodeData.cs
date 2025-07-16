@@ -27,6 +27,8 @@ namespace Woopsious
 		}
 
 		public int entityBudget;
+		[Range(0f, 100f)]
+		public float nodeSpawnChance;
 
 		[Header("Chance Modifiers")]
 		[Tooltip("Base Value: 5%")]
