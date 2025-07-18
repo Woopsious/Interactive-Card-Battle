@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Forest
   m_EditorClassIdentifier: 
   nodeName: Forest
-  nodeState: 0
   landTypes: 2
   nodeType: 0
   entityBudget: 200
+  nodeSpawnChance: 40
   chanceOfRuins: 5
   chanceOfEliteFight: 6
   chanceOfFreeCardUpgrade: 5

@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Caves
   m_EditorClassIdentifier: 
   nodeName: Caves
-  nodeState: 0
   landTypes: 8
   nodeType: 0
   entityBudget: 200
+  nodeSpawnChance: 20
   chanceOfRuins: 5
   chanceOfEliteFight: 8
   chanceOfFreeCardUpgrade: 2

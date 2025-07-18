@@ -43,14 +43,9 @@ namespace Woopsious
 		public bool forceEliteFight;
 		public bool forceRuins;
 
-		void Start()
+		void Awake()
 		{
 			startEncounterButton.onClick.AddListener(delegate { BeginEncounter(); });
-
-			if (mapNodeData != null)
-				Initilize(mapNodeData, true, false);
-			else
-				Debug.LogWarning("Map node data not set, ignore if intended");
 		}
 
 		public void Initilize(MapNodeData mapNodeData, bool startingNode, bool bossFightNode)

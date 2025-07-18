@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Grasslands
   m_EditorClassIdentifier: 
   nodeName: Grasslands
-  nodeState: 0
   landTypes: 1
   nodeType: 0
-  entityBudget: 200
+  entityBudget: 175
+  nodeSpawnChance: 60
   chanceOfRuins: 3
   chanceOfEliteFight: 4
   chanceOfFreeCardUpgrade: 7.5

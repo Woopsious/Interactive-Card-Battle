@@ -15,9 +15,9 @@ MonoBehaviour:
   entityName: Spider
   entityDescription: A human sized spider
   isPlayer: 0
-  entityCost: 0
   enemyType: 2
   foundInLandTypes: 30
+  entitySpawnChance: 50
   eliteEnemy: 0
   maxHealth: 45
   minHealPercentage: 0.4

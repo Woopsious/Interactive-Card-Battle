@@ -15,9 +15,9 @@ MonoBehaviour:
   entityName: Slime
   entityDescription: A slime
   isPlayer: 0
-  entityCost: 0
   enemyType: 1
   foundInLandTypes: -1
+  entitySpawnChance: 75
   eliteEnemy: 0
   maxHealth: 30
   minHealPercentage: 0.5

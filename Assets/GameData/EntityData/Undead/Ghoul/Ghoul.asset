@@ -17,6 +17,7 @@ MonoBehaviour:
   isPlayer: 0
   enemyType: 16
   foundInLandTypes: 24
+  entitySpawnChance: 40
   eliteEnemy: 0
   maxHealth: 70
   minHealPercentage: 0

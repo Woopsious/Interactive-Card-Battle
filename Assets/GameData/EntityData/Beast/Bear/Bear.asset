@@ -15,9 +15,9 @@ MonoBehaviour:
   entityName: Bear
   entityDescription: A Hungry looking bear
   isPlayer: 0
-  entityCost: 0
   enemyType: 2
   foundInLandTypes: 3
+  entitySpawnChance: 40
   eliteEnemy: 0
   maxHealth: 60
   minHealPercentage: 0

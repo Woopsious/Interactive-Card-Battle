@@ -706,7 +706,7 @@ RectTransform:
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 300, y: 300}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0, y: 0}
 --- !u!114 &6938525707124995970
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -730,9 +730,13 @@ MonoBehaviour:
   enemyTypes: 0
   landTypes: 0
   nodeEncounterType: 0
+  PossibleEntities: []
+  totalPossibleEntitiesSpawnChance: 0
+  cheapistEnemyCost: 0
+  DisplayEncounterEnemies: 0
   forceEncounterType: 0
-  debugForceEliteFight: 0
-  debugForceRuins: 0
+  forceEliteFight: 0
+  forceRuins: 0
 --- !u!222 &5076225201847140388
 CanvasRenderer:
   m_ObjectHideFlags: 0

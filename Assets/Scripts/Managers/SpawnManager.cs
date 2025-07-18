@@ -17,15 +17,10 @@ namespace Woopsious
 		public GameObject PlayerPrefab;
 		public GameObject cardPrefab;
 
-		[Header("Map Node Scriptable Objects")]
-		public List<MapNodeData> MapNodeDataTypes = new();
-		private int totalMapNodeSpawnChance;
-
 		[Header("Entity Scriptable Objects")]
 		public List<EntityData> entityDataTypes = new();
 
 		[Header("Enemies To Spawn")]
-		public int numberOfEnemiesToSpawn;
 		private float widthOfEntities;
 
 		public static event Action<PlayerEntity> OnPlayerSpawned;
@@ -37,22 +32,13 @@ namespace Woopsious
 			widthOfEntities = EntityPrefab.GetComponent<RectTransform>().sizeDelta.x;
 			if (canvas == null)
 				Debug.LogError("canvas ref null, assign it in scene");
-
-			foreach (MapNodeData node in MapNodeDataTypes)
-				totalMapNodeSpawnChance += (int)node.nodeSpawnChance;
 		}
 
 		//card battle setup
 		public static async Task SpawnEntitiesForCardBattle(MapNode mapNode)
 		{
-			instance.RandomizeEnemySpawnAmount();
-
 			await SpawnPlayer();
 			await SpawnEnemies(mapNode);
-		}
-		void RandomizeEnemySpawnAmount()
-		{
-			numberOfEnemiesToSpawn = UnityEngine.Random.Range(2, 5);
 		}
 		public static async Task DebugSpawnAllEntities()
 		{
@@ -115,7 +101,6 @@ namespace Woopsious
 			Debug.LogError("Failed to get weighted enemy to spawn, spawning default");
 			return entityDataTypes[0];
 		}
-
 		void SetEnemyPositions(List<Entity> entities)
 		{
 			float spacing = (Screen.width - entities.Count * instance.widthOfEntities) / (entities.Count + 1);

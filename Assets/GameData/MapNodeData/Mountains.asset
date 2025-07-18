@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Mountains
   m_EditorClassIdentifier: 
   nodeName: Mountains
-  nodeState: 0
   landTypes: 4
   nodeType: 0
   entityBudget: 200
+  nodeSpawnChance: 10
   chanceOfRuins: 5
   chanceOfEliteFight: 6
   chanceOfFreeCardUpgrade: 5
