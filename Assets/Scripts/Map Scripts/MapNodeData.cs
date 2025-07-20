@@ -1,5 +1,4 @@
 using UnityEngine;
-using static Woopsious.EntityData;
 
 namespace Woopsious
 {
@@ -31,7 +30,7 @@ namespace Woopsious
 		public float nodeSpawnChance;
 
 		[Header("Chance Modifiers")]
-		[Tooltip("Base Value: 5%")]
+		[Tooltip("Base Value: 8%")]
 		[Range(0f, 100f)]
 		public float chanceOfRuins;
 		[Range(0f, 100f)]

@@ -21,7 +21,6 @@ namespace Woopsious
 			data = (EntityData)target;
 			BuildLists();
 		}
-
 		public override void OnInspectorGUI()
 		{
 			//DrawDefaultInspector(); // for other non-HideInInspector fields

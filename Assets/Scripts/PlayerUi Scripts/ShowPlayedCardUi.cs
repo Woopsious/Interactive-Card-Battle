@@ -25,7 +25,7 @@ namespace Woopsious
 			Entity.OnEnemyAttackCancel += HidePlayedCard;
 		}
 
-		void OnDisable()
+		void OnDestroy()
 		{
 			GameManager.OnStartCardCombatUiEvent -= HidePlayedCard;
 			Entity.OnEnemyMoveFound -= ShowPlayedCard;

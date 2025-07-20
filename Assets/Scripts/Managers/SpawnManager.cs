@@ -23,6 +23,7 @@ namespace Woopsious
 		[Header("Enemies To Spawn")]
 		private float widthOfEntities;
 
+		private readonly System.Random systemRandom = new();
 		public static event Action<PlayerEntity> OnPlayerSpawned;
 		public static event Action<Entity> OnEnemySpawned;
 
@@ -87,7 +88,7 @@ namespace Woopsious
 		}
 		EntityData GetWeightedEntitySpawn(MapNode mapNode)
 		{
-			float roll = UnityEngine.Random.Range(0, mapNode.totalPossibleEntitiesSpawnChance);
+			float roll = (float)(systemRandom.NextDouble() * mapNode.totalPossibleEntitiesSpawnChance);
 			float cumulativeChance = 0;
 
 			foreach (EntityData entity in mapNode.PossibleEntities)

@@ -15,8 +15,8 @@ MonoBehaviour:
   nodeName: Forest
   landTypes: 2
   nodeType: 0
-  entityBudget: 200
-  nodeSpawnChance: 40
-  chanceOfRuins: 5
+  entityBudget: 150
+  nodeSpawnChance: 60
+  chanceOfRuins: 8
   chanceOfEliteFight: 6
   chanceOfFreeCardUpgrade: 5

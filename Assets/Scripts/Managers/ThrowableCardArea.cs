@@ -13,7 +13,7 @@ namespace Woopsious
 			ThrowableCard.OnEnemyThrowCard += OnEnemyCardThrown;
 		}
 
-		void OnDisable()
+		void OnDestroy()
 		{
 			ThrowableCard.OnCardPickUp -= OnCardPickUp;
 			ThrowableCard.OnEnemyThrowCard -= OnEnemyCardThrown;

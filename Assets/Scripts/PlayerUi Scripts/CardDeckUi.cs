@@ -32,16 +32,14 @@ namespace Woopsious
 
 		void OnEnable()
 		{
-			SpawnManager.OnPlayerSpawned += SpawnInitialCards;
 			TurnOrderManager.OnNewTurnEvent += OnNewTurnStart;
 			PlayerEntity.HideOffensiveCards += HideMatchingCards;
 			PlayerEntity.HideReplaceCardsButton += HideReplaceCardsButton;
 			CardUi.OnCardReplace += ReplaceCardInDeck;
 			ThrowableCard.OnCardPickUp += OnCardPicked;
 		}
-		void OnDisable()
+		void OnDestroy()
 		{
-			SpawnManager.OnPlayerSpawned -= SpawnInitialCards;
 			TurnOrderManager.OnNewTurnEvent -= OnNewTurnStart;
 			PlayerEntity.HideOffensiveCards -= HideMatchingCards;
 			PlayerEntity.HideReplaceCardsButton -= HideReplaceCardsButton;
@@ -58,12 +56,6 @@ namespace Woopsious
 		{
 			if (other.GetComponent<CardUi>() != null)
 				ThrowableCardExit();
-		}
-
-		void SpawnInitialCards(PlayerEntity player)
-		{
-			while (cards.Count < 5)
-				SpawnNewPlayerCard();
 		}
 
 		//spawn card in player deck
@@ -84,7 +76,9 @@ namespace Woopsious
 			{
 				if (cards[i] != cardToReplace) continue;
 
-				if (damageCardsHidden && cardToReplace.Offensive)
+				if (TurnOrderManager.CurrentEntitiesTurn() != TurnOrderManager.Player())
+					HideCard(i);
+				else if (damageCardsHidden && cardToReplace.Offensive)
 					HideCard(i);
 				else if (nonDamageCardsHidden && !cardToReplace.Offensive)
 					HideCard(i);

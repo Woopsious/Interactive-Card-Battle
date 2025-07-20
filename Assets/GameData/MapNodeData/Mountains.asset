@@ -16,7 +16,7 @@ MonoBehaviour:
   landTypes: 4
   nodeType: 0
   entityBudget: 200
-  nodeSpawnChance: 10
-  chanceOfRuins: 5
+  nodeSpawnChance: 20
+  chanceOfRuins: 8
   chanceOfEliteFight: 6
   chanceOfFreeCardUpgrade: 5

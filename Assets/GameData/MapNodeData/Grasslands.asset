@@ -15,8 +15,8 @@ MonoBehaviour:
   nodeName: Grasslands
   landTypes: 1
   nodeType: 0
-  entityBudget: 175
-  nodeSpawnChance: 60
-  chanceOfRuins: 3
+  entityBudget: 150
+  nodeSpawnChance: 80
+  chanceOfRuins: 5
   chanceOfEliteFight: 4
   chanceOfFreeCardUpgrade: 7.5

@@ -17,13 +17,12 @@ namespace Woopsious
 
 		//round/turn tracking
 		public Entity currentEntityTurn;
-		private Entity entityToStartNewRoundOn;
+		public Entity entityToStartNewRoundOn;
 		public int currentRound;
 
 		//events
 		public static event Action<int> OnNewRoundStartEvent;
 		public static event Action<Entity> OnNewTurnEvent;
-		public static event Action<Entity> OnPlayerTurnStartEvent;
 
 		private void Awake()
 		{
@@ -71,9 +70,6 @@ namespace Woopsious
 
 			OnNewRoundStartEvent?.Invoke(currentRound);
 			OnNewTurnEvent?.Invoke(currentEntityTurn);
-
-			if (currentEntityTurn.entityData.isPlayer)
-				OnPlayerTurnStartEvent?.Invoke(currentEntityTurn);
 		}
 		void ResetListsAndEntities()
 		{
@@ -109,15 +105,12 @@ namespace Woopsious
 
 			ShouldStartNewRound();
 			OnNewTurnEvent?.Invoke(currentEntityTurn);
-
-			if (currentEntityTurn.entityData.isPlayer)
-				OnPlayerTurnStartEvent?.Invoke(currentEntityTurn);
 		}
 		void ShouldStartNewRound()
 		{
 			if (currentEntityTurn == entityToStartNewRoundOn)
 			{
-				currentRound ++;
+				currentRound++;
 				OnNewRoundStartEvent?.Invoke(currentRound);
 			}
 		}

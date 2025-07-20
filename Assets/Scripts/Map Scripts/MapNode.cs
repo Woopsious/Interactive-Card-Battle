@@ -5,7 +5,6 @@ using TMPro;
 using UnityEngine.UI;
 using Unity.VisualScripting;
 using System.Collections.Generic;
-using static UnityEngine.EventSystems.EventTrigger;
 using System.Threading.Tasks;
 
 namespace Woopsious
@@ -28,10 +27,14 @@ namespace Woopsious
 		public LandTypes landTypes;
 		public NodeEncounterType nodeEncounterType;
 
-		[Header("Runtime Spawn Table")]
+		[Header("Entity Spawn Table")]
 		public List<EntityData> PossibleEntities = new();
 		public int totalPossibleEntitiesSpawnChance;
 		public int cheapistEnemyCost;
+
+		[Header("Linked Nodes")]
+		public List<MapNode> previousLinkedNodes = new();
+		public List<MapNode> nextLinkedNodes = new();
 
 		[Header("Debug options")]
 		public bool DisplayEncounterEnemies;
@@ -43,9 +46,17 @@ namespace Woopsious
 		public bool forceEliteFight;
 		public bool forceRuins;
 
+		Color gold = new Color(1f, 0.85f, 0f);
+		Color lightGray = new Color(0.6862745f, 0.6862745f, 0.6862745f);
+
 		void Awake()
 		{
 			startEncounterButton.onClick.AddListener(delegate { BeginEncounter(); });
+		}
+
+		private void Start()
+		{
+			//Initilize(mapNodeData, true, false);
 		}
 
 		public void Initilize(MapNodeData mapNodeData, bool startingNode, bool bossFightNode)
@@ -69,11 +80,23 @@ namespace Woopsious
 			else
 				LockNode();
 		}
+		public void LinkNodes(List<MapNode> previousLinkedNodes, List<MapNode> nextLinkedNodes)
+		{
+			this.previousLinkedNodes = previousLinkedNodes;
+			this.nextLinkedNodes = nextLinkedNodes;
+		}
 
 		//start encounter
 		void BeginEncounter()
 		{
 			GameManager.BeginCardCombat(this);
+
+			CurrentlyAtNode();
+
+			foreach (MapNode previousNode in previousLinkedNodes)
+				previousNode.LockNode();
+			foreach (MapNode nextNode in nextLinkedNodes)
+				nextNode.CanTravelToNode();
 		}
 
 		//UPDATE NODE SETTINGS AT RUNTIME
@@ -182,16 +205,19 @@ namespace Woopsious
 		{
 			nodeState = NodeState.locked;
 			startEncounterButton.gameObject.SetActive(false);
+			backgroundImage.color = new Color(0.4f, 0f, 0f);
 		}
 		public void CanTravelToNode()
 		{
 			nodeState = NodeState.canTravel;
 			startEncounterButton.gameObject.SetActive(true);
+			backgroundImage.color = lightGray;
 		}
 		public void CurrentlyAtNode()
 		{
 			nodeState = NodeState.currentlyAt;
 			startEncounterButton.gameObject.SetActive(false);
+			backgroundImage.color = gold;
 		}
 
 		//update ui
@@ -227,17 +253,14 @@ namespace Woopsious
 			if (landTypes.HasFlag(LandTypes.grassland))
 				encounterModifiers += "<color=green>Grasslands</color>";
 			else if (landTypes.HasFlag(LandTypes.forest))
-				encounterModifiers += "<color=#006400>Forest</color>"; //Gray
+				encounterModifiers += "<color=#006400>Forest</color>"; //Dark green
 			else if (landTypes.HasFlag(LandTypes.mountains))
 				encounterModifiers += "<color=grey>Mountains</color>";
 			else if (landTypes.HasFlag(LandTypes.caves))
 				encounterModifiers += "<color=black>Caves</color>";
 
 			if (landTypes.HasFlag(LandTypes.ruins))
-			{
 				encounterModifiers += " with <color=#00FFFF>Ruins</color>"; //Cyan
-				Debug.LogError("node has ruins: " + landTypes.ToString());
-			}
 
 			encounterModifiersText.text = encounterModifiers;
 		}

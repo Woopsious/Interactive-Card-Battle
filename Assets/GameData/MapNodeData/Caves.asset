@@ -15,8 +15,8 @@ MonoBehaviour:
   nodeName: Caves
   landTypes: 8
   nodeType: 0
-  entityBudget: 200
-  nodeSpawnChance: 20
-  chanceOfRuins: 5
+  entityBudget: 175
+  nodeSpawnChance: 40
+  chanceOfRuins: 8
   chanceOfEliteFight: 8
   chanceOfFreeCardUpgrade: 2
