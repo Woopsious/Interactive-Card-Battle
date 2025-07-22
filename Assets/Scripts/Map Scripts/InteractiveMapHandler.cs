@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,11 +10,13 @@ namespace Woopsious
 	{
 		public Camera mapCamera;
 		public RectTransform interactiveMapRectTransform;
+		public RectTransform nodeLinksRectTransform;
 
 		public bool logLandTypeSpawns;
 
-		[Header("Map Node Spawn Data")]
+		[Header("Map Node Prefabs")]
 		public GameObject MapNodePrefab;
+		public GameObject MapNodeLinks;
 		private float heightOfNodes;
 		private float widthOfNodes;
 
@@ -79,6 +82,7 @@ namespace Woopsious
 				Dictionary<int, MapNode> newColumn = GenerateMapColumn(columnIndex);
 				mapNodeTable.Add(columnIndex, newColumn);
 				SetNodeColumnPositions(newColumn, mapColumnsCount, columnIndex);
+				LinkNodesTogether(mapColumnsCount, columnIndex);
 			}
 		}
 		Dictionary<int, MapNode> GenerateMapColumn(int columnIndex)
@@ -170,9 +174,90 @@ namespace Woopsious
 		}
 
 		//link previous and next nodes
-		void LinkNodesTogether()
+		void LinkNodesTogether(int mapColumnsCount, int columnIndex)
 		{
+			while (columnIndex > 0 && columnIndex < mapColumnsCount)
+			{
+				int previousColumnIndex = columnIndex - 1;
+				if (mapNodeTable[columnIndex].Count == mapNodeTable[previousColumnIndex].Count)
+				{
+					LinkNodeToPreviousNode(mapNodeTable[columnIndex], mapNodeTable[previousColumnIndex]);
+					return;
+				}
+				else
+				{
+					LinkNodeToPreviousNodes(mapNodeTable[columnIndex], mapNodeTable[previousColumnIndex]);
+					LinkNodeToNextNodes(mapNodeTable[columnIndex], mapNodeTable[previousColumnIndex]);
+					return;
+				}
+			}
+		}
+		void LinkNodeToPreviousNode(Dictionary<int, MapNode> currentColumn, Dictionary<int, MapNode> previousColumn)
+		{
+			for (int columnRow = 0; columnRow < currentColumn.Count; columnRow++)
+			{
+				currentColumn[columnRow].AddLinkedPreviousNode(previousColumn[columnRow]);
+				previousColumn[columnRow].AddLinkedNextNode(currentColumn[columnRow]);
+				SpawnNodeLinkObject(currentColumn[columnRow], previousColumn[columnRow]);
+			}
+		}
+		void LinkNodeToPreviousNodes(Dictionary<int, MapNode> currentColumn, Dictionary<int, MapNode> previousColumn)
+		{
+			int rowDifference = currentColumn.Count - previousColumn.Count;
 
+			for (int curColumnRow = 0; curColumnRow < currentColumn.Count; curColumnRow++)
+			{
+				for (int prevColumnRow = 0; prevColumnRow < previousColumn.Count; prevColumnRow++)
+				{
+					currentColumn[curColumnRow].AddLinkedPreviousNode(previousColumn[prevColumnRow]);
+					SpawnNodeLinkObject(currentColumn[curColumnRow], previousColumn[prevColumnRow]);
+				}
+			}
+		}
+		void LinkNodeToNextNodes(Dictionary<int, MapNode> currentColumn, Dictionary<int, MapNode> previousColumn)
+		{
+			int rowDifference = currentColumn.Count - previousColumn.Count;
+
+			for (int curColumnRow = 0; curColumnRow < currentColumn.Count; curColumnRow++)
+			{
+				for (int prevColumnRow = 0; prevColumnRow < previousColumn.Count; prevColumnRow++)
+				{
+					previousColumn[prevColumnRow].AddLinkedNextNode(currentColumn[curColumnRow]);
+				}
+			}
+		}
+		void SpawnNodeLinkObject(MapNode mapNode, MapNode prevMapNode)
+		{
+			Vector2 posA = prevMapNode.GetComponent<RectTransform>().anchoredPosition;
+			Vector2 posB = mapNode.GetComponent<RectTransform>().anchoredPosition;
+
+			Vector2 direction = posB - posA;
+			float distance = direction.magnitude;
+			float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+			// Perpendicular direction
+			Vector2 perpendicular = new Vector2(-direction.y, direction.x).normalized;
+			float offsetAmount = heightOfNodes / 2f;
+			Vector2 offset = perpendicular * offsetAmount;
+
+			GameObject go = Instantiate(MapNodeLinks, nodeLinksRectTransform);
+			RectTransform linkRect = go.GetComponent<RectTransform>();
+
+			linkRect.sizeDelta = new Vector2(distance, linkRect.sizeDelta.y);
+			linkRect.localRotation = Quaternion.Euler(0, 0, angle);
+
+			// Because pivot is (0, 0), we must shift position backward by half the size (to center it)
+			Vector2 midpoint = (posA + posB) / 2f;
+			Vector2 correction = new(linkRect.sizeDelta.x / 2f, linkRect.sizeDelta.y / 2f);
+			Vector2 pivotOffset = RotateVector(correction, angle);
+			linkRect.anchoredPosition = midpoint + offset - pivotOffset;
+		}
+		Vector2 RotateVector(Vector2 v, float degrees)
+		{
+			float rad = degrees * Mathf.Deg2Rad;
+			float cos = Mathf.Cos(rad);
+			float sin = Mathf.Sin(rad);
+			return new Vector2(v.x * cos - v.y * sin, v.x * sin + v.y * cos);
 		}
 
 		//adjust map node positions

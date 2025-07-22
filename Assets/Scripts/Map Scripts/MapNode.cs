@@ -46,8 +46,8 @@ namespace Woopsious
 		public bool forceEliteFight;
 		public bool forceRuins;
 
-		Color gold = new Color(1f, 0.85f, 0f);
-		Color lightGray = new Color(0.6862745f, 0.6862745f, 0.6862745f);
+		Color gold = new(1f, 0.85f, 0f);
+		Color lightGray = new(0.6862745f, 0.6862745f, 0.6862745f);
 
 		void Awake()
 		{
@@ -80,10 +80,13 @@ namespace Woopsious
 			else
 				LockNode();
 		}
-		public void LinkNodes(List<MapNode> previousLinkedNodes, List<MapNode> nextLinkedNodes)
+		public void AddLinkedPreviousNode(MapNode mapNode)
 		{
-			this.previousLinkedNodes = previousLinkedNodes;
-			this.nextLinkedNodes = nextLinkedNodes;
+			previousLinkedNodes.Add(mapNode);
+		}
+		public void AddLinkedNextNode(MapNode mapNode)
+		{
+			nextLinkedNodes.Add(mapNode);
 		}
 
 		//start encounter
