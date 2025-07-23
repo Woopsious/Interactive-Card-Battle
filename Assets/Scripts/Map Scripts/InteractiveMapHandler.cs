@@ -235,29 +235,12 @@ namespace Woopsious
 			float distance = direction.magnitude;
 			float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-			// Perpendicular direction
-			Vector2 perpendicular = new Vector2(-direction.y, direction.x).normalized;
-			float offsetAmount = heightOfNodes / 2f;
-			Vector2 offset = perpendicular * offsetAmount;
-
 			GameObject go = Instantiate(MapNodeLinks, nodeLinksRectTransform);
 			RectTransform linkRect = go.GetComponent<RectTransform>();
 
 			linkRect.sizeDelta = new Vector2(distance, linkRect.sizeDelta.y);
 			linkRect.localRotation = Quaternion.Euler(0, 0, angle);
-
-			// Because pivot is (0, 0), we must shift position backward by half the size (to center it)
-			Vector2 midpoint = (posA + posB) / 2f;
-			Vector2 correction = new(linkRect.sizeDelta.x / 2f, linkRect.sizeDelta.y / 2f);
-			Vector2 pivotOffset = RotateVector(correction, angle);
-			linkRect.anchoredPosition = midpoint + offset - pivotOffset;
-		}
-		Vector2 RotateVector(Vector2 v, float degrees)
-		{
-			float rad = degrees * Mathf.Deg2Rad;
-			float cos = Mathf.Cos(rad);
-			float sin = Mathf.Sin(rad);
-			return new Vector2(v.x * cos - v.y * sin, v.x * sin + v.y * cos);
+			linkRect.anchoredPosition = (posA + posB) / 2f;
 		}
 
 		//adjust map node positions
@@ -271,8 +254,8 @@ namespace Woopsious
 		}
 		void SetMapNodePosition(RectTransform rectTransform, float spacingX, float spacingY, int columnIndex, int rowIndex)
 		{
-			float offsetX = widthOfNodes * (columnIndex - 1);
-			float offsetY = heightOfNodes * (rowIndex - 1);
+			float offsetX = widthOfNodes * (columnIndex - 1) - interactiveMapSize.x / 2;
+			float offsetY = heightOfNodes * (rowIndex - 1) - interactiveMapSize.y / 2;
 			rectTransform.anchoredPosition = new Vector2(spacingX * columnIndex + offsetX, spacingY * rowIndex + offsetY);
 		}
 
