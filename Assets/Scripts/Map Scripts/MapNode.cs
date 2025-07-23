@@ -80,13 +80,14 @@ namespace Woopsious
 			else
 				LockNode();
 		}
-		public void AddLinkedPreviousNode(MapNode mapNode)
-		{
-			previousLinkedNodes.Add(mapNode);
-		}
-		public void AddLinkedNextNode(MapNode mapNode)
+		public void AddLinkToNextNode(MapNode mapNode)
 		{
 			nextLinkedNodes.Add(mapNode);
+			mapNode.AddThisNodeAsPreviousLink(this);
+		}
+		void AddThisNodeAsPreviousLink(MapNode mapNode)
+		{
+			previousLinkedNodes.Add(mapNode);
 		}
 
 		//start encounter

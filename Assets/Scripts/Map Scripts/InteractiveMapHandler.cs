@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -71,49 +72,31 @@ namespace Woopsious
 		}
 
 		//set up and generate map
-		void GenerateMapNodes(int mapColumnsCount = 10)
+		void GenerateMapNodes()
 		{
+			List<int> mapNodesToSpawnPerColumn = new()
+			{
+				1, 2, 2, 2, 4, 4, 4, 4, 4, 2
+			};
+
 			mapCamera.gameObject.SetActive(true);
 			mapCamera.orthographicSize = cameraBaseOrthoSize;
 			interactiveMapRectTransform.sizeDelta = interactiveMapSize;
 
-			for (int columnIndex = 0; columnIndex < mapColumnsCount; columnIndex++)
+			for (int columnIndex = 0; columnIndex < mapNodesToSpawnPerColumn.Count; columnIndex++)
 			{
-				Dictionary<int, MapNode> newColumn = GenerateMapColumn(columnIndex);
+				Dictionary<int, MapNode> newColumn = GenerateMapColumn(columnIndex, mapNodesToSpawnPerColumn[columnIndex]);
 				mapNodeTable.Add(columnIndex, newColumn);
-				SetNodeColumnPositions(newColumn, mapColumnsCount, columnIndex);
-				LinkNodesTogether(mapColumnsCount, columnIndex);
+				SetNodeColumnPositions(newColumn, mapNodesToSpawnPerColumn.Count, columnIndex);
+				LinkNodesTogether(mapNodesToSpawnPerColumn.Count, columnIndex);
 			}
 		}
-		Dictionary<int, MapNode> GenerateMapColumn(int columnIndex)
+		Dictionary<int, MapNode> GenerateMapColumn(int columnIndex, int nodesToSpawn)
 		{
 			Dictionary<int, MapNode> mapColumnNodes = new();
 
-			if (columnIndex == 0)
-				mapColumnNodes.Add(0, GenerateMapNode(columnIndex));
-			else if (columnIndex > 0 && columnIndex <= 3)
-			{
-				mapColumnNodes.Add(0, GenerateMapNode(columnIndex));
-				mapColumnNodes.Add(1, GenerateMapNode(columnIndex));
-			}
-			else if (columnIndex > 3 && columnIndex <= 6)
-			{
-				mapColumnNodes.Add(0, GenerateMapNode(columnIndex));
-				mapColumnNodes.Add(1, GenerateMapNode(columnIndex));
-				mapColumnNodes.Add(2, GenerateMapNode(columnIndex));
-			}
-			else if (columnIndex > 6 && columnIndex <= 8)
-			{
-				mapColumnNodes.Add(0, GenerateMapNode(columnIndex));
-				mapColumnNodes.Add(1, GenerateMapNode(columnIndex));
-				mapColumnNodes.Add(2, GenerateMapNode(columnIndex));
-				mapColumnNodes.Add(3, GenerateMapNode(columnIndex));
-			}
-			else if (columnIndex > 8)
-			{
-				mapColumnNodes.Add(0, GenerateMapNode(columnIndex));
-				mapColumnNodes.Add(1, GenerateMapNode(columnIndex));
-			}
+			for (int i = 0; i < nodesToSpawn; i++)
+				mapColumnNodes.Add(i, GenerateMapNode(columnIndex));
 
 			return mapColumnNodes;
 		}
@@ -179,54 +162,72 @@ namespace Woopsious
 			while (columnIndex > 0 && columnIndex < mapColumnsCount)
 			{
 				int previousColumnIndex = columnIndex - 1;
-				if (mapNodeTable[columnIndex].Count == mapNodeTable[previousColumnIndex].Count)
+				if (mapNodeTable[previousColumnIndex].Count == mapNodeTable[columnIndex].Count)
 				{
-					LinkNodeToPreviousNode(mapNodeTable[columnIndex], mapNodeTable[previousColumnIndex]);
+					LinkPreviousAndCurrentNodes(mapNodeTable[previousColumnIndex], mapNodeTable[columnIndex]);
 					return;
 				}
 				else
 				{
-					LinkNodeToPreviousNodes(mapNodeTable[columnIndex], mapNodeTable[previousColumnIndex]);
-					LinkNodeToNextNodes(mapNodeTable[columnIndex], mapNodeTable[previousColumnIndex]);
+					int rowDifference = mapNodeTable[columnIndex].Count - mapNodeTable[previousColumnIndex].Count;
+					LinkPreviousAndCurrentNodes(mapNodeTable[previousColumnIndex], mapNodeTable[columnIndex], rowDifference);
 					return;
 				}
 			}
 		}
-		void LinkNodeToPreviousNode(Dictionary<int, MapNode> currentColumn, Dictionary<int, MapNode> previousColumn)
+		void LinkPreviousAndCurrentNodes(Dictionary<int, MapNode> previousColumn, Dictionary<int, MapNode> currentColumn)
 		{
 			for (int columnRow = 0; columnRow < currentColumn.Count; columnRow++)
 			{
-				currentColumn[columnRow].AddLinkedPreviousNode(previousColumn[columnRow]);
-				previousColumn[columnRow].AddLinkedNextNode(currentColumn[columnRow]);
-				SpawnNodeLinkObject(currentColumn[columnRow], previousColumn[columnRow]);
+				previousColumn[columnRow].AddLinkToNextNode(currentColumn[columnRow]);
+				SpawnNodeLinkObject(previousColumn[columnRow], currentColumn[columnRow]);
 			}
 		}
-		void LinkNodeToPreviousNodes(Dictionary<int, MapNode> currentColumn, Dictionary<int, MapNode> previousColumn)
+		void LinkPreviousAndCurrentNodes(Dictionary<int, MapNode> previousColumn, Dictionary<int, MapNode> currentColumn, int rowDifference)
 		{
-			int rowDifference = currentColumn.Count - previousColumn.Count;
-
-			for (int curColumnRow = 0; curColumnRow < currentColumn.Count; curColumnRow++)
+			if (rowDifference > 0)
 			{
+				int nodeOffset = previousColumn.Count / currentColumn.Count;
+				int remainder = previousColumn.Count % currentColumn.Count;
+
 				for (int prevColumnRow = 0; prevColumnRow < previousColumn.Count; prevColumnRow++)
 				{
-					currentColumn[curColumnRow].AddLinkedPreviousNode(previousColumn[prevColumnRow]);
-					SpawnNodeLinkObject(currentColumn[curColumnRow], previousColumn[prevColumnRow]);
+					previousColumn[prevColumnRow].AddLinkToNextNode(currentColumn[prevColumnRow]);
+					SpawnNodeLinkObject(previousColumn[prevColumnRow], currentColumn[prevColumnRow]);
+
+					nodeOffset += 1;
+
+					previousColumn[prevColumnRow].AddLinkToNextNode(currentColumn[prevColumnRow + nodeOffset]);
+					SpawnNodeLinkObject(previousColumn[prevColumnRow], currentColumn[prevColumnRow + nodeOffset]);
+
+					if (remainder != 0)
+						nodeOffset -= 1;
+					else
+						nodeOffset += rowDifference;
+				}
+			}
+			else
+			{
+				int nodeOffset = previousColumn.Count / currentColumn.Count;
+				int remainder = previousColumn.Count % currentColumn.Count;
+
+				for (int prevColumnRow = previousColumn.Count - 1; prevColumnRow >= 0; prevColumnRow--)
+				{
+					previousColumn[prevColumnRow].AddLinkToNextNode(currentColumn[prevColumnRow - nodeOffset]);
+					SpawnNodeLinkObject(previousColumn[prevColumnRow], currentColumn[prevColumnRow - nodeOffset]);
+
+					nodeOffset -= 1;
+
+					previousColumn[prevColumnRow].AddLinkToNextNode(currentColumn[prevColumnRow - nodeOffset]);
+					SpawnNodeLinkObject(previousColumn[prevColumnRow], currentColumn[prevColumnRow - nodeOffset]);
+
+					if (remainder != 0)
+						nodeOffset += 1;
 				}
 			}
 		}
-		void LinkNodeToNextNodes(Dictionary<int, MapNode> currentColumn, Dictionary<int, MapNode> previousColumn)
-		{
-			int rowDifference = currentColumn.Count - previousColumn.Count;
 
-			for (int curColumnRow = 0; curColumnRow < currentColumn.Count; curColumnRow++)
-			{
-				for (int prevColumnRow = 0; prevColumnRow < previousColumn.Count; prevColumnRow++)
-				{
-					previousColumn[prevColumnRow].AddLinkedNextNode(currentColumn[curColumnRow]);
-				}
-			}
-		}
-		void SpawnNodeLinkObject(MapNode mapNode, MapNode prevMapNode)
+		void SpawnNodeLinkObject(MapNode prevMapNode, MapNode mapNode)
 		{
 			Vector2 posA = prevMapNode.GetComponent<RectTransform>().anchoredPosition;
 			Vector2 posB = mapNode.GetComponent<RectTransform>().anchoredPosition;
