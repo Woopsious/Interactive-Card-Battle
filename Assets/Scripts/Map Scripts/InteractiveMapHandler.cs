@@ -76,7 +76,7 @@ namespace Woopsious
 		{
 			List<int> mapNodesToSpawnPerColumn = new()
 			{
-				1, 2, 2, 2, 4, 4, 4, 4, 4, 2
+				1, 2, 2, 3, 6, 8, 8, 11
 			};
 
 			mapCamera.gameObject.SetActive(true);
@@ -88,7 +88,9 @@ namespace Woopsious
 				Dictionary<int, MapNode> newColumn = GenerateMapColumn(columnIndex, mapNodesToSpawnPerColumn[columnIndex]);
 				mapNodeTable.Add(columnIndex, newColumn);
 				SetNodeColumnPositions(newColumn, mapNodesToSpawnPerColumn.Count, columnIndex);
-				LinkNodesTogether(mapNodesToSpawnPerColumn.Count, columnIndex);
+
+				if (columnIndex == 0) continue;
+				LinkPreviousAndCurrentNodes(mapNodeTable[columnIndex - 1], mapNodeTable[columnIndex]);
 			}
 		}
 		Dictionary<int, MapNode> GenerateMapColumn(int columnIndex, int nodesToSpawn)
@@ -157,25 +159,27 @@ namespace Woopsious
 		}
 
 		//link previous and next nodes
-		void LinkNodesTogether(int mapColumnsCount, int columnIndex)
+		void LinkPreviousAndCurrentNodes(Dictionary<int, MapNode> previousColumn, Dictionary<int, MapNode> currentColumn)
 		{
-			while (columnIndex > 0 && columnIndex < mapColumnsCount)
+			int rowDifference = currentColumn.Count - previousColumn.Count;
+			int rowRemainder = previousColumn.Count % currentColumn.Count;
+
+			if (rowDifference == 0)
 			{
-				int previousColumnIndex = columnIndex - 1;
-				if (mapNodeTable[previousColumnIndex].Count == mapNodeTable[columnIndex].Count)
-				{
-					LinkPreviousAndCurrentNodes(mapNodeTable[previousColumnIndex], mapNodeTable[columnIndex]);
-					return;
-				}
-				else
-				{
-					int rowDifference = mapNodeTable[columnIndex].Count - mapNodeTable[previousColumnIndex].Count;
-					LinkPreviousAndCurrentNodes(mapNodeTable[previousColumnIndex], mapNodeTable[columnIndex], rowDifference);
-					return;
-				}
+				HandleSameRows(previousColumn, currentColumn);
+			}
+			else if (rowRemainder == 0 || rowDifference == 1 || rowDifference == -1)
+			{
+				HandleExtraOrDoubleRows(previousColumn, currentColumn, rowDifference);
+				//Debug.LogError("Handling Extra/Double Row");
+			}
+			else
+			{
+				HandleRemainderRows(previousColumn, currentColumn, rowDifference);
+				//Debug.LogError("Handling Remainder Rows");
 			}
 		}
-		void LinkPreviousAndCurrentNodes(Dictionary<int, MapNode> previousColumn, Dictionary<int, MapNode> currentColumn)
+		void HandleSameRows(Dictionary<int, MapNode> previousColumn, Dictionary<int, MapNode> currentColumn)
 		{
 			for (int columnRow = 0; columnRow < currentColumn.Count; columnRow++)
 			{
@@ -183,50 +187,67 @@ namespace Woopsious
 				SpawnNodeLinkObject(previousColumn[columnRow], currentColumn[columnRow]);
 			}
 		}
-		void LinkPreviousAndCurrentNodes(Dictionary<int, MapNode> previousColumn, Dictionary<int, MapNode> currentColumn, int rowDifference)
+		void HandleExtraOrDoubleRows(Dictionary<int, MapNode> previousColumn, Dictionary<int, MapNode> currentColumn, int rowDifference)
 		{
 			if (rowDifference > 0)
 			{
-				int nodeOffset = previousColumn.Count / currentColumn.Count;
-				int remainder = previousColumn.Count % currentColumn.Count;
+				int nodeLinks = currentColumn.Count / previousColumn.Count;
 
 				for (int prevColumnRow = 0; prevColumnRow < previousColumn.Count; prevColumnRow++)
 				{
-					previousColumn[prevColumnRow].AddLinkToNextNode(currentColumn[prevColumnRow]);
-					SpawnNodeLinkObject(previousColumn[prevColumnRow], currentColumn[prevColumnRow]);
+					int nodeOffset = nodeLinks * prevColumnRow;
+
+					previousColumn[prevColumnRow].AddLinkToNextNode(currentColumn[nodeOffset]);
+					SpawnNodeLinkObject(previousColumn[prevColumnRow], currentColumn[nodeOffset]);
 
 					nodeOffset += 1;
 
-					previousColumn[prevColumnRow].AddLinkToNextNode(currentColumn[prevColumnRow + nodeOffset]);
-					SpawnNodeLinkObject(previousColumn[prevColumnRow], currentColumn[prevColumnRow + nodeOffset]);
-
-					if (remainder != 0)
-						nodeOffset -= 1;
-					else
-						nodeOffset += rowDifference;
+					previousColumn[prevColumnRow].AddLinkToNextNode(currentColumn[nodeOffset]);
+					SpawnNodeLinkObject(previousColumn[prevColumnRow], currentColumn[nodeOffset]);
 				}
 			}
 			else
 			{
-				int nodeOffset = previousColumn.Count / currentColumn.Count;
-				int remainder = previousColumn.Count % currentColumn.Count;
 
-				for (int prevColumnRow = previousColumn.Count - 1; prevColumnRow >= 0; prevColumnRow--)
+			}
+		}
+		void HandleRemainderRows(Dictionary<int, MapNode> previousColumn, Dictionary<int, MapNode> currentColumn, int rowDifference)
+		{
+			if (rowDifference > 0)
+			{
+				int nodeOffset = 0;
+				int extraNodesToLink = currentColumn.Count - previousColumn.Count;
+				float chanceForNoLink = ((float)currentColumn.Count - previousColumn.Count) / previousColumn.Count * 100;
+
+				for (int prevColumnRow = 0; prevColumnRow < previousColumn.Count; prevColumnRow++)
 				{
-					previousColumn[prevColumnRow].AddLinkToNextNode(currentColumn[prevColumnRow - nodeOffset]);
-					SpawnNodeLinkObject(previousColumn[prevColumnRow], currentColumn[prevColumnRow - nodeOffset]);
+					previousColumn[prevColumnRow].AddLinkToNextNode(currentColumn[nodeOffset]);
+					SpawnNodeLinkObject(previousColumn[prevColumnRow], currentColumn[nodeOffset]);
+					nodeOffset++;
 
-					nodeOffset -= 1;
+					if (extraNodesToLink == 0) continue;
 
-					previousColumn[prevColumnRow].AddLinkToNextNode(currentColumn[prevColumnRow - nodeOffset]);
-					SpawnNodeLinkObject(previousColumn[prevColumnRow], currentColumn[prevColumnRow - nodeOffset]);
+					float roll = (float)(systemRandom.NextDouble() * totalMapNodeSpawnChance);
+					int nodesLeftToLink = previousColumn.Count - prevColumnRow - 1;
 
-					if (remainder != 0)
-						nodeOffset += 1;
+					if (extraNodesToLink >= nodesLeftToLink)
+						roll = 0f;
+
+					if (roll > chanceForNoLink) continue;
+
+					extraNodesToLink--;
+					previousColumn[prevColumnRow].AddLinkToNextNode(currentColumn[nodeOffset]);
+					SpawnNodeLinkObject(previousColumn[prevColumnRow], currentColumn[nodeOffset]);
+					nodeOffset++;
 				}
+			}
+			else
+			{
+
 			}
 		}
 
+		//spawn visual links in
 		void SpawnNodeLinkObject(MapNode prevMapNode, MapNode mapNode)
 		{
 			Vector2 posA = prevMapNode.GetComponent<RectTransform>().anchoredPosition;
