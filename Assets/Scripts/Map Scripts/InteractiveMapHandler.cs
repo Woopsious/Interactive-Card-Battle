@@ -76,7 +76,7 @@ namespace Woopsious
 		{
 			List<int> mapNodesToSpawnPerColumn = new()
 			{
-				1, 2, 2, 3, 6, 8, 8, 11
+				3, 5, 5, 10, 10, 8, 8, 4, 4, 3
 			};
 
 			mapCamera.gameObject.SetActive(true);
@@ -158,25 +158,78 @@ namespace Woopsious
 				Debug.LogError($"Land Type: {kvp.Key}, Count: {kvp.Value}");
 		}
 
-		//link previous and next nodes
+		//link nodes + handle row changes
 		void LinkPreviousAndCurrentNodes(Dictionary<int, MapNode> previousColumn, Dictionary<int, MapNode> currentColumn)
 		{
-			int rowDifference = currentColumn.Count - previousColumn.Count;
-			int rowRemainder = previousColumn.Count % currentColumn.Count;
+			int rowDifference = previousColumn.Count - currentColumn.Count;
 
-			if (rowDifference == 0)
-			{
-				HandleSameRows(previousColumn, currentColumn);
-			}
-			else if (rowRemainder == 0 || rowDifference == 1 || rowDifference == -1)
-			{
-				HandleExtraOrDoubleRows(previousColumn, currentColumn, rowDifference);
-				//Debug.LogError("Handling Extra/Double Row");
-			}
+			if (rowDifference < 0)
+				HandleExtraRows(previousColumn, currentColumn);
+			else if (rowDifference > 0)
+				HandleLessRows(previousColumn, currentColumn);
 			else
+				HandleSameRows(previousColumn, currentColumn);
+		}
+		void HandleExtraRows(Dictionary<int, MapNode> previousColumn, Dictionary<int, MapNode> currentColumn)
+		{
+			int nodeOffset = 0;
+			int extraNodesToLink = currentColumn.Count - previousColumn.Count;
+			float chanceForNoLink = ((float)currentColumn.Count - previousColumn.Count) / previousColumn.Count * 100;
+
+			//link nodes in previous column to nodes in current column
+			for (int prevColumnRow = 0; prevColumnRow < previousColumn.Count; prevColumnRow++)
 			{
-				HandleRemainderRows(previousColumn, currentColumn, rowDifference);
-				//Debug.LogError("Handling Remainder Rows");
+				previousColumn[prevColumnRow].AddLinkToNextNode(currentColumn[nodeOffset]);
+				SpawnNodeLinkObject(previousColumn[prevColumnRow], currentColumn[nodeOffset]);
+				nodeOffset++;
+
+				if (extraNodesToLink == 0) continue;
+
+				int nodesLeftToLink = previousColumn.Count - prevColumnRow - 1;
+				float roll;
+
+				if (extraNodesToLink >= nodesLeftToLink)
+					roll = 0f;
+				else
+					roll = (float)(systemRandom.NextDouble() * totalMapNodeSpawnChance);
+
+				if (roll > chanceForNoLink) continue;
+
+				extraNodesToLink--;
+				previousColumn[prevColumnRow].AddLinkToNextNode(currentColumn[nodeOffset]);
+				SpawnNodeLinkObject(previousColumn[prevColumnRow], currentColumn[nodeOffset]);
+				nodeOffset++;
+			}
+		}
+		void HandleLessRows(Dictionary<int, MapNode> previousColumn, Dictionary<int, MapNode> currentColumn)
+		{
+			int nodeOffset = 0;
+			int nodesToDoubleLink = previousColumn.Count - currentColumn.Count;
+			float chanceForNoLink = ((float)previousColumn.Count - currentColumn.Count) / currentColumn.Count * 100;
+
+			//link nodes in current column to nodes in previous column
+			for (int curColumnRow = 0; curColumnRow < currentColumn.Count; curColumnRow++)
+			{
+				currentColumn[curColumnRow].AddLinkToNextNode(previousColumn[nodeOffset]);
+				SpawnNodeLinkObject(currentColumn[curColumnRow], previousColumn[nodeOffset]);
+				nodeOffset++;
+
+				if (nodesToDoubleLink == 0) continue;
+
+				int nodesLeftToLink = currentColumn.Count - curColumnRow - 1;
+				float roll;
+
+				if (nodesToDoubleLink >= nodesLeftToLink)
+					roll = 0f;
+				else
+					roll = (float)(systemRandom.NextDouble() * totalMapNodeSpawnChance);
+
+				if (roll > chanceForNoLink) continue;
+
+				nodesToDoubleLink--;
+				currentColumn[curColumnRow].AddLinkToNextNode(previousColumn[nodeOffset]);
+				SpawnNodeLinkObject(currentColumn[curColumnRow], previousColumn[nodeOffset]);
+				nodeOffset++;
 			}
 		}
 		void HandleSameRows(Dictionary<int, MapNode> previousColumn, Dictionary<int, MapNode> currentColumn)
@@ -185,65 +238,6 @@ namespace Woopsious
 			{
 				previousColumn[columnRow].AddLinkToNextNode(currentColumn[columnRow]);
 				SpawnNodeLinkObject(previousColumn[columnRow], currentColumn[columnRow]);
-			}
-		}
-		void HandleExtraOrDoubleRows(Dictionary<int, MapNode> previousColumn, Dictionary<int, MapNode> currentColumn, int rowDifference)
-		{
-			if (rowDifference > 0)
-			{
-				int nodeLinks = currentColumn.Count / previousColumn.Count;
-
-				for (int prevColumnRow = 0; prevColumnRow < previousColumn.Count; prevColumnRow++)
-				{
-					int nodeOffset = nodeLinks * prevColumnRow;
-
-					previousColumn[prevColumnRow].AddLinkToNextNode(currentColumn[nodeOffset]);
-					SpawnNodeLinkObject(previousColumn[prevColumnRow], currentColumn[nodeOffset]);
-
-					nodeOffset += 1;
-
-					previousColumn[prevColumnRow].AddLinkToNextNode(currentColumn[nodeOffset]);
-					SpawnNodeLinkObject(previousColumn[prevColumnRow], currentColumn[nodeOffset]);
-				}
-			}
-			else
-			{
-
-			}
-		}
-		void HandleRemainderRows(Dictionary<int, MapNode> previousColumn, Dictionary<int, MapNode> currentColumn, int rowDifference)
-		{
-			if (rowDifference > 0)
-			{
-				int nodeOffset = 0;
-				int extraNodesToLink = currentColumn.Count - previousColumn.Count;
-				float chanceForNoLink = ((float)currentColumn.Count - previousColumn.Count) / previousColumn.Count * 100;
-
-				for (int prevColumnRow = 0; prevColumnRow < previousColumn.Count; prevColumnRow++)
-				{
-					previousColumn[prevColumnRow].AddLinkToNextNode(currentColumn[nodeOffset]);
-					SpawnNodeLinkObject(previousColumn[prevColumnRow], currentColumn[nodeOffset]);
-					nodeOffset++;
-
-					if (extraNodesToLink == 0) continue;
-
-					float roll = (float)(systemRandom.NextDouble() * totalMapNodeSpawnChance);
-					int nodesLeftToLink = previousColumn.Count - prevColumnRow - 1;
-
-					if (extraNodesToLink >= nodesLeftToLink)
-						roll = 0f;
-
-					if (roll > chanceForNoLink) continue;
-
-					extraNodesToLink--;
-					previousColumn[prevColumnRow].AddLinkToNextNode(currentColumn[nodeOffset]);
-					SpawnNodeLinkObject(previousColumn[prevColumnRow], currentColumn[nodeOffset]);
-					nodeOffset++;
-				}
-			}
-			else
-			{
-
 			}
 		}
 
