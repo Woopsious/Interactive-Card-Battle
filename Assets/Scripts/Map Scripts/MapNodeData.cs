@@ -8,7 +8,7 @@ namespace Woopsious
 		public string nodeName;
 		public enum NodeState
 		{
-			locked, canTravel, currentlyAt
+			locked, canTravel, currentlyAt, previouslyVisited
 		}
 
 		[Header("Node Basic Settings")]

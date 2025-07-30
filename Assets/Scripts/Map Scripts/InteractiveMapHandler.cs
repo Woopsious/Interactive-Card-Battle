@@ -89,6 +89,9 @@ namespace Woopsious
 				mapNodeTable.Add(columnIndex, newColumn);
 				SetNodeColumnPositions(newColumn, mapNodesToSpawnPerColumn.Count, columnIndex);
 
+				for (int rowIndex = 0; rowIndex < newColumn.Count; rowIndex++)
+					newColumn[rowIndex].AddSiblingNodes(newColumn);
+
 				if (columnIndex == 0) continue;
 				LinkPreviousAndCurrentNodes(mapNodeTable[columnIndex - 1], mapNodeTable[columnIndex]);
 			}

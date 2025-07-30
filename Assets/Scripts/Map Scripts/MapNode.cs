@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using Unity.VisualScripting;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEditor.Experimental.GraphView;
 
 namespace Woopsious
 {
@@ -35,6 +36,7 @@ namespace Woopsious
 		[Header("Linked Nodes")]
 		public List<MapNode> previousLinkedNodes = new();
 		public List<MapNode> nextLinkedNodes = new();
+		public List<MapNode> siblingNodes = new();
 
 		[Header("Debug options")]
 		public bool DisplayEncounterEnemies;
@@ -45,9 +47,9 @@ namespace Woopsious
 		}
 		public bool forceEliteFight;
 		public bool forceRuins;
-
-		Color gold = new(1f, 0.85f, 0f);
-		Color lightGray = new(0.6862745f, 0.6862745f, 0.6862745f);
+		private Color _ColourRed = new(0.55f, 0.25f, 0.25f);
+		private Color _ColourGreen = new(0.25f, 0.5f, 0.25f);
+		private Color _ColourGold = new(1f, 0.85f, 0f);
 
 		void Awake()
 		{
@@ -80,6 +82,14 @@ namespace Woopsious
 			else
 				LockNode();
 		}
+		public void AddSiblingNodes(Dictionary<int, MapNode> siblingNodes)
+		{
+			for (int i = 0; i < siblingNodes.Count; i++)
+			{
+				if (siblingNodes[i] == this) continue;
+				this.siblingNodes.Add(siblingNodes[i]);
+			}
+		}
 		public void AddLinkToNextNode(MapNode mapNode)
 		{
 			nextLinkedNodes.Add(mapNode);
@@ -94,13 +104,21 @@ namespace Woopsious
 		void BeginEncounter()
 		{
 			GameManager.BeginCardCombat(this);
-
 			CurrentlyAtNode();
 
-			foreach (MapNode previousNode in previousLinkedNodes)
-				previousNode.LockNode();
-			foreach (MapNode nextNode in nextLinkedNodes)
+			foreach (MapNode previousNode in previousLinkedNodes) //lock prev nodes
+			{
+				if (previousNode.nodeState == NodeState.currentlyAt)
+					previousNode.PreviouslyVisitedNode();
+				else
+					previousNode.LockNode();
+			}
+
+			foreach (MapNode nextNode in nextLinkedNodes) //unlock next nodes
 				nextNode.CanTravelToNode();
+
+			foreach (MapNode node in siblingNodes) //lock sibling nodes
+				node.LockNode();
 		}
 
 		//UPDATE NODE SETTINGS AT RUNTIME
@@ -209,19 +227,25 @@ namespace Woopsious
 		{
 			nodeState = NodeState.locked;
 			startEncounterButton.gameObject.SetActive(false);
-			backgroundImage.color = new Color(0.4f, 0f, 0f);
+			backgroundImage.color = _ColourRed;
 		}
-		public void CanTravelToNode()
+		void CanTravelToNode()
 		{
 			nodeState = NodeState.canTravel;
 			startEncounterButton.gameObject.SetActive(true);
-			backgroundImage.color = lightGray;
+			backgroundImage.color = _ColourGreen;
 		}
-		public void CurrentlyAtNode()
+		void CurrentlyAtNode()
 		{
 			nodeState = NodeState.currentlyAt;
 			startEncounterButton.gameObject.SetActive(false);
-			backgroundImage.color = gold;
+			backgroundImage.color = _ColourGold;
+		}
+		void PreviouslyVisitedNode()
+		{
+			nodeState = NodeState.previouslyVisited;
+			startEncounterButton.gameObject.SetActive(false);
+			backgroundImage.color = _ColourGold;
 		}
 
 		//update ui
@@ -235,13 +259,13 @@ namespace Woopsious
 				encounterTitle = "Basic Fight";
 				break;
 				case NodeEncounterType.eliteFight:
-				encounterTitle = "<color=purple>Elite Fight</color>";
+				encounterTitle = "<color=#800080>Elite Fight</color>"; //Eldritch Purple
 				break;
 				case NodeEncounterType.bossFight:
-				encounterTitle = "<color=red>Boss Fight</color>";
+				encounterTitle = "<color=#C81919>Boss Fight</color>"; //Red
 				break;
 				case NodeEncounterType.eliteBossFight:
-				encounterTitle = "<color=purple>Elite Boss Fight</color>";
+				encounterTitle = "<color=#800080>Elite Boss Fight</color>"; //Eldritch Purple
 				break;
 				case NodeEncounterType.freeCardUpgrade:
 				encounterTitle = "<color=#00FFFF>Free Card Upgrade</color>"; //Cyan
