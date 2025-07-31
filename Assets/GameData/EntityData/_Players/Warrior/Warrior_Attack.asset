@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c884579dafdc2754d85de74e4ad7743a, type: 3}
-  m_Name: Stab
+  m_Name: Warrior_Attack
   m_EditorClassIdentifier: 
-  cardName: Stab
-  cardDescription: Stab enemy
+  cardName: Sword Slash
+  cardDescription: Slash enemy with sword
   offensive: 1
   alsoHeals: 0
-  damage: 12
+  damage: 8
   damageType: 2

@@ -40,7 +40,7 @@ namespace Woopsious
 			AlsoHeals = CardData.alsoHeals;
 			Offensive = CardData.offensive;
 
-			string cardName = CardData.cardName + UnityEngine.Random.Range(1000, 9999);
+			string cardName = CardData.cardName;
 			gameObject.name = cardName;
 			cardNametext.text = cardName;
 			cardDescriptiontext.text = CardData.CreateDescription();
@@ -49,7 +49,6 @@ namespace Woopsious
 
 			replaceCardButton.gameObject.SetActive(true);
 		}
-
 		public void SetupCard(AttackData AttackData)
 		{
 			if (AttackData == null)

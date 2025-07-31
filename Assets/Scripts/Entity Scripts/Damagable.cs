@@ -5,6 +5,9 @@ namespace Woopsious
 {
 	public class DamageData
 	{
+		public Entity entityDamageSource;
+		public bool damageIgnoresBlock;
+
 		public readonly int damage;
 		public readonly DamageType damageType;
 		public enum DamageType
@@ -12,8 +15,10 @@ namespace Woopsious
 			block, heal, physical
 		}
 
-		public DamageData(int damage, DamageType damageType)
+		public DamageData(Entity entityDamageSource, bool damageIgnoresBlock, int damage, DamageType damageType)
 		{
+			this.entityDamageSource = entityDamageSource;
+			this.damageIgnoresBlock = damageIgnoresBlock;
 			this.damage = damage;
 			this.damageType = damageType;
 		}

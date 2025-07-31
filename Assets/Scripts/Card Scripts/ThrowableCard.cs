@@ -10,12 +10,13 @@ namespace Woopsious
 		Bounds bounds;
 		CardDeckUi cardDeckManagerUi;
 
-		Entity cardOwner;
+		[HideInInspector] public Entity cardOwner;
 		CardUi card;
 		Rigidbody2D rb;
 
-		public PlayerEntity PlayerRef { get; private set; }
-		bool isBeingDragged;
+		//public PlayerEntity PlayerRef { get; private set; }
+		bool draggedOntopOfPlayer;
+		[HideInInspector] public bool isBeingDragged;
 		bool inThrownCardsArea;
 		bool wasThrown;
 
@@ -54,7 +55,7 @@ namespace Woopsious
 		void OnTriggerEnter2D(Collider2D other)
 		{
 			if (!wasThrown && other.GetComponent<PlayerEntity>() != null)
-				PlayerEntityTriggerEnter(other.GetComponent<PlayerEntity>());
+				PlayerEntityTriggerEnter();
 			else if (other.GetComponent<CardDeckUi>() != null)
 				CardDeckTriggerEnter(other.GetComponent<CardDeckUi>());
 			else if (other.GetComponent<ThrowableCardArea>() != null)
@@ -73,13 +74,13 @@ namespace Woopsious
 		}
 
 		//trigger enter/exit funcs
-		void PlayerEntityTriggerEnter(PlayerEntity entity)
+		void PlayerEntityTriggerEnter()
 		{
-			PlayerRef = entity;
+			draggedOntopOfPlayer = true;
 		}
 		void PlayerEntityTriggerExit()
 		{
-			PlayerRef = null;
+			draggedOntopOfPlayer = false;
 		}
 
 		void CardDeckTriggerEnter(CardDeckUi cardDeckManagerUi)
@@ -136,6 +137,7 @@ namespace Woopsious
 		{
 			OnCardPickUp?.Invoke(card);
 			isBeingDragged = true;
+			draggedOntopOfPlayer = false;
 
 			cardOwner = TurnOrderManager.Player();
 			transform.SetParent(CardDeckUi.instance.movingCardsTransform);
@@ -160,8 +162,8 @@ namespace Woopsious
 			}
 			else
 			{
-				if (PlayerRef != null)
-					UseCard(PlayerRef);
+				if (draggedOntopOfPlayer)
+					UseCard(cardOwner);
 				else
 					CardDeckUi.instance.AddCardToPlayerDeck(card);
 			}
@@ -209,9 +211,9 @@ namespace Woopsious
 			if (!CardCanHitEntity(entity)) return;
 
 			if (card.AlsoHeals)
-				cardOwner.OnHit(new(card.Damage, DamageType.heal));
+				cardOwner.OnHit(new(cardOwner, false, card.Damage, DamageType.heal));
 
-			entity.OnHit(new(card.Damage, card.DamageType));
+			entity.OnHit(new(cardOwner, false, card.Damage, card.DamageType));
 			DestoryCard();
 		}
 		bool CardCanHitEntity(Entity entity)

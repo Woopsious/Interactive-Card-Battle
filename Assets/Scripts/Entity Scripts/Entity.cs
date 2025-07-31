@@ -32,6 +32,7 @@ namespace Woopsious
 		public static event Action<Entity> OnEntityDeath;
 
 		CancellationTokenSource cancellationToken = new();
+		private readonly System.Random systemRandom = new();
 
 		void Start()
 		{
@@ -57,7 +58,7 @@ namespace Woopsious
 				return;
 			}
 
-			string cardName = entityData.entityName + UnityEngine.Random.Range(1000, 9999);
+			string cardName = entityData.entityName;
 			gameObject.name = cardName;
 			entityNameText.text = cardName;
 			health = entityData.maxHealth;
@@ -192,23 +193,23 @@ namespace Woopsious
 		}
 
 		//entity hits via cards
-		public void OnHit(DamageData damageData)
+		public virtual void OnHit(DamageData damageData)
 		{
 			if (damageData.damageType == DamageType.block)
 				AddBlock(damageData.damage);
 			else if (damageData.damageType == DamageType.heal)
 				RecieveHealing(damageData.damage);
 			else if (damageData.damageType == DamageType.physical)
-				RecieveDamage(damageData.damage);
+				RecieveDamage(damageData);
 			else
 				Debug.LogError("no hit type set up");
 		}
-		void AddBlock(int block)
+		protected void AddBlock(int block)
 		{
 			this.block += block;
 			UpdateUi();
 		}
-		void RecieveHealing(int healing)
+		protected void RecieveHealing(int healing)
 		{
 			health += healing;
 			if (health > entityData.maxHealth)
@@ -216,10 +217,25 @@ namespace Woopsious
 
 			UpdateUi();
 		}
-		void RecieveDamage(int damage)
+		protected void RecieveDamage(DamageData damageData)
 		{
-			damage = GetBlockedDamage(damage);
-			health -= damage;
+			int damage = damageData.damage;
+
+			if (damageData.entityDamageSource.entityData.playerClass == EntityData.PlayerClass.Mage)
+			{
+				float roll = (float)(systemRandom.NextDouble() * 100);
+				if (roll < damageData.entityDamageSource.entityData.chanceOfDoubleDamage)
+					damage *= 2;
+			}
+
+			if (damageData.damageIgnoresBlock)
+				health -= damage;
+			else
+			{
+				damage = GetBlockedDamage(damage);
+				health -= damage;
+			}
+
 			UpdateUi();
 			OnDeath();
 		}

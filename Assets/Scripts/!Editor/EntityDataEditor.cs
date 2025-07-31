@@ -33,18 +33,37 @@ namespace Woopsious
 			EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.isPlayer)));
 
 			EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.maxHealth)));
-			EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.minHealPercentage)));
 
 			if (data.isPlayer)
 			{
+				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.playerClass)));
+
+				if (data.playerClass == EntityData.PlayerClass.Mage)
+					EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.chanceOfDoubleDamage)));
+				else if (data.playerClass == EntityData.PlayerClass.Ranger)
+					EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.healOnKillPercentage)));
+				else if (data.playerClass == EntityData.PlayerClass.Rogue)
+					EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.damageReflectedPercentage)));
+				else if (data.playerClass == EntityData.PlayerClass.Warrior)
+					EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.extraBlockPerTurn)));
+
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.maxCardsUsedPerTurn)));
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.maxDamageCardsUsedPerTurn)));
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.maxNonDamageCardsUsedPerTurn)));
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.maxReplaceableCardsPerTurn)));
+
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.cards)), true);
+
+				GUILayout.Space(10);
+				EditorGUILayout.LabelField("Create New Card For Player Class", EditorStyles.boldLabel);
+				if (GUILayout.Button("Create New CardData"))
+					CreateCardDataScriptableObject();
+				GUILayout.Space(10);
 			}
             else
 			{
+				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.minHealPercentage)));
+
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.enemyType)));
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.foundInLandTypes)));
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.entitySpawnChance)));
@@ -52,7 +71,7 @@ namespace Woopsious
 
 				GUILayout.Space(10);
 				EditorGUILayout.LabelField("Create New Move For Entity", EditorStyles.boldLabel);
-				if (GUILayout.Button("Create New Move AttackData"))
+				if (GUILayout.Button("Create New AttackData"))
 					CreateAttackDataScriptableObject();
 				GUILayout.Space(10);
 
@@ -64,6 +83,24 @@ namespace Woopsious
 			// Write back changed values
 			// This also handles all marking dirty, saving, undo/redo etc
 			serializedObject.ApplyModifiedProperties();
+		}
+
+		void CreateCardDataScriptableObject()
+		{
+			CardData asset = CreateInstance<CardData>();
+
+			// Choose path to save
+			string currentAssetPath = Path.GetDirectoryName(AssetDatabase.GetAssetPath(data));
+			currentAssetPath = AssetDatabase.GenerateUniqueAssetPath(currentAssetPath + "/NewCardData.asset");
+
+			// Save asset to the project
+			AssetDatabase.CreateAsset(asset, currentAssetPath);
+			AssetDatabase.SaveAssets();
+			AssetDatabase.Refresh();
+
+			// Select it in the Project window
+			EditorUtility.FocusProjectWindow();
+			Selection.activeObject = asset;
 		}
 
 		void CreateAttackDataScriptableObject()
@@ -88,6 +125,8 @@ namespace Woopsious
 			EditorUtility.FocusProjectWindow();
 			Selection.activeObject = asset;
 		}
+
+
 		void BuildLists()
 		{
 			attackDataList.Clear();

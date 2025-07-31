@@ -25,17 +25,33 @@ namespace Woopsious
 		public float entitySpawnChance;
 		public bool eliteEnemy;
 
-		[Header("Entity Health")]
+		[Header("Entity Stats")]
 		public int maxHealth;
 		[Range(0f, 1f)]
 		[Tooltip("If health percentage drops below, entity will use heal over other moves in its move set")]
 		public float minHealPercentage;
 
-		[Header("Player Cards")] //shown as player
-		[HideInInspector] public int maxCardsUsedPerTurn;
-		[HideInInspector] public int maxDamageCardsUsedPerTurn;
-		[HideInInspector] public int maxNonDamageCardsUsedPerTurn;
-		[HideInInspector] public int maxReplaceableCardsPerTurn;
+		[Header("Player Class")]
+		public PlayerClass playerClass;
+		public enum PlayerClass
+		{
+			NotPlayer, Mage, Ranger, Rogue, Warrior
+		}
+
+		//player class gimmicks
+		[Range(0f, 100f)]
+		public float chanceOfDoubleDamage; //Mage
+		[Range(0f, 100f)]
+		public float healOnKillPercentage; //Ranger
+		[Range(0f, 100f)]
+		public float damageReflectedPercentage; //Rogue
+		public int extraBlockPerTurn; //Warrior
+
+		[Header("Player Cards")]
+		public int maxCardsUsedPerTurn;
+		public int maxDamageCardsUsedPerTurn;
+		public int maxNonDamageCardsUsedPerTurn;
+		public int maxReplaceableCardsPerTurn;
 
 		public List<CardData> cards = new();
 
