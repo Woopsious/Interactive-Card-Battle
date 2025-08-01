@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4f033c656ca190f478155417260a6d26, type: 3}
-  m_Name: Forest
+  m_Name: Desert
   m_EditorClassIdentifier: 
-  nodeName: Forest
-  landTypes: 4
+  nodeName: Desert
+  landTypes: 16
   maxLandModifiers: 2
-  applyableLandModifiers: 7
-  nodeSpawnChance: 50
+  applyableLandModifiers: 28
+  nodeSpawnChance: 20
   entityBudget: 175
-  chanceOfRuins: 25
-  chanceOfTown: 10
-  chanceOfCursed: 10
-  chanceOfVolcanic: 0
-  chanceOfCaves: 0
+  chanceOfRuins: 0
+  chanceOfTown: 0
+  chanceOfCursed: 15
+  chanceOfVolcanic: 20
+  chanceOfCaves: 12
   chanceOfEliteFight: 15
   chanceOfFreeCardUpgrade: 10

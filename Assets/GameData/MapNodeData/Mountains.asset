@@ -13,10 +13,15 @@ MonoBehaviour:
   m_Name: Mountains
   m_EditorClassIdentifier: 
   nodeName: Mountains
-  landTypes: 4
-  nodeType: 0
-  entityBudget: 200
+  landTypes: 8
+  maxLandModifiers: 2
+  applyableLandModifiers: 24
   nodeSpawnChance: 20
-  chanceOfRuins: 8
-  chanceOfEliteFight: 6
-  chanceOfFreeCardUpgrade: 5
+  entityBudget: 200
+  chanceOfRuins: 0
+  chanceOfTown: 0
+  chanceOfCursed: 0
+  chanceOfVolcanic: 30
+  chanceOfCaves: 50
+  chanceOfEliteFight: 18
+  chanceOfFreeCardUpgrade: 10

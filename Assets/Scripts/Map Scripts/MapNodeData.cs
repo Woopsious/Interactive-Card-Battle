@@ -11,33 +11,55 @@ namespace Woopsious
 			locked, canTravel, currentlyAt, previouslyVisited
 		}
 
-		[Header("Node Basic Settings")]
+		[Header("Land Type")]
 		public LandTypes landTypes;
 		[System.Flags]
 		public enum LandTypes : int
 		{
-			none = 0, grassland = 1, forest = 2, mountains = 4, caves = 8, ruins = 16
+			none = 0, grassland = 1, hills = 2, forest = 4, mountains = 8, desert = 16, tundra = 32
 		}
 
-		public NodeEncounterType nodeType;
+		[Header("Modifiers")]
+		public int maxLandModifiers;
+		public LandModifiers applyableLandModifiers;
+		[System.Flags]
+		public enum LandModifiers : int
+		{
+			none = 0, ruins = 1, town = 2, cursed = 4, volcanic = 8, caves = 16
+		}
+
+		//set at runtime
 		public enum NodeEncounterType
 		{
 			basicFight, eliteFight, bossFight, eliteBossFight, freeCardUpgrade
 		}
 
-		public int entityBudget;
+		[Header("Node Settings")]
 		[Range(0f, 100f)]
 		public float nodeSpawnChance;
+		public int entityBudget;
 
 		[Header("Chance Modifiers")]
-		[Tooltip("Base Value: 8%")]
+		[Tooltip("Base Value: 15%")]
 		[Range(0f, 100f)]
 		public float chanceOfRuins;
+		[Tooltip("Base Value: 15%")]
 		[Range(0f, 100f)]
-		[Tooltip("Base Value: 5%")]
+		public float chanceOfTown;
+		[Tooltip("Base Value: 15%")]
+		[Range(0f, 100f)]
+		public float chanceOfCursed;
+		[Tooltip("Base Value: 15%")]
+		[Range(0f, 100f)]
+		public float chanceOfVolcanic;
+		[Tooltip("Base Value: 15%")]
+		[Range(0f, 100f)]
+		public float chanceOfCaves;
+		[Range(0f, 100f)]
+		[Tooltip("Base Value: 10%")]
 		public float chanceOfEliteFight;
 		[Range(0f, 100f)]
-		[Tooltip("Base Value: 5%")]
+		[Tooltip("Base Value: 10%")]
 		public float chanceOfFreeCardUpgrade;
 	}
 }

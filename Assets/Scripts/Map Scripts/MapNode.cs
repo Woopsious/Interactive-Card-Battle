@@ -14,6 +14,7 @@ namespace Woopsious
 	{
 		[Header("Ui")]
 		public TMP_Text encounterTitleText;
+		public TMP_Text encounterLandTypeText;
 		public TMP_Text encounterModifiersText;
 		public TMP_Text encounterEnemiesText;
 		public Button startEncounterButton;
@@ -26,6 +27,7 @@ namespace Woopsious
 		public NodeState nodeState;
 		public EnemyTypes enemyTypes;
 		public LandTypes landTypes;
+		public LandModifiers landModifiers;
 		public NodeEncounterType nodeEncounterType;
 
 		[Header("Entity Spawn Table")]
@@ -40,16 +42,24 @@ namespace Woopsious
 
 		[Header("Debug options")]
 		public bool DisplayEncounterEnemies;
+		public bool forceEliteFight;
+		public ForceLandModifier forceLandModifier;
+		[System.Flags]
+		public enum ForceLandModifier
+		{
+			none = 0, ruins = 1, town = 2, cursed = 4, volcanic = 8, caves = 16
+		}
 		public ForceEncounterType forceEncounterType;
 		public enum ForceEncounterType
 		{
 			noForceEncounter, forceBossFight, forceCardUpgrade
 		}
-		public bool forceEliteFight;
-		public bool forceRuins;
+
 		private Color _ColourRed = new(0.55f, 0.25f, 0.25f);
 		private Color _ColourGreen = new(0.25f, 0.5f, 0.25f);
 		private Color _ColourGold = new(1f, 0.85f, 0f);
+
+		private readonly System.Random systemRandom = new();
 
 		void Awake()
 		{
@@ -67,21 +77,25 @@ namespace Woopsious
 			entityBudget = mapNodeData.entityBudget;
 			nodeState = NodeState.locked;
 			landTypes = mapNodeData.landTypes;
-			nodeEncounterType = mapNodeData.nodeType;
+			landModifiers = LandModifiers.none;
+			nodeEncounterType = NodeEncounterType.basicFight;
 
 			ApplyRandomizedSettings(bossFightNode);
 			CheckAndForceDebugSettings();
 			SetEnemyTypes();
 
-			UpdateEncounterTitleUi();
-			UpdateEncounterModifiersUi();
-			UpdateEncounterEnemiesUi();
+			encounterTitleText.text = UpdateEncounterTitleUi();
+			encounterLandTypeText.text = UpdateEncounterLandTypeUi();
+			encounterModifiersText.text = UpdateEncounterModifiersUi();
+			encounterEnemiesText.text = UpdateEncounterEnemiesUi();
 
 			if (startingNode)
 				CanTravelToNode();
 			else
 				LockNode();
 		}
+
+		//node linking
 		public void AddSiblingNodes(Dictionary<int, MapNode> siblingNodes)
 		{
 			for (int i = 0; i < siblingNodes.Count; i++)
@@ -133,14 +147,36 @@ namespace Woopsious
 			if (bossFightNode)
 				nodeEncounterType = MakeEncounterBossFight();
 
-			if (GetRandomNumber() < mapNodeData.chanceOfRuins)
-				landTypes = AddRuinsLandType();
+			if (mapNodeData.applyableLandModifiers.HasFlag(LandModifiers.ruins) && GetRandomNumber() < mapNodeData.chanceOfRuins)
+				landModifiers = AddRuinsLandModifier();
+			if (mapNodeData.applyableLandModifiers.HasFlag(LandModifiers.town) && GetRandomNumber() < mapNodeData.chanceOfRuins)
+				landModifiers = AddTownLandModifier();
+			if (mapNodeData.applyableLandModifiers.HasFlag(LandModifiers.cursed) && GetRandomNumber() < mapNodeData.chanceOfRuins)
+				landModifiers = AddCursedLandModifier();
+			if (mapNodeData.applyableLandModifiers.HasFlag(LandModifiers.volcanic) && GetRandomNumber() < mapNodeData.chanceOfRuins)
+				landModifiers = AddVolcanicLandModifier();
+			if (mapNodeData.applyableLandModifiers.HasFlag(LandModifiers.caves) && GetRandomNumber() < mapNodeData.chanceOfRuins)
+				landModifiers = AddCavesLandModifier();
 
 			if (GetRandomNumber() < mapNodeData.chanceOfEliteFight)
 				nodeEncounterType = MakeEncounterElite();
 		}
 		void CheckAndForceDebugSettings()
 		{
+			if (forceEliteFight)
+				nodeEncounterType = MakeEncounterElite();
+
+			if (forceLandModifier.HasFlag(ForceLandModifier.ruins))
+				landModifiers = AddRuinsLandModifier();
+			if (forceLandModifier.HasFlag(ForceLandModifier.town))
+				landModifiers = AddTownLandModifier();
+			if (forceLandModifier.HasFlag(ForceLandModifier.cursed))
+				landModifiers = AddCursedLandModifier();
+			if (forceLandModifier.HasFlag(ForceLandModifier.volcanic))
+				landModifiers = AddVolcanicLandModifier();
+			if (forceLandModifier.HasFlag(ForceLandModifier.caves))
+				landModifiers = AddCavesLandModifier();
+
 			switch (forceEncounterType)
 			{
 				case ForceEncounterType.noForceEncounter:
@@ -152,12 +188,6 @@ namespace Woopsious
 				nodeEncounterType = MakeEncounterFreeCardUpgrade();
 				break;
 			}
-
-			if (forceEliteFight)
-				nodeEncounterType = MakeEncounterElite();
-
-			if (forceRuins)
-				landTypes = AddRuinsLandType();
 		}
 		void SetEnemyTypes()
 		{
@@ -165,8 +195,12 @@ namespace Woopsious
 
 			foreach (EntityData entity in SpawnManager.instance.entityDataTypes)
 			{
-				if ((landTypes & entity.foundInLandTypes) != LandTypes.none) //toggle flag if land types match
+				//toggle flag if land types match
+				if ((landTypes & entity.foundInLandTypes) != LandTypes.none  || (landModifiers & entity.foundWithLandModifiers) != LandModifiers.none)
 				{
+					if (PossibleEntities.Count != 0)
+						if (PossibleEntities.Contains(entity)) continue;
+
 					PossibleEntities.Add(entity);
 					totalPossibleEntitiesSpawnChance += (int)entity.entitySpawnChance;
 					enemyTypes |= entity.enemyType;
@@ -212,14 +246,35 @@ namespace Woopsious
 				return nodeEncounterType;
 			}
 		}
-		LandTypes AddRuinsLandType()
+		LandModifiers AddRuinsLandModifier()
 		{
-			LandTypes updateLandType = mapNodeData.landTypes | LandTypes.ruins;
-			return updateLandType;
+			LandModifiers addedModifier = landModifiers | LandModifiers.ruins;
+			return addedModifier;
 		}
-		float GetRandomNumber()
+		LandModifiers AddTownLandModifier()
 		{
-			return Random.Range(0f, 100f);
+			LandModifiers addedModifier = landModifiers | LandModifiers.town;
+			return addedModifier;
+		}
+		LandModifiers AddCursedLandModifier()
+		{
+			LandModifiers addedModifier = landModifiers | LandModifiers.cursed;
+			return addedModifier;
+		}
+		LandModifiers AddVolcanicLandModifier()
+		{
+			LandModifiers addedModifier = landModifiers | LandModifiers.volcanic;
+			return addedModifier;
+		}
+		LandModifiers AddCavesLandModifier()
+		{
+			LandModifiers addedModifier = landModifiers | LandModifiers.caves;
+			return addedModifier;
+		}
+		double GetRandomNumber()
+		{
+			double roll = systemRandom.NextDouble() * 100;
+			return roll;
 		}
 
 		//update node state
@@ -249,7 +304,7 @@ namespace Woopsious
 		}
 
 		//update ui
-		void UpdateEncounterTitleUi()
+		string UpdateEncounterTitleUi()
 		{
 			string encounterTitle = "";
 
@@ -272,43 +327,67 @@ namespace Woopsious
 				break;
 			}
 
-			encounterTitleText.text = encounterTitle;
+			return encounterTitle;
 		}
-		void UpdateEncounterModifiersUi()
+		string UpdateEncounterLandTypeUi()
 		{
-			string encounterModifiers = "Enviroment: \n";
+			string encounterLandType = "";
 
 			if (landTypes.HasFlag(LandTypes.grassland))
-				encounterModifiers += "<color=green>Grasslands</color>";
+				encounterLandType += "<color=green>Grasslands</color>";
+			else if (landTypes.HasFlag(LandTypes.hills))
+				encounterLandType += "<color=#7C9A61>Hills</color>"; //Muted Green
 			else if (landTypes.HasFlag(LandTypes.forest))
-				encounterModifiers += "<color=#006400>Forest</color>"; //Dark green
+				encounterLandType += "<color=#006400>Forest</color>"; //Dark Green
 			else if (landTypes.HasFlag(LandTypes.mountains))
-				encounterModifiers += "<color=grey>Mountains</color>";
-			else if (landTypes.HasFlag(LandTypes.caves))
-				encounterModifiers += "<color=black>Caves</color>";
+				encounterLandType += "<color=#5A5E5B>Mountains</color>"; //Dark Slate
+			else if (landTypes.HasFlag(LandTypes.desert))
+				encounterLandType += "<color=#DCC38C>Desert</color>"; //Golden Sand
+			else if (landTypes.HasFlag(LandTypes.tundra))
+				encounterLandType += "<color=#CDE2EA>Tundra</color>"; //Icy Blue
 
-			if (landTypes.HasFlag(LandTypes.ruins))
-				encounterModifiers += " with <color=#00FFFF>Ruins</color>"; //Cyan
-
-			encounterModifiersText.text = encounterModifiers;
+			return encounterLandType;
 		}
-		void UpdateEncounterEnemiesUi()
+		string UpdateEncounterModifiersUi()
+		{
+			string encounterModifiers = "Modifiers: \n";
+
+			if (landModifiers == LandModifiers.none)
+				return encounterModifiers += "None";
+
+			if (landModifiers.HasFlag(LandModifiers.ruins))
+				encounterModifiers += "<color=#00FFFF>Ruins, </color>"; //Cyan
+			if (landModifiers.HasFlag(LandModifiers.town))
+				encounterModifiers += "<color=#00FFFF>Town, </color>"; //Cyan
+			if (landModifiers.HasFlag(LandModifiers.cursed))
+				encounterModifiers += "<color=#00FFFF>Cursed, </color>"; //Cyan
+			if (landModifiers.HasFlag(LandModifiers.volcanic))
+				encounterModifiers += "<color=#00FFFF>Volcanic, </color>"; //Cyan
+			if (landModifiers.HasFlag(LandModifiers.caves))
+				encounterModifiers += "<color=#00FFFF>Caves, </color>"; //Cyan
+
+			encounterModifiers = RemoveLastComma(encounterModifiers);
+
+			return encounterModifiers;
+		}
+		string UpdateEncounterEnemiesUi()
 		{
 			string encounterEnemies = "Possible Enemies: \n";
 
 			if (nodeEncounterType == NodeEncounterType.freeCardUpgrade)
 			{
 				encounterEnemies += "None";
-				encounterEnemiesText.text = encounterEnemies;
-				return;
+				return encounterEnemies;
 			}
 
 			if (DisplayEncounterEnemies)
 				encounterEnemies += DisplayEncouterEnemiesIndividualy();
 			else
-				encounterEnemies += DisplayEncouterEnemeyTypes();
+				encounterEnemies += DisplayEncouterEnemyTypes();
 
-			encounterEnemiesText.text = encounterEnemies;
+			encounterEnemies = RemoveLastComma(encounterEnemies);
+
+			return encounterEnemies;
 		}
 		string DisplayEncouterEnemiesIndividualy()
 		{
@@ -316,7 +395,8 @@ namespace Woopsious
 
 			foreach (EntityData entity in SpawnManager.instance.entityDataTypes)
 			{
-				if ((landTypes & entity.foundInLandTypes) != LandTypes.none) //check if any land type flags match
+				//check if any LandType/LandModifier flags match
+				if ((landTypes & entity.foundInLandTypes) != LandTypes.none || (landModifiers & entity.foundWithLandModifiers) != LandModifiers.none)
 				{
 					switch (entity.enemyType)
 					{
@@ -335,7 +415,7 @@ namespace Woopsious
 						case EnemyTypes.undead:
 						encounterEnemies += "<color=#2F4F4F>" + entity.name + "</color>" + ", "; //Bloodless Gray
 						break;
-						case EnemyTypes.Abberrations:
+						case EnemyTypes.Abberration:
 						encounterEnemies += "<color=#800080>" + entity.name + "</color>" + ", "; //Eldritch Purple
 						break;
 					}
@@ -344,7 +424,7 @@ namespace Woopsious
 
 			return encounterEnemies;
 		}
-		string DisplayEncouterEnemeyTypes()
+		string DisplayEncouterEnemyTypes()
 		{
 			string encounterEnemies = "";
 
@@ -358,10 +438,20 @@ namespace Woopsious
 				encounterEnemies += "<color=#2a3439>Constructs</color>" + ", "; //Gun Metal
 			if (enemyTypes.HasFlag(EnemyTypes.undead))
 				encounterEnemies += "<color=#2F4F4F>Undead</color>" + ", "; //Bloodless Gray
-			if (enemyTypes.HasFlag(EnemyTypes.Abberrations))
+			if (enemyTypes.HasFlag(EnemyTypes.Abberration))
 				encounterEnemies += "<color=#800080>Abberrations</color>" + ", "; //Eldritch Purple
 
 			return encounterEnemies;
+		}
+
+		string RemoveLastComma(string input)
+		{
+			int lastCommaIndex = input.LastIndexOf(',');
+
+			if (lastCommaIndex >= 0)
+				return input.Remove(lastCommaIndex, 1);
+
+			return input;
 		}
 	}
 }

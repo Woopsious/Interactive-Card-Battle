@@ -10,18 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4f033c656ca190f478155417260a6d26, type: 3}
-  m_Name: Forest
+  m_Name: _TestNode
   m_EditorClassIdentifier: 
-  nodeName: Forest
-  landTypes: 4
-  maxLandModifiers: 2
-  applyableLandModifiers: 7
+  nodeName: TestNode
+  landTypes: 0
+  applyableLandModifiers: 0
+  entityBudget: 150
   nodeSpawnChance: 50
-  entityBudget: 175
-  chanceOfRuins: 25
-  chanceOfTown: 10
-  chanceOfCursed: 10
-  chanceOfVolcanic: 0
-  chanceOfCaves: 0
-  chanceOfEliteFight: 15
-  chanceOfFreeCardUpgrade: 10
+  chanceOfRuins: 8
+  chanceOfEliteFight: 5
+  chanceOfFreeCardUpgrade: 5

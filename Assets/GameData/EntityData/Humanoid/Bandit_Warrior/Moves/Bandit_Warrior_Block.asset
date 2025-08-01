@@ -9,14 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f033c656ca190f478155417260a6d26, type: 3}
-  m_Name: Caves
+  m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
+  m_Name: Bandit_Warrior_Block
   m_EditorClassIdentifier: 
-  nodeName: Caves
-  landTypes: 8
-  nodeType: 0
-  entityBudget: 175
-  nodeSpawnChance: 40
-  chanceOfRuins: 8
-  chanceOfEliteFight: 8
-  chanceOfFreeCardUpgrade: 2
+  attackName: Block
+  attackDescription: Block attacks with shield
+  offensive: 0
+  alsoHeals: 0
+  damage: 8
+  damageType: 0
+  attackCooldownTurns: 1
+  attackUseChance: 0.6

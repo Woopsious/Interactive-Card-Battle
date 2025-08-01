@@ -14,9 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nodeName: Grasslands
   landTypes: 1
-  nodeType: 0
-  entityBudget: 150
+  maxLandModifiers: 2
+  applyableLandModifiers: 7
   nodeSpawnChance: 80
-  chanceOfRuins: 5
-  chanceOfEliteFight: 4
-  chanceOfFreeCardUpgrade: 7.5
+  entityBudget: 150
+  chanceOfRuins: 8
+  chanceOfTown: 50
+  chanceOfCursed: 5
+  chanceOfVolcanic: 0
+  chanceOfCaves: 0
+  chanceOfEliteFight: 10
+  chanceOfFreeCardUpgrade: 10

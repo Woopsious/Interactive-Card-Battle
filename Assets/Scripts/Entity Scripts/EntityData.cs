@@ -18,9 +18,10 @@ namespace Woopsious
 		[Flags]
 		public enum EnemyTypes : int
 		{
-			none = 0, slime = 1, beast = 2, humanoid = 4, construct = 8, undead = 16, Abberrations = 32
+			none = 0, slime = 1, beast = 2, humanoid = 4, construct = 8, undead = 16, Abberration = 32
 		}
 		public LandTypes foundInLandTypes;
+		public LandModifiers foundWithLandModifiers;
 		[Range(0f, 100f)]
 		public float entitySpawnChance;
 		public bool eliteEnemy;
@@ -84,7 +85,7 @@ namespace Woopsious
 				return 1.3f;
 				case EnemyTypes.undead:
 				return 1.5f;
-				case EnemyTypes.Abberrations:
+				case EnemyTypes.Abberration:
 				return 1.75f;
 				default:
 				Debug.LogError("failed to match enemy type");

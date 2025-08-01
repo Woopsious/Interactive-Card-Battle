@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4f033c656ca190f478155417260a6d26, type: 3}
-  m_Name: Forest
+  m_Name: Hills
   m_EditorClassIdentifier: 
-  nodeName: Forest
-  landTypes: 4
+  nodeName: Hills
+  landTypes: 2
   maxLandModifiers: 2
-  applyableLandModifiers: 7
-  nodeSpawnChance: 50
-  entityBudget: 175
-  chanceOfRuins: 25
-  chanceOfTown: 10
-  chanceOfCursed: 10
+  applyableLandModifiers: 23
+  nodeSpawnChance: 60
+  entityBudget: 150
+  chanceOfRuins: 10
+  chanceOfTown: 30
+  chanceOfCursed: 8
   chanceOfVolcanic: 0
-  chanceOfCaves: 0
-  chanceOfEliteFight: 15
+  chanceOfCaves: 20
+  chanceOfEliteFight: 10
   chanceOfFreeCardUpgrade: 10

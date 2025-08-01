@@ -66,6 +66,7 @@ namespace Woopsious
 
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.enemyType)));
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.foundInLandTypes)));
+				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.foundWithLandModifiers)));
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.entitySpawnChance)));
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.eliteEnemy)));
 

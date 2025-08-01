@@ -16,11 +16,17 @@ MonoBehaviour:
   entityDescription: 
   isPlayer: 0
   enemyType: 16
-  foundInLandTypes: 24
+  foundInLandTypes: 0
+  foundWithLandModifiers: 5
   entitySpawnChance: 40
   eliteEnemy: 0
   maxHealth: 70
   minHealPercentage: 0
+  playerClass: 0
+  chanceOfDoubleDamage: 0
+  healOnKillPercentage: 0
+  damageReflectedPercentage: 0
+  extraBlockPerTurn: 0
   maxCardsUsedPerTurn: 0
   maxDamageCardsUsedPerTurn: 0
   maxNonDamageCardsUsedPerTurn: 0

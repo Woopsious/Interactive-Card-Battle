@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4f033c656ca190f478155417260a6d26, type: 3}
-  m_Name: Forest
+  m_Name: Tundra
   m_EditorClassIdentifier: 
-  nodeName: Forest
-  landTypes: 4
+  nodeName: Tundra
+  landTypes: 32
   maxLandModifiers: 2
-  applyableLandModifiers: 7
-  nodeSpawnChance: 50
+  applyableLandModifiers: 14
+  nodeSpawnChance: 20
   entityBudget: 175
-  chanceOfRuins: 25
+  chanceOfRuins: 0
   chanceOfTown: 10
-  chanceOfCursed: 10
-  chanceOfVolcanic: 0
+  chanceOfCursed: 20
+  chanceOfVolcanic: 15
   chanceOfCaves: 0
   chanceOfEliteFight: 15
   chanceOfFreeCardUpgrade: 10

@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 862c4da70e93762488b165155f5dd2cb, type: 3}
-  m_Name: Bear
+  m_Name: Wolf_Arctic
   m_EditorClassIdentifier: 
-  entityName: Bear
-  entityDescription: A Hungry looking bear
+  entityName: Arctic Wolf
+  entityDescription: An Aggressive arctic wolf
   isPlayer: 0
   enemyType: 2
-  foundInLandTypes: 3
-  foundWithLandModifiers: 16
-  entitySpawnChance: 40
+  foundInLandTypes: 32
+  foundWithLandModifiers: 0
+  entitySpawnChance: 75
   eliteEnemy: 0
-  maxHealth: 60
+  maxHealth: 30
   minHealPercentage: 0
   playerClass: 0
   chanceOfDoubleDamage: 0
@@ -34,9 +34,10 @@ MonoBehaviour:
   cards: []
   moveSetOrder:
   - moveSetMoves:
-    - {fileID: 11400000, guid: 6fe0d96667276b14096967e8b9c45606, type: 2}
-    - {fileID: 11400000, guid: 46a39df2c4b8bc6448a2807654e347a2, type: 2}
+    - {fileID: 11400000, guid: 74c10a3cdde7ad14ab5f6a38437fb1ac, type: 2}
   - moveSetMoves:
-    - {fileID: 11400000, guid: 46a39df2c4b8bc6448a2807654e347a2, type: 2}
+    - {fileID: 11400000, guid: bba5404a514a38444b0afe3411fbed61, type: 2}
   - moveSetMoves:
-    - {fileID: 11400000, guid: bba36a84ede971945babb5c3261f4886, type: 2}
+    - {fileID: 11400000, guid: 33ed35b19e1fac54ab38c83e229e21da, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: bba5404a514a38444b0afe3411fbed61, type: 2}

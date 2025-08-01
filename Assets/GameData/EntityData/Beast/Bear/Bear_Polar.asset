@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 862c4da70e93762488b165155f5dd2cb, type: 3}
-  m_Name: Bear
+  m_Name: Bear_Polar
   m_EditorClassIdentifier: 
-  entityName: Bear
-  entityDescription: A Hungry looking bear
+  entityName: Polar Bear
+  entityDescription: A Hungry looking polar bear
   isPlayer: 0
   enemyType: 2
-  foundInLandTypes: 3
-  foundWithLandModifiers: 16
+  foundInLandTypes: 32
+  foundWithLandModifiers: 0
   entitySpawnChance: 40
   eliteEnemy: 0
   maxHealth: 60

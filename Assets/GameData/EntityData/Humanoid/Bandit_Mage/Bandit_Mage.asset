@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 862c4da70e93762488b165155f5dd2cb, type: 3}
-  m_Name: Bear
+  m_Name: Bandit_Mage
   m_EditorClassIdentifier: 
-  entityName: Bear
-  entityDescription: A Hungry looking bear
+  entityName: Bandit Mage
+  entityDescription: A human Bandit, looks like a mage
   isPlayer: 0
-  enemyType: 2
-  foundInLandTypes: 3
-  foundWithLandModifiers: 16
+  enemyType: 4
+  foundInLandTypes: -1
+  foundWithLandModifiers: -1
   entitySpawnChance: 40
   eliteEnemy: 0
-  maxHealth: 60
-  minHealPercentage: 0
+  maxHealth: 50
+  minHealPercentage: 0.5
   playerClass: 0
   chanceOfDoubleDamage: 0
   healOnKillPercentage: 0
@@ -34,9 +34,12 @@ MonoBehaviour:
   cards: []
   moveSetOrder:
   - moveSetMoves:
-    - {fileID: 11400000, guid: 6fe0d96667276b14096967e8b9c45606, type: 2}
-    - {fileID: 11400000, guid: 46a39df2c4b8bc6448a2807654e347a2, type: 2}
+    - {fileID: 11400000, guid: 71652cea0971beb44b26754f3a7a9830, type: 2}
   - moveSetMoves:
-    - {fileID: 11400000, guid: 46a39df2c4b8bc6448a2807654e347a2, type: 2}
+    - {fileID: 11400000, guid: 4eae7c938fe356c4aa243ddaaa112a6a, type: 2}
   - moveSetMoves:
-    - {fileID: 11400000, guid: bba36a84ede971945babb5c3261f4886, type: 2}
+    - {fileID: 11400000, guid: 42e30d1c8b2511c4f9e72a42bdabac54, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: 71652cea0971beb44b26754f3a7a9830, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: 4eae7c938fe356c4aa243ddaaa112a6a, type: 2}
