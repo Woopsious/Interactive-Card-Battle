@@ -16,5 +16,5 @@ MonoBehaviour:
   cardDescription: Block attacks with shield
   offensive: 0
   alsoHeals: 0
-  damage: 5
+  damage: 10
   damageType: 0

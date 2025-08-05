@@ -16,7 +16,7 @@ MonoBehaviour:
   entityDescription: A human sized spider
   isPlayer: 0
   enemyType: 2
-  foundInLandTypes: 14
+  foundInLandTypes: 12
   foundWithLandModifiers: 16
   entitySpawnChance: 50
   eliteEnemy: 0

@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using static Woopsious.DamageData;
 
 namespace Woopsious
@@ -34,6 +35,17 @@ namespace Woopsious
 		CancellationTokenSource cancellationToken = new();
 		private readonly System.Random systemRandom = new();
 
+		//background image highlight
+		protected Image imageHighlight;
+		Color _ColourDarkRed = new(0.3921569f, 0, 0, 1);
+		protected Color _ColourIceBlue = new(0, 1, 1, 1);
+		protected Color _ColourYellow = new(0.7843137f, 0.6862745f, 0, 1);
+
+		void Awake()
+		{
+			imageHighlight = GetComponent<Image>();
+			imageHighlight.color = _ColourDarkRed;
+		}
 		void Start()
 		{
 			SetupEntity();
@@ -43,11 +55,24 @@ namespace Woopsious
 		{
 			TurnOrderManager.OnNewRoundStartEvent += NewRoundStart;
 			TurnOrderManager.OnNewTurnEvent += StartTurn;
+			CardHandler.OnCardPickUp += OnCardPicked;
 		}
 		void OnDisable()
 		{
 			TurnOrderManager.OnNewRoundStartEvent -= NewRoundStart;
 			TurnOrderManager.OnNewTurnEvent -= StartTurn;
+			CardHandler.OnCardPickUp -= OnCardPicked;
+		}
+
+		void OnTriggerEnter2D(Collider2D other)
+		{
+			if (other.GetComponent<CardUi>() != null)
+				CardEnter(other.GetComponent<CardUi>());
+		}
+		void OnTriggerExit2D(Collider2D other)
+		{
+			if (other.GetComponent<CardUi>() != null)
+				CardExit(other.GetComponent<CardUi>());
 		}
 
 		void SetupEntity()
@@ -185,9 +210,9 @@ namespace Woopsious
 			card.SetupCard(attackData);
 
 			if (card.Offensive)
-				card.throwableCard.EnemyThrowCard(this, TurnOrderManager.Player().transform.localPosition);
+				card.cardHandler.EnemyUseCard(this, TurnOrderManager.Player());
 			else
-				card.throwableCard.EnemyUseCard(this);
+				card.cardHandler.EnemyUseCard(this, this);
 
 			OnEnemyAttack?.Invoke();
 		}
@@ -260,6 +285,44 @@ namespace Woopsious
 			{
 				OnEntityDeath?.Invoke(this);
 				Destroy(gameObject);
+			}
+		}
+
+		//update image border highlight
+		protected virtual void OnCardPicked(CardUi card)
+		{
+			if (card == null)
+				imageHighlight.color = _ColourDarkRed;
+			else
+			{
+				if (card.Offensive)
+					imageHighlight.color = _ColourIceBlue;
+				else
+					imageHighlight.color = _ColourDarkRed;
+			}
+		}
+		protected virtual void CardEnter(CardUi card)
+		{
+			if (card == null)
+				imageHighlight.color = _ColourDarkRed;
+			else
+			{
+				if (card.Offensive)
+					imageHighlight.color = _ColourYellow;
+				else
+					imageHighlight.color = _ColourDarkRed;
+			}
+		}
+		protected virtual void CardExit(CardUi card)
+		{
+			if (card == null)
+				imageHighlight.color = _ColourDarkRed;
+			else
+			{
+				if (card.Offensive && card.cardHandler.isBeingDragged)
+					imageHighlight.color = _ColourIceBlue;
+				else
+					imageHighlight.color = _ColourDarkRed;
 			}
 		}
 

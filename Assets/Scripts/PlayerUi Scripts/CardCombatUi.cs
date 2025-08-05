@@ -12,7 +12,7 @@ namespace Woopsious
 		[Header("Ui Panels")]
 		public GameObject CardDeckUi;
 		public GameObject PlayedCardUi;
-		public GameObject MovingCardsArea;
+		public RectTransform DraggedCardsArea;
 
 		[Header("Ui Elements")]
 		public TMP_Text currentRoundInfoText;
@@ -79,7 +79,6 @@ namespace Woopsious
 		{
 			CardDeckUi.SetActive(false);
 			PlayedCardUi.SetActive(false);
-			MovingCardsArea.SetActive(false);
 
 			currentRoundInfoText.gameObject.SetActive(false);
 			currentTurnInfoText.gameObject.SetActive(false);
@@ -95,7 +94,6 @@ namespace Woopsious
 		{
 			CardDeckUi.SetActive(true);
 			PlayedCardUi.SetActive(true);
-			MovingCardsArea.SetActive(true);
 
 			currentRoundInfoText.gameObject.SetActive(true);
 			currentTurnInfoText.gameObject.SetActive(true);

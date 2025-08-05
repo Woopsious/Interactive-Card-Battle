@@ -1029,7 +1029,7 @@ MonoBehaviour:
   previousLinkedNodes: []
   nextLinkedNodes: []
   siblingNodes: []
-  DisplayEncounterEnemies: 1
+  DisplayEncounterEnemies: 0
   forceEliteFight: 0
   forceLandModifier: 0
   forceEncounterType: 0

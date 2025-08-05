@@ -16,5 +16,5 @@ MonoBehaviour:
   cardDescription: Shoot arrow at enemy
   offensive: 1
   alsoHeals: 0
-  damage: 10
+  damage: 15
   damageType: 2

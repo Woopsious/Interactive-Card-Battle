@@ -7,7 +7,7 @@ namespace Woopsious
 {
 	public class CardUi : MonoBehaviour
 	{
-		[HideInInspector] public ThrowableCard throwableCard;
+		[HideInInspector] public CardHandler cardHandler;
 
 		public TMP_Text cardNametext;
 		public TMP_Text cardDescriptiontext;
@@ -25,7 +25,7 @@ namespace Woopsious
 
 		void Awake()
 		{
-			throwableCard = GetComponent<ThrowableCard>();
+			cardHandler = GetComponent<CardHandler>();
 		}
 
 		public void SetupCard(CardData CardData)

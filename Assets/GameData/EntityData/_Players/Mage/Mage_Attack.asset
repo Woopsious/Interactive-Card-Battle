@@ -16,5 +16,5 @@ MonoBehaviour:
   cardDescription: Cast a Bolt
   offensive: 1
   alsoHeals: 0
-  damage: 12
+  damage: 15
   damageType: 2

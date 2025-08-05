@@ -16,5 +16,5 @@ MonoBehaviour:
   cardDescription: Dodge incoming attacks
   offensive: 0
   alsoHeals: 0
-  damage: 5
+  damage: 8
   damageType: 0

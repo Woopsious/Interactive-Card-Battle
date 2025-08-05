@@ -16,5 +16,5 @@ MonoBehaviour:
   cardDescription: Slash enemy with sword
   offensive: 1
   alsoHeals: 0
-  damage: 8
+  damage: 10
   damageType: 2

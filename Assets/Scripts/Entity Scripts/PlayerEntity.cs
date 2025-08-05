@@ -8,7 +8,6 @@ namespace Woopsious
 	public class PlayerEntity : Entity
 	{
 		RectTransform rectTransform;
-		Image imageHighlight;
 
 		Color _ColourDarkGreen = new(0, 0.3921569f, 0, 1);
 
@@ -30,26 +29,13 @@ namespace Woopsious
 		{
 			TurnOrderManager.OnNewTurnEvent += StartTurn;
 			CardUi.OnCardReplace += OnReplaceCard;
-			ThrowableCard.OnCardPickUp += OnCardPicked;
 			OnEntityDeath += RangerHealOnKill;
 		}
 		void OnDisable()
 		{
 			TurnOrderManager.OnNewTurnEvent -= StartTurn;
 			CardUi.OnCardReplace -= OnReplaceCard;
-			ThrowableCard.OnCardPickUp -= OnCardPicked;
 			OnEntityDeath += RangerHealOnKill;
-		}
-
-		void OnTriggerEnter2D(Collider2D other)
-		{
-			if (other.GetComponent<CardUi>() != null)
-				ThrowableCardEnter(other.GetComponent<CardUi>());
-		}
-		void OnTriggerExit2D(Collider2D other)
-		{
-			if (other.GetComponent<CardUi>() != null)
-				ThrowableCardExit(other.GetComponent<CardUi>());
 		}
 
 		protected override void StartTurn(Entity entity)
@@ -73,7 +59,6 @@ namespace Woopsious
 			nonDamageCardsUsedThisTurn = 0;
 			cardsReplacedThisTurn = 0;
 		}
-
 		public void UpdateCardsUsed(bool offensiveCard)
 		{
 			cardsUsedThisTurn++;
@@ -99,12 +84,16 @@ namespace Woopsious
 			}
 		}
 
+		//entity hits via cards
 		public override void OnHit(DamageData damageData)
 		{
 			base.OnHit(damageData);
+
+			if (damageData.damageType is DamageType.block or DamageType.heal) return;
 			RogueReflectDamageRecieved(damageData);
 		}
 
+		//special class effects for player
 		void RangerHealOnKill(Entity entity)
 		{
 			if (entity == this) return;
@@ -125,38 +114,38 @@ namespace Woopsious
 		}
 
 		//update image border highlight
-		void OnCardPicked(CardUi card)
+		protected override void OnCardPicked(CardUi card)
 		{
 			if (card == null)
 				imageHighlight.color = _ColourDarkGreen;
 			else
 			{
-				if (card.Offensive)
-					imageHighlight.color = _ColourDarkGreen;
+				if (!card.Offensive)
+					imageHighlight.color = _ColourIceBlue;
 				else
-					imageHighlight.color = Color.red;
+					imageHighlight.color = _ColourDarkGreen;
 			}
 		}
-		void ThrowableCardEnter(CardUi card)
+		protected override void CardEnter(CardUi card)
 		{
 			if (card == null)
 				imageHighlight.color = _ColourDarkGreen;
 			else
 			{
-				if (card.Offensive)
-					imageHighlight.color = _ColourDarkGreen;
+				if (!card.Offensive)
+					imageHighlight.color = _ColourYellow;
 				else
-					imageHighlight.color = Color.cyan;
+					imageHighlight.color = _ColourDarkGreen;
 			}
 		}
-		void ThrowableCardExit(CardUi card)
+		protected override void CardExit(CardUi card)
 		{
 			if (card == null)
 				imageHighlight.color = _ColourDarkGreen;
 			else
 			{
-				if (!card.Offensive && card.throwableCard.isBeingDragged)
-					imageHighlight.color = Color.red;
+				if (!card.Offensive && card.cardHandler.isBeingDragged)
+					imageHighlight.color = _ColourIceBlue;
 				else
 					imageHighlight.color = _ColourDarkGreen;
 			}

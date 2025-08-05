@@ -9,7 +9,9 @@ namespace Woopsious
 		public static CardDeckUi instance;
 
 		Image imageHighlight;
-		Color colorGrey = new(0.3921569f, 0.3921569f, 0.3921569f, 1);
+		Color _ColourGrey = new(0.3921569f, 0.3921569f, 0.3921569f, 1);
+		Color _ColourIceBlue = new(0, 1, 1, 1);
+		Color _ColourYellow = new(0.7843137f, 0.6862745f, 0, 1);
 
 		private RectTransform cardDeckRectTransform;
 		public RectTransform[] cardSlotRectTransforms = new RectTransform[5];
@@ -20,6 +22,7 @@ namespace Woopsious
 
 		bool damageCardsHidden;
 		bool nonDamageCardsHidden;
+		bool hideReplaceCardsButton;
 		bool playerPickedUpCard;
 
 		void Awake()
@@ -36,7 +39,7 @@ namespace Woopsious
 			PlayerEntity.HideOffensiveCards += HideMatchingCards;
 			PlayerEntity.HideReplaceCardsButton += HideReplaceCardsButton;
 			CardUi.OnCardReplace += ReplaceCardInDeck;
-			ThrowableCard.OnCardPickUp += OnCardPicked;
+			CardHandler.OnCardPickUp += OnCardPicked;
 		}
 		void OnDestroy()
 		{
@@ -44,7 +47,7 @@ namespace Woopsious
 			PlayerEntity.HideOffensiveCards -= HideMatchingCards;
 			PlayerEntity.HideReplaceCardsButton -= HideReplaceCardsButton;
 			CardUi.OnCardReplace -= ReplaceCardInDeck;
-			ThrowableCard.OnCardPickUp -= OnCardPicked;
+			CardHandler.OnCardPickUp -= OnCardPicked;
 		}
 
 		void OnTriggerEnter2D(Collider2D other)
@@ -103,18 +106,25 @@ namespace Woopsious
 			if (!cards.Contains(card))
 				cards.Add(card);
 
-			foreach (RectTransform cardSlotRectTransform in cardSlotRectTransforms)
+			for (int i = 0;i < cards.Count; i++)
 			{
-				if (cardSlotRectTransform.transform.childCount == 1)
-					continue;
-				else if (cardSlotRectTransform.transform.childCount == 0)
+				if (cardSlotRectTransforms[i].transform.childCount == 1) continue;
+				else if (cardSlotRectTransforms[i].transform.childCount == 0)
 				{
-					card.transform.SetParent(cardSlotRectTransform.transform, false);
+					if (card.Offensive && damageCardsHidden || !card.Offensive && nonDamageCardsHidden)
+					{
+						Transform cardSlotTransform = card.transform.parent;
+						HideCard(cardSlotTransform.GetSiblingIndex());
+					}
+					else
+						ShowCard(i);
+					
+					card.transform.SetParent(cardSlotRectTransforms[i].transform, false);
 					card.transform.localPosition = Vector3.zero;
 					break;
 				}
 				else
-					Debug.LogError("child count of card slots incorrect: " + cardSlotRectTransform.transform.childCount);
+					Debug.LogError("child count of card slots incorrect: " + cardSlotRectTransforms[i].transform.childCount);
 			}
 		}
 
@@ -126,6 +136,7 @@ namespace Woopsious
 			{
 				damageCardsHidden = false;
 				nonDamageCardsHidden = false;
+				hideReplaceCardsButton = false;
 
 				RemoveNullCardsFromPlayerDeck();
 				while (cards.Count < 5)
@@ -138,30 +149,22 @@ namespace Woopsious
 		void HideMatchingCards(bool hideDamageCards)
 		{
 			if (hideDamageCards)
-			{
-				Debug.LogError("hiding Damage Cards");
 				damageCardsHidden = true;
-
-				for (int i = 0; i < cards.Count; i++)
-				{
-					if (cards[i].Offensive)
-						HideCard(i);
-				}
-			}
 			else
-			{
-				Debug.LogError("hiding Non Damage Cards");
 				nonDamageCardsHidden = true;
 
-				for (int i = 0; i < cards.Count; i++)
-				{
-					if (!cards[i].Offensive)
-						HideCard(i);
-				}
+			foreach (CardUi card in cards)
+			{
+				if (card == null) continue;
+
+				if (card.Offensive == hideDamageCards)
+					HideCard(card.transform.parent.GetSiblingIndex() - 1);
 			}
 		}
 		void HideReplaceCardsButton()
 		{
+			hideReplaceCardsButton = true;
+
 			for (int i = 0; i < cards.Count; i++)
 			{
 				if (cards[i] == null) continue;
@@ -175,30 +178,30 @@ namespace Woopsious
 			if (card != null)
 			{
 				playerPickedUpCard = true;
-				imageHighlight.color = Color.red;
+				imageHighlight.color = _ColourYellow;
 			}
 			else
 			{
 				playerPickedUpCard = false;
-				imageHighlight.color = colorGrey;
+				imageHighlight.color = _ColourGrey;
 			}
 		}
 		void ThrowableCardEnter()
 		{
 			if (!playerPickedUpCard) return;
-			imageHighlight.color = Color.cyan;
+			imageHighlight.color = _ColourYellow;
 		}
 		void ThrowableCardExit()
 		{
 			if (!playerPickedUpCard) return;
-			imageHighlight.color = Color.red;
+			imageHighlight.color = _ColourIceBlue;
 		}
 
 		//show/hide deck + all cards
 		void ShowCardDeck()
 		{
 			cardDeckRectTransform.anchoredPosition = Vector2.zero;
-			imageHighlight.color = colorGrey;
+			imageHighlight.color = _ColourGrey;
 
 			for (int i = 0; i < cardSlotRectTransforms.Length; i++)
 				ShowCard(i);
@@ -206,7 +209,7 @@ namespace Woopsious
 		void HideCardDeck()
 		{
 			cardDeckRectTransform.anchoredPosition = new Vector2(0, -50);
-			imageHighlight.color = colorGrey;
+			imageHighlight.color = _ColourGrey;
 
 			for (int i = 0; i < cardSlotRectTransforms.Length; i++)
 				HideCard(i);
@@ -219,7 +222,11 @@ namespace Woopsious
 			{
 				cards[i].selectable = true;
 				cards[i].replaceCardButton.anchoredPosition = new Vector2(0, 5);
-				cards[i].replaceCardButton.gameObject.SetActive(true);
+
+				if (hideReplaceCardsButton)
+					cards[i].replaceCardButton.gameObject.SetActive(false);
+				else
+					cards[i].replaceCardButton.gameObject.SetActive(true);
 			}
 
 			switch (i)
@@ -252,6 +259,11 @@ namespace Woopsious
 			{
 				cards[i].selectable = false;
 				cards[i].replaceCardButton.anchoredPosition = new Vector2(0, 230);
+
+				if (hideReplaceCardsButton)
+					cards[i].replaceCardButton.gameObject.SetActive(false);
+				else
+					cards[i].replaceCardButton.gameObject.SetActive(true);
 			}
 
 			cardSlotRectTransforms[i].transform.localRotation = Quaternion.Euler(0, 0, 0);

@@ -16,5 +16,5 @@ MonoBehaviour:
   cardDescription: Stab enemy with dagger
   offensive: 1
   alsoHeals: 0
-  damage: 10
+  damage: 12
   damageType: 2

@@ -16,5 +16,5 @@ MonoBehaviour:
   cardDescription: Heal self
   offensive: 0
   alsoHeals: 0
-  damage: 5
+  damage: 15
   damageType: 1
