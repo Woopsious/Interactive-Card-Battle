@@ -597,10 +597,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 215461738}
+  - component: {fileID: 215461739}
   - component: {fileID: 215461737}
   - component: {fileID: 215461736}
   - component: {fileID: 215461735}
-  - component: {fileID: 215461739}
   m_Layer: 5
   m_Name: CardCombatCanvas
   m_TagString: Untagged
@@ -683,11 +683,11 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 824218642}
   - {fileID: 37824104}
   - {fileID: 2072515820}
   - {fileID: 366729781}
   - {fileID: 1524205310}
+  - {fileID: 824218642}
   - {fileID: 1553117978}
   - {fileID: 1076092764}
   - {fileID: 546958708}
@@ -868,12 +868,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 366729781}
+  - component: {fileID: 366729775}
   - component: {fileID: 366729780}
   - component: {fileID: 366729779}
   - component: {fileID: 366729778}
   - component: {fileID: 366729777}
   - component: {fileID: 366729776}
-  - component: {fileID: 366729775}
   m_Layer: 5
   m_Name: CardDeckUi
   m_TagString: Untagged
@@ -893,14 +893,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09fe3b73d7fc1fb429fa7efe38c924cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardSlotRectTransforms:
-  - {fileID: 737230944}
-  - {fileID: 1628109283}
-  - {fileID: 717966400}
-  - {fileID: 1161063816}
-  - {fileID: 1074873369}
-  movingCardsTransform: {fileID: 0}
-  cards: []
+  cardSlots:
+  - {fileID: 737230948}
+  - {fileID: 1628109287}
+  - {fileID: 717966404}
+  - {fileID: 1161063820}
+  - {fileID: 1074873373}
+  movingCardsTransform: {fileID: 824218642}
 --- !u!61 &366729776
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1718,6 +1717,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 717966400}
+  - component: {fileID: 717966404}
   - component: {fileID: 717966403}
   - component: {fileID: 717966402}
   - component: {fileID: 717966401}
@@ -1795,6 +1795,19 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &717966404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 717966399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8201878317734645b3aea5143acd8fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cardSlotIndex: 0
 --- !u!1 &737230943
 GameObject:
   m_ObjectHideFlags: 0
@@ -1804,6 +1817,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 737230944}
+  - component: {fileID: 737230948}
   - component: {fileID: 737230947}
   - component: {fileID: 737230946}
   - component: {fileID: 737230945}
@@ -1881,6 +1895,19 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &737230948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 737230943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8201878317734645b3aea5143acd8fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cardSlotIndex: 0
 --- !u!1 &812837357
 GameObject:
   m_ObjectHideFlags: 0
@@ -2235,6 +2262,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1074873369}
+  - component: {fileID: 1074873373}
   - component: {fileID: 1074873372}
   - component: {fileID: 1074873371}
   - component: {fileID: 1074873370}
@@ -2312,6 +2340,19 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1074873373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1074873368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8201878317734645b3aea5143acd8fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cardSlotIndex: 0
 --- !u!1 &1076092763
 GameObject:
   m_ObjectHideFlags: 0
@@ -2555,6 +2596,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1161063816}
+  - component: {fileID: 1161063820}
   - component: {fileID: 1161063819}
   - component: {fileID: 1161063818}
   - component: {fileID: 1161063817}
@@ -2632,6 +2674,19 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1161063820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1161063815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8201878317734645b3aea5143acd8fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cardSlotIndex: 0
 --- !u!1 &1164447926
 GameObject:
   m_ObjectHideFlags: 0
@@ -3194,7 +3249,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1480236296}
   - component: {fileID: 1480236300}
-  - component: {fileID: 1480236299}
   - component: {fileID: 1480236298}
   - component: {fileID: 1480236297}
   m_Layer: 5
@@ -3262,30 +3316,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1480236295}
   m_CullTransparentMesh: 1
---- !u!114 &1480236299
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1480236295}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 100
-    m_Right: 100
-    m_Top: 100
-    m_Bottom: 100
-  m_ChildAlignment: 0
-  m_StartCorner: 0
-  m_StartAxis: 0
-  m_CellSize: {x: 300, y: 300}
-  m_Spacing: {x: 495, y: 650}
-  m_Constraint: 0
-  m_ConstraintCount: 2
 --- !u!114 &1480236300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3320,8 +3350,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1524205310}
-  - component: {fileID: 1524205309}
   - component: {fileID: 1524205308}
+  - component: {fileID: 1524205309}
   m_Layer: 5
   m_Name: PlayedCardUi
   m_TagString: Untagged
@@ -3531,10 +3561,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1606297254}
+  - component: {fileID: 1606297255}
   - component: {fileID: 1606297253}
   - component: {fileID: 1606297252}
   - component: {fileID: 1606297251}
-  - component: {fileID: 1606297255}
   m_Layer: 5
   m_Name: InteractiveMapCanvas
   m_TagString: Untagged
@@ -3648,6 +3678,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1628109283}
+  - component: {fileID: 1628109287}
   - component: {fileID: 1628109286}
   - component: {fileID: 1628109285}
   - component: {fileID: 1628109284}
@@ -3725,6 +3756,19 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1628109287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1628109282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8201878317734645b3aea5143acd8fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cardSlotIndex: 0
 --- !u!1 &1706509154
 GameObject:
   m_ObjectHideFlags: 0

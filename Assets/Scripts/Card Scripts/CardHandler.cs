@@ -115,7 +115,7 @@ namespace Woopsious
 			else if (touchingEnemyRef != null)
 				UseCardOnTarget(touchingEnemyRef);
 			else
-				CardDeckUi.instance.AddCardToPlayerDeck(card);
+				CardDeckUi.instance.ReturnCardToPlayerDeck(card);
 
 			touchingPlayerRef = null;
 			touchingEnemyRef = null;
