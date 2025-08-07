@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Woopsious
 {
@@ -30,12 +32,16 @@ namespace Woopsious
 
 		public static GameManager instance;
 
-		public TMP_Text fpsCounter;
+		//player runtime class
+		public static EntityData playerClass;
 
-		int framerateCounter = 0;
-		float timeCounter = 0.0f;
-		float lastFramerate = 0.0f;
-		public float refreshTime = 0.5f;
+		//scene names
+		public readonly string mainScene = "MainScene";
+		public readonly string gameScene = "GameScene";
+
+		//loaded scenes
+		public Scene loadedMainScene;
+		public Scene loadedGameScene;
 
 		public static event Action<MapNode> OnStartCardCombatEvent;
 		public static event Action OnStartCardCombatUiEvent;
@@ -45,41 +51,24 @@ namespace Woopsious
 		private void Awake()
 		{
 			instance = this;
+			loadedMainScene = SceneManager.GetActiveScene();
 		}
 		private void Start()
 		{
 			ShowMap();
 		}
 
-		private void Update()
-		{
-			GetFps();
-		}
-
 		void OnEnable()
 		{
+			SceneManager.sceneLoaded += OnLoadSceneFinish;
+			SceneManager.sceneUnloaded += OnUnloadSceneFinish;
 			Entity.OnEntityDeath += EndCardCombat;
 		}
 		void OnDisable()
 		{
+			SceneManager.sceneLoaded -= OnLoadSceneFinish;
+			SceneManager.sceneUnloaded -= OnUnloadSceneFinish;
 			Entity.OnEntityDeath -= EndCardCombat;
-		}
-
-		void GetFps()
-		{
-			if (timeCounter < refreshTime)
-			{
-				timeCounter += Time.deltaTime;
-				framerateCounter++;
-			}
-			else
-			{
-				//This code will break if you set your m_refreshTime to 0, which makes no sense.
-				lastFramerate = framerateCounter / timeCounter;
-				framerateCounter = 0;
-				timeCounter = 0.0f;
-			}
-			fpsCounter.text = "FPS: " + (int)lastFramerate;
 		}
 
 		//start/end card combat
@@ -112,6 +101,62 @@ namespace Woopsious
 				Time.timeScale = 0f;
 			else
 				Time.timeScale = 1f;
+		}
+
+		//LOAD SCENES
+		void LoadGameScene()
+		{
+			StartCoroutine(LoadSceneAsync(gameScene));
+		}
+
+		//SCENE LOADING
+		private IEnumerator LoadSceneAsync(string sceneToLoad)
+		{
+			Debug.LogError("loading scene name: " + sceneToLoad + " at: " + DateTime.Now.ToString());
+
+			AsyncOperation asyncLoadScene = SceneManager.LoadSceneAsync(sceneToLoad, LoadSceneMode.Additive);
+
+			while (!asyncLoadScene.isDone)
+				yield return null;
+		}
+
+		//SCENE LOAD EVENT
+		private void OnLoadSceneFinish(Scene newLoadedScene, LoadSceneMode mode)
+		{
+			Debug.LogError("loaded scene name: " + newLoadedScene.name + " at: " + DateTime.Now.ToString());
+
+			UpdateActiveSceneToMainScene(newLoadedScene);
+			UpdateCurrentlyLoadedScene(newLoadedScene);
+		}
+
+		//SCENE UNLOADING
+		private IEnumerator TryUnLoadSceneAsync(string sceneToUnLoad)
+		{
+			AsyncOperation asyncUnLoadScene = SceneManager.UnloadSceneAsync(sceneToUnLoad);
+
+			while (!asyncUnLoadScene.isDone)
+				yield return null;
+		}
+
+		//SCENE UNLOAD EVENT
+		private void OnUnloadSceneFinish(Scene unLoadedScene)
+		{
+			Debug.LogError("unloaded scene: " + unLoadedScene.name + " at: " + DateTime.Now.ToString());
+		}
+
+		//SCENE CHECKS/UPDATES
+		private void UpdateActiveSceneToMainScene(Scene newLoadedScene)
+		{
+			Scene currentActiveScene = SceneManager.GetActiveScene();
+			if (currentActiveScene.name == mainScene) return;
+			SceneManager.SetActiveScene(newLoadedScene);
+		}
+		private void UpdateCurrentlyLoadedScene(Scene newLoadedScene)
+		{
+			if (newLoadedScene.name == mainScene)   //scene always stays loaded
+				loadedMainScene = newLoadedScene;
+			else if (newLoadedScene.name == gameScene)
+				loadedGameScene = newLoadedScene;
 		}
 	}
 }

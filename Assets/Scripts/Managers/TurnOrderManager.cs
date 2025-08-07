@@ -79,7 +79,7 @@ namespace Woopsious
 			if (enemyEntities.Count > 0)
 			{
 				for (int i = enemyEntities.Count - 1; i >= 0; i--)
-					Destroy(enemyEntities[i].gameObject);
+					enemyEntities[i].DebugKill();
 
 				enemyEntities.Clear();
 			}

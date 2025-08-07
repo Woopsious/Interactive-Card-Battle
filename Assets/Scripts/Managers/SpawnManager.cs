@@ -73,12 +73,18 @@ namespace Woopsious
 			bool spawnEnemies = true;
 			while (spawnEnemies)
 			{
-				Entity spawnedEntity = Instantiate(instance.EntityPrefab, instance.canvas.transform).GetComponent<Entity>();
-				spawnedEntity.entityData = instance.GetWeightedEntitySpawn(mapNode);
+				Entity entity = PoolingManager.instance.RequestEntity();
 
-				await mapNode.BuyEnemy(spawnedEntity.entityData);
-				spawnedEntites.Add(spawnedEntity);
-				OnEnemySpawned?.Invoke(spawnedEntity);
+				if (entity == null)
+					entity = Instantiate(instance.EntityPrefab, instance.canvas.transform).GetComponent<Entity>();
+
+				entity.entityData = instance.GetWeightedEntitySpawn(mapNode);
+				entity.transform.SetParent(instance.canvas.transform);
+				entity.gameObject.SetActive(true);
+
+				await mapNode.BuyEnemy(entity.entityData);
+				spawnedEntites.Add(entity);
+				OnEnemySpawned?.Invoke(entity);
 
 				if (spawnedEntites.Count >= 5 || mapNode.entityBudget < mapNode.cheapistEnemyCost)
 					spawnEnemies = false;

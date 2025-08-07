@@ -48,7 +48,7 @@ namespace Woopsious
 		}
 		void Start()
 		{
-			SetupEntity();
+			InitilizeEntity();
 		}
 
 		void OnEnable()
@@ -75,7 +75,7 @@ namespace Woopsious
 				CardExit(other.GetComponent<CardUi>());
 		}
 
-		void SetupEntity()
+		void InitilizeEntity()
 		{
 			if (entityData == null)
 			{
@@ -284,8 +284,15 @@ namespace Woopsious
 			if (health <= 0)
 			{
 				OnEntityDeath?.Invoke(this);
-				Destroy(gameObject);
+				gameObject.SetActive(false);
 			}
+		}
+
+		//debugs
+		public void DebugKill()
+		{
+			health = 0;
+			OnDeath();
 		}
 
 		//update image border highlight
