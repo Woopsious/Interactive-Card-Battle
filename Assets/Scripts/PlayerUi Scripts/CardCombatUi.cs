@@ -64,7 +64,7 @@ namespace Woopsious
 		}
 		void UpdateCurrentTurnText(Entity entity)
 		{
-			currentTurnInfoText.text = entity.entityData.entityName + "'s turn";
+			currentTurnInfoText.text = entity.EntityData.entityName + "'s turn";
 		}
 		void ShowHideEndPlayerTurnButton(Entity entity)
 		{

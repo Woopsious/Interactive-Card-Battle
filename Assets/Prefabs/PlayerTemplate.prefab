@@ -288,7 +288,7 @@ GameObject:
   - component: {fileID: 2165728888666346268}
   - component: {fileID: 1453047648358434025}
   - component: {fileID: 7150289283468408251}
-  - component: {fileID: 3979020627920233318}
+  - component: {fileID: 4959695063293482393}
   m_Layer: 5
   m_Name: PlayerTemplate
   m_TagString: Untagged
@@ -404,7 +404,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 125, y: 125}
   m_EdgeRadius: 0
---- !u!114 &3979020627920233318
+--- !u!114 &4959695063293482393
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -413,7 +413,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5386469954458961082}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89e38731cce5c9f43914741ecc46122c, type: 3}
+  m_Script: {fileID: 11500000, guid: ae9c3ace7a8185f4a908865b3d0a4e4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   entityData: {fileID: 11400000, guid: 8bfb230dbaec90644aa0b19c479cf573, type: 2}
@@ -423,8 +423,6 @@ MonoBehaviour:
   turnIndicator: {fileID: 8401865776216599779}
   health: 0
   block: 0
-  previousUsedMove: {fileID: 0}
-  previousUsedMoveIndex: 0
 --- !u!1 &5404073770167879110
 GameObject:
   m_ObjectHideFlags: 0

@@ -51,14 +51,14 @@ namespace Woopsious
 		//trigger enter/exit funcs
 		void EntityTriggerEnter(Entity entity)
 		{
-			if (entity.entityData.isPlayer)
+			if (entity.EntityData.isPlayer)
 				touchingPlayerRef = (PlayerEntity)entity;
 			else
 				touchingEnemyRef = entity;
 		}
 		void EntityTriggerExit(Entity entity)
 		{
-			if (entity.entityData.isPlayer)
+			if (entity.EntityData.isPlayer)
 				touchingPlayerRef = null;
 			else
 				touchingEnemyRef = null;

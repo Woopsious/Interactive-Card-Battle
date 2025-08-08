@@ -11,7 +11,9 @@ namespace Woopsious
 {
 	public class Entity : MonoBehaviour, IDamagable
 	{
-		public EntityData entityData;
+		public bool debugInitilizeEntity;
+		public EntityData EntityData { get; private set; }
+		EntityMoves entityMoves;
 
 		public TMP_Text entityNameText;
 		public TMP_Text entityHealthText;
@@ -21,18 +23,9 @@ namespace Woopsious
 		public int health;
 		public int block;
 
-		public List<EnemyMoveSet> enemyMovesList = new();
-		public AttackData previousUsedMove;
-		public int previousUsedMoveIndex;
-
-		public static event Action<AttackData> OnEnemyMoveFound;
-		public static event Action OnEnemyAttack;
-		public static event Action OnEnemyAttackCancel;
-
 		public static event Action<Entity> OnTurnEndEvent;
 		public static event Action<Entity> OnEntityDeath;
 
-		CancellationTokenSource cancellationToken = new();
 		private readonly System.Random systemRandom = new();
 
 		//background image highlight
@@ -43,23 +36,27 @@ namespace Woopsious
 
 		void Awake()
 		{
+			entityMoves = GetComponent<EntityMoves>();
 			imageHighlight = GetComponent<Image>();
 			imageHighlight.color = _ColourDarkRed;
 		}
 		void Start()
 		{
-			InitilizeEntity();
+			if (!debugInitilizeEntity) return;
+
+			if (EntityData == null)
+				Debug.LogError("Entity data null");
+            else
+				InitilizeEntity(EntityData);
 		}
 
 		void OnEnable()
 		{
-			TurnOrderManager.OnNewRoundStartEvent += NewRoundStart;
 			TurnOrderManager.OnNewTurnEvent += StartTurn;
 			CardHandler.OnPlayerPickedUpCard += OnCardPicked;
 		}
 		void OnDisable()
 		{
-			TurnOrderManager.OnNewRoundStartEvent -= NewRoundStart;
 			TurnOrderManager.OnNewTurnEvent -= StartTurn;
 			CardHandler.OnPlayerPickedUpCard -= OnCardPicked;
 		}
@@ -75,7 +72,7 @@ namespace Woopsious
 				CardExit(other.GetComponent<CardUi>());
 		}
 
-		void InitilizeEntity()
+		public void InitilizeEntity(EntityData entityData)
 		{
 			if (entityData == null)
 			{
@@ -88,34 +85,14 @@ namespace Woopsious
 			entityNameText.text = cardName;
 			health = entityData.maxHealth;
 			block = 0;
+
 			UpdateUi();
+			turnIndicator.SetActive(false);
 
 			if (entityData.isPlayer) return;
 
-			SetupEnemyAttacks();
-		}
-		void SetupEnemyAttacks()
-		{
-			if (entityData.moveSetOrder.Count == 0)
-			{
-				Debug.LogError("Entity move set order at 0");
-				return;
-			}
-
-			previousUsedMove = null;
-			previousUsedMoveIndex = -1;
-
-			enemyMovesList.Clear();
-
-			foreach (MoveSetData moveSet in entityData.moveSetOrder)
-				enemyMovesList.Add(new EnemyMoveSet(this, moveSet));
-		}
-
-		//start new round event
-		void NewRoundStart(int currentRound)
-		{
-			foreach (EnemyMoveSet move in enemyMovesList)
-				move.NewRound();
+			imageHighlight.color = _ColourDarkRed;
+			entityMoves.InitilizeMoveSet(this);
 		}
 
 		//start/end turn events
@@ -123,98 +100,18 @@ namespace Woopsious
 		{
 			if (entity != this) return; //not this entities turn
 
-			cancellationToken = new CancellationTokenSource();
 			block = 0;
 			UpdateUi();
 
-			if (entityData.isPlayer) return; //if is player shouldnt need to do anything else as other scripts handle it
+			if (EntityData.isPlayer) return; //if is player shouldnt need to do anything else as other scripts handle it
 
 			turnIndicator.SetActive(true);
-			PickNextMove();
+			entityMoves.PickNextMove();
 		}
 		public virtual void EndTurn()
 		{
 			turnIndicator.SetActive(false);
 			OnTurnEndEvent?.Invoke(this);
-			cancellationToken.Cancel();
-		}
-
-		//new enemy entity attacks
-		async void PickNextMove()
-		{
-			int nextMoveIndex = previousUsedMoveIndex + 1;
-
-			//Debug.LogError("next attack index: " + nextMoveIndex + " | attacks count: " + enemyMovesList.Count);
-
-			if (nextMoveIndex >= enemyMovesList.Count) //end of attack queue, loop back
-			{
-				//Debug.LogError("end of attack queue");
-
-				previousUsedMoveIndex = -1;
-				PickNextMove();
-				return;
-			}
-
-			if (enemyMovesList[nextMoveIndex].CanUseMoveFromMoveSet())
-			{
-				//Debug.LogError("using attack");
-
-				await UseMove(cancellationToken.Token, nextMoveIndex);
-				return;
-			}
-			else if (HasMoveAvailable()) //try next move set
-			{
-				//Debug.LogError("has attack trying next");
-
-				previousUsedMoveIndex++;
-				PickNextMove();
-				return;
-			}
-			else //end turn if no moves available in move sets to avoid endless loop
-			{
-				//Debug.LogError("end turn");
-
-				EndTurn();
-				return;
-			}
-		}
-		bool HasMoveAvailable()
-		{
-			foreach (EnemyMoveSet moveSet in enemyMovesList)
-			{
-				if (moveSet.CanUseMoveFromMoveSet())
-					return true;
-			}
-
-			return false;
-		}
-		async Task UseMove(CancellationToken token, int nextMoveIndex)
-		{
-			await Task.Delay(100);
-			AttackData attackData = enemyMovesList[nextMoveIndex].UseMove().attackData;
-
-			previousUsedMoveIndex = nextMoveIndex;
-			previousUsedMove = attackData;
-			OnEnemyMoveFound?.Invoke(attackData);
-
-			await Task.Delay(3000);
-			if (token.IsCancellationRequested)
-			{
-				OnEnemyAttackCancel?.Invoke();
-				return;
-			}
-
-			if (TurnOrderManager.Player() == null) return;
-
-			CardUi card = SpawnManager.SpawnCard();
-			card.SetupCard(attackData);
-
-			if (card.Offensive)
-				card.cardHandler.EnemyUseCard(this, TurnOrderManager.Player());
-			else
-				card.cardHandler.EnemyUseCard(this, this);
-
-			OnEnemyAttack?.Invoke();
 		}
 
 		//entity hits via cards
@@ -237,8 +134,8 @@ namespace Woopsious
 		protected void RecieveHealing(int healing)
 		{
 			health += healing;
-			if (health > entityData.maxHealth)
-				health = entityData.maxHealth;
+			if (health > EntityData.maxHealth)
+				health = EntityData.maxHealth;
 
 			UpdateUi();
 		}
@@ -246,10 +143,10 @@ namespace Woopsious
 		{
 			int damage = damageData.damage;
 
-			if (damageData.entityDamageSource.entityData.playerClass == EntityData.PlayerClass.Mage)
+			if (damageData.entityDamageSource.EntityData.playerClass == EntityData.PlayerClass.Mage)
 			{
 				float roll = (float)(systemRandom.NextDouble() * 100);
-				if (roll < damageData.entityDamageSource.entityData.chanceOfDoubleDamage)
+				if (roll < damageData.entityDamageSource.EntityData.chanceOfDoubleDamage)
 					damage *= 2;
 			}
 
@@ -335,7 +232,7 @@ namespace Woopsious
 
 		void UpdateUi()
 		{
-			entityHealthText.text = "HEALTH\n" + health + "/" + entityData.maxHealth;
+			entityHealthText.text = "HEALTH\n" + health + "/" + EntityData.maxHealth;
 			entityblockText.text = "Block\n" + block;
 		}
 	}

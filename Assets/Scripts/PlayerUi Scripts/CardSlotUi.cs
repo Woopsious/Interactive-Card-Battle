@@ -40,7 +40,7 @@ namespace Woopsious
 		//card spawning
 		void OnNewTurnStart(Entity entity)
 		{
-			if (entity.entityData.isPlayer)
+			if (entity.EntityData.isPlayer)
 			{
 				damageCardsHidden = false;
 				nonDamageCardsHidden = false;
@@ -56,7 +56,7 @@ namespace Woopsious
 		void SpawnNewPlayerCard()
 		{
 			CardUi card = SpawnManager.SpawnCard();
-			card.SetupCard(SpawnManager.GetRandomCard(TurnOrderManager.Player().entityData.cards));
+			card.SetupCard(SpawnManager.GetRandomCard(TurnOrderManager.Player().EntityData.cards));
 			AddCardToSlot(card);
 		}
 
@@ -106,7 +106,7 @@ namespace Woopsious
 		{
 			if (CardInSlot != cardToReplace) return;
 
-			CardInSlot.SetupCard(SpawnManager.GetRandomCard(TurnOrderManager.Player().entityData.cards));
+			CardInSlot.SetupCard(SpawnManager.GetRandomCard(TurnOrderManager.Player().EntityData.cards));
 			AddCardToSlot(CardInSlot);
 		}
 

@@ -50,11 +50,12 @@ namespace Woopsious
 			for (int i = 0; i < instance.entityDataTypes.Count; i++)
 			{
 				Entity spawnedEntity = Instantiate(instance.EntityPrefab, instance.canvas.transform).GetComponent<Entity>();
-				spawnedEntity.entityData = instance.entityDataTypes[i];
+
+				spawnedEntity.InitilizeEntity(instance.entityDataTypes[i]);
 				instance.SetEnemyPosition(spawnedEntity.GetComponent<RectTransform>(), spacing, i + 1);
 				OnEnemySpawned?.Invoke(spawnedEntity);
 
-				Debug.LogError(spawnedEntity.entityData.entityName + " cost: " + spawnedEntity.entityData.GetEntityCost());
+				Debug.LogError(spawnedEntity.EntityData.entityName + " cost: " + spawnedEntity.EntityData.GetEntityCost());
 			}
 		}
 
@@ -78,11 +79,11 @@ namespace Woopsious
 				if (entity == null)
 					entity = Instantiate(instance.EntityPrefab, instance.canvas.transform).GetComponent<Entity>();
 
-				entity.entityData = instance.GetWeightedEntitySpawn(mapNode);
+				entity.InitilizeEntity(instance.GetWeightedEntitySpawn(mapNode));
 				entity.transform.SetParent(instance.canvas.transform);
 				entity.gameObject.SetActive(true);
 
-				await mapNode.BuyEnemy(entity.entityData);
+				await mapNode.BuyEnemy(entity.EntityData);
 				spawnedEntites.Add(entity);
 				OnEnemySpawned?.Invoke(entity);
 

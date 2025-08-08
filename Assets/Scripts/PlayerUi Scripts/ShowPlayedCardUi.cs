@@ -20,17 +20,17 @@ namespace Woopsious
 		void OnEnable()
 		{
 			GameManager.OnStartCardCombatUiEvent += HidePlayedCard;
-			Entity.OnEnemyMoveFound += ShowPlayedCard;
-			Entity.OnEnemyAttack += HidePlayedCard;
-			Entity.OnEnemyAttackCancel += HidePlayedCard;
+			EntityMoves.OnEnemyMoveFound += ShowPlayedCard;
+			EntityMoves.OnEnemyAttack += HidePlayedCard;
+			EntityMoves.OnEnemyAttackCancel += HidePlayedCard;
 		}
 
 		void OnDestroy()
 		{
 			GameManager.OnStartCardCombatUiEvent -= HidePlayedCard;
-			Entity.OnEnemyMoveFound -= ShowPlayedCard;
-			Entity.OnEnemyAttack -= HidePlayedCard;
-			Entity.OnEnemyAttackCancel -= HidePlayedCard;
+			EntityMoves.OnEnemyMoveFound -= ShowPlayedCard;
+			EntityMoves.OnEnemyAttack -= HidePlayedCard;
+			EntityMoves.OnEnemyAttackCancel -= HidePlayedCard;
 		}
 
 		void ShowPlayedCard(AttackData data)

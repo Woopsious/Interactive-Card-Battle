@@ -63,7 +63,7 @@ namespace Woopsious
 		//show/hide deck + all cards
 		void OnNewTurnStart(Entity entity)
 		{
-			if (entity.entityData.isPlayer)
+			if (entity.EntityData.isPlayer)
 				ShowCardDeck();
 			else
 				HideCardDeck();

@@ -226,6 +226,7 @@ GameObject:
   - component: {fileID: 1453047648358434025}
   - component: {fileID: 7150289283468408251}
   - component: {fileID: 3525811030106715706}
+  - component: {fileID: 837194938984598661}
   m_Layer: 5
   m_Name: EnemyTemplate
   m_TagString: Untagged
@@ -354,12 +355,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entityData: {fileID: 0}
+  entityMoves: {fileID: 0}
   entityNameText: {fileID: 7074107260620252129}
   entityHealthText: {fileID: 1396649465573815591}
   entityblockText: {fileID: 5362072691124237724}
   turnIndicator: {fileID: 1893625026254256927}
   health: 0
   block: 0
+--- !u!114 &837194938984598661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5386469954458961082}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69bf6451612e545478ea35db185a7d4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   previousUsedMove: {fileID: 0}
   previousUsedMoveIndex: 0
 --- !u!1 &6181495016370862049

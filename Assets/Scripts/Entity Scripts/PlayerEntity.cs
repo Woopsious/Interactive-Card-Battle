@@ -53,8 +53,8 @@ namespace Woopsious
 
 			if (entity != this) return;
 
-			if (entityData.playerClass == EntityData.PlayerClass.Warrior)
-				AddBlock(entityData.extraBlockPerTurn);
+			if (EntityData.playerClass == EntityData.PlayerClass.Warrior)
+				AddBlock(EntityData.extraBlockPerTurn);
 
 			cardsUsedThisTurn = 0;
 			damageCardsUsedThisTurn = 0;
@@ -70,17 +70,17 @@ namespace Woopsious
 			else
 				nonDamageCardsUsedThisTurn++;
 
-			if (cardsUsedThisTurn == entityData.maxCardsUsedPerTurn)
+			if (cardsUsedThisTurn == EntityData.maxCardsUsedPerTurn)
 			{
 				EndTurn();
 				return;
 			}
 
-			if (damageCardsUsedThisTurn == entityData.maxDamageCardsUsedPerTurn)
+			if (damageCardsUsedThisTurn == EntityData.maxDamageCardsUsedPerTurn)
 			{
 				HideOffensiveCards?.Invoke(true);
 			}
-			if (nonDamageCardsUsedThisTurn == entityData.maxNonDamageCardsUsedPerTurn)
+			if (nonDamageCardsUsedThisTurn == EntityData.maxNonDamageCardsUsedPerTurn)
 			{
 				HideOffensiveCards?.Invoke(false);
 			}
@@ -99,16 +99,16 @@ namespace Woopsious
 		void RangerHealOnKill(Entity entity)
 		{
 			if (entity == this) return;
-			if (entityData.playerClass != EntityData.PlayerClass.Ranger) return;
+			if (EntityData.playerClass != EntityData.PlayerClass.Ranger) return;
 
-			int healOnKill = (int)(entityData.maxHealth / entityData.healOnKillPercentage);
+			int healOnKill = (int)(EntityData.maxHealth / EntityData.healOnKillPercentage);
 			RecieveHealing(healOnKill);
 		}
 		void RogueReflectDamageRecieved(DamageData damageData)
 		{
-			if (entityData.playerClass != EntityData.PlayerClass.Rogue) return;
+			if (EntityData.playerClass != EntityData.PlayerClass.Rogue) return;
 
-			int damageReflected = Mathf.RoundToInt(damageData.damage / entityData.damageReflectedPercentage);
+			int damageReflected = Mathf.RoundToInt(damageData.damage / EntityData.damageReflectedPercentage);
 
 			if (damageReflected == 0)
 				damageReflected++;
@@ -162,7 +162,7 @@ namespace Woopsious
 		}
 		public bool HasReachedReplaceCardsLimit()
 		{
-			if (cardsReplacedThisTurn >= entityData.maxReplaceableCardsPerTurn)
+			if (cardsReplacedThisTurn >= EntityData.maxReplaceableCardsPerTurn)
 				return true;
 			else
 				return false;
