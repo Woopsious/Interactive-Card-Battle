@@ -11,7 +11,7 @@ namespace Woopsious
 
 		public List<Entity> turnOrder = new();
 
-		protected PlayerEntity playerEntity;
+		protected PlayerEntity player;
 
 		public List<Entity> enemyEntities = new();
 
@@ -55,7 +55,7 @@ namespace Woopsious
 			await SpawnManager.SpawnEntitiesForCardBattle(mapNode);
 
 			turnOrder.Clear();
-			turnOrder.Add(playerEntity);
+			turnOrder.Add(player);
 
 			foreach (var entity in enemyEntities)
 				turnOrder.Add(entity);
@@ -73,8 +73,8 @@ namespace Woopsious
 		}
 		void ResetListsAndEntities()
 		{
-			if (playerEntity != null)
-				Destroy(playerEntity.gameObject);
+			if (player != null)
+				Destroy(player.gameObject);
 
 			if (enemyEntities.Count > 0)
 			{
@@ -116,9 +116,9 @@ namespace Woopsious
 		}
 
 		//set refs for turn order creation
-		void AddPlayerOnSpawnComplete(PlayerEntity playerEntity)
+		void AddPlayerOnSpawnComplete(PlayerEntity player)
 		{
-			this.playerEntity = playerEntity;
+			this.player = player;
 		}
 		void AddEnemyOnSpawnComplete(Entity entity)
 		{
@@ -128,7 +128,7 @@ namespace Woopsious
 		//get instanced refs
 		public static Entity Player()
 		{
-			return Instance.playerEntity;
+			return Instance.player;
 		}
 		public static Entity CurrentEntitiesTurn()
 		{

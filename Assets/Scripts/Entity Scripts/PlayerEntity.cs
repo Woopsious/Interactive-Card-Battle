@@ -28,12 +28,14 @@ namespace Woopsious
 		void OnEnable()
 		{
 			TurnOrderManager.OnNewTurnEvent += StartTurn;
+			CardHandler.OnPlayerUseCard += UpdateCardsUsed;
 			CardUi.OnCardReplace += OnReplaceCard;
 			OnEntityDeath += RangerHealOnKill;
 		}
 		void OnDisable()
 		{
 			TurnOrderManager.OnNewTurnEvent -= StartTurn;
+			CardHandler.OnPlayerUseCard -= UpdateCardsUsed;
 			CardUi.OnCardReplace -= OnReplaceCard;
 			OnEntityDeath += RangerHealOnKill;
 		}

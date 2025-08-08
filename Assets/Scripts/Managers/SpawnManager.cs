@@ -73,7 +73,7 @@ namespace Woopsious
 			bool spawnEnemies = true;
 			while (spawnEnemies)
 			{
-				Entity entity = PoolingManager.instance.RequestEntity();
+				Entity entity = ObjectPoolingManager.RequestEntity();
 
 				if (entity == null)
 					entity = Instantiate(instance.EntityPrefab, instance.canvas.transform).GetComponent<Entity>();
@@ -124,7 +124,11 @@ namespace Woopsious
 		//card spawning
 		public static CardUi SpawnCard()
 		{
-			CardUi card = Instantiate(instance.cardPrefab).GetComponent<CardUi>();
+			CardUi card = ObjectPoolingManager.RequestCard();
+
+			if (card == null)
+				card = Instantiate(instance.cardPrefab).GetComponent<CardUi>();
+
 			return card;
 		}
 

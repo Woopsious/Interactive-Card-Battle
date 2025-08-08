@@ -30,12 +30,12 @@ namespace Woopsious
 		void OnEnable()
 		{
 			TurnOrderManager.OnNewTurnEvent += OnNewTurnStart;
-			CardHandler.OnCardPickUp += OnCardPicked;
+			CardHandler.OnPlayerPickedUpCard += OnCardPicked;
 		}
 		void OnDestroy()
 		{
 			TurnOrderManager.OnNewTurnEvent -= OnNewTurnStart;
-			CardHandler.OnCardPickUp -= OnCardPicked;
+			CardHandler.OnPlayerPickedUpCard -= OnCardPicked;
 		}
 
 		void OnTriggerEnter2D(Collider2D other)

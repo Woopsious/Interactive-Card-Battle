@@ -55,13 +55,13 @@ namespace Woopsious
 		{
 			TurnOrderManager.OnNewRoundStartEvent += NewRoundStart;
 			TurnOrderManager.OnNewTurnEvent += StartTurn;
-			CardHandler.OnCardPickUp += OnCardPicked;
+			CardHandler.OnPlayerPickedUpCard += OnCardPicked;
 		}
 		void OnDisable()
 		{
 			TurnOrderManager.OnNewRoundStartEvent -= NewRoundStart;
 			TurnOrderManager.OnNewTurnEvent -= StartTurn;
-			CardHandler.OnCardPickUp -= OnCardPicked;
+			CardHandler.OnPlayerPickedUpCard -= OnCardPicked;
 		}
 
 		void OnTriggerEnter2D(Collider2D other)

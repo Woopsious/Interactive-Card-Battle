@@ -11,7 +11,7 @@ public class MainMenuUi : MonoBehaviour
 	int framerateCounter = 0;
 	float timeCounter = 0.0f;
 	float lastFramerate = 0.0f;
-	float refreshTime = 0.5f;
+	readonly float refreshTime = 0.5f;
 
 	void Awake()
 	{

@@ -16,8 +16,9 @@ namespace Woopsious
 
 		Vector3 mousePos;
 
-		public static event Action<CardUi> OnCardPickUp;
-		public static event Action<bool> OnEnemyUseCard;
+		public static event Action<CardUi> OnCardUsed;
+		public static event Action<CardUi> OnPlayerPickedUpCard;
+		public static event Action<bool> OnPlayerUseCard;
 
 		void Awake()
 		{
@@ -93,7 +94,7 @@ namespace Woopsious
 
 		void PlayerSelectCard()
 		{
-			OnCardPickUp?.Invoke(card);
+			OnPlayerPickedUpCard?.Invoke(card);
 			isBeingDragged = true;
 			touchingPlayerRef = null;
 			touchingEnemyRef = null;
@@ -107,7 +108,7 @@ namespace Woopsious
 		}
 		void PlayerDeselectCard()
 		{
-			OnCardPickUp?.Invoke(null);
+			OnPlayerPickedUpCard?.Invoke(null);
 			isBeingDragged = false;
 
 			if (touchingPlayerRef != null)
@@ -136,22 +137,20 @@ namespace Woopsious
 			if (card.AlsoHeals)
 				cardOwner.OnHit(new(cardOwner, false, card.Damage, DamageType.heal));
 
-			DestoryCard();
+			CleanUpCard();
 		}
-		void DestoryCard()
+		void CleanUpCard()
 		{
 			if (card.PlayerCard)
 			{
 				PlayerEntity player = cardOwner as PlayerEntity;
-				player.UpdateCardsUsed(card.Offensive);
+				OnPlayerUseCard?.Invoke(card.Offensive);
 			}
 			else
-			{
 				cardOwner.EndTurn();
-				OnEnemyUseCard?.Invoke(false);
-			}
 
-			Destroy(gameObject);
+			gameObject.SetActive(false);
+			OnCardUsed?.Invoke(card);
 		}
 	}
 }

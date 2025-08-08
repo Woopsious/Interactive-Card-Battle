@@ -25,6 +25,7 @@ namespace Woopsious
 			TurnOrderManager.OnNewTurnEvent += OnNewTurnStart;
 			PlayerEntity.HideOffensiveCards += HideMatchingCards;
 			PlayerEntity.HideReplaceCardsButton += HideReplaceCardsButton;
+			CardHandler.OnCardUsed += RemoveCardFromSlot;
 			CardUi.OnCardReplace += ReplaceCardInDeck;
 		}
 		private void OnDestroy()
@@ -32,6 +33,7 @@ namespace Woopsious
 			TurnOrderManager.OnNewTurnEvent -= OnNewTurnStart;
 			PlayerEntity.HideOffensiveCards -= HideMatchingCards;
 			PlayerEntity.HideReplaceCardsButton -= HideReplaceCardsButton;
+			CardHandler.OnCardUsed -= RemoveCardFromSlot;
 			CardUi.OnCardReplace -= ReplaceCardInDeck;
 		}
 
@@ -57,9 +59,12 @@ namespace Woopsious
 			card.SetupCard(SpawnManager.GetRandomCard(TurnOrderManager.Player().entityData.cards));
 			AddCardToSlot(card);
 		}
+
+		//card adding/removing
 		public void AddCardToSlot(CardUi newCard)
 		{
 			CardInSlot = newCard;
+			CardInSlot.gameObject.SetActive(true);
 			CardInSlot.transform.SetParent(gameObject.transform, false);
 			CardInSlot.transform.localPosition = Vector3.zero;
 
@@ -67,6 +72,11 @@ namespace Woopsious
 				HideCardInSlot();
 			else
 				ShowCardInSlot();
+		}
+		void RemoveCardFromSlot(CardUi card)
+		{
+			if (card == CardInSlot)
+				CardInSlot = null;
 		}
 
 		//events
