@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -33,7 +34,7 @@ namespace Woopsious
 		public static GameManager instance;
 
 		//player runtime class
-		public static EntityData playerClass;
+		public static EntityData PlayerClass { get; private set; }
 
 		//scene names
 		public readonly string mainScene = "MainScene";
@@ -43,6 +44,7 @@ namespace Woopsious
 		public Scene loadedMainScene;
 		public Scene loadedGameScene;
 
+		//game events
 		public static event Action<MapNode> OnStartCardCombatEvent;
 		public static event Action OnStartCardCombatUiEvent;
 		public static event Action<bool> OnEndCardCombatEvent;
@@ -103,13 +105,28 @@ namespace Woopsious
 				Time.timeScale = 1f;
 		}
 
-		//LOAD SCENES
-		void LoadGameScene()
+		//SET PLAYER CLASS
+		public static void SetPlayerClass(EntityData playerClass)
 		{
-			StartCoroutine(LoadSceneAsync(gameScene));
+			PlayerClass = playerClass;
 		}
 
-		//SCENE LOADING
+		//LOAD SCENES
+		public static void LoadGameScene()
+		{
+			instance.StartCoroutine(instance.LoadSceneAsync(instance.gameScene));
+		}
+		public static void ExitGameScene()
+		{
+			instance.StartCoroutine(instance.TryUnLoadSceneAsync(instance.gameScene));
+		}
+		public static void QuitGame()
+		{
+			Application.Quit();
+		}
+
+		//SCENE MANAGER
+		//loading + event
 		private IEnumerator LoadSceneAsync(string sceneToLoad)
 		{
 			Debug.LogError("loading scene name: " + sceneToLoad + " at: " + DateTime.Now.ToString());
@@ -119,17 +136,18 @@ namespace Woopsious
 			while (!asyncLoadScene.isDone)
 				yield return null;
 		}
-
-		//SCENE LOAD EVENT
-		private void OnLoadSceneFinish(Scene newLoadedScene, LoadSceneMode mode)
+		private void OnLoadSceneFinish(Scene loadedScene, LoadSceneMode mode)
 		{
-			Debug.LogError("loaded scene name: " + newLoadedScene.name + " at: " + DateTime.Now.ToString());
+			Debug.LogError("loaded scene name: " + loadedScene.name + " at: " + DateTime.Now.ToString());
 
-			UpdateActiveSceneToMainScene(newLoadedScene);
-			UpdateCurrentlyLoadedScene(newLoadedScene);
+			if (loadedScene.name == gameScene)
+				OnShowMapEvent?.Invoke();
+
+			UpdateActiveSceneToMainScene(loadedScene);
+			UpdateCurrentlyLoadedScene(loadedScene);
 		}
 
-		//SCENE UNLOADING
+		//unloading + event
 		private IEnumerator TryUnLoadSceneAsync(string sceneToUnLoad)
 		{
 			AsyncOperation asyncUnLoadScene = SceneManager.UnloadSceneAsync(sceneToUnLoad);
@@ -137,14 +155,12 @@ namespace Woopsious
 			while (!asyncUnLoadScene.isDone)
 				yield return null;
 		}
-
-		//SCENE UNLOAD EVENT
 		private void OnUnloadSceneFinish(Scene unLoadedScene)
 		{
 			Debug.LogError("unloaded scene: " + unLoadedScene.name + " at: " + DateTime.Now.ToString());
 		}
 
-		//SCENE CHECKS/UPDATES
+		//scene updates
 		private void UpdateActiveSceneToMainScene(Scene newLoadedScene)
 		{
 			Scene currentActiveScene = SceneManager.GetActiveScene();

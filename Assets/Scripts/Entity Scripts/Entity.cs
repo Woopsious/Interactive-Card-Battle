@@ -79,10 +79,24 @@ namespace Woopsious
 				Debug.LogError("Entity data null");
 				return;
 			}
+			else
+				EntityData = entityData;
 
-			string cardName = entityData.entityName;
-			gameObject.name = cardName;
-			entityNameText.text = cardName;
+			string entityName; //specialize name
+
+			if (entityData.playerClass == EntityData.PlayerClass.Mage)
+				entityName = "Player (Mage)";
+			else if (entityData.playerClass == EntityData.PlayerClass.Ranger)
+				entityName = "Player (Ranger)";
+			else if(entityData.playerClass == EntityData.PlayerClass.Rogue)
+				entityName = "Player (Rogue)";
+			else if(entityData.playerClass == EntityData.PlayerClass.Warrior)
+				entityName = "Player (Warrior)";
+			else
+				entityName = entityData.entityName;
+
+			gameObject.name = entityName;
+			entityNameText.text = entityName;
 			health = entityData.maxHealth;
 			block = 0;
 
@@ -232,8 +246,8 @@ namespace Woopsious
 
 		void UpdateUi()
 		{
-			entityHealthText.text = "HEALTH\n" + health + "/" + EntityData.maxHealth;
-			entityblockText.text = "Block\n" + block;
+			entityHealthText.text = "HEALTH:\n" + health + "/" + EntityData.maxHealth;
+			entityblockText.text = "Block: " + block;
 		}
 	}
 }

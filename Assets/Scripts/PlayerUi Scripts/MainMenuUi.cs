@@ -1,6 +1,8 @@
 using System;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Woopsious
@@ -12,6 +14,7 @@ namespace Woopsious
 		public bool inGame;
 
 		public GameObject mainMenuPanel;
+		Image mainMenuBackground;
 
 		[Header("Main Menu Buttons")]
 		public Button newGameButton;
@@ -24,12 +27,20 @@ namespace Woopsious
 		RectTransform loadGameButtonRectTransform;
 
 		public Button settingsButton;
-		RectTransform settingsGameButtonRectTransform;
+		RectTransform settingsButtonRectTransform;
 
-		[Header("Main Menu Buttons")]
-		public Button backToMainMenuButton; //reused in sub menus (save slots/settings ui)
+		public Button exitGameButton;
+		RectTransform exitGameButtonRectTransform;
+
+		public Button quitGameButton;
+		RectTransform QuitGameButtonRectTransform;
+
+		[Header("Back Buttons")]
+		public Button backButton; //reused in sub menus (save slots/settings ui etc...)
+		TMP_Text backButtonText;
 
 		public static Action ShowMainMenuUi;
+		public static Action ShowNewGameUi;
 		public static Action ShowSaveSlotsUi;
 		public static Action ShowSettingsUi;
 
@@ -41,48 +52,73 @@ namespace Woopsious
 		float lastFramerate = 0.0f;
 		readonly float refreshTime = 0.5f;
 
+		Color _ColourDarkGray = new(0.2941177f, 0.2941177f, 0.2941177f, 1);
+
 		void Awake()
 		{
 			Instance = this;
+			mainMenuBackground = mainMenuPanel.GetComponent<Image>();
+			backButtonText = backButton.GetComponentInChildren<TMP_Text>();
 			SetUpButtons();
 		}
 
 		void Update()
 		{
 			DisplayFps();
-			DetectEscapeButtonPresses();
+			DetectEscapeButtonPressesInGame();
 		}
 
 		void OnEnable()
 		{
+			SceneManager.sceneLoaded += OnSceneLoadedEvent;
+			SceneManager.sceneUnloaded += OnSceneUnLoadedEvent;
+
 			ShowMainMenuUi += ShowMainMenuUiPanel;
+			ShowNewGameUi += HideMainMenuUiPanel;
 			ShowSaveSlotsUi += HideMainMenuUiPanel;
 			ShowSettingsUi += HideMainMenuUiPanel;
 		}
 		void OnDestroy()
 		{
+			SceneManager.sceneLoaded -= OnSceneLoadedEvent;
+			SceneManager.sceneUnloaded -= OnSceneUnLoadedEvent;
+
 			ShowMainMenuUi -= ShowMainMenuUiPanel;
+			ShowNewGameUi -= HideMainMenuUiPanel;
 			ShowSaveSlotsUi -= HideMainMenuUiPanel;
 			ShowSettingsUi -= HideMainMenuUiPanel;
 		}
 
 		void SetUpButtons()
 		{
-			newGameButton.onClick.AddListener(delegate { StartNewGame(); });
+			newGameButton.onClick.AddListener(delegate { ShowNewGameUi?.Invoke(); });
 			saveGameButton.onClick.AddListener(delegate { ShowSaveSlotsUi?.Invoke(); });
 			loadGameButton.onClick.AddListener(delegate { ShowSaveSlotsUi?.Invoke(); });
 			settingsButton.onClick.AddListener(delegate { ShowSettingsUi?.Invoke(); });
-			backToMainMenuButton.onClick.AddListener(delegate { ShowMainMenuUi?.Invoke(); });
+			exitGameButton.onClick.AddListener(delegate { GameManager.ExitGameScene(); });
+			quitGameButton.onClick.AddListener(delegate { GameManager.QuitGame(); });
+
+			backButton.onClick.AddListener(delegate { BackButtonClickEvents(); });
 
 			newGameButtonRectTransform = newGameButton.GetComponent<RectTransform>();
 			saveGameButtonRectTransform = saveGameButton.GetComponent<RectTransform>();
 			loadGameButtonRectTransform = loadGameButton.GetComponent<RectTransform>();
-			settingsGameButtonRectTransform = settingsButton.GetComponent<RectTransform>();
+			settingsButtonRectTransform = settingsButton.GetComponent<RectTransform>();
+			exitGameButtonRectTransform = exitGameButton.GetComponent<RectTransform>();
+			QuitGameButtonRectTransform = quitGameButton.GetComponent<RectTransform>();
 		}
 
-		void DetectEscapeButtonPresses()
+		void BackButtonClickEvents()
 		{
-			if (!inGame) return;
+			if (mainMenuPanel.activeInHierarchy)
+				HideMainMenuUiPanel();
+			else
+				ShowMainMenuUi?.Invoke();
+		}
+
+		void DetectEscapeButtonPressesInGame()
+		{
+			//if (!inGame) return;
 
 			if (Input.GetKeyDown(KeyCode.Escape))
 			{
@@ -93,10 +129,24 @@ namespace Woopsious
 			}
 		}
 
-		void StartNewGame()
+		//scene change events
+		void OnSceneLoadedEvent(Scene loadedScene, LoadSceneMode mode)
 		{
-			//start new game
-			HideMainMenuUiPanel();
+			if (loadedScene.name == GameManager.instance.mainScene)
+			{
+				ShowMainMenuUi?.Invoke();
+			}
+			else if (loadedScene.name == GameManager.instance.gameScene)
+			{
+				HideMainMenuUiPanel();
+			}
+		}
+		void OnSceneUnLoadedEvent(Scene unloadedScene)
+		{
+			if (unloadedScene.name == GameManager.instance.gameScene)
+			{
+				ShowMainMenuUi?.Invoke();
+			}
 		}
 
 		//change ui panels
@@ -104,30 +154,47 @@ namespace Woopsious
 		{
 			if (inGame)
 			{
-				newGameButtonRectTransform.anchoredPosition = new Vector3(-800, 200, 0);
-				saveGameButtonRectTransform.anchoredPosition = new Vector3(-800, 200, 0);
-				loadGameButtonRectTransform.anchoredPosition = new Vector3(-800, 100, 0);
-				settingsGameButtonRectTransform.anchoredPosition = new Vector3(-800, -100, 0);
+				newGameButtonRectTransform.anchoredPosition = new Vector2(-800, 150);
+				saveGameButtonRectTransform.anchoredPosition = new Vector2(-800, 150);
+				loadGameButtonRectTransform.anchoredPosition = new Vector2(-800, 50);
+				settingsButtonRectTransform.anchoredPosition = new Vector2(-800, -100);
+				exitGameButtonRectTransform.anchoredPosition = new Vector2(-800, -200);
+				QuitGameButtonRectTransform.anchoredPosition = new Vector2(-800, -200);
+
+				mainMenuBackground.color = _ColourDarkGray - new Color(0, 0, 0, 0.25f); //make transparent
 
 				newGameButton.gameObject.SetActive(false);
 				saveGameButton.gameObject.SetActive(true);
+
+				exitGameButton.gameObject.SetActive(true);
+				quitGameButton.gameObject.SetActive(false);
 			}
 			else
 			{
-				newGameButtonRectTransform.anchoredPosition = new Vector3(0, 200, 0);
-				saveGameButtonRectTransform.anchoredPosition = new Vector3(0, 200, 0);
-				loadGameButtonRectTransform.anchoredPosition = new Vector3(0, 100, 0);
-				settingsGameButtonRectTransform.anchoredPosition = new Vector3(0, -100, 0);
+				newGameButtonRectTransform.anchoredPosition = new Vector2(0, 150);
+				saveGameButtonRectTransform.anchoredPosition = new Vector2(0, 150);
+				loadGameButtonRectTransform.anchoredPosition = new Vector2(0, 50);
+				settingsButtonRectTransform.anchoredPosition = new Vector2(0, -100);
+				exitGameButtonRectTransform.anchoredPosition = new Vector2(0, -200);
+				QuitGameButtonRectTransform.anchoredPosition = new Vector2(0, -200);
+
+				mainMenuBackground.color = _ColourDarkGray;
 
 				newGameButton.gameObject.SetActive(true);
 				saveGameButton.gameObject.SetActive(false);
+
+				exitGameButton.gameObject.SetActive(false);
+				quitGameButton.gameObject.SetActive(true);
 			}
 
+			backButton.gameObject.transform.SetParent(mainMenuPanel.transform);
+			backButtonText.text = "Close Menu";
 			mainMenuPanel.SetActive(true);
 		}
 		public void HideMainMenuUiPanel()
 		{
 			mainMenuPanel.SetActive(false);
+			backButtonText.text = "Back";
 		}
 
 		//fps

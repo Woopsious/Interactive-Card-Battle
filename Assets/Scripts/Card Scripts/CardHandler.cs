@@ -100,7 +100,7 @@ namespace Woopsious
 			touchingEnemyRef = null;
 
 			cardOwner = TurnOrderManager.Player();
-			transform.SetParent(CardCombatUi.instance.DraggedCardsArea);
+			transform.SetParent(CardCombatUi.instance.DraggedCardsTransform);
 			transform.rotation = new Quaternion(0, 0, 0, 0);
 			mousePos = Input.mousePosition;
 

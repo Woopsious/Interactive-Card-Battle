@@ -12,7 +12,8 @@ namespace Woopsious
 		[Header("Ui Panels")]
 		public GameObject CardDeckUi;
 		public GameObject PlayedCardUi;
-		public RectTransform DraggedCardsArea;
+		public RectTransform spawnedEntitiesTransform;
+		public RectTransform DraggedCardsTransform;
 
 		[Header("Ui Elements")]
 		public TMP_Text currentRoundInfoText;

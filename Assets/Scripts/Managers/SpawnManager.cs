@@ -10,12 +10,13 @@ namespace Woopsious
 	{
 		public static SpawnManager instance;
 
-		public Canvas canvas;
-
 		[Header("Object Prefabs")]
 		public GameObject EntityPrefab;
 		public GameObject PlayerPrefab;
 		public GameObject cardPrefab;
+
+		[Header("Player Scriptable Objects")]
+		public List<EntityData> playerClassDataTypes = new();
 
 		[Header("Entity Scriptable Objects")]
 		public List<EntityData> entityDataTypes = new();
@@ -31,8 +32,6 @@ namespace Woopsious
 		{
 			instance = this;
 			widthOfEntities = EntityPrefab.GetComponent<RectTransform>().sizeDelta.x;
-			if (canvas == null)
-				Debug.LogError("canvas ref null, assign it in scene");
 		}
 
 		//card battle setup
@@ -49,7 +48,7 @@ namespace Woopsious
 
 			for (int i = 0; i < instance.entityDataTypes.Count; i++)
 			{
-				Entity spawnedEntity = Instantiate(instance.EntityPrefab, instance.canvas.transform).GetComponent<Entity>();
+				Entity spawnedEntity = Instantiate(instance.EntityPrefab, CardCombatUi.instance.spawnedEntitiesTransform).GetComponent<Entity>();
 
 				spawnedEntity.InitilizeEntity(instance.entityDataTypes[i]);
 				instance.SetEnemyPosition(spawnedEntity.GetComponent<RectTransform>(), spacing, i + 1);
@@ -62,7 +61,10 @@ namespace Woopsious
 		//entity spawning
 		public static Task SpawnPlayer()
 		{
-			PlayerEntity player = Instantiate(instance.PlayerPrefab, instance.canvas.transform).GetComponent<PlayerEntity>();
+			PlayerEntity player = Instantiate(instance.PlayerPrefab, CardCombatUi.instance.spawnedEntitiesTransform).GetComponent<PlayerEntity>();
+			EntityData playerClass = GameManager.PlayerClass;
+
+			player.InitilizeEntity(playerClass);
 			OnPlayerSpawned?.Invoke(player);
 
 			return Task.CompletedTask;
@@ -77,10 +79,10 @@ namespace Woopsious
 				Entity entity = ObjectPoolingManager.RequestEntity();
 
 				if (entity == null)
-					entity = Instantiate(instance.EntityPrefab, instance.canvas.transform).GetComponent<Entity>();
+					entity = Instantiate(instance.EntityPrefab, CardCombatUi.instance.spawnedEntitiesTransform).GetComponent<Entity>();
 
 				entity.InitilizeEntity(instance.GetWeightedEntitySpawn(mapNode));
-				entity.transform.SetParent(instance.canvas.transform);
+				entity.transform.SetParent(CardCombatUi.instance.spawnedEntitiesTransform);
 				entity.gameObject.SetActive(true);
 
 				await mapNode.BuyEnemy(entity.EntityData);
