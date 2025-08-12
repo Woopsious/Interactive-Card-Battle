@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -140,6 +141,8 @@ namespace Woopsious
 		{
 			Debug.LogError("loaded scene name: " + loadedScene.name + " at: " + DateTime.Now.ToString());
 
+			if (loadedScene.name == mainScene)
+				SaveManager.LoadPlayerData();
 			if (loadedScene.name == gameScene)
 				OnShowMapEvent?.Invoke();
 
@@ -173,6 +176,24 @@ namespace Woopsious
 				loadedMainScene = newLoadedScene;
 			else if (newLoadedScene.name == gameScene)
 				loadedGameScene = newLoadedScene;
+		}
+
+		//scene active check
+		public static bool SceneIsActive(string sceneName)
+		{
+			List<Scene> loadedScenes = new();
+
+			for (int i = 0; i < SceneManager.sceneCount; i++)
+				loadedScenes.Add(SceneManager.GetSceneAt(i));
+
+			foreach (Scene scene in loadedScenes)
+			{
+				if (scene.name == sceneName)
+					return true;
+				else continue;
+			}
+
+			return false;
 		}
 	}
 }

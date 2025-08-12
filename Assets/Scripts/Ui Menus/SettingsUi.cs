@@ -13,8 +13,11 @@ namespace Woopsious
 		public TMP_Text audioText;
 		public Slider audioSlider;
 
+		public Button saveSettingsButton;
+
 		void OnEnable()
 		{
+			SaveManager.ReloadPlayerData += ReloadPlayerData;
 			MainMenuUi.ShowMainMenuUi += HideSettingsUi;
 			MainMenuUi.ShowNewGameUi += HideSettingsUi;
 			MainMenuUi.ShowSaveSlotsUi += HideSettingsUi;
@@ -22,6 +25,7 @@ namespace Woopsious
 		}
 		void OnDestroy()
 		{
+			SaveManager.ReloadPlayerData -= ReloadPlayerData;
 			MainMenuUi.ShowMainMenuUi -= HideSettingsUi;
 			MainMenuUi.ShowNewGameUi -= HideSettingsUi;
 			MainMenuUi.ShowSaveSlotsUi -= HideSettingsUi;
@@ -31,31 +35,39 @@ namespace Woopsious
 		private void Awake()
 		{
 			SetUpAudio();
+			saveSettingsButton.onClick.AddListener(delegate { SaveManager.SavePlayerData(); });
 		}
 
 		void SetUpAudio()
 		{
-			audioSlider.onValueChanged.AddListener(delegate { UpdateAudioVolume(audioSlider.value); });
-			SetAudioSettings(0.75f); //set initial value
+			audioSlider.onValueChanged.AddListener(delegate { UpdateAudioManagerVolume(audioSlider.value); });
+			SetAudioSettings(75); //set initial value
 		}
-		void SetAudioSettings(float audioVolume) //will eventually sub to load player data event to restore player set audio volume
+
+		//reload player data event
+		void ReloadPlayerData(PlayerData playerData)
+		{
+			SetAudioSettings((int)(playerData.audioVolume * 100));
+		}
+
+		//set audio levels
+		void SetAudioSettings(int audioVolume)
 		{
 			audioSlider.value = audioVolume;
-			audioText.text = "Audio Volume: " + audioVolume * 100;
+			audioText.text = "Audio Volume: " + audioVolume;
 		}
-
-		void UpdateAudioVolume(float audioVolume)
+		void UpdateAudioManagerVolume(float audioVolume)
 		{
-			audioText.text = "Audio Volume: " + audioVolume * 100;
-			AudioManager.SetAudioVolume(audioVolume);
+			audioText.text = "Audio Volume: " + audioVolume;
+			AudioManager.SetAudioVolume(audioVolume / 100);
 		}
 
+		//update ui panel
 		void ShowSettingsUi()
 		{
 			settingsPanel.SetActive(true);
 			MainMenuUi.Instance.backButton.gameObject.transform.SetParent(settingsPanel.transform);
 		}
-
 		void HideSettingsUi()
 		{
 			settingsPanel.SetActive(false);

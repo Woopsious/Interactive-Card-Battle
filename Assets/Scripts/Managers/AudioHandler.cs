@@ -42,7 +42,22 @@ namespace Woopsious
 			audioSource.clip = clip;
 			audioSource.Play();
 		}
-		public bool IsAudioPlaying()
+		public void PlayAudio(AudioClip clip, AudioType audioType, bool overwriteAudio)
+		{
+			if (clip == null) return;
+			if (!gameObject.activeInHierarchy) return;
+
+			if (IsAudioPlaying())
+			{
+				if (overwriteAudio)
+					audioSource.Stop();
+				else return;
+			}
+
+			audioSource.clip = clip;
+			audioSource.Play();
+		}
+		bool IsAudioPlaying()
 		{
 			if (audioSource.isPlaying)
 				return true;
