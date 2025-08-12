@@ -17,8 +17,8 @@ namespace Woopsious
 		Vector3 mousePos;
 
 		public static event Action<CardUi> OnCardUsed;
+		public static event Action<CardUi, bool> OnPlayerCardUsed;
 		public static event Action<CardUi> OnPlayerPickedUpCard;
-		public static event Action<bool> OnPlayerUseCard;
 
 		void Awake()
 		{
@@ -116,7 +116,7 @@ namespace Woopsious
 			else if (touchingEnemyRef != null)
 				UseCardOnTarget(touchingEnemyRef);
 			else
-				CardDeckUi.instance.ReturnCardToPlayerDeck(card);
+				OnPlayerCardUsed?.Invoke(card, false);
 
 			touchingPlayerRef = null;
 			touchingEnemyRef = null;
@@ -142,10 +142,7 @@ namespace Woopsious
 		void CleanUpCard()
 		{
 			if (card.PlayerCard)
-			{
-				PlayerEntity player = cardOwner as PlayerEntity;
-				OnPlayerUseCard?.Invoke(card.Offensive);
-			}
+				OnPlayerCardUsed?.Invoke(card, true);
 			else
 				cardOwner.EndTurn();
 

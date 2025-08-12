@@ -12,7 +12,7 @@ namespace Woopsious
 
 		public int cardSlotIndex;
 
-		public CardUi CardInSlot { get; private set; }
+		public CardUi CardInSlot;
 
 		void Awake()
 		{
@@ -25,7 +25,7 @@ namespace Woopsious
 			TurnOrderManager.OnNewTurnEvent += OnNewTurnStart;
 			PlayerEntity.HideOffensiveCards += HideMatchingCards;
 			PlayerEntity.HideReplaceCardsButton += HideReplaceCardsButton;
-			CardHandler.OnCardUsed += RemoveCardFromSlot;
+			CardHandler.OnPlayerCardUsed += OnPlayerCardUsed;
 			CardUi.OnCardReplace += ReplaceCardInDeck;
 		}
 		private void OnDestroy()
@@ -33,7 +33,7 @@ namespace Woopsious
 			TurnOrderManager.OnNewTurnEvent -= OnNewTurnStart;
 			PlayerEntity.HideOffensiveCards -= HideMatchingCards;
 			PlayerEntity.HideReplaceCardsButton -= HideReplaceCardsButton;
-			CardHandler.OnCardUsed -= RemoveCardFromSlot;
+			CardHandler.OnPlayerCardUsed -= OnPlayerCardUsed;
 			CardUi.OnCardReplace -= ReplaceCardInDeck;
 		}
 
@@ -60,8 +60,23 @@ namespace Woopsious
 			AddCardToSlot(card);
 		}
 
-		//card adding/removing
-		public void AddCardToSlot(CardUi newCard)
+		//card adding/removing + being used
+		void OnPlayerCardUsed(CardUi card, bool wasUsed)
+		{
+			if (CardInSlot != card) return;
+
+			if (wasUsed)
+			{
+				Debug.LogError("remove card");
+				RemoveCardFromSlot(card);
+			}
+			else
+			{
+				Debug.LogError("add card");
+				AddCardToSlot(card);
+			}
+		}
+		void AddCardToSlot(CardUi newCard)
 		{
 			CardInSlot = newCard;
 			CardInSlot.gameObject.SetActive(true);
@@ -131,7 +146,12 @@ namespace Woopsious
 
 			CardInSlot.selectable = false;
 			CardInSlot.replaceCardButton.anchoredPosition = new Vector2(0, 230);
-			CardInSlot.replaceCardButton.gameObject.SetActive(false);
+
+			if (hideReplaceCardsButton)
+				CardInSlot.replaceCardButton.gameObject.SetActive(false);
+			else
+				CardInSlot.replaceCardButton.gameObject.SetActive(true);
+
 			UpdateCardSlotPositions(true);
 		}
 
@@ -140,6 +160,7 @@ namespace Woopsious
 			if (hideSlot)
 			{
 				rectTransform.localRotation = Quaternion.Euler(0, 0, 0);
+				CardInSlot.replaceCardButton.anchoredPosition = new Vector2(0, 230);
 
 				switch (cardSlotIndex)
 				{
@@ -162,6 +183,8 @@ namespace Woopsious
 			}
 			else
 			{
+				CardInSlot.replaceCardButton.anchoredPosition = new Vector2(0, 5);
+
 				switch (cardSlotIndex)
 				{
 					case 0:

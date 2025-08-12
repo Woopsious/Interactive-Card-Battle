@@ -11,10 +11,10 @@ namespace Woopsious
 
 		Color _ColourDarkGreen = new(0, 0.3921569f, 0, 1);
 
-		int cardsUsedThisTurn;
-		int damageCardsUsedThisTurn;
-		int nonDamageCardsUsedThisTurn;
-		int cardsReplacedThisTurn;
+		public int cardsUsedThisTurn;
+		public int damageCardsUsedThisTurn;
+		public int nonDamageCardsUsedThisTurn;
+		public int cardsReplacedThisTurn;
 
 		public static event Action<bool> HideOffensiveCards;
 		public static event Action HideReplaceCardsButton;
@@ -28,14 +28,14 @@ namespace Woopsious
 		void OnEnable()
 		{
 			TurnOrderManager.OnNewTurnEvent += StartTurn;
-			CardHandler.OnPlayerUseCard += UpdateCardsUsed;
+			CardHandler.OnCardUsed += UpdateCardsUsed;
 			CardUi.OnCardReplace += OnReplaceCard;
 			OnEntityDeath += RangerHealOnKill;
 		}
 		void OnDisable()
 		{
 			TurnOrderManager.OnNewTurnEvent -= StartTurn;
-			CardHandler.OnPlayerUseCard -= UpdateCardsUsed;
+			CardHandler.OnCardUsed -= UpdateCardsUsed;
 			CardUi.OnCardReplace -= OnReplaceCard;
 			OnEntityDeath += RangerHealOnKill;
 		}
@@ -61,11 +61,13 @@ namespace Woopsious
 			nonDamageCardsUsedThisTurn = 0;
 			cardsReplacedThisTurn = 0;
 		}
-		public void UpdateCardsUsed(bool offensiveCard)
+		public void UpdateCardsUsed(CardUi card)
 		{
+			if (!card.PlayerCard) return;
+
 			cardsUsedThisTurn++;
 
-			if (offensiveCard)
+			if (card.Offensive)
 				damageCardsUsedThisTurn++;
 			else
 				nonDamageCardsUsedThisTurn++;

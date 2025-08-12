@@ -712,6 +712,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardSlotIndex: 0
+  CardInSlot: {fileID: 0}
 --- !u!222 &486146378
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2232,6 +2233,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardSlotIndex: 0
+  CardInSlot: {fileID: 0}
 --- !u!222 &1444560168
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2542,6 +2544,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardSlotIndex: 0
+  CardInSlot: {fileID: 0}
 --- !u!222 &1651807563
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2717,6 +2720,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardSlotIndex: 0
+  CardInSlot: {fileID: 0}
 --- !u!222 &1785654803
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3025,6 +3029,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardSlotIndex: 0
+  CardInSlot: {fileID: 0}
 --- !u!222 &1955618394
 CanvasRenderer:
   m_ObjectHideFlags: 0

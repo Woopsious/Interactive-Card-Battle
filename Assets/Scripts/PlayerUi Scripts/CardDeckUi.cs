@@ -49,16 +49,6 @@ namespace Woopsious
 				ThrowableCardExit();
 		}
 
-		//return cards back to deck when failed to play
-		public void ReturnCardToPlayerDeck(CardUi card)
-		{
-			foreach (CardSlotUi cardSlot in cardSlots)
-			{
-				if (cardSlot.CardInSlot == card)
-					cardSlot.AddCardToSlot(card);
-			}
-		}
-
 		//UI
 		//show/hide deck + all cards
 		void OnNewTurnStart(Entity entity)
