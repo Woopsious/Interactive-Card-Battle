@@ -20,11 +20,16 @@ namespace Woopsious
 		public Transform movingCardsTransform;
 		bool playerPickedUpCard;
 
+		[Header("audio")]
+		AudioHandler audioHandler;
+		public AudioClip cardAudioSfx;
+
 		void Awake()
 		{
 			instance = this;
-			cardDeckRectTransform = GetComponent<RectTransform>();
 			imageHighlight = GetComponent<Image>();
+			cardDeckRectTransform = GetComponent<RectTransform>();
+			audioHandler = GetComponent<AudioHandler>();
 		}
 
 		void OnEnable()
@@ -62,6 +67,7 @@ namespace Woopsious
 		{
 			cardDeckRectTransform.anchoredPosition = Vector2.zero;
 			imageHighlight.color = _ColourGrey;
+			audioHandler.PlayAudio(cardAudioSfx, true);
 		}
 		void HideCardDeck()
 		{
@@ -72,6 +78,8 @@ namespace Woopsious
 		//update image border highlight
 		void OnCardPicked(CardUi card)
 		{
+			audioHandler.PlayAudio(cardAudioSfx, true);
+
 			if (card != null)
 			{
 				playerPickedUpCard = true;

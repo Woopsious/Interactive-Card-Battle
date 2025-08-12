@@ -66,15 +66,9 @@ namespace Woopsious
 			if (CardInSlot != card) return;
 
 			if (wasUsed)
-			{
-				Debug.LogError("remove card");
 				RemoveCardFromSlot(card);
-			}
 			else
-			{
-				Debug.LogError("add card");
 				AddCardToSlot(card);
-			}
 		}
 		void AddCardToSlot(CardUi newCard)
 		{

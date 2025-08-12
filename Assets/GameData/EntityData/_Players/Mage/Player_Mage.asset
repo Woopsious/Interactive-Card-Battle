@@ -41,3 +41,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 16226633b2bd55747b7529bdcaeb1f9a, type: 2}
   - {fileID: 11400000, guid: 16226633b2bd55747b7529bdcaeb1f9a, type: 2}
   moveSetOrder: []
+  hitSfx: {fileID: 8300000, guid: f84e2c4d9f703b247890aec43610627e, type: 3}

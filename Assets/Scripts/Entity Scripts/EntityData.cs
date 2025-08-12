@@ -59,6 +59,9 @@ namespace Woopsious
 		[Header("Enemy Move Set Order")] //shown as non player
 		public List<MoveSetData> moveSetOrder = new();
 
+		[Header("Entity Audio")]
+		public AudioClip hitSfx;
+
 		public int GetEntityCost()
 		{
 			int entityCost = (int)(maxHealth * GetEnemyTypeCostModifier(enemyType));

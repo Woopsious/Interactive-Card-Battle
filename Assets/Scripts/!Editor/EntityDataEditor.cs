@@ -34,6 +34,8 @@ namespace Woopsious
 
 			EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.maxHealth)));
 
+			EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.hitSfx)));
+
 			if (data.isPlayer)
 			{
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.playerClass)));

@@ -34,11 +34,14 @@ namespace Woopsious
 		protected Color _ColourIceBlue = new(0, 1, 1, 1);
 		protected Color _ColourYellow = new(0.7843137f, 0.6862745f, 0, 1);
 
+		AudioHandler audioHandler;
+
 		void Awake()
 		{
 			entityMoves = GetComponent<EntityMoves>();
 			imageHighlight = GetComponent<Image>();
 			imageHighlight.color = _ColourDarkRed;
+			audioHandler = GetComponent<AudioHandler>();
 		}
 		void Start()
 		{
@@ -172,6 +175,7 @@ namespace Woopsious
 				health -= damage;
 			}
 
+			audioHandler.PlayAudio(EntityData.hitSfx, true);
 			UpdateUi();
 			OnDeath();
 		}

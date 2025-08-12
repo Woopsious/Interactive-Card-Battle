@@ -12,6 +12,8 @@ namespace Woopsious
 {
 	public class NewGameUi : MonoBehaviour
 	{
+		public static NewGameUi instance;
+
 		public GameObject newGamePanel;
 
 		[Header("Class Ui Info")]

@@ -125,7 +125,7 @@ namespace Woopsious
 				if (mainMenuPanel.activeInHierarchy)
 					HideMainMenuUiPanel();
 				else
-					ShowMainMenuUiPanel();
+					ShowMainMenuUi?.Invoke();
 			}
 		}
 
