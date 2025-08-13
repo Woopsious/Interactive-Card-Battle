@@ -138,6 +138,7 @@ namespace Woopsious
 			}
 			else if (loadedScene.name == GameManager.instance.gameScene)
 			{
+				inGame = true;
 				HideMainMenuUiPanel();
 			}
 		}
@@ -145,6 +146,7 @@ namespace Woopsious
 		{
 			if (unloadedScene.name == GameManager.instance.gameScene)
 			{
+				inGame = false;
 				ShowMainMenuUi?.Invoke();
 			}
 		}

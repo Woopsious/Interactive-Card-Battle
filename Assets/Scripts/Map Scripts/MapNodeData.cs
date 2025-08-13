@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Woopsious
@@ -27,6 +28,45 @@ namespace Woopsious
 		{
 			none = 0, ruins = 1, town = 2, cursed = 4, volcanic = 8, caves = 16
 		}
+		public float CalculateEncounterDifficultyFromModifiers(int columnIndex, MapNode mapNode)
+		{
+			float difficultyModifier = baseEncounterDifficulty;
+
+			int increaseDifficultyEveryXColumns = 3;
+			int timesByLimit = columnIndex / increaseDifficultyEveryXColumns;
+
+			for (int i = 0; i < timesByLimit; i++) //increase difficulty every x columns by x amount
+				difficultyModifier += 0.2f;
+
+			if (mapNode.landModifiers.HasFlag(LandModifiers.ruins))
+				difficultyModifier += 0.025f;
+			if (mapNode.landModifiers.HasFlag(LandModifiers.town))
+				difficultyModifier -= 0.1f;
+			if (mapNode.landModifiers.HasFlag(LandModifiers.cursed))
+				difficultyModifier += 0.05f;
+			if (mapNode.landModifiers.HasFlag(LandModifiers.volcanic))
+				difficultyModifier += 0.025f;
+			if (mapNode.landModifiers.HasFlag(LandModifiers.caves))
+				difficultyModifier += 0.025f;
+
+			switch(mapNode.nodeEncounterType)
+			{
+				case NodeEncounterType.eliteFight:
+				difficultyModifier += 0.025f;
+				break;
+				case NodeEncounterType.bossFight:
+				difficultyModifier += 0.05f;
+				break;
+				case NodeEncounterType.eliteBossFight:
+				difficultyModifier += 0.1f;
+				break;
+				default:
+				difficultyModifier += 0f;
+				break;
+			}
+
+			return difficultyModifier;
+		}
 
 		//set at runtime
 		public enum NodeEncounterType
@@ -37,7 +77,9 @@ namespace Woopsious
 		[Header("Node Settings")]
 		[Range(0f, 100f)]
 		public float nodeSpawnChance;
-		public int entityBudget;
+		[Range(0.5f, 1.5f)]
+		public float baseEncounterDifficulty;
+		public int baseEntityBudget;
 
 		[Header("Chance Modifiers")]
 		[Tooltip("Base Value: 15%")]

@@ -14,9 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nodeName: TestNode
   landTypes: 0
+  maxLandModifiers: 0
   applyableLandModifiers: 0
-  entityBudget: 150
   nodeSpawnChance: 50
+  baseEncounterDifficulty: 0
+  baseEntityBudget: 80
   chanceOfRuins: 8
+  chanceOfTown: 0
+  chanceOfCursed: 0
+  chanceOfVolcanic: 0
+  chanceOfCaves: 0
   chanceOfEliteFight: 5
   chanceOfFreeCardUpgrade: 5

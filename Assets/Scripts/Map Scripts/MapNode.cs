@@ -3,10 +3,9 @@ using static Woopsious.MapNodeData;
 using static Woopsious.EntityData;
 using TMPro;
 using UnityEngine.UI;
-using Unity.VisualScripting;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using UnityEditor.Experimental.GraphView;
+using System.Transactions;
 
 namespace Woopsious
 {
@@ -20,9 +19,11 @@ namespace Woopsious
 		public Button startEncounterButton;
 
 		public Image backgroundImage;
+		public TMP_Text debugDataText;
 
 		[Header("Runtime data")]
 		public MapNodeData mapNodeData;
+		public float encounterDifficulty;
 		public int entityBudget;
 		public NodeState nodeState;
 		public EnemyTypes enemyTypes;
@@ -41,14 +42,10 @@ namespace Woopsious
 		public List<MapNode> siblingNodes = new();
 
 		[Header("Debug options")]
+		public bool debugRuntimeData;
 		public bool DisplayEncounterEnemies;
 		public bool forceEliteFight;
-		public ForceLandModifier forceLandModifier;
-		[System.Flags]
-		public enum ForceLandModifier
-		{
-			none = 0, ruins = 1, town = 2, cursed = 4, volcanic = 8, caves = 16
-		}
+		public LandModifiers forceLandModifier;
 		public ForceEncounterType forceEncounterType;
 		public enum ForceEncounterType
 		{
@@ -66,15 +63,9 @@ namespace Woopsious
 			startEncounterButton.onClick.AddListener(delegate { BeginEncounter(); });
 		}
 
-		private void Start()
-		{
-			//Initilize(mapNodeData, true, false);
-		}
-
-		public void Initilize(MapNodeData mapNodeData, bool startingNode, bool bossFightNode)
+		public void Initilize(int columnIndex, MapNodeData mapNodeData, bool startingNode, bool bossFightNode)
 		{
 			this.mapNodeData = mapNodeData;
-			entityBudget = mapNodeData.entityBudget;
 			nodeState = NodeState.locked;
 			landTypes = mapNodeData.landTypes;
 			landModifiers = LandModifiers.none;
@@ -83,11 +74,19 @@ namespace Woopsious
 			ApplyRandomizedSettings(bossFightNode);
 			CheckAndForceDebugSettings();
 			SetEnemyTypes();
+			encounterDifficulty = mapNodeData.CalculateEncounterDifficultyFromModifiers(columnIndex, this);
+			entityBudget = Mathf.RoundToInt(mapNodeData.baseEntityBudget * encounterDifficulty);
 
 			encounterTitleText.text = UpdateEncounterTitleUi();
 			encounterLandTypeText.text = UpdateEncounterLandTypeUi();
 			encounterModifiersText.text = UpdateEncounterModifiersUi();
 			encounterEnemiesText.text = UpdateEncounterEnemiesUi();
+
+			if (debugDataText)
+			{
+				debugDataText.text = DebugDataTextToUi();
+				debugDataText.gameObject.SetActive(true);
+			}
 
 			if (startingNode)
 				CanTravelToNode();
@@ -107,32 +106,12 @@ namespace Woopsious
 		public void AddLinkToNextNode(MapNode mapNode)
 		{
 			nextLinkedNodes.Add(mapNode);
-			mapNode.AddThisNodeAsPreviousLink(this);
+			mapNode.previousLinkedNodes.Add(this);
 		}
-		void AddThisNodeAsPreviousLink(MapNode mapNode)
+		public void AddLinkToPreviousNode(MapNode mapNode)
 		{
 			previousLinkedNodes.Add(mapNode);
-		}
-
-		//start encounter
-		void BeginEncounter()
-		{
-			GameManager.BeginCardCombat(this);
-			CurrentlyAtNode();
-
-			foreach (MapNode previousNode in previousLinkedNodes) //lock prev nodes
-			{
-				if (previousNode.nodeState == NodeState.currentlyAt)
-					previousNode.PreviouslyVisitedNode();
-				else
-					previousNode.LockNode();
-			}
-
-			foreach (MapNode nextNode in nextLinkedNodes) //unlock next nodes
-				nextNode.CanTravelToNode();
-
-			foreach (MapNode node in siblingNodes) //lock sibling nodes
-				node.LockNode();
+			mapNode.nextLinkedNodes.Add(this);
 		}
 
 		//UPDATE NODE SETTINGS AT RUNTIME
@@ -166,15 +145,15 @@ namespace Woopsious
 			if (forceEliteFight)
 				nodeEncounterType = MakeEncounterElite();
 
-			if (forceLandModifier.HasFlag(ForceLandModifier.ruins))
+			if (forceLandModifier.HasFlag(LandModifiers.ruins))
 				landModifiers = AddRuinsLandModifier();
-			if (forceLandModifier.HasFlag(ForceLandModifier.town))
+			if (forceLandModifier.HasFlag(LandModifiers.town))
 				landModifiers = AddTownLandModifier();
-			if (forceLandModifier.HasFlag(ForceLandModifier.cursed))
+			if (forceLandModifier.HasFlag(LandModifiers.cursed))
 				landModifiers = AddCursedLandModifier();
-			if (forceLandModifier.HasFlag(ForceLandModifier.volcanic))
+			if (forceLandModifier.HasFlag(LandModifiers.volcanic))
 				landModifiers = AddVolcanicLandModifier();
-			if (forceLandModifier.HasFlag(ForceLandModifier.caves))
+			if (forceLandModifier.HasFlag(LandModifiers.caves))
 				landModifiers = AddCavesLandModifier();
 
 			switch (forceEncounterType)
@@ -210,19 +189,6 @@ namespace Woopsious
 						cheapistEnemyCost = entityCost;
 				}
 			}
-		}
-
-		public Task BuyEnemy(EntityData spawnedEntity)
-		{
-			entityBudget -= spawnedEntity.GetEntityCost();
-
-			for (int i = PossibleEntities.Count - 1;  i > 0; i--)
-			{
-				if (entityBudget < PossibleEntities[i].GetEntityCost())
-					PossibleEntities.Remove(PossibleEntities[i]);
-			}
-
-			return Task.CompletedTask;
 		}
 
 		//sub funcs
@@ -275,6 +241,39 @@ namespace Woopsious
 		{
 			double roll = systemRandom.NextDouble() * 100;
 			return roll;
+		}
+
+		//start encounter
+		void BeginEncounter()
+		{
+			GameManager.BeginCardCombat(this);
+			CurrentlyAtNode();
+
+			foreach (MapNode previousNode in previousLinkedNodes) //lock prev nodes
+			{
+				if (previousNode.nodeState == NodeState.currentlyAt)
+					previousNode.PreviouslyVisitedNode();
+				else
+					previousNode.LockNode();
+			}
+
+			foreach (MapNode nextNode in nextLinkedNodes) //unlock next nodes
+				nextNode.CanTravelToNode();
+
+			foreach (MapNode node in siblingNodes) //lock sibling nodes
+				node.LockNode();
+		}
+		public Task BuyEnemy(EntityData spawnedEntity)
+		{
+			entityBudget -= spawnedEntity.GetEntityCost();
+
+			for (int i = PossibleEntities.Count - 1; i > 0; i--)
+			{
+				if (entityBudget < PossibleEntities[i].GetEntityCost())
+					PossibleEntities.Remove(PossibleEntities[i]);
+			}
+
+			return Task.CompletedTask;
 		}
 
 		//update node state
@@ -442,6 +441,11 @@ namespace Woopsious
 				encounterEnemies += "<color=#800080>Abberrations</color>" + ", "; //Eldritch Purple
 
 			return encounterEnemies;
+		}
+		string DebugDataTextToUi()
+		{
+			string debugData = "Encounter Difficulty: " + encounterDifficulty + "\nEncounterBudget: " + entityBudget;
+			return debugData;
 		}
 
 		string RemoveLastComma(string input)

@@ -110,11 +110,11 @@ namespace Woopsious
 			MapNode mapNode = Instantiate(MapNodePrefab, gameObject.transform).GetComponent<MapNode>();
 
 			if (columnIndex == 0) //starting nodes
-				mapNode.Initilize(GetWeightedMapNode(), true, false);
-			else if (columnIndex == 2) //boss nodes
-				mapNode.Initilize(GetWeightedMapNode(), false, true);
+				mapNode.Initilize(columnIndex, GetWeightedMapNode(), true, false);
+			else if (columnIndex == 9) //boss nodes
+				mapNode.Initilize(columnIndex, GetWeightedMapNode(), false, true);
 			else //standard nodes
-				mapNode.Initilize(GetWeightedMapNode(), false, false);
+				mapNode.Initilize(columnIndex, GetWeightedMapNode(), false, false);
 
 			return mapNode;
 		}
@@ -213,7 +213,7 @@ namespace Woopsious
 			//link nodes in current column to nodes in previous column
 			for (int curColumnRow = 0; curColumnRow < currentColumn.Count; curColumnRow++)
 			{
-				currentColumn[curColumnRow].AddLinkToNextNode(previousColumn[nodeOffset]);
+				currentColumn[curColumnRow].AddLinkToPreviousNode(previousColumn[nodeOffset]);
 				SpawnNodeLinkObject(currentColumn[curColumnRow], previousColumn[nodeOffset]);
 				nodeOffset++;
 
@@ -230,7 +230,7 @@ namespace Woopsious
 				if (roll > chanceForNoLink) continue;
 
 				nodesToDoubleLink--;
-				currentColumn[curColumnRow].AddLinkToNextNode(previousColumn[nodeOffset]);
+				currentColumn[curColumnRow].AddLinkToPreviousNode(previousColumn[nodeOffset]);
 				SpawnNodeLinkObject(currentColumn[curColumnRow], previousColumn[nodeOffset]);
 				nodeOffset++;
 			}
