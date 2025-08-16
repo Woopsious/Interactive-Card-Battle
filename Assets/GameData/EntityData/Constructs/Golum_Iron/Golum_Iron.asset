@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 862c4da70e93762488b165155f5dd2cb, type: 3}
+  m_Name: Golum_Iron
+  m_EditorClassIdentifier: 
+  entityName: Iron Golum
+  entityDescription: A golum made from magical Iron and rock
+  isPlayer: 0
+  enemyType: 8
+  foundInLandTypes: 0
+  foundWithLandModifiers: 21
+  entitySpawnChance: 0.8
+  eliteEnemy: 0
+  maxHealth: 70
+  minHealPercentage: 0
+  playerClass: 0
+  chanceOfDoubleDamage: 0
+  healOnKillPercentage: 0
+  damageReflectedPercentage: 0
+  extraBlockPerTurn: 0
+  maxCardsUsedPerTurn: 0
+  maxDamageCardsUsedPerTurn: 0
+  maxNonDamageCardsUsedPerTurn: 0
+  maxReplaceableCardsPerTurn: 0
+  cards: []
+  moveSetOrder:
+  - moveSetMoves:
+    - {fileID: 11400000, guid: c9a31d9f738017548a16510cd629ca7d, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: e17cf0f4d73b39a4ebad5dae3d3637ff, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: 66dc63b809141994a9eaa0f78f4d9db8, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: c9a31d9f738017548a16510cd629ca7d, type: 2}
+  hitSfx: {fileID: 8300000, guid: f84e2c4d9f703b247890aec43610627e, type: 3}

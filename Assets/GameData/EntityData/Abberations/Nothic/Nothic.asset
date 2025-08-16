@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 862c4da70e93762488b165155f5dd2cb, type: 3}
+  m_Name: Nothic
+  m_EditorClassIdentifier: 
+  entityName: Nothic
+  entityDescription: 
+  isPlayer: 0
+  enemyType: 8
+  foundInLandTypes: 0
+  foundWithLandModifiers: 5
+  entitySpawnChance: 0.8
+  eliteEnemy: 0
+  maxHealth: 55
+  minHealPercentage: 0
+  playerClass: 0
+  chanceOfDoubleDamage: 0
+  healOnKillPercentage: 0
+  damageReflectedPercentage: 0
+  extraBlockPerTurn: 0
+  maxCardsUsedPerTurn: 0
+  maxDamageCardsUsedPerTurn: 0
+  maxNonDamageCardsUsedPerTurn: 0
+  maxReplaceableCardsPerTurn: 0
+  cards: []
+  moveSetOrder:
+  - moveSetMoves:
+    - {fileID: 11400000, guid: 81d60cbf9bfae5748903e07e1b61ffa2, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: 238ee9401eca251418d79db17733e104, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: 81d60cbf9bfae5748903e07e1b61ffa2, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: 81d60cbf9bfae5748903e07e1b61ffa2, type: 2}
+    - {fileID: 11400000, guid: 62dfabf2fc3cf7c419ad8919b4d26676, type: 2}
+  hitSfx: {fileID: 8300000, guid: f84e2c4d9f703b247890aec43610627e, type: 3}
