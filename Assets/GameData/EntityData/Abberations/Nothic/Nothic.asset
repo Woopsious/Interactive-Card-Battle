@@ -15,7 +15,7 @@ MonoBehaviour:
   entityName: Nothic
   entityDescription: 
   isPlayer: 0
-  enemyType: 8
+  enemyType: 32
   foundInLandTypes: 0
   foundWithLandModifiers: 5
   entitySpawnChance: 0.8

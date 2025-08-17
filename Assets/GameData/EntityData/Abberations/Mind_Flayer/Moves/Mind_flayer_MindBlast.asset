@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
   m_Name: Mind_flayer_MindBlast
   m_EditorClassIdentifier: 
-  attackName: 
-  attackDescription: 
-  offensive: 0
+  attackName: Mind Blast
+  attackDescription: Blast targets mind with psychic energy
+  offensive: 1
   alsoHeals: 0
-  damage: 0
+  damage: 18
   damageType: 2
-  attackCooldownTurns: 0
-  attackUseChance: 0
+  attackCooldownTurns: 1
+  attackUseChance: 0.4

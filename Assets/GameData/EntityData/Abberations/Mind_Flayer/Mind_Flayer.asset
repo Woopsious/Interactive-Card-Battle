@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 862c4da70e93762488b165155f5dd2cb, type: 3}
   m_Name: Mind_Flayer
   m_EditorClassIdentifier: 
-  entityName: 
+  entityName: Mind Flayer
   entityDescription: 
   isPlayer: 0
-  enemyType: 8
+  enemyType: 32
   foundInLandTypes: 0
   foundWithLandModifiers: 5
   entitySpawnChance: 0.8
@@ -32,5 +32,17 @@ MonoBehaviour:
   maxNonDamageCardsUsedPerTurn: 0
   maxReplaceableCardsPerTurn: 0
   cards: []
-  moveSetOrder: []
+  moveSetOrder:
+  - moveSetMoves:
+    - {fileID: 11400000, guid: 65b595bedacee554cadcd8049d0280a9, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: e705ab42045678c45afae6cd624a38b0, type: 2}
+    - {fileID: 11400000, guid: f25d3415aac66234cbe272752ccd8c19, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: 99ae19d3c4c44e64ea8b3a80fb051e08, type: 2}
+    - {fileID: 11400000, guid: 65b595bedacee554cadcd8049d0280a9, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: 65b595bedacee554cadcd8049d0280a9, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: f25d3415aac66234cbe272752ccd8c19, type: 2}
   hitSfx: {fileID: 8300000, guid: f84e2c4d9f703b247890aec43610627e, type: 3}

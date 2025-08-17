@@ -76,7 +76,7 @@ namespace Woopsious
 		{
 			List<int> mapNodesToSpawnPerColumn = new()
 			{
-				3, 5, 5, 10, 10, 8, 8, 4, 4, 3
+				1, 2, 2, 3, 6, 6, 5, 3, 3, 2
 			};
 
 			mapCamera.gameObject.SetActive(true);
@@ -177,7 +177,7 @@ namespace Woopsious
 		{
 			int nodeOffset = 0;
 			int extraNodesToLink = currentColumn.Count - previousColumn.Count;
-			float chanceForNoLink = ((float)currentColumn.Count - previousColumn.Count) / previousColumn.Count * 100;
+			float chanceForNoLink = 50;
 
 			//link nodes in previous column to nodes in current column
 			for (int prevColumnRow = 0; prevColumnRow < previousColumn.Count; prevColumnRow++)
@@ -188,13 +188,13 @@ namespace Woopsious
 
 				if (extraNodesToLink == 0) continue;
 
-				int nodesLeftToLink = previousColumn.Count - prevColumnRow - 1;
+				int nodesLeftToLink = previousColumn.Count - prevColumnRow;
 				float roll;
 
 				if (extraNodesToLink >= nodesLeftToLink)
 					roll = 0f;
 				else
-					roll = (float)(systemRandom.NextDouble() * totalMapNodeSpawnChance);
+					roll = (float)(systemRandom.NextDouble() * 100);
 
 				if (roll > chanceForNoLink) continue;
 
@@ -208,7 +208,7 @@ namespace Woopsious
 		{
 			int nodeOffset = 0;
 			int nodesToDoubleLink = previousColumn.Count - currentColumn.Count;
-			float chanceForNoLink = ((float)previousColumn.Count - currentColumn.Count) / currentColumn.Count * 100;
+			float chanceForNoLink = 50;
 
 			//link nodes in current column to nodes in previous column
 			for (int curColumnRow = 0; curColumnRow < currentColumn.Count; curColumnRow++)
@@ -219,13 +219,13 @@ namespace Woopsious
 
 				if (nodesToDoubleLink == 0) continue;
 
-				int nodesLeftToLink = currentColumn.Count - curColumnRow - 1;
+				int nodesLeftToLink = currentColumn.Count - curColumnRow;
 				float roll;
 
 				if (nodesToDoubleLink >= nodesLeftToLink)
 					roll = 0f;
 				else
-					roll = (float)(systemRandom.NextDouble() * totalMapNodeSpawnChance);
+					roll = (float)(systemRandom.NextDouble() * 100);
 
 				if (roll > chanceForNoLink) continue;
 

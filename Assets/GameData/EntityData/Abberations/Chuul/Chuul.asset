@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 862c4da70e93762488b165155f5dd2cb, type: 3}
   m_Name: Chuul
   m_EditorClassIdentifier: 
-  entityName: 
+  entityName: Chuul
   entityDescription: 
   isPlayer: 0
-  enemyType: 8
-  foundInLandTypes: 0
+  enemyType: 32
+  foundInLandTypes: 32
   foundWithLandModifiers: 5
   entitySpawnChance: 0.8
   eliteEnemy: 0
