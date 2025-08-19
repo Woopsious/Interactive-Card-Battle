@@ -9,12 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c884579dafdc2754d85de74e4ad7743a, type: 3}
-  m_Name: Rogue_Attack
+  m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
+  m_Name: P_Mage_Heal
   m_EditorClassIdentifier: 
-  cardName: Stab
-  cardDescription: Stab enemy with dagger
-  offensive: 1
-  alsoHeals: 0
-  damage: 12
-  damageType: 2
+  attackName: Heal
+  attackDescription: Heal self
+  offensive: 0
+  DamageInfo:
+    DamageType: 0
+    DamageValue: 0
+    BlockValue: 0
+    HealValue: 15
+  attackUseChance: 0

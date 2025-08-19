@@ -17,7 +17,7 @@ MonoBehaviour:
   maxLandModifiers: 0
   applyableLandModifiers: 0
   nodeSpawnChance: 50
-  baseEncounterDifficulty: 0
+  baseEncounterDifficulty: 0.5
   baseEntityBudget: 80
   chanceOfRuins: 8
   chanceOfTown: 0

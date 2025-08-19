@@ -1,6 +1,10 @@
 using System;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static UnityEngine.EventSystems.EventTrigger;
+using static UnityEngine.GraphicsBuffer;
 using static Woopsious.DamageData;
 
 namespace Woopsious
@@ -132,13 +136,51 @@ namespace Woopsious
 		//shared actions
 		void UseCardOnTarget(Entity target)
 		{
-			target.OnHit(new(cardOwner, false, card.Damage, card.DamageType));
+			if (card.DamageInfo.isAoeAttack)
+				HandleCardAoeDamage(target);
+			else
+				HandleCardDamage(target);
 
-			if (card.AlsoHeals)
-				cardOwner.OnHit(new(cardOwner, false, card.Damage, DamageType.heal));
+			HandleCardBlock();
+			HandleCardHeal();
 
 			CleanUpCard();
 		}
+
+		//handle applying damage info values to correct entities
+		void HandleCardAoeDamage(Entity initialTarget)
+		{
+			if (card.DamageInfo.DamageValue == 0) return;
+
+			initialTarget.RecieveDamage(new(cardOwner, false, card.DamageInfo)); //damage initial target
+			int targetsToFind = card.DamageInfo.maxAoeTargets - 1;
+
+			foreach (Entity entity in TurnOrderManager.Instance.turnOrder) //find and damage others in turn order (excluding initial + player)
+			{
+				if (entity.EntityData.isPlayer || entity == initialTarget) continue;
+				if (targetsToFind <= 0) break;
+
+				targetsToFind--;
+				entity.RecieveDamage(new(cardOwner, false, card.DamageInfo));
+			}
+		}
+		void HandleCardDamage(Entity target)
+		{
+			if (card.DamageInfo.DamageValue == 0) return;
+			target.RecieveDamage(new(cardOwner, false, card.DamageInfo));
+		}
+		void HandleCardBlock()
+		{
+			if (card.DamageInfo.BlockValue == 0) return;
+			cardOwner.RecieveBlock(new(cardOwner, false, card.DamageInfo));
+		}
+		void HandleCardHeal()
+		{
+			if (card.DamageInfo.HealValue == 0) return;
+			cardOwner.RecieveHealing(new(cardOwner, false, card.DamageInfo));
+		}
+
+		//clean up card
 		void CleanUpCard()
 		{
 			if (card.PlayerCard)

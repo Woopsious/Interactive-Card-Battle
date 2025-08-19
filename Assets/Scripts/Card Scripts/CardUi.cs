@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System;
 using TMPro;
 using UnityEngine;
@@ -15,9 +16,7 @@ namespace Woopsious
 
 		public bool PlayerCard { get; private set; }
 		public bool Offensive { get; private set; }
-		public bool AlsoHeals { get; private set; }
-		public int Damage { get; private set; }
-		public DamageType DamageType { get; private set; }
+		public Damage DamageInfo { get; private set; }
 
 		public bool selectable;
 
@@ -28,28 +27,7 @@ namespace Woopsious
 			cardHandler = GetComponent<CardHandler>();
 		}
 
-		public void SetupCard(CardData CardData)
-		{
-			if (CardData == null)
-			{
-				Debug.LogError("Card data null");
-				return;
-			}
-
-			PlayerCard = true;
-			AlsoHeals = CardData.alsoHeals;
-			Offensive = CardData.offensive;
-
-			string cardName = CardData.cardName;
-			gameObject.name = cardName;
-			cardNametext.text = cardName;
-			cardDescriptiontext.text = CardData.CreateDescription();
-			Damage = CardData.damage;
-			DamageType = CardData.damageType;
-
-			replaceCardButton.gameObject.SetActive(true);
-		}
-		public void SetupCard(AttackData AttackData)
+		public void SetupCard(AttackData AttackData, bool playerCard)
 		{
 			if (AttackData == null)
 			{
@@ -57,16 +35,14 @@ namespace Woopsious
 				return;
 			}
 
-			PlayerCard = false;
-			AlsoHeals = AttackData.alsoHeals;
+			PlayerCard = playerCard;
 			Offensive = AttackData.offensive;
 
 			string cardName = AttackData.attackName;
 			gameObject.name = cardName;
 			cardNametext.text = cardName;
 			cardDescriptiontext.text = AttackData.CreateDescription();
-			Damage = AttackData.damage;
-			DamageType = AttackData.damageType;
+			DamageInfo = AttackData.DamageInfo;
 
 			replaceCardButton.gameObject.SetActive(false);
 		}

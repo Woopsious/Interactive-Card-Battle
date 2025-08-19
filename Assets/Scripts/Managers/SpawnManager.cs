@@ -136,9 +136,9 @@ namespace Woopsious
 		}
 
 		//types of cards to get
-		public static CardData GetRandomCard(List<CardData> cardDataList)
+		public static AttackData GetRandomCard(List<AttackData> cardDataList)
 		{
-			CardData cardData = cardDataList[UnityEngine.Random.Range(0, cardDataList.Count)];
+			AttackData cardData = cardDataList[instance.systemRandom.Next(cardDataList.Count)];
 			return cardData;
 		}
 	}

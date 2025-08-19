@@ -110,26 +110,29 @@ namespace Woopsious
 
 			return classInfo;
 		}
-		string SetClassCardsInfo(List<CardData> playerCards)
+		string SetClassCardsInfo(List<AttackData> playerCards)
 		{
+			int multiCardsCount = 0;
 			int attackCardsCount = 0;
 			int blockCardsCount = 0;
 			int healCardsCount = 0;
 
-			foreach (CardData card in playerCards)
+			foreach (AttackData attackData in playerCards)
 			{
-				if (card.damageType == DamageType.block)
-					blockCardsCount++;
-				else if (card.damageType == DamageType.heal)
-					healCardsCount++;
-				else
+				Damage damageInfo = attackData.DamageInfo;
+				if (damageInfo.DamageValue != 0 && damageInfo.BlockValue != 0 || damageInfo.DamageValue != 0 && damageInfo.HealValue != 0)
+					multiCardsCount++;
+				else if (damageInfo.DamageValue != 0)
 					attackCardsCount++;
+				else if (damageInfo.BlockValue != 0)
+					blockCardsCount++;
+				else if (damageInfo.HealValue != 0)
+					healCardsCount++;
 			}
 
 			string cardsInfo = "";
-			cardsInfo += $"Attack Cards: {attackCardsCount}\nBlock Cards: {blockCardsCount}\nHeal Cards: {healCardsCount}";
+			cardsInfo += $"Multi Cards: {multiCardsCount}\nAttack Cards: {attackCardsCount}\nBlock Cards: {blockCardsCount}\nHeal Cards: {healCardsCount}";
 			return cardsInfo;
-
 			//at some point also add the dispalying of each type of starting cards details
 		}
 		string ExplainClassGimmick(EntityData playerData)

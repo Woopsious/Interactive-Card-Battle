@@ -54,7 +54,7 @@ namespace Woopsious
 		public int maxNonDamageCardsUsedPerTurn;
 		public int maxReplaceableCardsPerTurn;
 
-		public List<CardData> cards = new();
+		public List<AttackData> cards = new();
 
 		[Header("Enemy Move Set Order")] //shown as non player
 		public List<MoveSetData> moveSetOrder = new();

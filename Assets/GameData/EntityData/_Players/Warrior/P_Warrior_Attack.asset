@@ -9,12 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c884579dafdc2754d85de74e4ad7743a, type: 3}
-  m_Name: Warrior_Attack
+  m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
+  m_Name: P_Warrior_Attack
   m_EditorClassIdentifier: 
-  cardName: Sword Slash
-  cardDescription: Slash enemy with sword
+  attackName: Sword Slash
+  attackDescription: Slash enemy with sword
   offensive: 1
-  alsoHeals: 0
-  damage: 10
-  damageType: 2
+  DamageInfo:
+    DamageType: 0
+    DamageValue: 8
+    BlockValue: 0
+    HealValue: 0
+  attackUseChance: 0

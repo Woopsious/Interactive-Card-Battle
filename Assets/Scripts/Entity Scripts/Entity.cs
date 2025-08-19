@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -34,16 +31,16 @@ namespace Woopsious
 		protected Color _ColourIceBlue = new(0, 1, 1, 1);
 		protected Color _ColourYellow = new(0.7843137f, 0.6862745f, 0, 1);
 
-		AudioHandler audioHandler;
+		public AudioHandler audioHandler;
 
-		void Awake()
+		protected virtual void Awake()
 		{
 			entityMoves = GetComponent<EntityMoves>();
 			imageHighlight = GetComponent<Image>();
 			imageHighlight.color = _ColourDarkRed;
 			audioHandler = GetComponent<AudioHandler>();
 		}
-		void Start()
+		protected virtual void Start()
 		{
 			if (!debugInitilizeEntity) return;
 
@@ -132,42 +129,33 @@ namespace Woopsious
 		}
 
 		//entity hits via cards
-		public virtual void OnHit(DamageData damageData)
+		public virtual void RecieveDamage(DamageData damageData)
 		{
-			if (damageData.damageType == DamageType.block)
-				AddBlock(damageData.damage);
-			else if (damageData.damageType == DamageType.heal)
-				RecieveHealing(damageData.damage);
-			else if (damageData.damageType == DamageType.physical)
-				RecieveDamage(damageData);
-			else
-				Debug.LogError("no hit type set up");
-		}
-		protected void AddBlock(int block)
-		{
-			this.block += block;
-			UpdateUi();
-		}
-		protected void RecieveHealing(int healing)
-		{
-			health += healing;
-			if (health > EntityData.maxHealth)
-				health = EntityData.maxHealth;
+			int damage = 0; //get true damage from multihit enum
+			switch (damageData.DamageInfo.multiHitSettings)
+			{
+				case Damage.MultiHitAttack.No:
+				damage = damageData.DamageInfo.DamageValue;
+				break;
+				case Damage.MultiHitAttack.TwoHits:
+				damage = damageData.DamageInfo.DamageValue * 2;
+				break;
+				case Damage.MultiHitAttack.ThreeHits:
+				damage = damageData.DamageInfo.DamageValue * 3;
+				break;
+				case Damage.MultiHitAttack.FourHits:
+				damage = damageData.DamageInfo.DamageValue * 4;
+				break;
+			}
 
-			UpdateUi();
-		}
-		protected void RecieveDamage(DamageData damageData)
-		{
-			int damage = damageData.damage;
-
-			if (damageData.entityDamageSource.EntityData.playerClass == EntityData.PlayerClass.Mage)
+			if (damageData.EntityDamageSource.EntityData.playerClass == EntityData.PlayerClass.Mage)
 			{
 				float roll = (float)(systemRandom.NextDouble() * 100);
-				if (roll < damageData.entityDamageSource.EntityData.chanceOfDoubleDamage)
+				if (roll < damageData.EntityDamageSource.EntityData.chanceOfDoubleDamage)
 					damage *= 2;
 			}
 
-			if (damageData.damageIgnoresBlock)
+			if (damageData.DamageIgnoresBlock)
 				health -= damage;
 			else
 			{
@@ -179,6 +167,20 @@ namespace Woopsious
 			UpdateUi();
 			OnDeath();
 		}
+		public virtual void RecieveBlock(DamageData damageData)
+		{
+			block += damageData.DamageInfo.BlockValue;
+			UpdateUi();
+		}
+		public virtual void RecieveHealing(DamageData damageData)
+		{
+			health += damageData.DamageInfo.HealValue;
+			if (health > EntityData.maxHealth)
+				health = EntityData.maxHealth;
+
+			UpdateUi();
+		}
+
 		int GetBlockedDamage(int damage)
 		{
 			if (block > damage)

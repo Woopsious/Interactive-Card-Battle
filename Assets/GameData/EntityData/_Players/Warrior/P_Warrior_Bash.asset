@@ -9,12 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c884579dafdc2754d85de74e4ad7743a, type: 3}
-  m_Name: Mage_Block
+  m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
+  m_Name: P_Warrior_Bash
   m_EditorClassIdentifier: 
-  cardName: Shield
-  cardDescription: Shield yourself from attacks
-  offensive: 0
-  alsoHeals: 0
-  damage: 10
-  damageType: 0
+  attackName: Shield Bash
+  attackDescription: Bash enemy with shield
+  offensive: 1
+  DamageInfo:
+    DamageType: 0
+    DamageValue: 2
+    BlockValue: 5
+    HealValue: 0
+  attackUseChance: 0

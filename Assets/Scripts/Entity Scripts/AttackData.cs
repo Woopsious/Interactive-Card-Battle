@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using static Woopsious.DamageData;
 
@@ -13,29 +15,46 @@ namespace Woopsious
 		public string attackDescription;
 
 		public bool offensive;
-		public bool alsoHeals;
 
-		[Header("Attack damage")]
-		public int damage;
-
-		public DamageType damageType;
+		[Header("Damage Info")]
+		public Damage DamageInfo;
 
 		[Header("Attack use rules")]
-		public int attackCooldownTurns;
 		[Range(0f, 1f)]
 		public float attackUseChance;
 
 		public string CreateDescription()
 		{
 			string attackDescription = this.attackDescription;
-			attackDescription += "\n\n";
+			attackDescription += "\n";
 
-			if (damageType == DamageType.block)
-				attackDescription += "Blocks " + damage + " damage";
-			else if (damageType == DamageType.heal)
-				attackDescription += "Heals " + damage + " damage";
-			else if (damageType == DamageType.physical)
-				attackDescription += "Deals " + damage + " physical damage";
+			if (DamageInfo.DamageValue != 0)
+			{
+				if (DamageInfo.DamageType == DamageType.physical)
+					attackDescription += "\nDeals " + DamageInfo.DamageValue + " physical damage";
+
+				if (DamageInfo.isAoeAttack)
+					attackDescription += " each to a max of " + DamageInfo.maxAoeTargets + " targets";
+
+				switch (DamageInfo.multiHitSettings)
+				{
+					case Damage.MultiHitAttack.No:
+					break;
+					case Damage.MultiHitAttack.TwoHits:
+					attackDescription += " 2x (" + DamageInfo.DamageValue * 2 + ")" ;
+					break;
+					case Damage.MultiHitAttack.ThreeHits:
+					attackDescription += " 3x (" + DamageInfo.DamageValue * 3 + ")";
+					break;
+					case Damage.MultiHitAttack.FourHits:
+					attackDescription += " 4x (" + DamageInfo.DamageValue * 4 + ")";
+					break;
+				}
+			}
+			if (DamageInfo.BlockValue != 0)
+				attackDescription += "\nBlocks " + DamageInfo.BlockValue + " damage";
+			if (DamageInfo.HealValue != 0)
+				attackDescription += "\nHeals " + DamageInfo.HealValue + " damage";
 
 			return attackDescription;
 		}

@@ -57,9 +57,9 @@ namespace Woopsious
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.cards)), true);
 
 				GUILayout.Space(10);
-				EditorGUILayout.LabelField("Create New Card For Player Class", EditorStyles.boldLabel);
-				if (GUILayout.Button("Create New CardData"))
-					CreateCardDataScriptableObject();
+				EditorGUILayout.LabelField("Create New Card For Player", EditorStyles.boldLabel);
+				if (GUILayout.Button("Create New AttackData"))
+					CreateAttackDataScriptableObject();
 				GUILayout.Space(10);
 			}
             else
@@ -86,24 +86,6 @@ namespace Woopsious
 			// Write back changed values
 			// This also handles all marking dirty, saving, undo/redo etc
 			serializedObject.ApplyModifiedProperties();
-		}
-
-		void CreateCardDataScriptableObject()
-		{
-			CardData asset = CreateInstance<CardData>();
-
-			// Choose path to save
-			string currentAssetPath = Path.GetDirectoryName(AssetDatabase.GetAssetPath(data));
-			currentAssetPath = AssetDatabase.GenerateUniqueAssetPath(currentAssetPath + "/NewCardData.asset");
-
-			// Save asset to the project
-			AssetDatabase.CreateAsset(asset, currentAssetPath);
-			AssetDatabase.SaveAssets();
-			AssetDatabase.Refresh();
-
-			// Select it in the Project window
-			EditorUtility.FocusProjectWindow();
-			Selection.activeObject = asset;
 		}
 
 		void CreateAttackDataScriptableObject()

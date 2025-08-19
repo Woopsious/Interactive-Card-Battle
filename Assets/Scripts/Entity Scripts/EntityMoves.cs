@@ -124,7 +124,7 @@ namespace Woopsious
 			if (TurnOrderManager.Player() == null) return;
 
 			CardUi card = SpawnManager.SpawnCard();
-			card.SetupCard(attackData);
+			card.SetupCard(attackData, false);
 
 			if (card.Offensive)
 				card.cardHandler.EnemyUseCard(entity, TurnOrderManager.Player());
@@ -166,15 +166,7 @@ namespace Woopsious
 		{
 			foreach (EnemyMove move in moves)
 			{
-				if (move.CanUseMove())
-				{
-					if (move.attackData.damageType == DamageType.heal && NeedsHealing())
-						return true;
-					else if (move.attackData.damageType != DamageType.heal)
-						return true;
-					else
-						return false;
-				}
+				if (move.CanUseMove()) return true;
 			}
 			//no usable moves found in move set
 			return false;
@@ -183,62 +175,9 @@ namespace Woopsious
 		//use move (should never return null)
 		public EnemyMove UseMove()
 		{
-			EnemyMove moveToUse = HasHealOptionAndNeedsHeal(); //always priorities healing
-
-			if (moveToUse == null)
-			{
-				/*
-				List<EnemyMove> moveOptions = GetAvailableMoveOptions();
-
-				if (moveOptions != null)
-					moveToUse = PickRandomMoveFromList(moveOptions);
-				*/
-
-				moveToUse = PickRandomMoveFromList(moves);
-			}
-
+			EnemyMove moveToUse = PickRandomMoveFromList(moves);
 			moveToUse.UseAttack();
 			return moveToUse;
-		}
-
-		//additional logic
-		EnemyMove HasHealOptionAndNeedsHeal()
-		{
-			foreach (EnemyMove move in moves)
-			{
-				if (move.attackData.damageType != DamageType.heal) continue;
-
-				if (NeedsHealing())
-					return move;
-			}
-
-			return null;
-		}
-		bool NeedsHealing()
-		{
-			float HealthPercentage = (float)entity.health / entity.EntityData.maxHealth * 100;
-
-			if (HealthPercentage <= 0.5f)
-				return true;
-			else
-				return false;
-		}
-
-		//create new list of moves from available moves
-		List<EnemyMove> GetAvailableMoveOptions()
-		{
-			List<EnemyMove> moveOptions = new();
-
-			foreach (EnemyMove move in moves)
-			{
-				if (move.CanUseMove() && move.attackData.damageType != DamageType.heal) //exclude heal cards
-					moveOptions.Add(move);
-			}
-
-			if (moveOptions.Count > 0)
-				return moveOptions;
-			else
-				return null;
 		}
 
 		//pick random move from moves available based on weighted use chance (excluding healing moves)
@@ -279,30 +218,24 @@ namespace Woopsious
 	{
 		public readonly AttackData attackData;
 
-		public int cooldownTimer;
-
 		public EnemyMove(AttackData attackData)
 		{
 			this.attackData = attackData;
-			cooldownTimer = 0;
 		}
 
 		public bool CanUseMove()
 		{
-			if (cooldownTimer <= 0)
-				return true;
-			else
-				return false;
+			return true;
 		}
 
 		public void UseAttack()
 		{
-			cooldownTimer = attackData.attackCooldownTurns;
+			//noop
 		}
 
 		public void NewRound()
 		{
-			cooldownTimer--;
+			//noop
 		}
 	}
 }

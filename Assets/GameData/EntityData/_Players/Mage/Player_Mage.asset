@@ -32,13 +32,13 @@ MonoBehaviour:
   maxNonDamageCardsUsedPerTurn: 2
   maxReplaceableCardsPerTurn: 2
   cards:
-  - {fileID: 11400000, guid: 77e67c82d12f0d84f897398b17501f6c, type: 2}
-  - {fileID: 11400000, guid: 77e67c82d12f0d84f897398b17501f6c, type: 2}
-  - {fileID: 11400000, guid: 77e67c82d12f0d84f897398b17501f6c, type: 2}
-  - {fileID: 11400000, guid: 77e67c82d12f0d84f897398b17501f6c, type: 2}
-  - {fileID: 11400000, guid: abf45241ceb91fe42bc2536d407d7b9c, type: 2}
-  - {fileID: 11400000, guid: abf45241ceb91fe42bc2536d407d7b9c, type: 2}
-  - {fileID: 11400000, guid: 16226633b2bd55747b7529bdcaeb1f9a, type: 2}
-  - {fileID: 11400000, guid: 16226633b2bd55747b7529bdcaeb1f9a, type: 2}
+  - {fileID: 11400000, guid: c500622a5be2e3e4a9c9d30d34990547, type: 2}
+  - {fileID: 11400000, guid: c500622a5be2e3e4a9c9d30d34990547, type: 2}
+  - {fileID: 11400000, guid: 7c5da8af0ccd79a47b8edb947718dff4, type: 2}
+  - {fileID: 11400000, guid: 7c5da8af0ccd79a47b8edb947718dff4, type: 2}
+  - {fileID: 11400000, guid: 6c6e370edd4fb7b4e8112180c6a4d2ec, type: 2}
+  - {fileID: 11400000, guid: 6c6e370edd4fb7b4e8112180c6a4d2ec, type: 2}
+  - {fileID: 11400000, guid: d39317e91867a9043bfe4e2b77867fe6, type: 2}
+  - {fileID: 11400000, guid: d39317e91867a9043bfe4e2b77867fe6, type: 2}
   moveSetOrder: []
   hitSfx: {fileID: 8300000, guid: f84e2c4d9f703b247890aec43610627e, type: 3}

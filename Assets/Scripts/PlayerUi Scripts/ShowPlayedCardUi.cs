@@ -35,7 +35,7 @@ namespace Woopsious
 
 		void ShowPlayedCard(AttackData data)
 		{
-			cardUi.SetupCard(data);
+			cardUi.SetupCard(data, false);
 			PlayedCardUi.SetActive(true);
 		}
 		void HidePlayedCard()

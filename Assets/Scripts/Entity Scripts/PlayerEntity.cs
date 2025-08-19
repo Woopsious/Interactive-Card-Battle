@@ -1,4 +1,6 @@
+using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using static Woopsious.DamageData;
@@ -19,10 +21,11 @@ namespace Woopsious
 		public static event Action<bool> HideOffensiveCards;
 		public static event Action HideReplaceCardsButton;
 
-		void Awake()
+		protected override void Awake()
 		{
+			base.Awake();
 			rectTransform = GetComponent<RectTransform>();
-			imageHighlight = GetComponent<Image>();
+			imageHighlight.color = _ColourDarkGreen;
 		}
 
 		void OnEnable()
@@ -54,7 +57,7 @@ namespace Woopsious
 			if (entity != this) return;
 
 			if (EntityData.playerClass == EntityData.PlayerClass.Warrior)
-				AddBlock(EntityData.extraBlockPerTurn);
+				RecieveBlock(new(this, false, new(DamageType.physical, 0, EntityData.extraBlockPerTurn, 0)));
 
 			cardsUsedThisTurn = 0;
 			damageCardsUsedThisTurn = 0;
@@ -89,11 +92,9 @@ namespace Woopsious
 		}
 
 		//entity hits via cards
-		public override void OnHit(DamageData damageData)
+		public override void RecieveDamage(DamageData damageData)
 		{
-			base.OnHit(damageData);
-
-			if (damageData.damageType is DamageType.block or DamageType.heal) return;
+			base.RecieveDamage(damageData);
 			RogueReflectDamageRecieved(damageData);
 		}
 
@@ -104,17 +105,17 @@ namespace Woopsious
 			if (EntityData.playerClass != EntityData.PlayerClass.Ranger) return;
 
 			int healOnKill = (int)(EntityData.maxHealth / EntityData.healOnKillPercentage);
-			RecieveHealing(healOnKill);
+			RecieveHealing(new(this, false, new(DamageType.physical, 0, 0, healOnKill)));
 		}
 		void RogueReflectDamageRecieved(DamageData damageData)
 		{
 			if (EntityData.playerClass != EntityData.PlayerClass.Rogue) return;
 
-			int damageReflected = Mathf.RoundToInt(damageData.damage / EntityData.damageReflectedPercentage);
-
+			int damageReflected = Mathf.RoundToInt(damageData.DamageInfo.DamageValue / EntityData.damageReflectedPercentage);
 			if (damageReflected == 0)
 				damageReflected++;
-			damageData.entityDamageSource.OnHit(new(this, true, damageReflected, DamageType.physical));
+
+			damageData.EntityDamageSource.RecieveDamage(new(this, true, new(DamageType.physical, damageReflected, 0, 0)));
 		}
 
 		//update image border highlight
