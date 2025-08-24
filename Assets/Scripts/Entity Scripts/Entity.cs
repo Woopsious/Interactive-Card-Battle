@@ -11,19 +11,13 @@ namespace Woopsious
 		public bool debugInitilizeEntity;
 		public EntityData EntityData { get; private set; }
 		EntityMoves entityMoves;
+		private AudioHandler audioHandler;
 
+		//ui elements
 		public TMP_Text entityNameText;
 		public TMP_Text entityHealthText;
 		public TMP_Text entityblockText;
 		public GameObject turnIndicator;
-
-		public int health;
-		public int block;
-
-		public static event Action<Entity> OnTurnEndEvent;
-		public static event Action<Entity> OnEntityDeath;
-
-		private readonly System.Random systemRandom = new();
 
 		//background image highlight
 		protected Image imageHighlight;
@@ -31,7 +25,17 @@ namespace Woopsious
 		protected Color _ColourIceBlue = new(0, 1, 1, 1);
 		protected Color _ColourYellow = new(0.7843137f, 0.6862745f, 0, 1);
 
-		public AudioHandler audioHandler;
+		[Header("Runtime Stats")]
+		public int health;
+		public int block;
+		[SerializeReference] public Stat damageDealtModifier;
+		[SerializeReference] public Stat damageRecievedModifier;
+
+		//events + rnd number
+		public static event Action<Entity> OnTurnEndEvent;
+		public static event Action<Entity> OnEntityDeath;
+
+		private readonly System.Random systemRandom = new();
 
 		protected virtual void Awake()
 		{
@@ -97,8 +101,12 @@ namespace Woopsious
 
 			gameObject.name = entityName;
 			entityNameText.text = entityName;
+
 			health = entityData.maxHealth;
 			block = 0;
+			damageDealtModifier = new Stat(1);
+			damageRecievedModifier = new Stat(1);
+			damageDealtModifier.AddModifier(-0.5f);
 
 			UpdateUi();
 			turnIndicator.SetActive(false);
@@ -132,21 +140,23 @@ namespace Woopsious
 		public virtual void RecieveDamage(DamageData damageData)
 		{
 			int damage = 0; //get true damage from multihit enum
-			switch (damageData.DamageInfo.multiHitSettings)
+			switch (damageData.multiHitSettings)
 			{
-				case Damage.MultiHitAttack.No:
-				damage = damageData.DamageInfo.DamageValue;
+				case MultiHitAttack.No:
+				damage = damageData.DamageValue;
 				break;
-				case Damage.MultiHitAttack.TwoHits:
-				damage = damageData.DamageInfo.DamageValue * 2;
+				case MultiHitAttack.TwoHits:
+				damage = damageData.DamageValue * 2;
 				break;
-				case Damage.MultiHitAttack.ThreeHits:
-				damage = damageData.DamageInfo.DamageValue * 3;
+				case MultiHitAttack.ThreeHits:
+				damage = damageData.DamageValue * 3;
 				break;
-				case Damage.MultiHitAttack.FourHits:
-				damage = damageData.DamageInfo.DamageValue * 4;
+				case MultiHitAttack.FourHits:
+				damage = damageData.DamageValue * 4;
 				break;
 			}
+
+			damage = (int)(damage * damageRecievedModifier.Value); //apply damage recieved modifier
 
 			if (damageData.EntityDamageSource.EntityData.playerClass == EntityData.PlayerClass.Mage)
 			{
@@ -169,12 +179,12 @@ namespace Woopsious
 		}
 		public virtual void RecieveBlock(DamageData damageData)
 		{
-			block += damageData.DamageInfo.BlockValue;
+			block += damageData.BlockValue;
 			UpdateUi();
 		}
 		public virtual void RecieveHealing(DamageData damageData)
 		{
-			health += damageData.DamageInfo.HealValue;
+			health += damageData.HealValue;
 			if (health > EntityData.maxHealth)
 				health = EntityData.maxHealth;
 

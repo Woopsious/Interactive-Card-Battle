@@ -136,7 +136,7 @@ namespace Woopsious
 		//shared actions
 		void UseCardOnTarget(Entity target)
 		{
-			if (card.DamageInfo.isAoeAttack)
+			if (card.DamageData.isAoeAttack)
 				HandleCardAoeDamage(target);
 			else
 				HandleCardDamage(target);
@@ -150,10 +150,10 @@ namespace Woopsious
 		//handle applying damage info values to correct entities
 		void HandleCardAoeDamage(Entity initialTarget)
 		{
-			if (card.DamageInfo.DamageValue == 0) return;
+			if (card.DamageData.DamageValue == 0) return;
 
-			initialTarget.RecieveDamage(new(cardOwner, false, card.DamageInfo)); //damage initial target
-			int targetsToFind = card.DamageInfo.maxAoeTargets - 1;
+			initialTarget.RecieveDamage(card.DamageData); //damage initial target
+			int targetsToFind = card.DamageData.maxAoeTargets - 1;
 
 			foreach (Entity entity in TurnOrderManager.Instance.turnOrder) //find and damage others in turn order (excluding initial + player)
 			{
@@ -161,23 +161,23 @@ namespace Woopsious
 				if (targetsToFind <= 0) break;
 
 				targetsToFind--;
-				entity.RecieveDamage(new(cardOwner, false, card.DamageInfo));
+				entity.RecieveDamage(card.DamageData);
 			}
 		}
 		void HandleCardDamage(Entity target)
 		{
-			if (card.DamageInfo.DamageValue == 0) return;
-			target.RecieveDamage(new(cardOwner, false, card.DamageInfo));
+			if (card.DamageData.DamageValue == 0) return;
+			target.RecieveDamage(card.DamageData);
 		}
 		void HandleCardBlock()
 		{
-			if (card.DamageInfo.BlockValue == 0) return;
-			cardOwner.RecieveBlock(new(cardOwner, false, card.DamageInfo));
+			if (card.DamageData.BlockValue == 0) return;
+			cardOwner.RecieveBlock(card.DamageData);
 		}
 		void HandleCardHeal()
 		{
-			if (card.DamageInfo.HealValue == 0) return;
-			cardOwner.RecieveHealing(new(cardOwner, false, card.DamageInfo));
+			if (card.DamageData.HealValue == 0) return;
+			cardOwner.RecieveHealing(card.DamageData);
 		}
 
 		//clean up card

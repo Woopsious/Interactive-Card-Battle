@@ -5,28 +5,13 @@ using static Woopsious.DamageData;
 
 namespace Woopsious
 {
+	[Serializable]
 	public class DamageData
 	{
 		public Entity EntityDamageSource { get; private set; }
 		public bool DamageIgnoresBlock { get; private set; }
+		public bool DamageReflectable { get; private set; }
 
-		public Damage DamageInfo { get; private set; }
-		public enum DamageType
-		{
-			physical
-		}
-
-		public DamageData(Entity entityDamageSource, bool damageIgnoresBlock, Damage damageInfo)
-		{
-			EntityDamageSource = entityDamageSource;
-			DamageIgnoresBlock = damageIgnoresBlock;
-			DamageInfo = damageInfo;
-		}
-	}
-
-	[Serializable]
-	public class Damage
-	{
 		[Header("Aoe Settings")]
 		public bool isAoeAttack;
 		public int maxAoeTargets;
@@ -39,20 +24,61 @@ namespace Woopsious
 		}
 
 		[Header("Damage Values")]
-		public DamageType DamageType;
-		[Tooltip("if marked as aoe or is multi hit attack, value should represent damage doen to single target")]
+		public DamageType damageType;
+		public enum DamageType
+		{
+			physical
+		}
+		[Tooltip("if marked as aoe or is multi hit attack, value should represent damage done to single target")]
 		public int DamageValue;
 
 		[Header("Other Values")]
 		public int BlockValue;
 		public int HealValue;
 
-		public Damage(DamageType damageType, int damageValue, int blockValue, int healValue)
+		public DamageData(Entity entityDamageSource, DamageData damageData) //base
 		{
+			EntityDamageSource = entityDamageSource;
+			DamageIgnoresBlock = false;
+			DamageReflectable = true;
+
+			isAoeAttack = damageData.isAoeAttack;
+			maxAoeTargets = damageData.maxAoeTargets;
+			multiHitSettings = damageData.multiHitSettings;
+
+			damageType = damageData.damageType;
+			DamageValue = damageData.DamageValue;
+
+			BlockValue = damageData.BlockValue;
+			HealValue = damageData.HealValue;
+		}
+
+		public DamageData(Entity entityDamageSource, bool isReflectedDamage, int damageValue) //reflected damage
+		{
+			EntityDamageSource = entityDamageSource;
+			DamageIgnoresBlock = false;
+			DamageReflectable = true;
+
+			if (isReflectedDamage)
+			{
+				DamageIgnoresBlock = true;
+				DamageReflectable = false;
+			}
+
+			isAoeAttack = false;
+			maxAoeTargets = 0;
+			multiHitSettings = MultiHitAttack.No;
+
+			damageType = DamageType.physical;
 			DamageValue = damageValue;
-			DamageType = damageType;
-			BlockValue = blockValue;
-			HealValue = healValue;
+		}
+
+		public DamageData(bool isBlockValue, int value) //blocking/healing
+		{
+			if (isBlockValue)
+				BlockValue = value;
+			else
+				HealValue = value;
 		}
 	}
 

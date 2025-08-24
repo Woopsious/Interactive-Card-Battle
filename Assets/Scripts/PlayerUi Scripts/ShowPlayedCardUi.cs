@@ -33,9 +33,9 @@ namespace Woopsious
 			EntityMoves.OnEnemyAttackCancel -= HidePlayedCard;
 		}
 
-		void ShowPlayedCard(AttackData data)
+		void ShowPlayedCard(Entity entity, AttackData data)
 		{
-			cardUi.SetupCard(data, false);
+			cardUi.SetupCard(entity, data, false);
 			PlayedCardUi.SetActive(true);
 		}
 		void HidePlayedCard()

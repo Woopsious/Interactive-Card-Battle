@@ -16,8 +16,8 @@ namespace Woopsious
 
 		public bool offensive;
 
-		[Header("Damage Info")]
-		public Damage DamageInfo;
+		[Header("Damage Data")]
+		public DamageData DamageData;
 
 		[Header("Attack use rules")]
 		[Range(0f, 1f)]
@@ -25,38 +25,38 @@ namespace Woopsious
 
 		public string CreateDescription()
 		{
-			string attackDescription = this.attackDescription;
-			attackDescription += "\n";
+			string description = attackDescription;
+			description += "\n";
 
-			if (DamageInfo.DamageValue != 0)
+			if (DamageData.DamageValue != 0)
 			{
-				if (DamageInfo.DamageType == DamageType.physical)
-					attackDescription += "\nDeals " + DamageInfo.DamageValue + " physical damage";
+				if (DamageData.damageType == DamageType.physical)
+					description += "\nDeals " + DamageData.DamageValue + " physical damage";
 
-				if (DamageInfo.isAoeAttack)
-					attackDescription += " each to a max of " + DamageInfo.maxAoeTargets + " targets";
+				if (DamageData.isAoeAttack)
+					description += " each to a max of " + DamageData.maxAoeTargets + " targets";
 
-				switch (DamageInfo.multiHitSettings)
+				switch (DamageData.multiHitSettings)
 				{
-					case Damage.MultiHitAttack.No:
+					case MultiHitAttack.No:
 					break;
-					case Damage.MultiHitAttack.TwoHits:
-					attackDescription += " 2x (" + DamageInfo.DamageValue * 2 + ")" ;
+					case MultiHitAttack.TwoHits:
+					description += " 2x (" + DamageData.DamageValue * 2 + ")" ;
 					break;
-					case Damage.MultiHitAttack.ThreeHits:
-					attackDescription += " 3x (" + DamageInfo.DamageValue * 3 + ")";
+					case MultiHitAttack.ThreeHits:
+					description += " 3x (" + DamageData.DamageValue * 3 + ")";
 					break;
-					case Damage.MultiHitAttack.FourHits:
-					attackDescription += " 4x (" + DamageInfo.DamageValue * 4 + ")";
+					case MultiHitAttack.FourHits:
+					description += " 4x (" + DamageData.DamageValue * 4 + ")";
 					break;
 				}
 			}
-			if (DamageInfo.BlockValue != 0)
-				attackDescription += "\nBlocks " + DamageInfo.BlockValue + " damage";
-			if (DamageInfo.HealValue != 0)
-				attackDescription += "\nHeals " + DamageInfo.HealValue + " damage";
+			if (DamageData.BlockValue != 0)
+				description += "\nBlocks " + DamageData.BlockValue + " damage";
+			if (DamageData.HealValue != 0)
+				description += "\nHeals " + DamageData.HealValue + " damage";
 
-			return attackDescription;
+			return description;
 		}
 	}
 }

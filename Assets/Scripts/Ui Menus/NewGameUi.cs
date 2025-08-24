@@ -119,14 +119,14 @@ namespace Woopsious
 
 			foreach (AttackData attackData in playerCards)
 			{
-				Damage damageInfo = attackData.DamageInfo;
-				if (damageInfo.DamageValue != 0 && damageInfo.BlockValue != 0 || damageInfo.DamageValue != 0 && damageInfo.HealValue != 0)
+				DamageData damageData = attackData.DamageData;
+				if (damageData.DamageValue != 0 && damageData.BlockValue != 0 || damageData.DamageValue != 0 && damageData.HealValue != 0)
 					multiCardsCount++;
-				else if (damageInfo.DamageValue != 0)
+				else if (damageData.DamageValue != 0)
 					attackCardsCount++;
-				else if (damageInfo.BlockValue != 0)
+				else if (damageData.BlockValue != 0)
 					blockCardsCount++;
-				else if (damageInfo.HealValue != 0)
+				else if (damageData.HealValue != 0)
 					healCardsCount++;
 			}
 

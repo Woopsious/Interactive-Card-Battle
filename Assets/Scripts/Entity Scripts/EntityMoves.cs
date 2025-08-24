@@ -15,7 +15,7 @@ namespace Woopsious
 		public AttackData previousUsedMove;
 		public int previousUsedMoveIndex;
 
-		public static event Action<AttackData> OnEnemyMoveFound;
+		public static event Action<Entity, AttackData> OnEnemyMoveFound;
 		public static event Action OnEnemyAttack;
 		public static event Action OnEnemyAttackCancel;
 
@@ -112,7 +112,7 @@ namespace Woopsious
 
 			previousUsedMoveIndex = nextMoveIndex;
 			previousUsedMove = attackData;
-			OnEnemyMoveFound?.Invoke(attackData);
+			OnEnemyMoveFound?.Invoke(entity, attackData);
 
 			await Task.Delay(3000);
 			if (token.IsCancellationRequested)
@@ -124,7 +124,7 @@ namespace Woopsious
 			if (TurnOrderManager.Player() == null) return;
 
 			CardUi card = SpawnManager.SpawnCard();
-			card.SetupCard(attackData, false);
+			card.SetupCard(entity, attackData, false);
 
 			if (card.Offensive)
 				card.cardHandler.EnemyUseCard(entity, TurnOrderManager.Player());

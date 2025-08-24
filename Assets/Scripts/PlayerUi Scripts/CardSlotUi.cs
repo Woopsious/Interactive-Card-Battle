@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Woopsious
 {
@@ -56,7 +57,7 @@ namespace Woopsious
 		void SpawnNewPlayerCard()
 		{
 			CardUi card = SpawnManager.SpawnCard();
-			card.SetupCard(SpawnManager.GetRandomCard(TurnOrderManager.Player().EntityData.cards), true);
+			card.SetupCard(TurnOrderManager.Player(), SpawnManager.GetRandomCard(TurnOrderManager.Player().EntityData.cards), true);
 			AddCardToSlot(card);
 		}
 
@@ -115,7 +116,7 @@ namespace Woopsious
 		{
 			if (CardInSlot != cardToReplace) return;
 
-			CardInSlot.SetupCard(SpawnManager.GetRandomCard(TurnOrderManager.Player().EntityData.cards), true);
+			CardInSlot.SetupCard(TurnOrderManager.Player(), SpawnManager.GetRandomCard(TurnOrderManager.Player().EntityData.cards), true);
 			AddCardToSlot(CardInSlot);
 		}
 

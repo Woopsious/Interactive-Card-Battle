@@ -57,7 +57,7 @@ namespace Woopsious
 			if (entity != this) return;
 
 			if (EntityData.playerClass == EntityData.PlayerClass.Warrior)
-				RecieveBlock(new(this, false, new(DamageType.physical, 0, EntityData.extraBlockPerTurn, 0)));
+				RecieveBlock(new(true, EntityData.extraBlockPerTurn));
 
 			cardsUsedThisTurn = 0;
 			damageCardsUsedThisTurn = 0;
@@ -105,17 +105,18 @@ namespace Woopsious
 			if (EntityData.playerClass != EntityData.PlayerClass.Ranger) return;
 
 			int healOnKill = (int)(EntityData.maxHealth / EntityData.healOnKillPercentage);
-			RecieveHealing(new(this, false, new(DamageType.physical, 0, 0, healOnKill)));
+			RecieveHealing(new(false, healOnKill));
 		}
 		void RogueReflectDamageRecieved(DamageData damageData)
 		{
 			if (EntityData.playerClass != EntityData.PlayerClass.Rogue) return;
+			if (!damageData.DamageReflectable) return;
 
-			int damageReflected = Mathf.RoundToInt(damageData.DamageInfo.DamageValue / EntityData.damageReflectedPercentage);
+			int damageReflected = Mathf.RoundToInt(damageData.DamageValue / EntityData.damageReflectedPercentage);
 			if (damageReflected == 0)
 				damageReflected++;
 
-			damageData.EntityDamageSource.RecieveDamage(new(this, true, new(DamageType.physical, damageReflected, 0, 0)));
+			damageData.EntityDamageSource.RecieveDamage(new(this, true, damageReflected));
 		}
 
 		//update image border highlight

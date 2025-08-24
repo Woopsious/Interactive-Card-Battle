@@ -16,7 +16,7 @@ namespace Woopsious
 
 		public bool PlayerCard { get; private set; }
 		public bool Offensive { get; private set; }
-		public Damage DamageInfo { get; private set; }
+		public DamageData DamageData { get; private set; }
 
 		public bool selectable;
 
@@ -27,7 +27,7 @@ namespace Woopsious
 			cardHandler = GetComponent<CardHandler>();
 		}
 
-		public void SetupCard(AttackData AttackData, bool playerCard)
+		public void SetupCard(Entity cardOwner, AttackData AttackData, bool playerCard)
 		{
 			if (AttackData == null)
 			{
@@ -42,7 +42,9 @@ namespace Woopsious
 			gameObject.name = cardName;
 			cardNametext.text = cardName;
 			cardDescriptiontext.text = AttackData.CreateDescription();
-			DamageInfo = AttackData.DamageInfo;
+
+			DamageData = new(cardOwner, AttackData.DamageData);
+			DamageData.DamageValue = (int)(DamageData.DamageValue * cardOwner.damageDealtModifier.Value); //apply damage dealt modifier
 
 			replaceCardButton.gameObject.SetActive(false);
 		}
