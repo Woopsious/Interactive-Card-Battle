@@ -15,9 +15,12 @@ MonoBehaviour:
   attackName: Shield Bash
   attackDescription: Bash enemy with shield
   offensive: 1
-  DamageInfo:
-    DamageType: 0
-    DamageValue: 2
+  DamageData:
+    isAoeAttack: 0
+    maxAoeTargets: 0
+    multiHitSettings: 0
+    damageType: 0
+    DamageValue: 3
     BlockValue: 5
     HealValue: 0
   attackUseChance: 0

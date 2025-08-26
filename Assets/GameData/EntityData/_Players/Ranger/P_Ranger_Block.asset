@@ -15,8 +15,11 @@ MonoBehaviour:
   attackName: Deflect
   attackDescription: Deflect incoming attacks
   offensive: 0
-  DamageInfo:
-    DamageType: 0
+  DamageData:
+    isAoeAttack: 0
+    maxAoeTargets: 0
+    multiHitSettings: 0
+    damageType: 0
     DamageValue: 0
     BlockValue: 8
     HealValue: 0

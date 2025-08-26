@@ -215,6 +215,34 @@ namespace Woopsious
 			}
 		}
 
+		//applying/removing stat modifiers
+		public void AddStatModifier(StatModifierData statModifierData)
+		{
+			switch (statModifierData.StatModifierType)
+			{
+				case StatModifierData.StatType.noType: break;
+				case StatModifierData.StatType.damageDealt:
+					damageDealtModifier.AddModifier(statModifierData.ModifierValue);
+				break;
+				case StatModifierData.StatType.damageRecieved:
+					damageRecievedModifier.AddModifier(statModifierData.ModifierValue);
+				break;
+			}
+		}
+		public void RemoveStatModifier(StatModifierData statModifierData)
+		{
+			switch (statModifierData.StatModifierType)
+			{
+				case StatModifierData.StatType.noType: break;
+				case StatModifierData.StatType.damageDealt:
+				damageDealtModifier.RemoveModifier(statModifierData.ModifierValue);
+				break;
+				case StatModifierData.StatType.damageRecieved:
+				damageRecievedModifier.RemoveModifier(statModifierData.ModifierValue);
+				break;
+			}
+		}
+
 		//debugs
 		public void DebugKill()
 		{

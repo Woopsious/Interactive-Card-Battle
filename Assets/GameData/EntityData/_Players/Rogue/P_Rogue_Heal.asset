@@ -15,9 +15,12 @@ MonoBehaviour:
   attackName: Heal
   attackDescription: Heal self
   offensive: 0
-  DamageInfo:
-    DamageType: 0
+  DamageData:
+    isAoeAttack: 0
+    maxAoeTargets: 0
+    multiHitSettings: 0
+    damageType: 0
     DamageValue: 0
     BlockValue: 0
-    HealValue: 15
+    HealValue: 8
   attackUseChance: 0

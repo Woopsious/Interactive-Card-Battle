@@ -7,8 +7,8 @@ namespace Woopsious
 	[Serializable]
 	public class Stat
 	{
-		[SerializeField] private float baseValue;
-		[SerializeField] private List<float> valueModifiers = new();
+		[SerializeField] public float baseValue;
+		[SerializeField] public List<float> valueModifiers = new();
 		[SerializeField] public float Value;
 
 		public Stat(float baseValue)
@@ -35,12 +35,31 @@ namespace Woopsious
 
 		void UpdateValue()
 		{
-			float finalValue = baseValue;
+			Value = GetBaseAndModifiersTotal();
+		}
+		float GetBaseAndModifiersTotal()
+		{
+			float modifiers = baseValue;
+			foreach (float modifier in valueModifiers)
+				modifiers += modifier;
 
-			foreach (var modifier in valueModifiers)
-				finalValue += modifier;
+			return modifiers;
+		}
+	}
 
-			Value = finalValue;
+    public class StatModifierData
+    {
+		public float ModifierValue { get; private set; }
+		public StatType StatModifierType { get; private set; }
+		public enum StatType
+		{
+			noType, damageRecieved, damageDealt
+		}
+
+		public StatModifierData(float modifierValue, StatType statModifierType)
+		{
+			ModifierValue = modifierValue;
+			StatModifierType = statModifierType;
 		}
 	}
 }

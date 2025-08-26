@@ -15,12 +15,12 @@ MonoBehaviour:
   attackName: Throwing Knives
   attackDescription: Throw knives at multiple enemies
   offensive: 1
-  DamageInfo:
-    isAoeAttack: 1
-    maxAoeTargets: 3
-    multiHitSettings: 0
-    DamageType: 0
-    DamageValue: 4
+  DamageData:
+    isAoeAttack: 0
+    maxAoeTargets: 0
+    multiHitSettings: 1
+    damageType: 0
+    DamageValue: 7
     BlockValue: 0
     HealValue: 0
   attackUseChance: 0

@@ -9,8 +9,8 @@ namespace Woopsious
 	public class DamageData
 	{
 		public Entity EntityDamageSource { get; private set; }
-		public bool DamageIgnoresBlock { get; private set; }
 		public bool DamageReflectable { get; private set; }
+		public bool DamageIgnoresBlock { get; private set; }
 
 		[Header("Aoe Settings")]
 		public bool isAoeAttack;
@@ -39,8 +39,8 @@ namespace Woopsious
 		public DamageData(Entity entityDamageSource, DamageData damageData) //base
 		{
 			EntityDamageSource = entityDamageSource;
-			DamageIgnoresBlock = false;
 			DamageReflectable = true;
+			DamageIgnoresBlock = false;
 
 			isAoeAttack = damageData.isAoeAttack;
 			maxAoeTargets = damageData.maxAoeTargets;
@@ -53,17 +53,11 @@ namespace Woopsious
 			HealValue = damageData.HealValue;
 		}
 
-		public DamageData(Entity entityDamageSource, bool isReflectedDamage, int damageValue) //reflected damage
+		public DamageData(Entity entityDamageSource, bool reflectedDamage, int damageValue) //reflected damage
 		{
 			EntityDamageSource = entityDamageSource;
-			DamageIgnoresBlock = false;
-			DamageReflectable = true;
-
-			if (isReflectedDamage)
-			{
-				DamageIgnoresBlock = true;
-				DamageReflectable = false;
-			}
+			DamageReflectable = false;
+			DamageIgnoresBlock = true;
 
 			isAoeAttack = false;
 			maxAoeTargets = 0;
@@ -73,7 +67,21 @@ namespace Woopsious
 			DamageValue = damageValue;
 		}
 
-		public DamageData(bool isBlockValue, int value) //blocking/healing
+		public DamageData(Entity entityDamageSource, int damageValue) //simple damage
+		{
+			EntityDamageSource = entityDamageSource;
+			DamageReflectable = true;
+			DamageIgnoresBlock = false;
+
+			isAoeAttack = false;
+			maxAoeTargets = 0;
+			multiHitSettings = MultiHitAttack.No;
+
+			damageType = DamageType.physical;
+			DamageValue = damageValue;
+		}
+
+		public DamageData(bool isBlockValue, int value) //simple blocking/healing
 		{
 			if (isBlockValue)
 				BlockValue = value;

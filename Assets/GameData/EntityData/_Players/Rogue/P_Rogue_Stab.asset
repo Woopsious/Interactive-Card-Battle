@@ -15,8 +15,11 @@ MonoBehaviour:
   attackName: Stab
   attackDescription: Stab enemy with dagger
   offensive: 1
-  DamageInfo:
-    DamageType: 0
+  DamageData:
+    isAoeAttack: 0
+    maxAoeTargets: 0
+    multiHitSettings: 0
+    damageType: 0
     DamageValue: 12
     BlockValue: 0
     HealValue: 0
