@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using static UnityEngine.EventSystems.EventTrigger;
-using static UnityEngine.GraphicsBuffer;
 using static Woopsious.DamageData;
 
 namespace Woopsious
@@ -20,9 +17,9 @@ namespace Woopsious
 
 		Vector3 mousePos;
 
-		public static event Action<CardUi> OnCardUsed;
 		public static event Action<CardUi, bool> OnPlayerCardUsed;
 		public static event Action<CardUi> OnPlayerPickedUpCard;
+		public static event Action<CardUi> OnCardCleanUp;
 
 		void Awake()
 		{
@@ -136,48 +133,60 @@ namespace Woopsious
 		//shared actions
 		void UseCardOnTarget(Entity target)
 		{
-			if (card.DamageData.isAoeAttack)
-				HandleCardAoeDamage(target);
-			else
-				HandleCardDamage(target);
+			if (card.DamageData.valueTypes == ValueTypes.none)
+				Debug.LogError("Value type not set");
 
-			HandleCardBlock();
-			HandleCardHeal();
+			ApplyDamageAndEffectsToTarget(target);
+			ApplyBlockHealAndEffectsToCardOwner();
 
 			CleanUpCard();
 		}
 
-		//handle applying damage info values to correct entities
-		void HandleCardAoeDamage(Entity initialTarget)
+		//handle applying value types and status effects to correct entities
+		void ApplyDamageAndEffectsToTarget(Entity target)
 		{
-			if (card.DamageData.DamageValue == 0) return;
-
-			initialTarget.RecieveDamage(card.DamageData); //damage initial target
+			if (card.DamageData.valueTypes.HasFlag(ValueTypes.dealsDamage))
+			{
+				if (card.DamageData.isAoeAttack)
+				{
+					foreach (Entity aoeTarget in GetAoeTargets(target))
+					{
+						aoeTarget.RecieveDamage(card.DamageData);
+						aoeTarget.statusEffectsHandler.AddStatusEffects(card.DamageData.statusEffectsForTarget);
+					}
+				}
+				else
+				{
+					target.RecieveDamage(card.DamageData);
+					target.statusEffectsHandler.AddStatusEffects(card.DamageData.statusEffectsForTarget);
+				}
+			}
+		}
+		List<Entity> GetAoeTargets(Entity initialTarget)
+		{
+			List<Entity> targets = new() { initialTarget };
 			int targetsToFind = card.DamageData.maxAoeTargets - 1;
 
 			foreach (Entity entity in TurnOrderManager.Instance.turnOrder) //find and damage others in turn order (excluding initial + player)
 			{
-				if (entity.EntityData.isPlayer || entity == initialTarget) continue;
+				if (entity.EntityData.isPlayer || targets.Contains(entity)) continue;
 				if (targetsToFind <= 0) break;
 
 				targetsToFind--;
-				entity.RecieveDamage(card.DamageData);
+				targets.Add(entity);
 			}
+
+			return targets;
 		}
-		void HandleCardDamage(Entity target)
+		void ApplyBlockHealAndEffectsToCardOwner()
 		{
-			if (card.DamageData.DamageValue == 0) return;
-			target.RecieveDamage(card.DamageData);
-		}
-		void HandleCardBlock()
-		{
-			if (card.DamageData.BlockValue == 0) return;
-			cardOwner.RecieveBlock(card.DamageData);
-		}
-		void HandleCardHeal()
-		{
-			if (card.DamageData.HealValue == 0) return;
-			cardOwner.RecieveHealing(card.DamageData);
+			if (card.DamageData.valueTypes.HasFlag(DamageData.ValueTypes.blocks))
+				cardOwner.RecieveBlock(card.DamageData);
+
+			if (card.DamageData.valueTypes.HasFlag(DamageData.ValueTypes.heals))
+				cardOwner.RecieveHealing(card.DamageData);
+
+			cardOwner.statusEffectsHandler.AddStatusEffects(card.DamageData.statusEffectsForSelf);
 		}
 
 		//clean up card
@@ -189,7 +198,7 @@ namespace Woopsious
 				cardOwner.EndTurn();
 
 			gameObject.SetActive(false);
-			OnCardUsed?.Invoke(card);
+			OnCardCleanUp?.Invoke(card);
 		}
 	}
 }

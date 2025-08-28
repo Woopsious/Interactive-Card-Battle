@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-using static Woopsious.StatModifierData;
+using static Woopsious.Stat;
 
 namespace Woopsious
 {
@@ -13,15 +13,16 @@ namespace Woopsious
 		public string effectDescription;
 
 		[Header("Effect Stacks")]
+		public bool hasStacks;
 		public int effectStacks;
 		public int maxEffectStacks;
 
 		[Header("Effect Lifetime")]
 		public bool hasLifetime;
-		public bool isDoT;
 		public int effectTurnLifetime;
 
 		[Header("Effect Damage")]
+		public bool isDoT;
 		public bool isPercentage;
 		public float effectValue;
 		public StatType effectStatModifierType;

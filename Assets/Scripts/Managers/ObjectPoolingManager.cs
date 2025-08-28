@@ -24,12 +24,12 @@ namespace Woopsious
 		void OnEnable()
 		{
 			Entity.OnEntityDeath += AddEntityToInactiveList;
-			CardHandler.OnCardUsed += AddCardToInactiveList;
+			CardHandler.OnCardCleanUp += AddCardToInactiveList;
 		}
 		void OnDisable()
 		{
 			Entity.OnEntityDeath -= AddEntityToInactiveList;
-			CardHandler.OnCardUsed -= AddCardToInactiveList;
+			CardHandler.OnCardCleanUp -= AddCardToInactiveList;
 		}
 
 		//entity object pooling

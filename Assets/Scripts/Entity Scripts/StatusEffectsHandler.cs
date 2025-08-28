@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static Woopsious.Stat;
 
 namespace Woopsious
 {
@@ -28,31 +29,42 @@ namespace Woopsious
 			for (int i = currentStatusEffects.Count - 1; i >= 0; i--)
 				RemoveStatusEffect(currentStatusEffects[i]);
 		}
-		public void AddStatusEffect(StatusEffectsData statusEffectData)
+		public void AddStatusEffects(List<StatusEffectsData> statusEffectsData)
 		{
-			StatusEffect newEffect = new(entity, this, statusEffectData);
+			List<StatusEffectsData> effectsToApply = new(statusEffectsData);
 
-			//if (currentStatusEffects.Count == 0) //no effect to check so add
-				//currentStatusEffects.Add(newEffect);
-
-			foreach(StatusEffect effect in currentStatusEffects) //re apply match effects
+			for (int i = currentStatusEffects.Count - 1;  i >= 0; i--) //re apply matching status effects
 			{
-				if (effect.StatusEffectsData == newEffect.StatusEffectsData)
+				for (int j = effectsToApply.Count - 1; j >= 0; j--)
 				{
-					effect.ReApplyStatusEffect(newEffect.StatusEffectsData);
-					return;
+					if (currentStatusEffects[i].StatusEffectsData == effectsToApply[j])
+					{
+						StatType statType = currentStatusEffects[i].StatusEffectsData.effectStatModifierType;
+						entity.RemoveStatModifier(currentStatusEffects[i].effectValue, statType);
+
+						currentStatusEffects[i].ReApplyStatusEffect(effectsToApply[j]);
+						entity.AddStatModifier(currentStatusEffects[i].effectValue, statType);
+						effectsToApply.RemoveAt(j);
+					}
 				}
 			}
 
-			entity.AddStatModifier(new(statusEffectData.effectValue, statusEffectData.effectStatModifierType));
-			currentStatusEffects.Add(newEffect);
+			foreach (StatusEffectsData effectToApply in effectsToApply) //add new status effects
+			{
+				StatusEffect newStatusEffect = new(entity, this, effectToApply);
+				currentStatusEffects.Add(newStatusEffect);
+				entity.AddStatModifier(newStatusEffect.effectValue, effectToApply.effectStatModifierType);
+			}
+
+			//if (currentStatusEffects.Count == 0) //no effect to check so add
+				//currentStatusEffects.Add(newEffect);
 		}
 		public void RemoveStatusEffect(StatusEffect effectToRemove)
 		{
 			if (currentStatusEffects.Contains(effectToRemove))
 			{
 				StatusEffectsData statusEffectData = effectToRemove.StatusEffectsData;
-				entity.RemoveStatModifier(new(statusEffectData.effectValue, statusEffectData.effectStatModifierType));
+				entity.RemoveStatModifier(statusEffectData.effectValue, statusEffectData.effectStatModifierType);
 				currentStatusEffects.Remove(effectToRemove);
 			}
 			else

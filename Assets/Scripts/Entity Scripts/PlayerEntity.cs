@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using static Woopsious.DamageData;
+using static Woopsious.Stat;
 
 namespace Woopsious
 {
@@ -20,6 +21,7 @@ namespace Woopsious
 
 		public static event Action<bool> HideOffensiveCards;
 		public static event Action HideReplaceCardsButton;
+		public static event Action OnPlayerStatChanges;
 
 		protected override void Awake()
 		{
@@ -31,14 +33,14 @@ namespace Woopsious
 		void OnEnable()
 		{
 			TurnOrderManager.OnNewTurnEvent += StartTurn;
-			CardHandler.OnCardUsed += UpdateCardsUsed;
+			CardHandler.OnCardCleanUp += UpdateCardsUsed;
 			CardUi.OnCardReplace += OnReplaceCard;
 			OnEntityDeath += RangerHealOnKill;
 		}
 		void OnDisable()
 		{
 			TurnOrderManager.OnNewTurnEvent -= StartTurn;
-			CardHandler.OnCardUsed -= UpdateCardsUsed;
+			CardHandler.OnCardCleanUp -= UpdateCardsUsed;
 			CardUi.OnCardReplace -= OnReplaceCard;
 			OnEntityDeath += RangerHealOnKill;
 		}
@@ -57,7 +59,7 @@ namespace Woopsious
 			if (entity != this) return;
 
 			if (EntityData.playerClass == EntityData.PlayerClass.Warrior)
-				RecieveBlock(new(true, EntityData.extraBlockPerTurn));
+				RecieveBlock(new(ValueTypes.blocks, EntityData.extraBlockPerTurn));
 
 			cardsUsedThisTurn = 0;
 			damageCardsUsedThisTurn = 0;
@@ -98,6 +100,18 @@ namespace Woopsious
 			RogueReflectDamageRecieved(damageData);
 		}
 
+		//applying/removing stat modifiers
+		public override void AddStatModifier(float value, StatType statType)
+		{
+			base.AddStatModifier(value, statType);
+			OnPlayerStatChanges?.Invoke();
+		}
+		public override void RemoveStatModifier(float value, StatType statType)
+		{
+			base.RemoveStatModifier(value, statType);
+			OnPlayerStatChanges?.Invoke();
+		}
+
 		//special class effects for player
 		void RangerHealOnKill(Entity entity)
 		{
@@ -105,7 +119,7 @@ namespace Woopsious
 			if (EntityData.playerClass != EntityData.PlayerClass.Ranger) return;
 
 			int healOnKill = (int)(EntityData.maxHealth / EntityData.healOnKillPercentage);
-			RecieveHealing(new(false, healOnKill));
+			RecieveHealing(new(ValueTypes.heals, healOnKill));
 		}
 		void RogueReflectDamageRecieved(DamageData damageData)
 		{
@@ -116,7 +130,7 @@ namespace Woopsious
 			if (damageReflected == 0)
 				damageReflected++;
 
-			damageData.EntityDamageSource.RecieveDamage(new(this, true, damageReflected));
+			damageData.EntityDamageSource.RecieveDamage(new(this, false, true, damageReflected));
 		}
 
 		//update image border highlight

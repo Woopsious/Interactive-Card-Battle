@@ -18,8 +18,8 @@ namespace Woopsious
 
 		[Header("Class Ui Info")]
 		public TMP_Text mageInfoText;
-		public TMP_Text rogueInfoText;
 		public TMP_Text rangerInfoText;
+		public TMP_Text rogueInfoText;
 		public TMP_Text warriorInfoText;
 
 		[Header("Class Select Buttons")]

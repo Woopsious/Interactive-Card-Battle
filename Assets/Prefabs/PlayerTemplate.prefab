@@ -284,6 +284,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5611256917527611009}
   - component: {fileID: 4959695063293482393}
+  - component: {fileID: -4145584527750781959}
   - component: {fileID: 3220206897846045916}
   - component: {fileID: 2976199853928286207}
   - component: {fileID: 2165728888666346268}
@@ -339,10 +340,40 @@ MonoBehaviour:
   turnIndicator: {fileID: 8401865776216599779}
   health: 0
   block: 0
+  damageDealtModifier:
+    rid: -2
+  damageRecievedModifier:
+    rid: -2
+  damageBonus:
+    baseValue: 0
+    valueModifiers: []
+    Value: 0
+  blockBonus:
+    baseValue: 0
+    valueModifiers: []
+    Value: 0
   cardsUsedThisTurn: 0
   damageCardsUsedThisTurn: 0
   nonDamageCardsUsedThisTurn: 0
   cardsReplacedThisTurn: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+--- !u!114 &-4145584527750781959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5386469954458961082}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc3446625c82105448097b0a839c8347, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentStatusEffects: []
 --- !u!114 &3220206897846045916
 MonoBehaviour:
   m_ObjectHideFlags: 0

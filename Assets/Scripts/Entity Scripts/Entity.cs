@@ -2,7 +2,9 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 using static Woopsious.DamageData;
+using static Woopsious.Stat;
 
 namespace Woopsious
 {
@@ -11,7 +13,8 @@ namespace Woopsious
 		public bool debugInitilizeEntity;
 		public EntityData EntityData { get; private set; }
 		EntityMoves entityMoves;
-		private AudioHandler audioHandler;
+		public StatusEffectsHandler statusEffectsHandler { get; private set; }
+		AudioHandler audioHandler;
 
 		//ui elements
 		public TMP_Text entityNameText;
@@ -28,8 +31,14 @@ namespace Woopsious
 		[Header("Runtime Stats")]
 		public int health;
 		public int block;
+
+		[Header("Modifiers %")]
 		[SerializeReference] public Stat damageDealtModifier;
 		[SerializeReference] public Stat damageRecievedModifier;
+
+		[Header("Modifiers")]
+		public Stat damageBonus;
+		public Stat blockBonus;
 
 		//events + rnd number
 		public static event Action<Entity> OnTurnEndEvent;
@@ -40,6 +49,7 @@ namespace Woopsious
 		protected virtual void Awake()
 		{
 			entityMoves = GetComponent<EntityMoves>();
+			statusEffectsHandler = GetComponent<StatusEffectsHandler>();
 			imageHighlight = GetComponent<Image>();
 			imageHighlight.color = _ColourDarkRed;
 			audioHandler = GetComponent<AudioHandler>();
@@ -102,12 +112,7 @@ namespace Woopsious
 			gameObject.name = entityName;
 			entityNameText.text = entityName;
 
-			health = entityData.maxHealth;
-			block = 0;
-			damageDealtModifier = new Stat(1);
-			damageRecievedModifier = new Stat(1);
-			damageDealtModifier.AddModifier(-0.5f);
-
+			SetupStats();
 			UpdateUi();
 			turnIndicator.SetActive(false);
 
@@ -115,6 +120,18 @@ namespace Woopsious
 
 			imageHighlight.color = _ColourDarkRed;
 			entityMoves.InitilizeMoveSet(this);
+			statusEffectsHandler.ClearStatusEffects();
+		}
+		void SetupStats()
+		{
+			health = EntityData.maxHealth;
+			block = 0;
+
+			damageDealtModifier = new Stat(1, StatType.damageDealt);
+			damageRecievedModifier = new Stat(1, StatType.damageRecieved);
+
+			damageBonus = new Stat(0, StatType.damageBonus);
+			blockBonus = new Stat(0, StatType.blockBonus);
 		}
 
 		//start/end turn events
@@ -122,7 +139,7 @@ namespace Woopsious
 		{
 			if (entity != this) return; //not this entities turn
 
-			block = 0;
+			block = (int)blockBonus.Value;
 			UpdateUi();
 
 			if (EntityData.isPlayer) return; //if is player shouldnt need to do anything else as other scripts handle it
@@ -216,31 +233,21 @@ namespace Woopsious
 		}
 
 		//applying/removing stat modifiers
-		public void AddStatModifier(StatModifierData statModifierData)
+		public virtual void AddStatModifier(float value, StatType statType)
 		{
-			switch (statModifierData.StatModifierType)
-			{
-				case StatModifierData.StatType.noType: break;
-				case StatModifierData.StatType.damageDealt:
-					damageDealtModifier.AddModifier(statModifierData.ModifierValue);
-				break;
-				case StatModifierData.StatType.damageRecieved:
-					damageRecievedModifier.AddModifier(statModifierData.ModifierValue);
-				break;
-			}
+			damageDealtModifier.AddModifier(value, statType);
+			damageRecievedModifier.AddModifier(value, statType);
+
+			damageBonus.AddModifier(value, statType);
+			blockBonus.AddModifier(value, statType);
 		}
-		public void RemoveStatModifier(StatModifierData statModifierData)
+		public virtual void RemoveStatModifier(float value, StatType statType)
 		{
-			switch (statModifierData.StatModifierType)
-			{
-				case StatModifierData.StatType.noType: break;
-				case StatModifierData.StatType.damageDealt:
-				damageDealtModifier.RemoveModifier(statModifierData.ModifierValue);
-				break;
-				case StatModifierData.StatType.damageRecieved:
-				damageRecievedModifier.RemoveModifier(statModifierData.ModifierValue);
-				break;
-			}
+			damageDealtModifier.RemoveModifier(value, statType);
+			damageRecievedModifier.RemoveModifier(value, statType);
+
+			damageBonus.RemoveModifier(value, statType);
+			blockBonus.RemoveModifier(value, statType);
 		}
 
 		//debugs

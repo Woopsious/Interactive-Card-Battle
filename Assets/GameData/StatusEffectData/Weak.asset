@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   effectName: Weak
   effectDescription: You feel weak
+  hasStacks: 0
   effectStacks: 0
   maxEffectStacks: 0
-  hasLifetime: 0
-  isDoT: 0
+  hasLifetime: 1
   effectTurnLifetime: 2
+  isDoT: 0
   isPercentage: 1
   effectValue: -0.25
-  statusEffectType: 3
+  effectStatModifierType: 2

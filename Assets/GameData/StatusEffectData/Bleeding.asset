@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e8761d35d959cba48b20137cd86d21c9, type: 3}
-  m_Name: Vulnerable
+  m_Name: Bleeding
   m_EditorClassIdentifier: 
-  effectName: Vulnerable
-  effectDescription: Your vulnerable to attacks
+  effectName: Bleeding
+  effectDescription: You are bleeding
   hasStacks: 0
   effectStacks: 0
   maxEffectStacks: 0
   hasLifetime: 1
   effectTurnLifetime: 2
-  isDoT: 0
-  isPercentage: 1
-  effectValue: 0.5
-  effectStatModifierType: 1
+  isDoT: 1
+  isPercentage: 0
+  effectValue: 3
+  effectStatModifierType: 0

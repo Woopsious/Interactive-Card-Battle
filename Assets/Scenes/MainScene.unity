@@ -4548,8 +4548,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   newGamePanel: {fileID: 2106305148}
   mageInfoText: {fileID: 1437762040}
-  rogueInfoText: {fileID: 1053338185}
-  rangerInfoText: {fileID: 1734226226}
+  rangerInfoText: {fileID: 1053338185}
+  rogueInfoText: {fileID: 1734226226}
   warriorInfoText: {fileID: 1043616103}
   playMageButton: {fileID: 777225447}
   playRangerButton: {fileID: 671691045}

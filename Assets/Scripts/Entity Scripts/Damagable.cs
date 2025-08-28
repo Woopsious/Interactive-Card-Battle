@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static Woopsious.DamageData;
 
 namespace Woopsious
 {
@@ -24,6 +23,12 @@ namespace Woopsious
 		}
 
 		[Header("Damage Values")]
+		public ValueTypes valueTypes;
+		[Flags]
+		public enum ValueTypes
+		{
+			none = 0, dealsDamage = 1, blocks = 2, heals = 4
+		}
 		public DamageType damageType;
 		public enum DamageType
 		{
@@ -36,6 +41,10 @@ namespace Woopsious
 		public int BlockValue;
 		public int HealValue;
 
+		[Header("Possible Status Effects")]
+		public List<StatusEffectsData> statusEffectsForTarget = new();
+		public List<StatusEffectsData> statusEffectsForSelf = new();
+
 		public DamageData(Entity entityDamageSource, DamageData damageData) //base
 		{
 			EntityDamageSource = entityDamageSource;
@@ -46,47 +55,45 @@ namespace Woopsious
 			maxAoeTargets = damageData.maxAoeTargets;
 			multiHitSettings = damageData.multiHitSettings;
 
+			valueTypes = damageData.valueTypes;
 			damageType = damageData.damageType;
 			DamageValue = damageData.DamageValue;
 
 			BlockValue = damageData.BlockValue;
 			HealValue = damageData.HealValue;
+
+			//statusEffectsForTarget.Clear();
+			statusEffectsForTarget = damageData.statusEffectsForTarget;
+
+			//statusEffectsForSelf.Clear();
+			statusEffectsForSelf = damageData.statusEffectsForSelf;
 		}
 
-		public DamageData(Entity entityDamageSource, bool reflectedDamage, int damageValue) //reflected damage
+		public DamageData(Entity entityDamageSource, bool damageReflectable, bool damageIgnoresBlock, int damageValue) //simple damage
 		{
 			EntityDamageSource = entityDamageSource;
-			DamageReflectable = false;
-			DamageIgnoresBlock = true;
+			DamageReflectable = damageReflectable;
+			DamageIgnoresBlock = damageIgnoresBlock;
 
 			isAoeAttack = false;
 			maxAoeTargets = 0;
 			multiHitSettings = MultiHitAttack.No;
 
+			valueTypes = ValueTypes.dealsDamage;
 			damageType = DamageType.physical;
 			DamageValue = damageValue;
 		}
 
-		public DamageData(Entity entityDamageSource, int damageValue) //simple damage
+		public DamageData(ValueTypes valueType, int value) //simple blocking/healing
 		{
-			EntityDamageSource = entityDamageSource;
-			DamageReflectable = true;
-			DamageIgnoresBlock = false;
-
-			isAoeAttack = false;
-			maxAoeTargets = 0;
-			multiHitSettings = MultiHitAttack.No;
-
-			damageType = DamageType.physical;
-			DamageValue = damageValue;
-		}
-
-		public DamageData(bool isBlockValue, int value) //simple blocking/healing
-		{
-			if (isBlockValue)
+			if (valueType == ValueTypes.none)
+				Debug.LogError("Value type not set");
+			else if (valueType == ValueTypes.blocks)
 				BlockValue = value;
-			else
+			else if (valueType == ValueTypes.heals)
 				HealValue = value;
+			else
+				Debug.LogError("Damage done in different overload method");
 		}
 	}
 

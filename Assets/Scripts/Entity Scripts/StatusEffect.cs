@@ -17,6 +17,7 @@ namespace Woopsious
 		[Header("Effect Runtime")]
 		[SerializeField] public int effectCurrentStacks;
 		[SerializeField] public int effectLifetimeLeft;
+		[SerializeField] public float effectValue;
 
 		public StatusEffect(Entity entity, StatusEffectsHandler effectsHandler, StatusEffectsData statusEffectsData)
 		{
@@ -29,14 +30,24 @@ namespace Woopsious
 
 			effectCurrentStacks = statusEffectsData.effectStacks;
 			effectLifetimeLeft = statusEffectsData.effectTurnLifetime;
+
+			if (statusEffectsData.hasStacks)
+				effectValue = statusEffectsData.effectValue * effectCurrentStacks;
+			else
+				effectValue = (int)statusEffectsData.effectValue;
 		}
 		public void ReApplyStatusEffect(StatusEffectsData statusEffectsData)
 		{
 			effectCurrentStacks += statusEffectsData.effectStacks;
 			effectLifetimeLeft = statusEffectsData.effectTurnLifetime;
 
-			if (effectCurrentStacks < statusEffectsData.maxEffectStacks)
+			if (effectCurrentStacks > statusEffectsData.maxEffectStacks)
 				effectCurrentStacks = statusEffectsData.maxEffectStacks;
+
+			if (statusEffectsData.hasStacks)
+				effectValue = statusEffectsData.effectValue * effectCurrentStacks;
+			else
+				effectValue = (int)statusEffectsData.effectValue;
 		}
 
 		public void OnNewTurnStart()
@@ -54,7 +65,7 @@ namespace Woopsious
 		}
 		void ApplyDoTDamage()
 		{
-			entity.RecieveDamage(new(entity, (int)StatusEffectsData.effectValue));
+			entity.RecieveDamage(new(entity, false, true, (int)effectValue));
 		}
 	}
 }

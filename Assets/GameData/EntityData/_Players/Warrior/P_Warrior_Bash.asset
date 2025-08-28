@@ -19,8 +19,11 @@ MonoBehaviour:
     isAoeAttack: 0
     maxAoeTargets: 0
     multiHitSettings: 0
+    valueTypes: 3
     damageType: 0
     DamageValue: 3
     BlockValue: 5
     HealValue: 0
+    statusEffectsForTarget: []
+    statusEffectsForSelf: []
   attackUseChance: 0
