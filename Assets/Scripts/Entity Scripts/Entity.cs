@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices.WindowsRuntime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -112,7 +113,7 @@ namespace Woopsious
 			gameObject.name = entityName;
 			entityNameText.text = entityName;
 
-			SetupStats();
+			InitilizeStats();
 			UpdateUi();
 			turnIndicator.SetActive(false);
 
@@ -122,10 +123,10 @@ namespace Woopsious
 			entityMoves.InitilizeMoveSet(this);
 			statusEffectsHandler.ClearStatusEffects();
 		}
-		void SetupStats()
+		void InitilizeStats()
 		{
 			health = EntityData.maxHealth;
-			block = 0;
+			block = EntityData.baseBlock;
 
 			damageDealtModifier = new Stat(1, StatType.damageDealt);
 			damageRecievedModifier = new Stat(1, StatType.damageRecieved);
@@ -139,8 +140,7 @@ namespace Woopsious
 		{
 			if (entity != this) return; //not this entities turn
 
-			block = (int)blockBonus.Value;
-			UpdateUi();
+			UpdateStatsAndUi();
 
 			if (EntityData.isPlayer) return; //if is player shouldnt need to do anything else as other scripts handle it
 
@@ -156,39 +156,13 @@ namespace Woopsious
 		//entity hits via cards
 		public virtual void RecieveDamage(DamageData damageData)
 		{
-			int damage = 0; //get true damage from multihit enum
-			switch (damageData.multiHitSettings)
-			{
-				case MultiHitAttack.No:
-				damage = damageData.DamageValue;
-				break;
-				case MultiHitAttack.TwoHits:
-				damage = damageData.DamageValue * 2;
-				break;
-				case MultiHitAttack.ThreeHits:
-				damage = damageData.DamageValue * 3;
-				break;
-				case MultiHitAttack.FourHits:
-				damage = damageData.DamageValue * 4;
-				break;
-			}
-
-			damage = (int)(damage * damageRecievedModifier.Value); //apply damage recieved modifier
-
 			if (damageData.EntityDamageSource.EntityData.playerClass == EntityData.PlayerClass.Mage)
-			{
-				float roll = (float)(systemRandom.NextDouble() * 100);
-				if (roll < damageData.EntityDamageSource.EntityData.chanceOfDoubleDamage)
-					damage *= 2;
-			}
+				damageData.DamageValue = GetMageClassSpecialDamageModifier(damageData);
 
-			if (damageData.DamageIgnoresBlock)
-				health -= damage;
-			else
-			{
-				damage = GetBlockedDamage(damage);
-				health -= damage;
-			}
+			damageData.DamageValue = GetDamageRecievedModifier(damageData);
+			damageData.DamageValue = GetBlockedDamage(damageData);
+
+			health -= damageData.DamageValue;
 
 			audioHandler.PlayAudio(EntityData.hitSfx, true);
 			UpdateUi();
@@ -208,21 +182,39 @@ namespace Woopsious
 			UpdateUi();
 		}
 
-		int GetBlockedDamage(int damage)
+		//helpers
+		int GetMageClassSpecialDamageModifier(DamageData damageData)
 		{
-			if (block > damage)
+			float roll = (float)(systemRandom.NextDouble() * 100);
+			if (roll < damageData.EntityDamageSource.EntityData.chanceOfDoubleDamage)
+				return damageData.DamageValue *= 2;
+			else
+				return damageData.DamageValue;
+		}
+		int GetDamageRecievedModifier(DamageData damageData)
+		{
+			int damage = (int)(damageData.DamageValue * damageRecievedModifier.Value);
+			return damage;
+		}
+		int GetBlockedDamage(DamageData damageData)
+		{
+			if (damageData.DamageIgnoresBlock)
+				return damageData.DamageValue;
+
+			if (block > damageData.DamageValue)
 			{
-				block -= damage;
-				damage = 0;
+				block -= damageData.DamageValue;
+				damageData.DamageValue = 0;
 			}
 			else
 			{
-				damage -= block;
+				damageData.DamageValue -= block;
 				block = 0;
 			}
-
-			return damage;
+			return damageData.DamageValue;
 		}
+
+		//entity death
 		void OnDeath()
 		{
 			if (health <= 0)
@@ -240,6 +232,7 @@ namespace Woopsious
 
 			damageBonus.AddModifier(value, statType);
 			blockBonus.AddModifier(value, statType);
+			UpdateStatsAndUi();
 		}
 		public virtual void RemoveStatModifier(float value, StatType statType)
 		{
@@ -248,6 +241,12 @@ namespace Woopsious
 
 			damageBonus.RemoveModifier(value, statType);
 			blockBonus.RemoveModifier(value, statType);
+			UpdateStatsAndUi();
+		}
+		void UpdateStatsAndUi()
+		{
+			block = (int)(EntityData.baseBlock + blockBonus.Value);
+			UpdateUi();
 		}
 
 		//debugs
@@ -295,10 +294,10 @@ namespace Woopsious
 			}
 		}
 
-		void UpdateUi()
+		protected void UpdateUi()
 		{
 			entityHealthText.text = "HEALTH:\n" + health + "/" + EntityData.maxHealth;
-			entityblockText.text = "Block: " + block;
+			entityblockText.text = "BLOCK: " + block;
 		}
 	}
 }

@@ -58,9 +58,6 @@ namespace Woopsious
 
 			if (entity != this) return;
 
-			if (EntityData.playerClass == EntityData.PlayerClass.Warrior)
-				RecieveBlock(new(ValueTypes.blocks, EntityData.extraBlockPerTurn));
-
 			cardsUsedThisTurn = 0;
 			damageCardsUsedThisTurn = 0;
 			nonDamageCardsUsedThisTurn = 0;

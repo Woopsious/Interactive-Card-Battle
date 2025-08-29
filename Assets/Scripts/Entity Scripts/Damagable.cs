@@ -11,16 +11,10 @@ namespace Woopsious
 		public bool DamageReflectable { get; private set; }
 		public bool DamageIgnoresBlock { get; private set; }
 
-		[Header("Aoe Settings")]
-		public bool isAoeAttack;
-		public int maxAoeTargets;
-
 		[Header("Multihit Settings")]
-		public MultiHitAttack multiHitSettings;
-		public enum MultiHitAttack
-		{
-			No, TwoHits, ThreeHits, FourHits
-		}
+		public bool isMultiHitAttack;
+		public bool HitsDifferentTargets;
+		public int multiHitCount;
 
 		[Header("Damage Values")]
 		public ValueTypes valueTypes;
@@ -34,7 +28,7 @@ namespace Woopsious
 		{
 			physical
 		}
-		[Tooltip("if marked as aoe or is multi hit attack, value should represent damage done to single target")]
+		[Tooltip("if marked as multihit attack put total damage")]
 		public int DamageValue;
 
 		[Header("Other Values")]
@@ -51,9 +45,9 @@ namespace Woopsious
 			DamageReflectable = true;
 			DamageIgnoresBlock = false;
 
-			isAoeAttack = damageData.isAoeAttack;
-			maxAoeTargets = damageData.maxAoeTargets;
-			multiHitSettings = damageData.multiHitSettings;
+			isMultiHitAttack = damageData.isMultiHitAttack;
+			HitsDifferentTargets = damageData.HitsDifferentTargets;
+			multiHitCount = damageData.multiHitCount;
 
 			valueTypes = damageData.valueTypes;
 			damageType = damageData.damageType;
@@ -75,9 +69,9 @@ namespace Woopsious
 			DamageReflectable = damageReflectable;
 			DamageIgnoresBlock = damageIgnoresBlock;
 
-			isAoeAttack = false;
-			maxAoeTargets = 0;
-			multiHitSettings = MultiHitAttack.No;
+			isMultiHitAttack = false;
+			HitsDifferentTargets = false;
+			multiHitCount = 0;
 
 			valueTypes = ValueTypes.dealsDamage;
 			damageType = DamageType.physical;

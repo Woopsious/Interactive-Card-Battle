@@ -71,34 +71,79 @@ namespace Woopsious
 				Debug.LogError("Value type not set");
 
 			if (DamageData.valueTypes.HasFlag(ValueTypes.dealsDamage))
-			{
-				if (DamageData.damageType == DamageType.physical)
-					description += "\nDeals " + DamageData.DamageValue + " physical damage";
+				description = CreateDamageDescription(description);
 
-				if (DamageData.isAoeAttack)
-					description += " each to a max of " + DamageData.maxAoeTargets + " targets";
+			description = CreateTargetStatusEffectDescription(description);
 
-				switch (DamageData.multiHitSettings)
-				{
-					case MultiHitAttack.No:
-					break;
-					case MultiHitAttack.TwoHits:
-					description += " 2x (" + DamageData.DamageValue * 2 + ")";
-					break;
-					case MultiHitAttack.ThreeHits:
-					description += " 3x (" + DamageData.DamageValue * 3 + ")";
-					break;
-					case MultiHitAttack.FourHits:
-					description += " 4x (" + DamageData.DamageValue * 4 + ")";
-					break;
-				}
-			}
 			if (DamageData.valueTypes.HasFlag(ValueTypes.blocks))
-				description += "\nBlocks " + DamageData.BlockValue + " damage";
+				description += "\nGain " + DamageData.BlockValue + " block";
+
 			if (DamageData.valueTypes.HasFlag(ValueTypes.heals))
-				description += "\nHeals " + DamageData.HealValue + " damage";
+				description += "\nHeal self for " + DamageData.HealValue;
+
+			description = CreateSelfStatusEffectDescription(description);
 
 			return description;
+		}
+
+		string CreateDamageDescription(string description)
+		{
+			if (DamageData.isMultiHitAttack)
+			{
+				int splitDamage = DamageData.DamageValue / DamageData.multiHitCount;
+				if (DamageData.HitsDifferentTargets)
+				{
+					description += "\nDeal " + splitDamage + " damage to " + DamageData.multiHitCount + " enemies";
+				}
+				else
+				{
+					description += "\nDeal " + splitDamage + " (" + DamageData.DamageValue + ") " + DamageData.multiHitCount + "x to enemy";
+				}
+			}
+			else
+				description += "\nDeal " + DamageData.DamageValue + " damage to enemy";
+
+			return description;
+		}	
+		string CreateTargetStatusEffectDescription(string description)
+		{
+			if (DamageData.statusEffectsForTarget.Count != 0)
+			{
+				description += "\nApplies ";
+
+				foreach (StatusEffectsData statusEffect in DamageData.statusEffectsForTarget)
+					description += "<link=\"Test\"><color=\"blue\">" + statusEffect.effectName + "</color></link>, ";
+
+				description = RemoveLastComma(description);
+				description += "to targets";
+			}
+
+			return description;
+		}
+		string CreateSelfStatusEffectDescription(string description)
+		{
+			if (DamageData.statusEffectsForSelf.Count != 0)
+			{
+				description += "\nApplies ";
+
+				foreach (StatusEffectsData statusEffect in DamageData.statusEffectsForSelf)
+					description += "<link=\"Test\"><color=\"blue\">" + statusEffect.effectName + "</color></link>, ";
+
+				description = RemoveLastComma(description);
+				description += "to self";
+			}
+
+			return description;
+		}
+
+		string RemoveLastComma(string input)
+		{
+			int lastCommaIndex = input.LastIndexOf(',');
+
+			if (lastCommaIndex >= 0)
+				return input.Remove(lastCommaIndex, 1);
+
+			return input;
 		}
 
 		//button call

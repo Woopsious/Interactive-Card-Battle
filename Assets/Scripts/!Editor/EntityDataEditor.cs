@@ -33,6 +33,7 @@ namespace Woopsious
 			EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.isPlayer)));
 
 			EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.maxHealth)));
+			EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.baseBlock)));
 
 			EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.hitSfx)));
 
@@ -46,8 +47,6 @@ namespace Woopsious
 					EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.healOnKillPercentage)));
 				else if (data.playerClass == EntityData.PlayerClass.Rogue)
 					EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.damageReflectedPercentage)));
-				else if (data.playerClass == EntityData.PlayerClass.Warrior)
-					EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.extraBlockPerTurn)));
 
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.maxCardsUsedPerTurn)));
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.maxDamageCardsUsedPerTurn)));

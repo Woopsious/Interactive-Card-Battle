@@ -28,6 +28,7 @@ namespace Woopsious
 
 		[Header("Entity Stats")]
 		public int maxHealth;
+		public int baseBlock;
 		[Range(0f, 1f)]
 		[Tooltip("If health percentage drops below, entity will use heal over other moves in its move set")]
 		public float minHealPercentage;
@@ -46,7 +47,6 @@ namespace Woopsious
 		public float healOnKillPercentage; //Ranger
 		[Range(0f, 100f)]
 		public float damageReflectedPercentage; //Rogue
-		public int extraBlockPerTurn; //Warrior
 
 		[Header("Player Cards")]
 		public int maxCardsUsedPerTurn;

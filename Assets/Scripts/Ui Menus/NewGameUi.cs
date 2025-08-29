@@ -153,7 +153,7 @@ namespace Woopsious
 			}
 			else if (playerData.playerClass == PlayerClass.Warrior)
 			{
-				classGimmickInfo += $"\"Stalwart\"\n Has a permanent {playerData.extraBlockPerTurn} block";
+				classGimmickInfo += $"\"Stalwart\"\n Has a permanent {playerData.baseBlock} block";
 			}
 
 			return classGimmickInfo;

@@ -147,8 +147,10 @@ namespace Woopsious
 		{
 			if (card.DamageData.valueTypes.HasFlag(ValueTypes.dealsDamage))
 			{
-				if (card.DamageData.isAoeAttack)
+				if (card.DamageData.isMultiHitAttack && card.DamageData.HitsDifferentTargets)
 				{
+					card.DamageData.DamageValue = card.DamageData.DamageValue / card.DamageData.multiHitCount; //split damage for multiple targets
+
 					foreach (Entity aoeTarget in GetAoeTargets(target))
 					{
 						aoeTarget.RecieveDamage(card.DamageData);
@@ -165,7 +167,7 @@ namespace Woopsious
 		List<Entity> GetAoeTargets(Entity initialTarget)
 		{
 			List<Entity> targets = new() { initialTarget };
-			int targetsToFind = card.DamageData.maxAoeTargets - 1;
+			int targetsToFind = card.DamageData.multiHitCount - 1;
 
 			foreach (Entity entity in TurnOrderManager.Instance.turnOrder) //find and damage others in turn order (excluding initial + player)
 			{

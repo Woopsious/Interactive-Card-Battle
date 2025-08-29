@@ -16,9 +16,9 @@ MonoBehaviour:
   attackDescription: Slash enemy with sword
   offensive: 1
   DamageData:
-    isAoeAttack: 0
-    maxAoeTargets: 0
-    multiHitSettings: 0
+    isMultiHitAttack: 0
+    HitsDifferentTargets: 0
+    multiHitCount: 0
     valueTypes: 1
     damageType: 0
     DamageValue: 10

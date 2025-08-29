@@ -16,13 +16,13 @@ MonoBehaviour:
   attackDescription: Bash enemy with shield
   offensive: 1
   DamageData:
-    isAoeAttack: 0
-    maxAoeTargets: 0
-    multiHitSettings: 0
+    isMultiHitAttack: 0
+    HitsDifferentTargets: 0
+    multiHitCount: 0
     valueTypes: 3
     damageType: 0
-    DamageValue: 3
-    BlockValue: 5
+    DamageValue: 4
+    BlockValue: 6
     HealValue: 0
     statusEffectsForTarget: []
     statusEffectsForSelf: []
