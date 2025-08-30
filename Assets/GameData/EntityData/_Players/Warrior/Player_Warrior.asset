@@ -21,12 +21,12 @@ MonoBehaviour:
   entitySpawnChance: 0
   eliteEnemy: 0
   maxHealth: 80
+  baseBlock: 3
   minHealPercentage: 0
   playerClass: 4
   chanceOfDoubleDamage: 0
   healOnKillPercentage: 0
   damageReflectedPercentage: 0
-  extraBlockPerTurn: 3
   maxCardsUsedPerTurn: 3
   maxDamageCardsUsedPerTurn: 2
   maxNonDamageCardsUsedPerTurn: 2

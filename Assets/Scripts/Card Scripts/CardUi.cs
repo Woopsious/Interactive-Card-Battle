@@ -115,7 +115,7 @@ namespace Woopsious
 					description += "<link=\"Test\"><color=\"blue\">" + statusEffect.effectName + "</color></link>, ";
 
 				description = RemoveLastComma(description);
-				description += "to targets";
+				description += "to enemy";
 			}
 
 			return description;

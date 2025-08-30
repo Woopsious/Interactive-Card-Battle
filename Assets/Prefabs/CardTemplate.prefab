@@ -279,7 +279,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3277450784611063888}
   - component: {fileID: 7179057540241238291}
+  - component: {fileID: 7437896452757969467}
   - component: {fileID: 2297873378167699421}
+  - component: {fileID: 2116831331289641198}
   m_Layer: 5
   m_Name: Description
   m_TagString: Untagged
@@ -314,6 +316,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4995608188835361454}
   m_CullTransparentMesh: 1
+--- !u!114 &7437896452757969467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4995608188835361454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 0
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!114 &2297873378167699421
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -405,6 +424,29 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!223 &2116831331289641198
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4995608188835361454}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!1 &8655149506762040854
 GameObject:
   m_ObjectHideFlags: 0
@@ -420,6 +462,7 @@ GameObject:
   - component: {fileID: 7801385609012476621}
   - component: {fileID: 7036156710718518891}
   - component: {fileID: 2216728023845142203}
+  - component: {fileID: 6961645267239720422}
   m_Layer: 5
   m_Name: CardTemplate
   m_TagString: Untagged
@@ -591,6 +634,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardOwner: {fileID: 0}
   isBeingDragged: 0
+--- !u!114 &6961645267239720422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8655149506762040854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bd3a7f40706df74b8442c2d4a15048e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tmpTextBox: {fileID: 2297873378167699421}
 --- !u!1 &8678740576945916282
 GameObject:
   m_ObjectHideFlags: 0

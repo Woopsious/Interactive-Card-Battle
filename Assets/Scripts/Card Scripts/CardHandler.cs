@@ -95,6 +95,7 @@ namespace Woopsious
 
 		void PlayerSelectCard()
 		{
+			return;
 			OnPlayerPickedUpCard?.Invoke(card);
 			isBeingDragged = true;
 			touchingPlayerRef = null;
