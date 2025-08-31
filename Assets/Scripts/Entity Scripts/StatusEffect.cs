@@ -26,7 +26,7 @@ namespace Woopsious
 			StatusEffectsData = statusEffectsData;
 
 			effectName = statusEffectsData.effectName;
-			effectDescription = statusEffectsData.CreateDescription();
+			effectDescription = statusEffectsData.CreateInGameDescription();
 
 			effectCurrentStacks = statusEffectsData.effectStacks;
 			effectLifetimeLeft = statusEffectsData.effectTurnLifetime;

@@ -84,18 +84,17 @@ namespace Woopsious
 		//player card actions
 		public void OnPointerDown(PointerEventData eventData)
 		{
-			if (!card.selectable) return;
+			if (!card.selectable || eventData.button != PointerEventData.InputButton.Left) return;
 			PlayerSelectCard();
 		}
 		public void OnPointerUp(PointerEventData eventData)
 		{
-			if (!card.selectable) return;
+			if (!card.selectable || eventData.button != PointerEventData.InputButton.Left) return;
 			PlayerDeselectCard();
 		}
 
 		void PlayerSelectCard()
 		{
-			return;
 			OnPlayerPickedUpCard?.Invoke(card);
 			isBeingDragged = true;
 			touchingPlayerRef = null;
@@ -113,9 +112,9 @@ namespace Woopsious
 			OnPlayerPickedUpCard?.Invoke(null);
 			isBeingDragged = false;
 
-			if (touchingPlayerRef != null)
+			if (touchingPlayerRef != null && !card.Offensive)
 				UseCardOnTarget(cardOwner);
-			else if (touchingEnemyRef != null)
+			else if (touchingEnemyRef != null && card.Offensive)
 				UseCardOnTarget(touchingEnemyRef);
 			else
 				OnPlayerCardUsed?.Invoke(card, false);

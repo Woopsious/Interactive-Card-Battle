@@ -21,6 +21,9 @@ namespace Woopsious
 		[Header("Entity Scriptable Objects")]
 		public List<EntityData> entityDataTypes = new();
 
+		[Header("Status Effects Scriptable Objects")]
+		public List<StatusEffectsData> statusEffectsDataTypes = new();
+
 		[Header("Enemies To Spawn")]
 		private float widthOfEntities;
 
