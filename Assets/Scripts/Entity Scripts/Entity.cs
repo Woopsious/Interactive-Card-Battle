@@ -140,7 +140,7 @@ namespace Woopsious
 		{
 			if (entity != this) return; //not this entities turn
 
-			UpdateStatsAndUi();
+			UpdateStatsAndUi(true, 0);
 
 			if (EntityData.isPlayer) return; //if is player shouldnt need to do anything else as other scripts handle it
 
@@ -227,25 +227,38 @@ namespace Woopsious
 		//applying/removing stat modifiers
 		public virtual void AddStatModifier(float value, StatType statType)
 		{
+			int blockToKeep = (int)(block - blockBonus.Value);
+
 			damageDealtModifier.AddModifier(value, statType);
 			damageRecievedModifier.AddModifier(value, statType);
 
 			damageBonus.AddModifier(value, statType);
 			blockBonus.AddModifier(value, statType);
-			UpdateStatsAndUi();
+
+			UpdateStatsAndUi(false, blockToKeep);
 		}
 		public virtual void RemoveStatModifier(float value, StatType statType)
 		{
+			int blockToKeep = (int)(block - blockBonus.Value);
+
 			damageDealtModifier.RemoveModifier(value, statType);
 			damageRecievedModifier.RemoveModifier(value, statType);
 
 			damageBonus.RemoveModifier(value, statType);
 			blockBonus.RemoveModifier(value, statType);
-			UpdateStatsAndUi();
+
+			UpdateStatsAndUi(false, blockToKeep);
 		}
-		void UpdateStatsAndUi()
+		void UpdateStatsAndUi(bool newTurn, int blockToKeep)
 		{
-			block = (int)(EntityData.baseBlock + blockBonus.Value);
+			if (newTurn)
+			{
+				block = (int)(EntityData.baseBlock + blockBonus.Value);
+			}
+			else
+			{
+				block = (int)(blockToKeep + blockBonus.Value);
+			}
 			UpdateUi();
 		}
 
@@ -296,7 +309,7 @@ namespace Woopsious
 
 		protected void UpdateUi()
 		{
-			entityHealthText.text = "HEALTH:\n" + health + "/" + EntityData.maxHealth;
+			entityHealthText.text = "HP:" + health + "/" + EntityData.maxHealth;
 			entityblockText.text = "BLOCK: " + block;
 		}
 	}

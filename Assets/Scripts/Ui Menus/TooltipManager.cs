@@ -27,11 +27,13 @@ namespace Woopsious
 		void OnEnable()
 		{
 			TooltipUi.OnTooltipTextLinkClicked += ShowTip;
+			TooltipUi.OnTooltipStatusEffectIconClicked += ShowTip;
 			TooltipUi.OnHideTooltip += HideTip;
 		}
 		void OnDisable()
 		{
 			TooltipUi.OnTooltipTextLinkClicked -= ShowTip;
+			TooltipUi.OnTooltipStatusEffectIconClicked -= ShowTip;
 			TooltipUi.OnHideTooltip -= HideTip;
 		}
 

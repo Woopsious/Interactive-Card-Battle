@@ -9,6 +9,9 @@ namespace Woopsious
 		Entity entity;
 		public List<StatusEffect> currentStatusEffects = new();
 
+		public GameObject statusEffectsUiParent;
+		public GameObject statusEffectTemplate;
+
 		void Awake()
 		{
 			entity = GetComponent<Entity>();
@@ -21,6 +24,16 @@ namespace Woopsious
 		void OnDisable()
 		{
 			TurnOrderManager.OnNewTurnEvent += OnNewTurnStart;
+		}
+
+		private void Start()
+		{
+			//DebugAddStatusEffects();
+		}
+
+		public void DebugAddStatusEffects()
+		{
+			AddStatusEffects(SpawnManager.instance.statusEffectsDataTypes);
 		}
 
 		//adding/removing effects
@@ -49,15 +62,17 @@ namespace Woopsious
 				}
 			}
 
-			foreach (StatusEffectsData effectToApply in effectsToApply) //add new status effects
+			foreach (StatusEffectsData effectToApply in effectsToApply)
 			{
-				StatusEffect newStatusEffect = new(entity, this, effectToApply);
+				StatusEffect newStatusEffect = Instantiate(statusEffectTemplate).GetComponent<StatusEffect>();
+				newStatusEffect.gameObject.transform.SetParent(statusEffectsUiParent.transform);
+				newStatusEffect.InitilizeStatusEffect(entity, this, effectToApply);
+
 				currentStatusEffects.Add(newStatusEffect);
 				entity.AddStatModifier(newStatusEffect.effectValue, effectToApply.effectStatModifierType);
 			}
 
-			//if (currentStatusEffects.Count == 0) //no effect to check so add
-				//currentStatusEffects.Add(newEffect);
+			UpdateUiStatusEffectPositions();
 		}
 		public void RemoveStatusEffect(StatusEffect effectToRemove)
 		{
@@ -66,12 +81,22 @@ namespace Woopsious
 				StatusEffectsData statusEffectData = effectToRemove.StatusEffectsData;
 				entity.RemoveStatModifier(statusEffectData.effectValue, statusEffectData.effectStatModifierType);
 				currentStatusEffects.Remove(effectToRemove);
+				Destroy(effectToRemove.gameObject);
 			}
 			else
 				Debug.LogError("tried to remove status effect that doesnt exist");
+
+			UpdateUiStatusEffectPositions();
 		}
 
-		//apply effect modifiers
+		//updating ui elements
+		void UpdateUiStatusEffectPositions()
+		{
+			for (int i = 0; i < currentStatusEffects.Count; i++)
+			{
+				currentStatusEffects[i].UpdateRectTransform(i);
+			}
+		}
 
 		//event listeners
 		void OnNewTurnStart(Entity entity)

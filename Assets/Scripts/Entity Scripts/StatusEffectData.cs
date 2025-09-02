@@ -27,19 +27,10 @@ namespace Woopsious
 		public float effectValue;
 		public StatType effectStatModifierType;
 
-		public string CreateInGameDescription()
-		{
-			string description = effectDescription;
-			return EffectDescription(description);
-		}
-		public string CreateTooltipDescription()
+		public string CreateEffectDescription()
 		{
 			string description = effectName + " Effect";
-			return EffectDescription(description);
-		}
 
-		string EffectDescription(string description)
-		{
 			if (hasStacks)
 			{
 				if (effectValue > 0)
@@ -53,10 +44,10 @@ namespace Woopsious
 				if (effectValue > 0)
 				{
 					if (effectStatModifierType == StatType.damageDealt)
-						description += $"\nIncreases damage dealt by {effectValue * 100}%";
+						description += $"\n+{effectValue * 100}% damage dealt";
 
 					else if (effectStatModifierType == StatType.damageRecieved)
-						description += $"\nIncreases damage recieved by {effectValue * 100}%";
+						description += $"\n+{effectValue * 100}% damage recieved";
 
 					else if (effectStatModifierType == StatType.damageBonus)
 						description += $"\n+{effectValue} damage per stack (max:{effectValue * maxEffectStacks})";
@@ -67,10 +58,10 @@ namespace Woopsious
 				else
 				{
 					if (effectStatModifierType == StatType.damageDealt)
-						description += $"\nDecreases damage dealt by {effectValue * 100}%";
+						description += $"\n{effectValue * 100}% damage dealt";
 
 					else if (effectStatModifierType == StatType.damageRecieved)
-						description += $"\nDecreases damage recieved by {effectValue * 100}%";
+						description += $"\n{effectValue * 100}% damage recieved";
 
 					else if (effectStatModifierType == StatType.damageBonus)
 						description += $"\n{effectValue} damage per stack (max:{effectValue * maxEffectStacks})";
