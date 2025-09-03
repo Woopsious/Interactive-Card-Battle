@@ -13,6 +13,7 @@ namespace Woopsious
 			MainMenuUi.ShowNewGameUi += HideSaveSlotsUi;
 			MainMenuUi.ShowSaveSlotsUi += ShowSaveSlotsUi;
 			MainMenuUi.ShowSettingsUi += HideSaveSlotsUi;
+			MainMenuUi.ShowDatabaseUi += HideSaveSlotsUi;
 		}
 		void OnDestroy()
 		{
@@ -20,6 +21,7 @@ namespace Woopsious
 			MainMenuUi.ShowNewGameUi -= HideSaveSlotsUi;
 			MainMenuUi.ShowSaveSlotsUi -= ShowSaveSlotsUi;
 			MainMenuUi.ShowSettingsUi -= HideSaveSlotsUi;
+			MainMenuUi.ShowDatabaseUi -= HideSaveSlotsUi;
 		}
 
 		void ShowSaveSlotsUi()

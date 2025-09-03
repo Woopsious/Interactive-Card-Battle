@@ -62,6 +62,73 @@ namespace Woopsious
 		[Header("Entity Audio")]
 		public AudioClip hitSfx;
 
+		//set info for every class on start
+		public string CreatePlayerClassInfo()
+		{
+			string classInfo = "";
+
+			classInfo += entityName + "\n\n";
+
+			classInfo += $"Health: {maxHealth}\n\n";
+
+			classInfo += "STARTING CARDS\n";
+			classInfo += SetPlayerClassCardsInfo() + "\n\n";
+
+			classInfo += "Class specialty ";
+			classInfo += ExplainPlayerClassGimmick();
+
+			return classInfo;
+		}
+		string SetPlayerClassCardsInfo()
+		{
+			int multiCardsCount = 0;
+			int attackCardsCount = 0;
+			int blockCardsCount = 0;
+			int healCardsCount = 0;
+
+			foreach (AttackData attackData in cards)
+			{
+				DamageData damageData = attackData.DamageData;
+				if (damageData.DamageValue != 0 && damageData.BlockValue != 0 || damageData.DamageValue != 0 && damageData.HealValue != 0)
+					multiCardsCount++;
+				else if (damageData.DamageValue != 0)
+					attackCardsCount++;
+				else if (damageData.BlockValue != 0)
+					blockCardsCount++;
+				else if (damageData.HealValue != 0)
+					healCardsCount++;
+			}
+
+			string cardsInfo = "";
+			cardsInfo += $"Multi Cards: {multiCardsCount}\nAttack Cards: {attackCardsCount}\nBlock Cards: {blockCardsCount}\nHeal Cards: {healCardsCount}";
+			return cardsInfo;
+			//at some point also add the dispalying of each type of starting cards details
+		}
+		string ExplainPlayerClassGimmick()
+		{
+			string classGimmickInfo = "";
+
+			if (playerClass == PlayerClass.Mage)
+			{
+				classGimmickInfo += $"\"Potent Magic\"\n Has a {chanceOfDoubleDamage}% to deal double the damage of a card";
+			}
+			else if (playerClass == PlayerClass.Ranger)
+			{
+				classGimmickInfo += $"\"Resourceful\"\n Heals for {healOnKillPercentage}% of health on killing an enemy";
+			}
+			else if (playerClass == PlayerClass.Rogue)
+			{
+				classGimmickInfo += $"\"Trickster\"\n Reflects {damageReflectedPercentage}% of damage recieved onto attacker";
+			}
+			else if (playerClass == PlayerClass.Warrior)
+			{
+				classGimmickInfo += $"\"Stalwart\"\n Has a permanent {baseBlock} block";
+			}
+
+			return classGimmickInfo;
+		}
+
+		//calc entity cost at runtime
 		public int GetEntityCost()
 		{
 			int entityCost = (int)(maxHealth * GetEnemyTypeCostModifier(enemyType));

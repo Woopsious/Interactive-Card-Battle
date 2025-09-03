@@ -12,9 +12,10 @@ namespace Woopsious
 
 		public TMP_Text cardNametext;
 		public TMP_Text cardDescriptiontext;
+		public TMP_Text cardCountForCardDeckUi;
 		public RectTransform replaceCardButton;
 
-		AttackData attackData;
+		public AttackData AttackData { get; private set; }
 		public bool PlayerCard { get; private set; }
 		public bool Offensive { get; private set; }
 		public DamageData DamageData { get; private set; }
@@ -28,34 +29,60 @@ namespace Woopsious
 			cardHandler = GetComponent<CardHandler>();
 		}
 
-		public void SetupCard(Entity cardOwner, AttackData AttackData, bool playerCard)
+		public void SetupUiCard(AttackData attackData, int cardDeckCount)
 		{
-			if (AttackData == null)
+			if (attackData == null)
 			{
 				Debug.LogError("Attack data null");
 				return;
 			}
 
-			attackData = AttackData;
-			PlayerCard = playerCard;
-			Offensive = AttackData.offensive;
+			GetComponent<BoxCollider2D>().enabled = false;
+			AttackData = attackData;
+			Offensive = attackData.offensive;
 
-			string cardName = AttackData.attackName;
+			string cardName = attackData.attackName;
 			gameObject.name = cardName;
 			cardNametext.text = cardName;
 
-			DamageData = new(cardOwner, AttackData.DamageData);
+			DamageData = new(null, attackData.DamageData);
+
+			cardDescriptiontext.text = CreateDescription();
+			replaceCardButton.gameObject.SetActive(false);
+
+			cardCountForCardDeckUi.text = $"{cardDeckCount}x";
+			cardCountForCardDeckUi.gameObject.SetActive(true);
+		}
+
+		public void SetupInGameCard(Entity cardOwner, AttackData attackData, bool playerCard)
+		{
+			if (attackData == null)
+			{
+				Debug.LogError("Attack data null");
+				return;
+			}
+
+			AttackData = attackData;
+			PlayerCard = playerCard;
+			Offensive = attackData.offensive;
+
+			string cardName = attackData.attackName;
+			gameObject.name = cardName;
+			cardNametext.text = cardName;
+
+			DamageData = new(cardOwner, attackData.DamageData);
 			DamageData.DamageValue = (int)(DamageData.DamageValue + cardOwner.damageBonus.Value); //apply bonus damage
 			DamageData.DamageValue = (int)(DamageData.DamageValue * cardOwner.damageDealtModifier.Value); //apply damage dealt modifier
 
 			cardDescriptiontext.text = CreateDescription();
+			cardCountForCardDeckUi.gameObject.SetActive(false);
 			replaceCardButton.gameObject.SetActive(false);
 		}
-		public void UpdateCard(Entity cardOwner, bool playerCard)
+		public void UpdateInGameCard(Entity cardOwner, bool playerCard)
 		{
 			PlayerCard = playerCard;
 
-			DamageData = new(cardOwner, attackData.DamageData);
+			DamageData = new(cardOwner, AttackData.DamageData);
 			DamageData.DamageValue = (int)(DamageData.DamageValue + cardOwner.damageBonus.Value); //apply bonus damage
 			DamageData.DamageValue = (int)(DamageData.DamageValue * cardOwner.damageDealtModifier.Value); //apply damage dealt modifier
 
@@ -64,7 +91,7 @@ namespace Woopsious
 
 		public string CreateDescription()
 		{
-			string description = attackData.attackDescription;
+			string description = AttackData.attackDescription;
 			description += "\n";
 
 			if (DamageData.valueTypes == ValueTypes.none)

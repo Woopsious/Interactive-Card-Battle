@@ -124,7 +124,7 @@ namespace Woopsious
 			if (TurnOrderManager.Player() == null) return;
 
 			CardUi card = SpawnManager.SpawnCard();
-			card.SetupCard(entity, attackData, false);
+			card.SetupInGameCard(entity, attackData, false);
 
 			if (card.Offensive)
 				card.cardHandler.EnemyUseCard(entity, TurnOrderManager.Player());

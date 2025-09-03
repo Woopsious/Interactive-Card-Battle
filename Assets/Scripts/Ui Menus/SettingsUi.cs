@@ -22,6 +22,7 @@ namespace Woopsious
 			MainMenuUi.ShowNewGameUi += HideSettingsUi;
 			MainMenuUi.ShowSaveSlotsUi += HideSettingsUi;
 			MainMenuUi.ShowSettingsUi += ShowSettingsUi;
+			MainMenuUi.ShowDatabaseUi += HideSettingsUi;
 		}
 		void OnDestroy()
 		{
@@ -30,12 +31,13 @@ namespace Woopsious
 			MainMenuUi.ShowNewGameUi -= HideSettingsUi;
 			MainMenuUi.ShowSaveSlotsUi -= HideSettingsUi;
 			MainMenuUi.ShowSettingsUi -= ShowSettingsUi;
+			MainMenuUi.ShowDatabaseUi -= HideSettingsUi;
 		}
 
 		private void Awake()
 		{
 			SetUpAudio();
-			saveSettingsButton.onClick.AddListener(delegate { SaveManager.SavePlayerData(); });
+			saveSettingsButton.onClick.AddListener(() => SaveManager.SavePlayerData());
 		}
 
 		void SetUpAudio()

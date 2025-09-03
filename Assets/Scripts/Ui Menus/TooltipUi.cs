@@ -77,7 +77,7 @@ namespace Woopsious
 		}
 		string GetStatusEffectDescriptionToolTip(string effectName)
 		{
-			foreach (StatusEffectsData statusEffectsData in SpawnManager.instance.statusEffectsDataTypes)
+			foreach (StatusEffectsData statusEffectsData in GameManager.instance.statusEffectsDataTypes)
 			{
 				if (effectName == statusEffectsData.effectName)
 					return statusEffectsData.CreateEffectDescription();

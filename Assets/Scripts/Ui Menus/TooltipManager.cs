@@ -21,7 +21,7 @@ namespace Woopsious
 		{
 			instance = this;
 			closeTipButtonRect = closeTipButton.GetComponent<RectTransform>();
-			closeTipButton.onClick.AddListener(delegate { HideTip(); });
+			closeTipButton.onClick.AddListener(() => HideTip());
 		}
 
 		void OnEnable()

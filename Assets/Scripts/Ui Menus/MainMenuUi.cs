@@ -29,6 +29,9 @@ namespace Woopsious
 		public Button settingsButton;
 		RectTransform settingsButtonRectTransform;
 
+		public Button databaseButton;
+		RectTransform databaseButtonRectTransform;
+
 		public Button exitGameButton;
 		RectTransform exitGameButtonRectTransform;
 
@@ -43,6 +46,7 @@ namespace Woopsious
 		public static Action ShowNewGameUi;
 		public static Action ShowSaveSlotsUi;
 		public static Action ShowSettingsUi;
+		public static Action ShowDatabaseUi;
 
 		//fps counter
 		public TMP_Text fpsCounter;
@@ -76,6 +80,7 @@ namespace Woopsious
 			ShowMainMenuUi += ShowMainMenuUiPanel;
 			ShowNewGameUi += HideMainMenuUiPanel;
 			ShowSaveSlotsUi += HideMainMenuUiPanel;
+			ShowDatabaseUi += HideMainMenuUiPanel;
 			ShowSettingsUi += HideMainMenuUiPanel;
 		}
 		void OnDestroy()
@@ -86,23 +91,26 @@ namespace Woopsious
 			ShowMainMenuUi -= ShowMainMenuUiPanel;
 			ShowNewGameUi -= HideMainMenuUiPanel;
 			ShowSaveSlotsUi -= HideMainMenuUiPanel;
+			ShowDatabaseUi -= HideMainMenuUiPanel;
 			ShowSettingsUi -= HideMainMenuUiPanel;
 		}
 
 		void SetUpButtons()
 		{
-			newGameButton.onClick.AddListener(delegate { ShowNewGameUi?.Invoke(); });
-			saveGameButton.onClick.AddListener(delegate { ShowSaveSlotsUi?.Invoke(); });
-			loadGameButton.onClick.AddListener(delegate { ShowSaveSlotsUi?.Invoke(); });
-			settingsButton.onClick.AddListener(delegate { ShowSettingsUi?.Invoke(); });
-			exitGameButton.onClick.AddListener(delegate { GameManager.ExitGameScene(); });
-			quitGameButton.onClick.AddListener(delegate { GameManager.QuitGame(); });
+			newGameButton.onClick.AddListener(() => ShowNewGameUi?.Invoke());
+			saveGameButton.onClick.AddListener(() => ShowSaveSlotsUi?.Invoke());
+			loadGameButton.onClick.AddListener(() => ShowSaveSlotsUi?.Invoke());
+			databaseButton.onClick.AddListener(() => ShowDatabaseUi?.Invoke());
+			settingsButton.onClick.AddListener(() => ShowSettingsUi?.Invoke());
+			exitGameButton.onClick.AddListener(() => GameManager.ExitGameScene());
+			quitGameButton.onClick.AddListener(() => GameManager.QuitGame());
 
-			backButton.onClick.AddListener(delegate { BackButtonClickEvents(); });
+			backButton.onClick.AddListener(() => BackButtonClickEvents());
 
 			newGameButtonRectTransform = newGameButton.GetComponent<RectTransform>();
 			saveGameButtonRectTransform = saveGameButton.GetComponent<RectTransform>();
 			loadGameButtonRectTransform = loadGameButton.GetComponent<RectTransform>();
+			databaseButtonRectTransform = databaseButton.GetComponent<RectTransform>();
 			settingsButtonRectTransform = settingsButton.GetComponent<RectTransform>();
 			exitGameButtonRectTransform = exitGameButton.GetComponent<RectTransform>();
 			QuitGameButtonRectTransform = quitGameButton.GetComponent<RectTransform>();
@@ -156,9 +164,10 @@ namespace Woopsious
 		{
 			if (inGame)
 			{
-				newGameButtonRectTransform.anchoredPosition = new Vector2(-800, 150);
-				saveGameButtonRectTransform.anchoredPosition = new Vector2(-800, 150);
-				loadGameButtonRectTransform.anchoredPosition = new Vector2(-800, 50);
+				newGameButtonRectTransform.anchoredPosition = new Vector2(-800, 250);
+				saveGameButtonRectTransform.anchoredPosition = new Vector2(-800, 250);
+				loadGameButtonRectTransform.anchoredPosition = new Vector2(-800, 150);
+				databaseButtonRectTransform.anchoredPosition = new Vector2(-800, 50);
 				settingsButtonRectTransform.anchoredPosition = new Vector2(-800, -100);
 				exitGameButtonRectTransform.anchoredPosition = new Vector2(-800, -200);
 				QuitGameButtonRectTransform.anchoredPosition = new Vector2(-800, -200);
@@ -173,9 +182,10 @@ namespace Woopsious
 			}
 			else
 			{
-				newGameButtonRectTransform.anchoredPosition = new Vector2(0, 150);
-				saveGameButtonRectTransform.anchoredPosition = new Vector2(0, 150);
-				loadGameButtonRectTransform.anchoredPosition = new Vector2(0, 50);
+				newGameButtonRectTransform.anchoredPosition = new Vector2(0, 250);
+				saveGameButtonRectTransform.anchoredPosition = new Vector2(0, 250);
+				loadGameButtonRectTransform.anchoredPosition = new Vector2(0, 150);
+				databaseButtonRectTransform.anchoredPosition = new Vector2(0, 50);
 				settingsButtonRectTransform.anchoredPosition = new Vector2(0, -100);
 				exitGameButtonRectTransform.anchoredPosition = new Vector2(0, -200);
 				QuitGameButtonRectTransform.anchoredPosition = new Vector2(0, -200);

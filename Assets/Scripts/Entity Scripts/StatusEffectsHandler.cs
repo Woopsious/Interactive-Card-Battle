@@ -33,7 +33,7 @@ namespace Woopsious
 
 		public void DebugAddStatusEffects()
 		{
-			AddStatusEffects(SpawnManager.instance.statusEffectsDataTypes);
+			AddStatusEffects(GameManager.instance.statusEffectsDataTypes);
 		}
 
 		//adding/removing effects

@@ -59,7 +59,7 @@ namespace Woopsious
 		void SpawnNewPlayerCard()
 		{
 			CardUi card = SpawnManager.SpawnCard();
-			card.SetupCard(TurnOrderManager.Player(), SpawnManager.GetRandomCard(TurnOrderManager.Player().EntityData.cards), true);
+			card.SetupInGameCard(TurnOrderManager.Player(), SpawnManager.GetRandomCard(TurnOrderManager.Player().EntityData.cards), true);
 			AddCardToSlot(card);
 		}
 
@@ -115,7 +115,7 @@ namespace Woopsious
 		void UpdateCardsOnPlayerStatChanges()
 		{
 			if (CardInSlot == null) return;
-			CardInSlot.UpdateCard(TurnOrderManager.Player(), true);
+			CardInSlot.UpdateInGameCard(TurnOrderManager.Player(), true);
 		}
 
 		//card replacing
@@ -123,7 +123,7 @@ namespace Woopsious
 		{
 			if (CardInSlot != cardToReplace) return;
 
-			CardInSlot.SetupCard(TurnOrderManager.Player(), SpawnManager.GetRandomCard(TurnOrderManager.Player().EntityData.cards), true);
+			CardInSlot.SetupInGameCard(TurnOrderManager.Player(), SpawnManager.GetRandomCard(TurnOrderManager.Player().EntityData.cards), true);
 			AddCardToSlot(CardInSlot);
 		}
 

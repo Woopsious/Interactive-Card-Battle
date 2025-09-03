@@ -45,6 +45,15 @@ namespace Woopsious
 		public Scene loadedMainScene;
 		public Scene loadedGameScene;
 
+		[Header("Player Scriptable Objects")]
+		public List<EntityData> playerClassDataTypes = new();
+
+		[Header("Entity Scriptable Objects")]
+		public List<EntityData> entityDataTypes = new();
+
+		[Header("Status Effects Scriptable Objects")]
+		public List<StatusEffectsData> statusEffectsDataTypes = new();
+
 		//game events
 		public static event Action<MapNode> OnStartCardCombatEvent;
 		public static event Action OnStartCardCombatUiEvent;

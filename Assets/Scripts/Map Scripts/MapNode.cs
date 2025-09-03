@@ -60,7 +60,7 @@ namespace Woopsious
 
 		void Awake()
 		{
-			startEncounterButton.onClick.AddListener(delegate { BeginEncounter(); });
+			startEncounterButton.onClick.AddListener(() => BeginEncounter());
 		}
 
 		public void Initilize(int columnIndex, MapNodeData mapNodeData, bool startingNode, bool bossFightNode)
@@ -172,7 +172,7 @@ namespace Woopsious
 		{
 			cheapistEnemyCost = 100000;
 
-			foreach (EntityData entity in SpawnManager.instance.entityDataTypes)
+			foreach (EntityData entity in GameManager.instance.entityDataTypes)
 			{
 				//toggle flag if land types match
 				if ((landTypes & entity.foundInLandTypes) != LandTypes.none  || (landModifiers & entity.foundWithLandModifiers) != LandModifiers.none)
@@ -392,7 +392,7 @@ namespace Woopsious
 		{
 			string encounterEnemies = "";
 
-			foreach (EntityData entity in SpawnManager.instance.entityDataTypes)
+			foreach (EntityData entity in GameManager.instance.entityDataTypes)
 			{
 				//check if any LandType/LandModifier flags match
 				if ((landTypes & entity.foundInLandTypes) != LandTypes.none || (landModifiers & entity.foundWithLandModifiers) != LandModifiers.none)
