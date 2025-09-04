@@ -53,6 +53,28 @@ namespace Woopsious
 			cardCountForCardDeckUi.text = $"{cardDeckCount}x";
 			cardCountForCardDeckUi.gameObject.SetActive(true);
 		}
+		public void SetupUiCard(AttackData attackData)
+		{
+			if (attackData == null)
+			{
+				Debug.LogError("Attack data null");
+				return;
+			}
+
+			GetComponent<BoxCollider2D>().enabled = false;
+			AttackData = attackData;
+			Offensive = attackData.offensive;
+
+			string cardName = attackData.attackName;
+			gameObject.name = cardName;
+			cardNametext.text = cardName;
+
+			DamageData = new(null, attackData.DamageData);
+
+			cardDescriptiontext.text = CreateDescription();
+			cardCountForCardDeckUi.gameObject.SetActive(false);
+			replaceCardButton.gameObject.SetActive(false);
+		}
 
 		public void SetupInGameCard(Entity cardOwner, AttackData attackData, bool playerCard)
 		{

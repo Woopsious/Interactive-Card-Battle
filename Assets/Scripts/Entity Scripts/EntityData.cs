@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static Woopsious.EntityData;
 using static Woopsious.MapNodeData;
 
 namespace Woopsious
@@ -62,7 +63,64 @@ namespace Woopsious
 		[Header("Entity Audio")]
 		public AudioClip hitSfx;
 
-		//set info for every class on start
+		//set info for enemy entities
+		public string CreateEntityInfo()
+		{
+			string entityInfo = "";
+
+			entityInfo += entityName + "\n\n";
+
+			entityInfo += $"Health: {maxHealth}\nBase Block: {baseBlock}\n\n";
+
+			entityInfo += CreateFoundLandTypesAndModifiersInfo();
+
+			entityInfo += $"\n\nSpawn Chance: {entitySpawnChance}";
+
+			return entityInfo;
+		}
+		string CreateFoundLandTypesAndModifiersInfo()
+		{
+			string entityInfo = "";
+			entityInfo += $"Found in following land types:\n";
+
+			if (foundInLandTypes == LandTypes.none)
+				entityInfo += "None";
+			if (foundInLandTypes.HasFlag(LandTypes.grassland))
+				entityInfo += "<color=green>Grasslands</color>, ";
+			if (foundInLandTypes.HasFlag(LandTypes.hills))
+				entityInfo += "<color=#7C9A61>Hills</color>, "; //Muted Green
+			if (foundInLandTypes.HasFlag(LandTypes.forest))
+				entityInfo += "<color=#006400>Forest</color>, "; //Dark Green
+			if (foundInLandTypes.HasFlag(LandTypes.mountains))
+				entityInfo += "<color=#A0A0A0>Mountains</color>, "; //Dark Slate
+			if (foundInLandTypes.HasFlag(LandTypes.desert))
+				entityInfo += "<color=#DCC38C>Desert</color>, "; //Golden Sand
+			if (foundInLandTypes.HasFlag(LandTypes.tundra))
+				entityInfo += "<color=#CDE2EA>Tundra</color>, "; //Icy Blue
+
+			entityInfo = RemoveLastComma(entityInfo);
+
+			entityInfo += "\nFound with following land modifiers:\n";
+
+			if (foundWithLandModifiers == LandModifiers.none)
+				entityInfo += "None";
+			if (foundWithLandModifiers.HasFlag(LandModifiers.ruins))
+				entityInfo += "Ruins, ";
+			if (foundWithLandModifiers.HasFlag(LandModifiers.town))
+				entityInfo += "Town, ";
+			if (foundWithLandModifiers.HasFlag(LandModifiers.cursed))
+				entityInfo += "Cursed, ";
+			if (foundWithLandModifiers.HasFlag(LandModifiers.volcanic))
+				entityInfo += "Volcanic, ";
+			if (foundWithLandModifiers.HasFlag(LandModifiers.caves))
+				entityInfo += "Caves, ";
+
+			entityInfo = RemoveLastComma(entityInfo);
+
+			return entityInfo;
+		}
+
+		//set info for player classes
 		public string CreatePlayerClassInfo()
 		{
 			string classInfo = "";
@@ -161,6 +219,16 @@ namespace Woopsious
 				Debug.LogError("failed to match enemy type");
 				return 1f;
 			}
+		}
+
+		string RemoveLastComma(string input)
+		{
+			int lastCommaIndex = input.LastIndexOf(',');
+
+			if (lastCommaIndex >= 0)
+				return input.Remove(lastCommaIndex, 1);
+
+			return input;
 		}
 	}
 
