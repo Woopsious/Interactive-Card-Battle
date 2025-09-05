@@ -26,7 +26,7 @@ namespace Woopsious
 		public GameObject playerClassPanel;
 
 		public TMP_Text playerInfoText;
-		private List<CardUi> startingDeckCards = new();
+		List<CardUi> startingDeckCards = new();
 
 		[Header("Entity Panel")]
 		public GameObject entityPanel;
@@ -52,7 +52,9 @@ namespace Woopsious
 		List<CardUi> enemyMoveCards = new();
 
 		[Header("Land Types Panel")]
-		public GameObject landTypesPanel;
+		public GameObject mapNodeLandTypesPanel;
+
+		public TMP_Text mapNodeLandTypesInfoText;
 
 		void OnEnable()
 		{
@@ -80,18 +82,17 @@ namespace Woopsious
 		{
 			viewPlayerClassButton.onClick.AddListener(() => ShowPlayerClassesUi());
 			viewEntitiesButton.onClick.AddListener(() => ShowEntitiesUi());
-			viewLandTypesButton.onClick.AddListener(() => ShowLandTypesUi());
+			viewLandTypesButton.onClick.AddListener(() => ShowMapNodeTypesUi());
 		}
 
 		void Start()
 		{
 			SetupPlayerClassesUiPanel();
 			SetupEntityUiPanel();
+			SetupMapNodeTypesUiPanel();
 		}
 		void SetupPlayerClassesUiPanel()
 		{
-			playerInfoText.text = "Select Player Class Button Above";
-
 			int i = 0;
 
 			foreach (EntityData playerClass in GameManager.instance.playerClassDataTypes)
@@ -105,7 +106,7 @@ namespace Woopsious
 				button.name = playerClass.entityName + "InfoButton";
 
 				RectTransform rectTransform = button.GetComponent<RectTransform>();
-				rectTransform.anchoredPosition = new Vector2((200 * i) + 10, -10);
+				rectTransform.anchoredPosition = new Vector2(10, (-75 * i) - 25);
 				i++;
 			}
 		}
@@ -148,6 +149,25 @@ namespace Woopsious
 				}
 			}
 		}
+		void SetupMapNodeTypesUiPanel()
+		{
+			int i = 0;
+
+			foreach (MapNodeData mapNodeData in GameManager.instance.mapNodeDataTypes)
+			{
+				Button button = Instantiate(buttonPrefab).GetComponent<Button>();
+				button.transform.SetParent(mapNodeLandTypesPanel.transform);
+				button.onClick.AddListener(() => ShowMapNodeData(mapNodeData));
+
+				TMP_Text buttonText = button.GetComponentInChildren<TMP_Text>();
+				buttonText.text = mapNodeData.nodeName + " Info";
+				button.name = mapNodeData.nodeName + "InfoButton";
+
+				RectTransform rectTransform = button.GetComponent<RectTransform>();
+				rectTransform.anchoredPosition = new Vector2(10, (-75 * i) - 25);
+				i++;
+			}
+		}
 
 		//main database panel
 		void ShowDatabaseUi()
@@ -155,13 +175,12 @@ namespace Woopsious
 			MainMenuUi.Instance.backButton.gameObject.transform.SetParent(databasePanel.transform);
 			databasePanel.SetActive(true);
 		}
-
 		void HideDatabaseUi()
 		{
 			databasePanel.SetActive(false);
 			playerClassPanel.SetActive(false);
 			entityPanel.SetActive(false);
-			landTypesPanel.SetActive(false);
+			mapNodeLandTypesPanel.SetActive(false);
 		
 			HidePlayerClassesUi();
 			HideEntitiesUi();
@@ -172,12 +191,12 @@ namespace Woopsious
 		{
 			playerClassPanel.SetActive(true);
 			HideEntitiesUi();
-			HideLandTypesUi();
+			HideMapNodeTypesUi();
 		}
 		public void HidePlayerClassesUi()
 		{
 			playerClassPanel.SetActive(false);
-			playerInfoText.text = "Select Player Class Button Above";
+			playerInfoText.text = "Select button to view player class info";
 			ClearUpStartingCardsInfo();
 		}
 
@@ -249,12 +268,12 @@ namespace Woopsious
 		{
 			HidePlayerClassesUi();
 			entityPanel.SetActive(true);
-			HideLandTypesUi();
+			HideMapNodeTypesUi();
 		}
 		public void HideEntitiesUi()
 		{
 			entityPanel.SetActive(false);
-			enemyInfoText.text = "Select entity to view info";
+			enemyInfoText.text = "Select button to view enemy type info";
 			ClearUpEntityMoveCardsInfo();
 		}
 
@@ -382,16 +401,22 @@ namespace Woopsious
 			enemyMoveCards.Clear();
 		}
 
-		//land types database
-		public void ShowLandTypesUi()
+		//Map Node types database
+		public void ShowMapNodeTypesUi()
 		{
 			HidePlayerClassesUi();
 			HideEntitiesUi();
-			landTypesPanel.SetActive(true);
+			mapNodeLandTypesPanel.SetActive(true);
 		}
-		public void HideLandTypesUi()
+		public void HideMapNodeTypesUi()
 		{
-			landTypesPanel.SetActive(false);
+			mapNodeLandTypesPanel.SetActive(false);
+			mapNodeLandTypesInfoText.text = "Select button to view land type info";
+		}
+
+		void ShowMapNodeData(MapNodeData mapNodeData)
+		{
+			mapNodeLandTypesInfoText.text = mapNodeData.CreateMapNodeLandTypeInfo();
 		}
 	}
 }

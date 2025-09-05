@@ -54,6 +54,9 @@ namespace Woopsious
 		[Header("Status Effects Scriptable Objects")]
 		public List<StatusEffectsData> statusEffectsDataTypes = new();
 
+		[Header("Map Node Scriptable Objects")]
+		public List<MapNodeData> mapNodeDataTypes = new();
+
 		//game events
 		public static event Action<MapNode> OnStartCardCombatEvent;
 		public static event Action OnStartCardCombatUiEvent;

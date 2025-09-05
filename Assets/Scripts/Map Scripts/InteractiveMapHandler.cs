@@ -21,8 +21,6 @@ namespace Woopsious
 		private float heightOfNodes;
 		private float widthOfNodes;
 
-		[Header("Map Node Scriptable Objects")]
-		public List<MapNodeData> mapNodeDataTypes = new();
 		private int totalMapNodeSpawnChance;
 
 		//map size
@@ -47,7 +45,7 @@ namespace Woopsious
 			heightOfNodes = MapNodePrefab.GetComponent<RectTransform>().sizeDelta.y;
 			widthOfNodes = MapNodePrefab.GetComponent<RectTransform>().sizeDelta.x;
 
-			foreach (MapNodeData node in mapNodeDataTypes)
+			foreach (MapNodeData node in GameManager.instance.mapNodeDataTypes)
 				totalMapNodeSpawnChance += (int)node.nodeSpawnChance;
 		}
 
@@ -123,7 +121,7 @@ namespace Woopsious
 			float roll = (float)(systemRandom.NextDouble() * totalMapNodeSpawnChance);
 			float cumulativeChance = 0;
 
-			foreach (MapNodeData mapNodeData in mapNodeDataTypes)
+			foreach (MapNodeData mapNodeData in GameManager.instance.mapNodeDataTypes)
 			{
 				cumulativeChance += mapNodeData.nodeSpawnChance;
 
@@ -132,7 +130,7 @@ namespace Woopsious
 			}
 
 			Debug.LogError("Failed to get weighted map node to spawn, spawning default");
-			return mapNodeDataTypes[0];
+			return GameManager.instance.mapNodeDataTypes[0];
 		}
 
 		//debug
