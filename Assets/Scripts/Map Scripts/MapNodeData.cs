@@ -105,33 +105,7 @@ namespace Woopsious
 		}
 		public string CreateMapNodeLandTypeInfo()
 		{
-			string landTypeInfo = "";
-			switch (landTypes)
-			{
-				case LandTypes.grassland:
-				landTypeInfo += "Grasslands";
-				break;
-
-				case LandTypes.hills:
-				landTypeInfo += "Hills";
-				break;
-
-				case LandTypes.forest:
-				landTypeInfo += "Forest";
-				break;
-
-				case LandTypes.mountains:
-				landTypeInfo += "Mountains";
-				break;
-
-				case LandTypes.desert:
-				landTypeInfo += "Desert";
-				break;
-
-				case LandTypes.tundra:
-				landTypeInfo += "Tundra";
-				break;
-			}
+			string landTypeInfo = RichTextManager.GetLandTypesTextColour(landTypes);
 
 			landTypeInfo += $"\n\nChance of spawning: {nodeSpawnChance}%";
 			landTypeInfo += $"\nChance of elite fight: {chanceOfEliteFight}%";
@@ -149,16 +123,6 @@ namespace Woopsious
 				landTypeInfo += $"\nChance of Caves: {chanceOfCaves}%";
 
 			return landTypeInfo;
-		}
-
-		string RemoveLastComma(string input)
-		{
-			int lastCommaIndex = input.LastIndexOf(',');
-
-			if (lastCommaIndex >= 0)
-				return input.Remove(lastCommaIndex, 1);
-
-			return input;
 		}
 	}
 }

@@ -39,13 +39,13 @@ namespace Woopsious
 			await SpawnPlayer();
 
 			float spacing = (Screen.width - 
-				GameManager.instance.entityDataTypes.Count * instance.widthOfEntities) / (GameManager.instance.entityDataTypes.Count + 1);
+				GameManager.instance.enemyDataTypes.Count * instance.widthOfEntities) / (GameManager.instance.enemyDataTypes.Count + 1);
 
-			for (int i = 0; i < GameManager.instance.entityDataTypes.Count; i++)
+			for (int i = 0; i < GameManager.instance.enemyDataTypes.Count; i++)
 			{
 				Entity spawnedEntity = Instantiate(instance.EntityPrefab, CardCombatUi.instance.spawnedEntitiesTransform).GetComponent<Entity>();
 
-				spawnedEntity.InitilizeEntity(GameManager.instance.entityDataTypes[i]);
+				spawnedEntity.InitilizeEntity(GameManager.instance.enemyDataTypes[i]);
 				instance.SetEnemyPosition(spawnedEntity.GetComponent<RectTransform>(), spacing, i + 1);
 				OnEnemySpawned?.Invoke(spawnedEntity);
 
@@ -104,7 +104,7 @@ namespace Woopsious
 			}
 
 			Debug.LogError("Failed to get weighted enemy to spawn, spawning default");
-			return GameManager.instance.entityDataTypes[0];
+			return GameManager.instance.enemyDataTypes[0];
 		}
 		void SetEnemyPositions(List<Entity> entities)
 		{

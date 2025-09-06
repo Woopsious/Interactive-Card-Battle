@@ -5,6 +5,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static Woopsious.EntityData;
 
 namespace Woopsious
 {
@@ -48,8 +49,15 @@ namespace Woopsious
 		[Header("Player Scriptable Objects")]
 		public List<EntityData> playerClassDataTypes = new();
 
-		[Header("Entity Scriptable Objects")]
-		public List<EntityData> entityDataTypes = new();
+		[Header("Enemy Scriptable Objects")]
+		public List<EntityData> enemyDataTypes = new();
+
+		public List<EntityData> AbberationsEnemyData { get; private set; } = new();
+		public List<EntityData> BeastsEnemyData { get; private set; } = new();
+		public List<EntityData> ConstructsEnemyData { get; private set; } = new();
+		public List<EntityData> HumanoidsEnemyData { get; private set; } = new();
+		public List<EntityData> SlimesEnemyData { get; private set; } = new();
+		public List<EntityData> UndeadEnemyData { get; private set; } = new();
 
 		[Header("Status Effects Scriptable Objects")]
 		public List<StatusEffectsData> statusEffectsDataTypes = new();
@@ -67,6 +75,7 @@ namespace Woopsious
 		{
 			instance = this;
 			loadedMainScene = SceneManager.GetActiveScene();
+			SplitEnemyDataIntoTypes();
 		}
 		private void Start()
 		{
@@ -84,6 +93,27 @@ namespace Woopsious
 			SceneManager.sceneLoaded -= OnLoadSceneFinish;
 			SceneManager.sceneUnloaded -= OnUnloadSceneFinish;
 			Entity.OnEntityDeath -= EndCardCombat;
+		}
+
+		void SplitEnemyDataIntoTypes()
+		{
+			foreach (EntityData entityData in instance.enemyDataTypes)
+			{
+				switch (entityData.enemyType)
+				{
+					case EnemyTypes.Abberration: AbberationsEnemyData.Add(entityData); break;
+
+					case EnemyTypes.beast: BeastsEnemyData.Add(entityData); break;
+
+					case EnemyTypes.construct: ConstructsEnemyData.Add(entityData); break;
+
+					case EnemyTypes.humanoid: HumanoidsEnemyData.Add(entityData); break;
+
+					case EnemyTypes.slime: SlimesEnemyData.Add(entityData); break;
+
+					case EnemyTypes.undead: UndeadEnemyData.Add(entityData); break;
+				}
+			}
 		}
 
 		//start/end card combat

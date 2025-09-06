@@ -163,7 +163,7 @@ namespace Woopsious
 				foreach (StatusEffectsData statusEffect in DamageData.statusEffectsForTarget)
 					description += "<link=\"Test\"><color=\"blue\">" + statusEffect.effectName + "</color></link>, ";
 
-				description = RemoveLastComma(description);
+				description = RichTextManager.RemoveLastComma(description);
 				description += "to enemy";
 			}
 
@@ -178,21 +178,11 @@ namespace Woopsious
 				foreach (StatusEffectsData statusEffect in DamageData.statusEffectsForSelf)
 					description += "<link=\"Test\"><color=\"blue\">" + statusEffect.effectName + "</color></link>, ";
 
-				description = RemoveLastComma(description);
+				description = RichTextManager.RemoveLastComma(description);
 				description += "to self";
 			}
 
 			return description;
-		}
-
-		string RemoveLastComma(string input)
-		{
-			int lastCommaIndex = input.LastIndexOf(',');
-
-			if (lastCommaIndex >= 0)
-				return input.Remove(lastCommaIndex, 1);
-
-			return input;
 		}
 
 		//button call

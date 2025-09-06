@@ -18,7 +18,7 @@ namespace Woopsious
 		public TMP_Text encounterEnemiesText;
 		public Button startEncounterButton;
 
-		public Image backgroundImage;
+		Image backgroundImage;
 		public TMP_Text debugDataText;
 
 		[Header("Runtime data")]
@@ -60,6 +60,7 @@ namespace Woopsious
 
 		void Awake()
 		{
+			backgroundImage = GetComponent<Image>();
 			startEncounterButton.onClick.AddListener(() => BeginEncounter());
 		}
 
@@ -172,7 +173,7 @@ namespace Woopsious
 		{
 			cheapistEnemyCost = 100000;
 
-			foreach (EntityData entity in GameManager.instance.entityDataTypes)
+			foreach (EntityData entity in GameManager.instance.enemyDataTypes)
 			{
 				//toggle flag if land types match
 				if ((landTypes & entity.foundInLandTypes) != LandTypes.none  || (landModifiers & entity.foundWithLandModifiers) != LandModifiers.none)
@@ -305,68 +306,16 @@ namespace Woopsious
 		//update ui
 		string UpdateEncounterTitleUi()
 		{
-			string encounterTitle = "";
-
-			switch (nodeEncounterType)
-			{
-				case NodeEncounterType.basicFight:
-				encounterTitle = "Basic Fight";
-				break;
-				case NodeEncounterType.eliteFight:
-				encounterTitle = "<color=#800080>Elite Fight</color>"; //Eldritch Purple
-				break;
-				case NodeEncounterType.bossFight:
-				encounterTitle = "<color=#C81919>Boss Fight</color>"; //Red
-				break;
-				case NodeEncounterType.eliteBossFight:
-				encounterTitle = "<color=#800080>Elite Boss Fight</color>"; //Eldritch Purple
-				break;
-				case NodeEncounterType.freeCardUpgrade:
-				encounterTitle = "<color=#00FFFF>Free Card Upgrade</color>"; //Cyan
-				break;
-			}
-
-			return encounterTitle;
+			return RichTextManager.GetEncounterTypeTextColour(nodeEncounterType);
 		}
 		string UpdateEncounterLandTypeUi()
 		{
-			string encounterLandType = "";
-
-			if (landTypes.HasFlag(LandTypes.grassland))
-				encounterLandType += "<color=green>Grasslands</color>";
-			else if (landTypes.HasFlag(LandTypes.hills))
-				encounterLandType += "<color=#7C9A61>Hills</color>"; //Muted Green
-			else if (landTypes.HasFlag(LandTypes.forest))
-				encounterLandType += "<color=#006400>Forest</color>"; //Dark Green
-			else if (landTypes.HasFlag(LandTypes.mountains))
-				encounterLandType += "<color=#5A5E5B>Mountains</color>"; //Dark Slate
-			else if (landTypes.HasFlag(LandTypes.desert))
-				encounterLandType += "<color=#DCC38C>Desert</color>"; //Golden Sand
-			else if (landTypes.HasFlag(LandTypes.tundra))
-				encounterLandType += "<color=#CDE2EA>Tundra</color>"; //Icy Blue
-
-			return encounterLandType;
+			return RichTextManager.GetLandTypesTextColour(landTypes);
 		}
 		string UpdateEncounterModifiersUi()
 		{
 			string encounterModifiers = "Modifiers: \n";
-
-			if (landModifiers == LandModifiers.none)
-				return encounterModifiers += "None";
-
-			if (landModifiers.HasFlag(LandModifiers.ruins))
-				encounterModifiers += "<color=#00FFFF>Ruins, </color>"; //Cyan
-			if (landModifiers.HasFlag(LandModifiers.town))
-				encounterModifiers += "<color=#00FFFF>Town, </color>"; //Cyan
-			if (landModifiers.HasFlag(LandModifiers.cursed))
-				encounterModifiers += "<color=#00FFFF>Cursed, </color>"; //Cyan
-			if (landModifiers.HasFlag(LandModifiers.volcanic))
-				encounterModifiers += "<color=#00FFFF>Volcanic, </color>"; //Cyan
-			if (landModifiers.HasFlag(LandModifiers.caves))
-				encounterModifiers += "<color=#00FFFF>Caves, </color>"; //Cyan
-
-			encounterModifiers = RemoveLastComma(encounterModifiers);
-
+			encounterModifiers += RichTextManager.GetLandModifiersTextColour(landModifiers);
 			return encounterModifiers;
 		}
 		string UpdateEncounterEnemiesUi()
@@ -384,15 +333,13 @@ namespace Woopsious
 			else
 				encounterEnemies += DisplayEncouterEnemyTypes();
 
-			encounterEnemies = RemoveLastComma(encounterEnemies);
-
 			return encounterEnemies;
 		}
 		string DisplayEncouterEnemiesIndividualy()
 		{
 			string encounterEnemies = "";
 
-			foreach (EntityData entity in GameManager.instance.entityDataTypes)
+			foreach (EntityData entity in GameManager.instance.enemyDataTypes)
 			{
 				//check if any LandType/LandModifier flags match
 				if ((landTypes & entity.foundInLandTypes) != LandTypes.none || (landModifiers & entity.foundWithLandModifiers) != LandModifiers.none)
@@ -420,42 +367,17 @@ namespace Woopsious
 					}
 				}
 			}
-
+			encounterEnemies = RichTextManager.RemoveLastComma(encounterEnemies);
 			return encounterEnemies;
 		}
 		string DisplayEncouterEnemyTypes()
 		{
-			string encounterEnemies = "";
-
-			if (enemyTypes.HasFlag(EnemyTypes.slime))
-				encounterEnemies += "<color=#90EE90>Slimes</color>" + ", "; //light green
-			if (enemyTypes.HasFlag(EnemyTypes.beast))
-				encounterEnemies += "<color=#8B4513>Beasts</color>" + ", "; //Earthy Brown
-			if (enemyTypes.HasFlag(EnemyTypes.humanoid))
-				encounterEnemies += "Humanoids" + ", "; //
-			if (enemyTypes.HasFlag(EnemyTypes.construct))
-				encounterEnemies += "<color=#2a3439>Constructs</color>" + ", "; //Gun Metal
-			if (enemyTypes.HasFlag(EnemyTypes.undead))
-				encounterEnemies += "<color=#2F4F4F>Undead</color>" + ", "; //Bloodless Gray
-			if (enemyTypes.HasFlag(EnemyTypes.Abberration))
-				encounterEnemies += "<color=#800080>Abberrations</color>" + ", "; //Eldritch Purple
-
-			return encounterEnemies;
+			return RichTextManager.GetEnemyTypesTextColour(enemyTypes);
 		}
 		string DebugDataTextToUi()
 		{
 			string debugData = "Encounter Difficulty: " + encounterDifficulty + "\nEncounterBudget: " + entityBudget;
 			return debugData;
-		}
-
-		string RemoveLastComma(string input)
-		{
-			int lastCommaIndex = input.LastIndexOf(',');
-
-			if (lastCommaIndex >= 0)
-				return input.Remove(lastCommaIndex, 1);
-
-			return input;
 		}
 	}
 }
