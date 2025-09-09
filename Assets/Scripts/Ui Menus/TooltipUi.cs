@@ -7,8 +7,8 @@ namespace Woopsious
 {
 	public class TooltipUi : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, IPointerMoveHandler
 	{
-		public static Action<string, Vector2> OnTooltipTextLinkClicked;
-		public static Action<string, Vector2> OnTooltipStatusEffectIconClicked;
+		public static Action<TooltipUi, string, Vector2> OnTooltipTextLinkClicked;
+		public static Action<TooltipUi, string, Vector2> OnTooltipStatusEffectIconClicked;
 
 		public static Action OnHideTooltip;
 
@@ -68,7 +68,7 @@ namespace Woopsious
 			if (linkTaggedText != -1)
 			{
 				TMP_LinkInfo linkInfo = tmpTextBox.textInfo.linkInfo[linkTaggedText];
-				OnTooltipTextLinkClicked?.Invoke(GetStatusEffectDescriptionToolTip(linkInfo.GetLinkText()), eventData.position);
+				OnTooltipTextLinkClicked?.Invoke(this, GetStatusEffectDescriptionToolTip(linkInfo.GetLinkText()), eventData.position);
 			}
 			else
 			{
@@ -87,7 +87,7 @@ namespace Woopsious
 
 		void HandleStatusEffectIconTooltips(PointerEventData eventData)
 		{
-			OnTooltipStatusEffectIconClicked?.Invoke(statusEffect.CreateInGameDescription(), eventData.position);
+			OnTooltipStatusEffectIconClicked?.Invoke(this, statusEffect.CreateInGameDescription(), eventData.position);
 		}
 	}
 }

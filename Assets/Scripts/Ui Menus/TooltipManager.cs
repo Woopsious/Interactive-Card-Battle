@@ -12,7 +12,7 @@ namespace Woopsious
 		public RectTransform tooltipWindow;
 		public TextMeshProUGUI tipText;
 		public Button closeTipButton;
-		private RectTransform closeTipButtonRect;
+		TooltipUi tooltipUiCurrentlyDisplayed;
 
 		public static Action<string, Vector2> OnMouseHover;
 		public static Action OnMouseLoseFocus;
@@ -20,7 +20,6 @@ namespace Woopsious
 		void Awake()
 		{
 			instance = this;
-			closeTipButtonRect = closeTipButton.GetComponent<RectTransform>();
 			closeTipButton.onClick.AddListener(() => HideTip());
 		}
 
@@ -37,9 +36,18 @@ namespace Woopsious
 			TooltipUi.OnHideTooltip -= HideTip;
 		}
 
-		void ShowTip(string tip, Vector2 mousePos)
+		void ShowTip(TooltipUi tooltipUi, string tip, Vector2 mousePos)
 		{
+			if (tooltipUi == tooltipUiCurrentlyDisplayed && tip == tipText.text) //hide tip if same ui element and text content
+			{
+				HideTip();
+				tooltipUiCurrentlyDisplayed = null;
+				return;
+			}
+
+			tooltipUiCurrentlyDisplayed = tooltipUi;
 			tipText.text = tip;
+
 			tooltipWindow.sizeDelta = new Vector2(tipText.preferredWidth > 300 ? 300 :
 				tipText.preferredWidth * 1.25f, tipText.preferredHeight * 1.25f);
 
