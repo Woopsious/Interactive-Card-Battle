@@ -15,6 +15,7 @@ MonoBehaviour:
   attackName: MultiShot
   attackDescription: Shoot multiple arrows in rapid succession
   offensive: 1
+  energyCost: 2
   DamageData:
     isMultiHitAttack: 1
     HitsDifferentTargets: 0

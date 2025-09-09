@@ -11,6 +11,8 @@ namespace Woopsious
 		[HideInInspector] public CardHandler cardHandler;
 
 		public TMP_Text cardNametext;
+		public GameObject energyBackground;
+		public TMP_Text cardCostText;
 		public TMP_Text cardDescriptiontext;
 		public TMP_Text cardCountForCardDeckUi;
 		public RectTransform replaceCardButton;
@@ -44,6 +46,7 @@ namespace Woopsious
 			string cardName = attackData.attackName;
 			gameObject.name = cardName;
 			cardNametext.text = cardName;
+			cardCostText.text = $"{attackData.energyCost}";
 
 			DamageData = new(null, attackData.DamageData);
 
@@ -68,6 +71,8 @@ namespace Woopsious
 			string cardName = attackData.attackName;
 			gameObject.name = cardName;
 			cardNametext.text = cardName;
+			energyBackground.SetActive(false);
+			cardCostText.text = $"{attackData.energyCost}";
 
 			DamageData = new(null, attackData.DamageData);
 
@@ -91,6 +96,10 @@ namespace Woopsious
 			string cardName = attackData.attackName;
 			gameObject.name = cardName;
 			cardNametext.text = cardName;
+			cardCostText.text = $"{attackData.energyCost}";
+
+			if (!playerCard)
+				energyBackground.SetActive(false);
 
 			DamageData = new(cardOwner, attackData.DamageData);
 			DamageData.DamageValue = (int)(DamageData.DamageValue + cardOwner.damageBonus.Value); //apply bonus damage

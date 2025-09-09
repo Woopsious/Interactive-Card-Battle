@@ -14,13 +14,12 @@ namespace Woopsious
 
 		Color _ColourDarkGreen = new(0, 0.3921569f, 0, 1);
 
-		public int cardsUsedThisTurn;
-		public int damageCardsUsedThisTurn;
-		public int nonDamageCardsUsedThisTurn;
+		[Header("Player Unique Stats")]
+		public int energy;
 		public int cardsReplacedThisTurn;
 
-		public static event Action<bool> HideOffensiveCards;
 		public static event Action HideReplaceCardsButton;
+		public static event Action<int> OnPlayerEnergyChanges;
 		public static event Action OnPlayerStatChanges;
 
 		protected override void Awake()
@@ -58,35 +57,23 @@ namespace Woopsious
 
 			if (entity != this) return;
 
-			cardsUsedThisTurn = 0;
-			damageCardsUsedThisTurn = 0;
-			nonDamageCardsUsedThisTurn = 0;
+			energy = EntityData.baseEnergy;
 			cardsReplacedThisTurn = 0;
+
+			UpdateEnergyUi();
 		}
 		public void UpdateCardsUsed(CardUi card)
 		{
 			if (!card.PlayerCard) return;
 
-			cardsUsedThisTurn++;
+			energy -= card.AttackData.energyCost;
+			UpdateEnergyUi();
+			OnPlayerEnergyChanges?.Invoke(energy);
 
-			if (card.Offensive)
-				damageCardsUsedThisTurn++;
-			else
-				nonDamageCardsUsedThisTurn++;
-
-			if (cardsUsedThisTurn == EntityData.maxCardsUsedPerTurn)
+			if (energy <= 0)
 			{
 				EndTurn();
 				return;
-			}
-
-			if (damageCardsUsedThisTurn == EntityData.maxDamageCardsUsedPerTurn)
-			{
-				HideOffensiveCards?.Invoke(true);
-			}
-			if (nonDamageCardsUsedThisTurn == EntityData.maxNonDamageCardsUsedPerTurn)
-			{
-				HideOffensiveCards?.Invoke(false);
 			}
 		}
 
@@ -181,6 +168,11 @@ namespace Woopsious
 				return true;
 			else
 				return false;
+		}
+
+		protected void UpdateEnergyUi()
+		{
+			energyText.text = $"{energy}";
 		}
 	}
 }

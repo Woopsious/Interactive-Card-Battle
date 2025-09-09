@@ -27,9 +27,7 @@ MonoBehaviour:
   chanceOfDoubleDamage: 0
   healOnKillPercentage: 0
   damageReflectedPercentage: 0
-  maxCardsUsedPerTurn: 3
-  maxDamageCardsUsedPerTurn: 2
-  maxNonDamageCardsUsedPerTurn: 2
+  baseEnergy: 3
   maxReplaceableCardsPerTurn: 2
   cards:
   - {fileID: 11400000, guid: 790d1ce2261adf54f8d1fbf5f14cd7b3, type: 2}

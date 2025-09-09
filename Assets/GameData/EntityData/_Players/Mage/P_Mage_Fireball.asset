@@ -15,6 +15,7 @@ MonoBehaviour:
   attackName: Fireball
   attackDescription: Cast a fireball
   offensive: 1
+  energyCost: 1
   DamageData:
     isMultiHitAttack: 1
     HitsDifferentTargets: 1

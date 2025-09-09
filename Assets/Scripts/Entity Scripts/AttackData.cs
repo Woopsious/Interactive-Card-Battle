@@ -14,7 +14,9 @@ namespace Woopsious
 		public string attackName;
 		public string attackDescription;
 
+		[Header("Other Data")]
 		public bool offensive;
+		public int energyCost;
 
 		[Header("Damage Data")]
 		public DamageData DamageData;

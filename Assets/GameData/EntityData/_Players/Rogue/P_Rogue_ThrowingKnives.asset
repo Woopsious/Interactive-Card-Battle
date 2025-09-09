@@ -15,6 +15,7 @@ MonoBehaviour:
   attackName: Throwing Knives
   attackDescription: Throw knives at multiple enemies
   offensive: 1
+  energyCost: 1
   DamageData:
     isMultiHitAttack: 1
     HitsDifferentTargets: 1

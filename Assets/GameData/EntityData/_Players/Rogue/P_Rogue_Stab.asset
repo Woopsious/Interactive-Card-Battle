@@ -15,6 +15,7 @@ MonoBehaviour:
   attackName: Stab
   attackDescription: Stab enemy with dagger
   offensive: 1
+  energyCost: 1
   DamageData:
     isMultiHitAttack: 0
     HitsDifferentTargets: 0

@@ -19,6 +19,7 @@ namespace Woopsious
 
 		//ui elements
 		public TMP_Text entityNameText;
+		public TMP_Text energyText;
 		public TMP_Text entityHealthText;
 		public TMP_Text entityblockText;
 		public GameObject turnIndicator;

@@ -15,6 +15,7 @@ MonoBehaviour:
   attackName: Sword Slash
   attackDescription: Slash enemy with sword
   offensive: 1
+  energyCost: 1
   DamageData:
     isMultiHitAttack: 0
     HitsDifferentTargets: 0

@@ -24,18 +24,18 @@ namespace Woopsious
 		private void OnEnable()
 		{
 			TurnOrderManager.OnNewTurnEvent += OnNewTurnStart;
-			PlayerEntity.HideOffensiveCards += HideMatchingCards;
 			PlayerEntity.HideReplaceCardsButton += HideReplaceCardsButton;
 			PlayerEntity.OnPlayerStatChanges += UpdateCardsOnPlayerStatChanges;
+			PlayerEntity.OnPlayerEnergyChanges += OnPlayerEnergyChanges;
 			CardHandler.OnPlayerCardUsed += OnPlayerCardUsed;
 			CardUi.OnCardReplace += ReplaceCardInDeck;
 		}
 		private void OnDestroy()
 		{
 			TurnOrderManager.OnNewTurnEvent -= OnNewTurnStart;
-			PlayerEntity.HideOffensiveCards -= HideMatchingCards;
 			PlayerEntity.HideReplaceCardsButton -= HideReplaceCardsButton;
 			PlayerEntity.OnPlayerStatChanges -= UpdateCardsOnPlayerStatChanges;
+			PlayerEntity.OnPlayerEnergyChanges -= OnPlayerEnergyChanges;
 			CardHandler.OnPlayerCardUsed -= OnPlayerCardUsed;
 			CardUi.OnCardReplace -= ReplaceCardInDeck;
 		}
@@ -80,7 +80,7 @@ namespace Woopsious
 			CardInSlot.transform.SetParent(gameObject.transform, false);
 			CardInSlot.transform.localPosition = Vector3.zero;
 
-			if (CardInSlot.Offensive && damageCardsHidden || !CardInSlot.Offensive && nonDamageCardsHidden)
+			if (CardInSlot.AttackData.energyCost > TurnOrderManager.Player().energy)
 				HideCardInSlot();
 			else
 				ShowCardInSlot();
@@ -92,18 +92,6 @@ namespace Woopsious
 		}
 
 		//events
-		void HideMatchingCards(bool hideDamageCards)
-		{
-			if (hideDamageCards)
-				damageCardsHidden = true;
-			else
-				nonDamageCardsHidden = true;
-
-			if (CardInSlot == null) return;
-
-			if (CardInSlot.Offensive && damageCardsHidden || !CardInSlot.Offensive && nonDamageCardsHidden)
-				HideCardInSlot();
-		}
 		void HideReplaceCardsButton()
 		{
 			hideReplaceCardsButton = true;
@@ -116,6 +104,12 @@ namespace Woopsious
 		{
 			if (CardInSlot == null) return;
 			CardInSlot.UpdateInGameCard(TurnOrderManager.Player(), true);
+		}
+		void OnPlayerEnergyChanges(int energy)
+		{
+			if (CardInSlot == null) return;
+			if (CardInSlot.AttackData.energyCost > energy)
+				HideCardInSlot();
 		}
 
 		//card replacing

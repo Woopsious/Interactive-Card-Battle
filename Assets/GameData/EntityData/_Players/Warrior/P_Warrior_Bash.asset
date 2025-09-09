@@ -15,6 +15,7 @@ MonoBehaviour:
   attackName: Shield Bash
   attackDescription: Bash enemy with shield
   offensive: 1
+  energyCost: 1
   DamageData:
     isMultiHitAttack: 0
     HitsDifferentTargets: 0

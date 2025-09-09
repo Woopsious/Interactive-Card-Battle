@@ -48,9 +48,7 @@ namespace Woopsious
 				else if (data.playerClass == EntityData.PlayerClass.Rogue)
 					EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.damageReflectedPercentage)));
 
-				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.maxCardsUsedPerTurn)));
-				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.maxDamageCardsUsedPerTurn)));
-				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.maxNonDamageCardsUsedPerTurn)));
+				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.baseEnergy)));
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.maxReplaceableCardsPerTurn)));
 
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.cards)), true);

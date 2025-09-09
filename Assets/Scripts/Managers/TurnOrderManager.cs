@@ -126,7 +126,7 @@ namespace Woopsious
 		}
 
 		//get instanced refs
-		public static Entity Player()
+		public static PlayerEntity Player()
 		{
 			return Instance.player;
 		}
