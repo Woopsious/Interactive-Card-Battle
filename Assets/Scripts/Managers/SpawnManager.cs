@@ -60,6 +60,7 @@ namespace Woopsious
 			EntityData playerClass = GameManager.PlayerClass;
 
 			player.InitilizeEntity(playerClass);
+			player.transform.SetAsFirstSibling();
 			OnPlayerSpawned?.Invoke(player);
 
 			return Task.CompletedTask;

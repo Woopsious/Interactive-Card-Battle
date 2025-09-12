@@ -14,7 +14,7 @@ namespace Woopsious
 		[SerializeField] public StatType statType;
 		public enum StatType
 		{
-			noType, damageRecieved, damageDealt, blockBonus, damageBonus
+			noType, damageRecieved, damageDealt, blockBonus, damageBonus, cardDrawAmount
 		}
 
 		public Stat(float baseValue, StatType statType)

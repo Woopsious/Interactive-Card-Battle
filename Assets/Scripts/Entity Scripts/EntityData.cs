@@ -49,9 +49,10 @@ namespace Woopsious
 		[Range(0f, 100f)]
 		public float damageReflectedPercentage; //Rogue
 
-		[Header("Player Stats")]
+		[Header("Player Only Stats")]
 		public int baseEnergy;
 		public int maxReplaceableCardsPerTurn;
+		public int initialCardDrawAmount;
 
 		[Header("Player Starting Deck")]
 		public List<AttackData> cards = new();

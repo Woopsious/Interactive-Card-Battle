@@ -9,6 +9,7 @@ namespace Woopsious
 	public class CardUi : MonoBehaviour
 	{
 		[HideInInspector] public CardHandler cardHandler;
+		public RectTransform CardRectTransform { get; private set; }
 
 		public TMP_Text cardNametext;
 		public GameObject energyBackground;
@@ -28,6 +29,7 @@ namespace Woopsious
 
 		void Awake()
 		{
+			CardRectTransform = GetComponent<RectTransform>();
 			cardHandler = GetComponent<CardHandler>();
 		}
 
@@ -51,7 +53,7 @@ namespace Woopsious
 			DamageData = new(null, attackData.DamageData);
 
 			cardDescriptiontext.text = CreateDescription();
-			replaceCardButton.gameObject.SetActive(false);
+			ToggleReplaceCardButton(false);
 
 			cardCountForCardDeckUi.text = $"{cardDeckCount}x";
 			cardCountForCardDeckUi.gameObject.SetActive(true);
@@ -78,7 +80,7 @@ namespace Woopsious
 
 			cardDescriptiontext.text = CreateDescription();
 			cardCountForCardDeckUi.gameObject.SetActive(false);
-			replaceCardButton.gameObject.SetActive(false);
+			ToggleReplaceCardButton(false);
 		}
 
 		public void SetupInGameCard(Entity cardOwner, AttackData attackData, bool playerCard)
@@ -107,7 +109,7 @@ namespace Woopsious
 
 			cardDescriptiontext.text = CreateDescription();
 			cardCountForCardDeckUi.gameObject.SetActive(false);
-			replaceCardButton.gameObject.SetActive(false);
+			ToggleReplaceCardButton(false);
 		}
 		public void UpdateInGameCard(Entity cardOwner, bool playerCard)
 		{
@@ -192,6 +194,14 @@ namespace Woopsious
 			}
 
 			return description;
+		}
+
+		public void ToggleReplaceCardButton(bool showButton)
+		{
+			if (showButton)
+				replaceCardButton.gameObject.SetActive(true);
+			else
+				replaceCardButton.gameObject.SetActive(false);
 		}
 
 		//button call

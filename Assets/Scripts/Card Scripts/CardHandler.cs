@@ -38,15 +38,15 @@ namespace Woopsious
 		{
 			if (other.GetComponent<Entity>() != null)
 				EntityTriggerEnter(other.GetComponent<Entity>());
-			else if (other.GetComponent<CardDeckUi>() != null)
-				CardDeckTriggerEnter();
+			else if (other.GetComponent<DrawnCardsUi>() != null)
+				DrawnCardsDeckTriggerEnter();
 		}
 		void OnTriggerExit2D(Collider2D other)
 		{
 			if (other.GetComponent<Entity>() != null)
 				EntityTriggerExit(other.GetComponent<Entity>());
-			else if (other.GetComponent<CardDeckUi>() != null)
-				CardDeckTriggerExit();
+			else if (other.GetComponent<DrawnCardsUi>() != null)
+				DrawnCardsDeckTriggerExit();
 		}
 
 		//trigger enter/exit funcs
@@ -65,11 +65,11 @@ namespace Woopsious
 				touchingEnemyRef = null;
 		}
 
-		void CardDeckTriggerEnter()
+		void DrawnCardsDeckTriggerEnter()
 		{
 			transform.localScale = new Vector2(1, 1);
 		}
-		void CardDeckTriggerExit()
+		void DrawnCardsDeckTriggerExit()
 		{
 			transform.localScale = new Vector2(0.5f, 0.5f);
 		}
@@ -104,8 +104,7 @@ namespace Woopsious
 			transform.SetParent(CardCombatUi.instance.DraggedCardsTransform);
 			transform.rotation = new Quaternion(0, 0, 0, 0);
 			mousePos = Input.mousePosition;
-
-			card.replaceCardButton.gameObject.SetActive(false);
+			card.ToggleReplaceCardButton(false);
 		}
 		void PlayerDeselectCard()
 		{

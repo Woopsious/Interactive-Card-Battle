@@ -29,6 +29,7 @@ MonoBehaviour:
   damageReflectedPercentage: 0
   baseEnergy: 3
   maxReplaceableCardsPerTurn: 2
+  initialCardDrawAmount: 5
   cards:
   - {fileID: 11400000, guid: 790d1ce2261adf54f8d1fbf5f14cd7b3, type: 2}
   - {fileID: 11400000, guid: 790d1ce2261adf54f8d1fbf5f14cd7b3, type: 2}

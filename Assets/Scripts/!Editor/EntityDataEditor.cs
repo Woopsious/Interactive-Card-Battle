@@ -35,8 +35,6 @@ namespace Woopsious
 			EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.maxHealth)));
 			EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.baseBlock)));
 
-			EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.hitSfx)));
-
 			if (data.isPlayer)
 			{
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.playerClass)));
@@ -50,6 +48,7 @@ namespace Woopsious
 
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.baseEnergy)));
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.maxReplaceableCardsPerTurn)));
+				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.initialCardDrawAmount)));
 
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.cards)), true);
 
@@ -79,6 +78,8 @@ namespace Woopsious
 
 				BuildAttackEditorUi();
 			}
+
+			EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.hitSfx)));
 
 			// Write back changed values
 			// This also handles all marking dirty, saving, undo/redo etc

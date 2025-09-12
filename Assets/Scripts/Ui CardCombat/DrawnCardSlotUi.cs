@@ -1,0 +1,215 @@
+using System;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using static Woopsious.DrawnCardsUi;
+
+namespace Woopsious
+{
+	public class DrawnCardSlotUi : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+	{
+		RectTransform slotRectTransform;
+		bool showReplaceCardsButton;
+
+		//slot move positions
+		RectTransformData showCardRectTransform;
+		RectTransformData hideCardRectTransform;
+		RectTransformData mouseHoverRectTransform;
+
+		public int cardSlotIndex;
+		public CardUi CardInSlot;
+
+		public static event Action<DrawnCardSlotUi> OnThisSlotMouseEnter;
+
+		void Awake()
+		{
+			slotRectTransform = GetComponent<RectTransform>();
+			cardSlotIndex = gameObject.transform.GetSiblingIndex() - 1; //-1 due to background element
+
+			TurnOrderManager.OnNewTurnEvent += OnNewTurnStart;
+			OnThisSlotMouseEnter += OnOtherCardSlotsMouseEnters;
+			PlayerEntity.HideReplaceCardsButton += HideReplaceCardsButton;
+			PlayerEntity.OnPlayerStatChanges += UpdateCardsOnPlayerStatChanges;
+			PlayerEntity.OnPlayerEnergyChanges += OnPlayerEnergyChanges;
+			CardHandler.OnPlayerCardUsed += OnPlayerCardUsed;
+			CardUi.OnCardReplace += ReplaceCardInDeck;
+		}
+		private void OnDestroy()
+		{
+			TurnOrderManager.OnNewTurnEvent -= OnNewTurnStart;
+			OnThisSlotMouseEnter -= OnOtherCardSlotsMouseEnters;
+			PlayerEntity.HideReplaceCardsButton -= HideReplaceCardsButton;
+			PlayerEntity.OnPlayerStatChanges -= UpdateCardsOnPlayerStatChanges;
+			PlayerEntity.OnPlayerEnergyChanges -= OnPlayerEnergyChanges;
+			CardHandler.OnPlayerCardUsed -= OnPlayerCardUsed;
+			CardUi.OnCardReplace -= ReplaceCardInDeck;
+		}
+
+		public void SetSlotRectTransforms(RectTransformData initialRectTransform)
+		{
+			showCardRectTransform = new RectTransformData
+			{
+				anchoredPosition = initialRectTransform.anchoredPosition,
+				rotation = initialRectTransform.rotation,
+			};
+			hideCardRectTransform = new RectTransformData
+			{
+				anchoredPosition = new(initialRectTransform.anchoredPosition.x, -150),
+				rotation = slotRectTransform.rotation = new(0, 0, 0, 0),
+			};
+			mouseHoverRectTransform = new RectTransformData
+			{
+				anchoredPosition = new(initialRectTransform.anchoredPosition.x, 25),
+				rotation = initialRectTransform.rotation,
+			};
+
+			slotRectTransform.anchoredPosition = showCardRectTransform.anchoredPosition;
+			slotRectTransform.rotation = showCardRectTransform.rotation;
+		}
+
+		//card spawning
+		void OnNewTurnStart(Entity entity)
+		{
+			if (entity.EntityData.isPlayer)
+			{
+				showReplaceCardsButton = true;
+
+				if (CardInSlot == null)
+					SpawnNewPlayerCard();
+				ShowCardInSlot();
+			}
+			else
+				HideCardInSlot();
+		}
+		void SpawnNewPlayerCard()
+		{
+			CardUi card = SpawnManager.SpawnCard();
+			card.SetupInGameCard(TurnOrderManager.Player(), SpawnManager.GetRandomCard(TurnOrderManager.Player().EntityData.cards), true);
+			AddCardToSlot(card);
+		}
+
+		//move card up on mouse 'hover'
+		public void OnPointerEnter(PointerEventData eventData)
+		{
+			if (!CardInSlot.selectable) return;
+			MoveCardUp();
+		}
+		void MoveCardUp()
+		{
+			OnThisSlotMouseEnter?.Invoke(this);
+			slotRectTransform.anchoredPosition = mouseHoverRectTransform.anchoredPosition;
+			slotRectTransform.rotation = mouseHoverRectTransform.rotation;
+			slotRectTransform.localScale = new Vector2(1.15f, 1.15f);
+			slotRectTransform.SetSiblingIndex(slotRectTransform.parent.childCount - 1); //set as last so ui not covered
+		}
+
+		public void OnPointerExit(PointerEventData eventData)
+		{
+			if (!CardInSlot.selectable) return;
+			MoveCardDown();
+		}
+		void MoveCardDown()
+		{
+			slotRectTransform.anchoredPosition = showCardRectTransform.anchoredPosition;
+			slotRectTransform.rotation = showCardRectTransform.rotation;
+			slotRectTransform.localScale = new Vector2(1, 1);
+			slotRectTransform.SetSiblingIndex(cardSlotIndex + 1); //reset to default
+		}
+
+		//card adding/removing + being used
+		void OnPlayerCardUsed(CardUi card, bool wasUsed)
+		{
+			if (CardInSlot != card) return;
+
+			if (wasUsed)
+				RemoveCardFromSlot(card);
+			else
+				AddCardToSlot(card);
+		}
+		void AddCardToSlot(CardUi newCard)
+		{
+			CardInSlot = newCard;
+			CardInSlot.gameObject.SetActive(true);
+			CardInSlot.transform.SetParent(gameObject.transform, false);
+			CardInSlot.CardRectTransform.anchoredPosition = new(0, 87.5f);
+
+			if (CardInSlot.AttackData.energyCost > TurnOrderManager.Player().energy)
+				HideCardInSlot();
+			else
+				ShowCardInSlot();
+		}
+		void RemoveCardFromSlot(CardUi card)
+		{
+			if (card == CardInSlot)
+				CardInSlot = null;
+		}
+
+		//events
+		void OnOtherCardSlotsMouseEnters(DrawnCardSlotUi cardSlotUi)
+		{
+			if (cardSlotUi == this) return;
+			MoveCardDown();
+		}
+		void HideReplaceCardsButton()
+		{
+			showReplaceCardsButton = false;
+
+			if (CardInSlot == null) return;
+
+			CardInSlot.ToggleReplaceCardButton(false);
+		}
+		void UpdateCardsOnPlayerStatChanges()
+		{
+			if (CardInSlot == null) return;
+			CardInSlot.UpdateInGameCard(TurnOrderManager.Player(), true);
+		}
+		void OnPlayerEnergyChanges(int energy)
+		{
+			if (CardInSlot == null) return;
+			if (CardInSlot.AttackData.energyCost > energy)
+				HideCardInSlot();
+		}
+
+		//card replacing
+		void ReplaceCardInDeck(CardUi cardToReplace)
+		{
+			if (CardInSlot != cardToReplace) return;
+
+			CardInSlot.SetupInGameCard(TurnOrderManager.Player(), SpawnManager.GetRandomCard(TurnOrderManager.Player().EntityData.cards), true);
+			AddCardToSlot(CardInSlot);
+		}
+
+		//show/hide cards
+		void ShowCardInSlot()
+		{
+			if (CardInSlot == null) return;
+
+			CardInSlot.selectable = true;
+			CardInSlot.ToggleReplaceCardButton(showReplaceCardsButton);
+
+			UpdateCardSlotPositions(true);
+		}
+		void HideCardInSlot()
+		{
+			if (CardInSlot == null) return;
+
+			CardInSlot.selectable = false;
+			CardInSlot.ToggleReplaceCardButton(showReplaceCardsButton);
+
+			UpdateCardSlotPositions(false);
+		}
+
+		void UpdateCardSlotPositions(bool showSlot)
+		{
+			if (showSlot)
+			{
+				slotRectTransform.anchoredPosition = showCardRectTransform.anchoredPosition;
+				slotRectTransform.localRotation = showCardRectTransform.rotation;
+			}
+			else
+			{
+				slotRectTransform.anchoredPosition = hideCardRectTransform.anchoredPosition;
+				slotRectTransform.localRotation = hideCardRectTransform.rotation;
+			}
+		}
+	}
+}

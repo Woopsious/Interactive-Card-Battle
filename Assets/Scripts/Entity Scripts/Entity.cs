@@ -124,7 +124,7 @@ namespace Woopsious
 			entityMoves.InitilizeMoveSet(this);
 			statusEffectsHandler.ClearStatusEffects();
 		}
-		void InitilizeStats()
+		protected virtual void InitilizeStats()
 		{
 			health = EntityData.maxHealth;
 			block = EntityData.baseBlock;

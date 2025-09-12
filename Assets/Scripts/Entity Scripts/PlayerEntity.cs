@@ -15,6 +15,7 @@ namespace Woopsious
 		Color _ColourDarkGreen = new(0, 0.3921569f, 0, 1);
 
 		[Header("Player Unique Stats")]
+		public Stat cardDrawAmount;
 		public int energy;
 		public int cardsReplacedThisTurn;
 
@@ -42,6 +43,13 @@ namespace Woopsious
 			CardHandler.OnCardCleanUp -= UpdateCardsUsed;
 			CardUi.OnCardReplace -= OnReplaceCard;
 			OnEntityDeath += RangerHealOnKill;
+		}
+
+		protected override void InitilizeStats()
+		{
+			base.InitilizeStats();
+
+			cardDrawAmount = new Stat(EntityData.initialCardDrawAmount, StatType.cardDrawAmount);
 		}
 
 		protected override void StartTurn(Entity entity)

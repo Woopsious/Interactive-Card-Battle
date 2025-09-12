@@ -5399,7 +5399,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8bfb230dbaec90644aa0b19c479cf573, type: 2}
   - {fileID: 11400000, guid: 92985e16dbe0dc54791524f987b3b631, type: 2}
   enemyDataTypes:
-  - {fileID: 11400000, guid: dc74f055f5c868f44a35aba13dcf462a, type: 2}
   - {fileID: 11400000, guid: 9e09821ebc6c14c4b987cff1d1b52324, type: 2}
   - {fileID: 11400000, guid: 9e9676400066cf14da68c72982e9635f, type: 2}
   - {fileID: 11400000, guid: d68800062e260af48abf701507ae9376, type: 2}
@@ -6056,14 +6055,6 @@ MonoBehaviour:
   classInfoPanel: {fileID: 1626866474}
   classInfoText: {fileID: 1437762040}
   startGameAsClassButton: {fileID: 1177194262}
-  startGameAsClassColourBlock:
-    m_NormalColor: {r: 0, g: 0, b: 0, a: 0}
-    m_HighlightedColor: {r: 0, g: 0, b: 0, a: 0}
-    m_PressedColor: {r: 0, g: 0, b: 0, a: 0}
-    m_SelectedColor: {r: 0, g: 0, b: 0, a: 0}
-    m_DisabledColor: {r: 0, g: 0, b: 0, a: 0}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0
 --- !u!114 &1517169634
 MonoBehaviour:
   m_ObjectHideFlags: 0
