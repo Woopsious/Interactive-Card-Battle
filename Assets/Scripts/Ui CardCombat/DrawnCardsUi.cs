@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 namespace Woopsious
@@ -9,6 +10,7 @@ namespace Woopsious
 	{
 		public static DrawnCardsUi instance;
 
+		BoxCollider2D boxCollider2D;
 		RectTransform drawnCardsTransform;
 		RectTransform drawnCardsBackgroundTransform;
 		Image imageHighlight;
@@ -29,6 +31,7 @@ namespace Woopsious
 		void Awake()
 		{
 			instance = this;
+			boxCollider2D = GetComponent<BoxCollider2D>();
 			drawnCardsTransform = GetComponent<RectTransform>();
 			drawnCardsBackgroundTransform = drawnCardsTransform.GetChild(0).GetComponentInChildren<RectTransform>();
 			imageHighlight = GetComponent<Image>();
@@ -71,48 +74,34 @@ namespace Woopsious
 			imageHighlight.color = _ColourGrey;
 			audioHandler.PlayAudio(cardAudioSfx, true);
 
-			if (activeCardSlots.Count == playerEntity.cardDrawAmount.Value) return;
-
-			SetupDynamicCardSlots((int)playerEntity.cardDrawAmount.Value);
+			if (activeCardSlots.Count == TurnOrderManager.Player().cardDrawAmount.Value) return;
+			SetupDynamicCardSlots((int)TurnOrderManager.Player().cardDrawAmount.Value);
 		}
 		void SetupDynamicCardSlots(int slotsToSetup)
 		{
 			activeCardSlots.Clear();
+			int drawnCardsWidth;
 
-			float spacingX = 150;
-			drawnCardsTransform.sizeDelta = new Vector2((spacingX * slotsToSetup) + 50, 125);
-			drawnCardsBackgroundTransform.sizeDelta = new Vector2((spacingX * slotsToSetup) + 40, 120);
+			if (slotsToSetup % 2 == 0) //if odd increase by 2 cards anyway
+				drawnCardsWidth = (150 * slotsToSetup) + 150;
+			else
+				drawnCardsWidth = (150 * (slotsToSetup + 1)) + 150;
+
+			boxCollider2D.size = new Vector2(drawnCardsWidth, 150);
+			drawnCardsTransform.sizeDelta = new Vector2(drawnCardsWidth, 125);
+			drawnCardsBackgroundTransform.sizeDelta = new Vector2(drawnCardsWidth - 10, 120);
 
 			for (int i = 0; i < cardSlots.Length; i++)
 			{
 				DrawnCardSlotUi cardSlotUi = cardSlots[i];
 				if (i < slotsToSetup)
 				{
-					RectTransformData data;
-
-					if (i == 0)
-						data = new RectTransformData(SetInitialSlotPosition(spacingX, i, -138), new Vector3(0, 0, 15));
-					else if (i == 1)
-						data = new RectTransformData(SetInitialSlotPosition(spacingX, i, -96), new Vector3(0, 0, 7.5f));
-					else if (i == slotsToSetup - 2)
-						data = new RectTransformData(SetInitialSlotPosition(spacingX, i, -75), new Vector3(0, 0, -7.5f));
-					else if (i == slotsToSetup - 1)
-						data = new RectTransformData(SetInitialSlotPosition(spacingX, i, -96), new Vector3(0, 0, -15));
-					else
-						data = new RectTransformData(SetInitialSlotPosition(spacingX, i, -75), new Vector3(0, 0, 0));
-
 					activeCardSlots.Add(cardSlotUi);
-					cardSlotUi.SetSlotRectTransforms(data);
 					cardSlotUi.gameObject.SetActive(true);
 				}
 				else
 					cardSlotUi.gameObject.SetActive(false);
 			}
-		}
-		//adjust map node positions
-		Vector2 SetInitialSlotPosition(float spacingX, int i, int posY)
-		{
-			return  new Vector2(spacingX * i, posY);
 		}
 		void HideCardDeck()
 		{

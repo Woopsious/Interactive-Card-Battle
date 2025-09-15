@@ -32,6 +32,8 @@ namespace Woopsious
 			PlayerEntity.OnPlayerEnergyChanges += OnPlayerEnergyChanges;
 			CardHandler.OnPlayerCardUsed += OnPlayerCardUsed;
 			CardUi.OnCardReplace += ReplaceCardInDeck;
+
+			SetSlotRectTransforms();
 		}
 		private void OnDestroy()
 		{
@@ -44,22 +46,22 @@ namespace Woopsious
 			CardUi.OnCardReplace -= ReplaceCardInDeck;
 		}
 
-		public void SetSlotRectTransforms(RectTransformData initialRectTransform)
+		void SetSlotRectTransforms()
 		{
 			showCardRectTransform = new RectTransformData
 			{
-				anchoredPosition = initialRectTransform.anchoredPosition,
-				rotation = initialRectTransform.rotation,
+				anchoredPosition = slotRectTransform.anchoredPosition,
+				rotation = slotRectTransform.rotation,
 			};
 			hideCardRectTransform = new RectTransformData
 			{
-				anchoredPosition = new(initialRectTransform.anchoredPosition.x, -150),
+				anchoredPosition = new(slotRectTransform.anchoredPosition.x, -150),
 				rotation = slotRectTransform.rotation = new(0, 0, 0, 0),
 			};
 			mouseHoverRectTransform = new RectTransformData
 			{
-				anchoredPosition = new(initialRectTransform.anchoredPosition.x, 25),
-				rotation = initialRectTransform.rotation,
+				anchoredPosition = new(slotRectTransform.anchoredPosition.x, 25),
+				rotation = slotRectTransform.rotation,
 			};
 
 			slotRectTransform.anchoredPosition = showCardRectTransform.anchoredPosition;
@@ -98,7 +100,7 @@ namespace Woopsious
 			OnThisSlotMouseEnter?.Invoke(this);
 			slotRectTransform.anchoredPosition = mouseHoverRectTransform.anchoredPosition;
 			slotRectTransform.rotation = mouseHoverRectTransform.rotation;
-			slotRectTransform.localScale = new Vector2(1.15f, 1.15f);
+			slotRectTransform.localScale = new Vector2(1.25f, 1.25f);
 			slotRectTransform.SetSiblingIndex(slotRectTransform.parent.childCount - 1); //set as last so ui not covered
 		}
 
