@@ -74,8 +74,8 @@ namespace Woopsious
 			imageHighlight.color = _ColourGrey;
 			audioHandler.PlayAudio(cardAudioSfx, true);
 
-			if (activeCardSlots.Count == TurnOrderManager.Player().cardDrawAmount.Value) return;
-			SetupDynamicCardSlots((int)TurnOrderManager.Player().cardDrawAmount.Value);
+			if (activeCardSlots.Count == playerEntity.cardDrawAmount.Value) return;
+			SetupDynamicCardSlots((int)playerEntity.cardDrawAmount.Value);
 		}
 		void SetupDynamicCardSlots(int slotsToSetup)
 		{

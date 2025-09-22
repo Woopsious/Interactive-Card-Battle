@@ -1,16 +1,14 @@
-using System.Collections.Generic;
 using System;
 using TMPro;
 using UnityEngine;
 using static Woopsious.DamageData;
+using UnityEngine.UI;
 
 namespace Woopsious
 {
 	public class CardUi : MonoBehaviour
 	{
-		[HideInInspector] public CardHandler cardHandler;
-		public RectTransform CardRectTransform { get; private set; }
-
+		[Header("Card Ui")]
 		public TMP_Text cardNametext;
 		public GameObject energyBackground;
 		public TMP_Text cardCostText;
@@ -18,6 +16,19 @@ namespace Woopsious
 		public TMP_Text cardCountForCardDeckUi;
 		public RectTransform replaceCardButton;
 
+		[Header("Discard Card Ui")]
+		public GameObject discardCardUiPanel;
+		public TMP_Text discardCardCountText;
+		public Button addCardToDiscardList;
+		public Button removeCardFromDiscardList;
+
+		//runtime card counts
+		public int CardDeckCount { get; private set; }
+		public int CardDiscardCount { get; private set; }
+
+		//runtime
+		[HideInInspector] public CardHandler cardHandler;
+		public RectTransform CardRectTransform { get; private set; }
 		public AttackData AttackData { get; private set; }
 		public bool PlayerCard { get; private set; }
 		public bool Offensive { get; private set; }
@@ -31,8 +42,12 @@ namespace Woopsious
 		{
 			CardRectTransform = GetComponent<RectTransform>();
 			cardHandler = GetComponent<CardHandler>();
+			addCardToDiscardList.onClick.AddListener(() => AddCardToDiscardList());
+			removeCardFromDiscardList.onClick.AddListener(() => RemoveCardFromDiscardList());
+			ToggleDiscardCardUi(false);
 		}
 
+		//card initilization
 		public void SetupUiCard(AttackData attackData, int cardDeckCount)
 		{
 			if (attackData == null)
@@ -55,6 +70,7 @@ namespace Woopsious
 			cardDescriptiontext.text = CreateDescription();
 			ToggleReplaceCardButton(false);
 
+			CardDeckCount = cardDeckCount;
 			cardCountForCardDeckUi.text = $"{cardDeckCount}x";
 			cardCountForCardDeckUi.gameObject.SetActive(true);
 		}
@@ -122,6 +138,7 @@ namespace Woopsious
 			cardDescriptiontext.text = CreateDescription();
 		}
 
+		//description creation
 		public string CreateDescription()
 		{
 			string description = AttackData.attackDescription;
@@ -196,12 +213,50 @@ namespace Woopsious
 			return description;
 		}
 
+		//replace card button toggle
 		public void ToggleReplaceCardButton(bool showButton)
 		{
 			if (showButton)
 				replaceCardButton.gameObject.SetActive(true);
 			else
 				replaceCardButton.gameObject.SetActive(false);
+		}
+
+		//discard card funcs
+		public void ToggleDiscardCardUi(bool show)
+		{
+			discardCardUiPanel.SetActive(show);
+			discardCardCountText.text = "0";
+		}
+		void AddCardToDiscardList()
+		{
+			if (CardDiscardCount >= CardDeckCount)
+			{
+				CardDiscardCount = CardDeckCount;
+				Debug.LogError($"card discard count already at {CardDeckCount}");
+			}
+			else
+			{
+				CardDiscardCount++;
+				PlayerCardDeckUi.AddCardToBeDiscarded(AttackData);
+			}
+
+			discardCardCountText.text = $"{CardDiscardCount}";
+		}
+		void RemoveCardFromDiscardList()
+		{
+			if (CardDiscardCount <= 0)
+			{
+				CardDiscardCount = 0;
+				Debug.LogError("card discard count already at 0");
+			}
+			else
+			{
+				CardDiscardCount--;
+				PlayerCardDeckUi.RemoveCardFromBeingDiscarded(AttackData);
+			}
+
+			discardCardCountText.text = $"{CardDiscardCount}";
 		}
 
 		//button call
