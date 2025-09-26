@@ -160,7 +160,7 @@ namespace Woopsious
 		//handle applying value types and status effects to correct entities
 		void ApplyDamageAndEffectsToTarget(Entity target)
 		{
-			if (card.DamageData.valueTypes.HasFlag(ValueTypes.dealsDamage))
+			if (card.DamageData.valueTypes.HasFlag(ValueTypes.damages))
 			{
 				if (card.DamageData.isMultiHitAttack && card.DamageData.HitsDifferentTargets)
 				{

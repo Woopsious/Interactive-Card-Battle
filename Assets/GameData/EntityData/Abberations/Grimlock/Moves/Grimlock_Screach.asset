@@ -10,13 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
-  m_Name: Chuul_EatTentacles
+  m_Name: Grimlock_Screach
   m_EditorClassIdentifier: 
-  attackName: Eat Tentacles
-  attackDescription: Eat summoned tentacles
-  offensive: 0
-  alsoHeals: 0
-  damage: 20
-  damageType: 1
-  attackCooldownTurns: 1
-  attackUseChance: 0.5
+  attackName: Screach
+  attackDescription: Screach at enemy
+  offensive: 1
+  energyCost: 0
+  DamageData:
+    isMultiHitAttack: 0
+    HitsDifferentTargets: 0
+    multiHitCount: 0
+    valueTypes: 3
+    damageType: 1
+    DamageValue: 3
+    BlockValue: 6
+    HealValue: 0
+    statusEffectsForTarget: []
+    statusEffectsForSelf: []
+  attackUseChance: 0.6

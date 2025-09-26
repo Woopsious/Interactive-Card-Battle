@@ -15,8 +15,16 @@ MonoBehaviour:
   attackName: Summon Tentacles
   attackDescription: Summon Tentacles below enemy
   offensive: 1
-  alsoHeals: 0
-  damage: 10
-  damageType: 2
-  attackCooldownTurns: 1
+  energyCost: 0
+  DamageData:
+    isMultiHitAttack: 0
+    HitsDifferentTargets: 0
+    multiHitCount: 0
+    valueTypes: 3
+    damageType: 1
+    DamageValue: 8
+    BlockValue: 8
+    HealValue: 0
+    statusEffectsForTarget: []
+    statusEffectsForSelf: []
   attackUseChance: 0.5

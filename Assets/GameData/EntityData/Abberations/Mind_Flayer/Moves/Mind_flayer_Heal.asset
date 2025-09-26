@@ -15,8 +15,16 @@ MonoBehaviour:
   attackName: Heal
   attackDescription: Heal self
   offensive: 0
-  alsoHeals: 0
-  damage: 25
-  damageType: 1
-  attackCooldownTurns: 1
+  energyCost: 0
+  DamageData:
+    isMultiHitAttack: 0
+    HitsDifferentTargets: 0
+    multiHitCount: 0
+    valueTypes: 4
+    damageType: 0
+    DamageValue: 0
+    BlockValue: 0
+    HealValue: 20
+    statusEffectsForTarget: []
+    statusEffectsForSelf: []
   attackUseChance: 0.4

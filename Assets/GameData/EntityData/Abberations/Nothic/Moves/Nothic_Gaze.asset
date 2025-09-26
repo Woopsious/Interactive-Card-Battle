@@ -15,8 +15,16 @@ MonoBehaviour:
   attackName: Gaze
   attackDescription: Gaze at and stun enemy
   offensive: 1
-  alsoHeals: 1
-  damage: 5
-  damageType: 0
-  attackCooldownTurns: 1
+  energyCost: 0
+  DamageData:
+    isMultiHitAttack: 0
+    HitsDifferentTargets: 0
+    multiHitCount: 0
+    valueTypes: 3
+    damageType: 1
+    DamageValue: 6
+    BlockValue: 8
+    HealValue: 0
+    statusEffectsForTarget: []
+    statusEffectsForSelf: []
   attackUseChance: 0.3

@@ -141,7 +141,7 @@ namespace Woopsious
 			if (DamageData.valueTypes == ValueTypes.none)
 				Debug.LogError("Value type not set");
 
-			if (DamageData.valueTypes.HasFlag(ValueTypes.dealsDamage))
+			if (DamageData.valueTypes.HasFlag(ValueTypes.damages))
 				description = CreateDamageDescription(description);
 
 			description = CreateTargetStatusEffectDescription(description);

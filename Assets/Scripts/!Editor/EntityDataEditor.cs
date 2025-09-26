@@ -13,6 +13,7 @@ namespace Woopsious
 
 		//move set attack data
 		List<SerializedProperty> attackDataList = new();
+		List<int> attackDataListSizes = new();
 		List<Editor> attackDataEditorList = new();
 		List<bool> showAttackDataList = new();
 
@@ -112,9 +113,10 @@ namespace Woopsious
 
 		void BuildLists()
 		{
-			attackDataList.Clear();
-			attackDataEditorList.Clear();
-			showAttackDataList.Clear();
+			attackDataList = new();
+			attackDataListSizes = new();
+			attackDataEditorList = new();
+			showAttackDataList = new();
 
 			SerializedProperty moveSetOrderProp = serializedObject.FindProperty(nameof(data.moveSetOrder));
 
@@ -129,6 +131,7 @@ namespace Woopsious
 					if (attackDataList.Any(p => p.objectReferenceValue == newObjRef)) continue;
 
 					attackDataList.Add(moveSetMovesProp.GetArrayElementAtIndex(j));
+					attackDataListSizes.Add(moveSetMovesProp.arraySize);
 					attackDataEditorList.Add(null);
 					showAttackDataList.Add(false);
 				}
@@ -136,8 +139,15 @@ namespace Woopsious
 		}
 		void BuildAttackEditorUi()
 		{
-			for (int i = 0; i < attackDataList.Count; i++)
+			for (int i = attackDataList.Count - 1; i >= 0; i--)
 			{
+				if (!attackDataList[i].isArray || attackDataList[i].arraySize != attackDataListSizes[i])
+				{
+					Debug.LogError("reset");
+					attackDataList[i] = null;
+					BuildLists();
+					break;
+				}
 				if (attackDataList[i].objectReferenceValue == null) return;
 
 				if (attackDataEditorList[i] == null || attackDataEditorList[i].target != attackDataList[i].objectReferenceValue)

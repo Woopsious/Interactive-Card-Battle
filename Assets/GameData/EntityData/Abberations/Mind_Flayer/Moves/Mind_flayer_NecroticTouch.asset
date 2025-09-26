@@ -10,13 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
-  m_Name: Mind_flayer_Knockback
+  m_Name: Mind_flayer_NecroticTouch
   m_EditorClassIdentifier: 
-  attackName: 
-  attackDescription: 
-  offensive: 0
-  alsoHeals: 0
-  damage: 20
-  damageType: 0
-  attackCooldownTurns: 1
+  attackName: Necrotic Touch
+  attackDescription: Touch enemy whilst casting
+  offensive: 1
+  energyCost: 0
+  DamageData:
+    isMultiHitAttack: 0
+    HitsDifferentTargets: 0
+    multiHitCount: 0
+    valueTypes: 1
+    damageType: 1
+    DamageValue: 20
+    BlockValue: 0
+    HealValue: 0
+    statusEffectsForTarget: []
+    statusEffectsForSelf: []
   attackUseChance: 0.6

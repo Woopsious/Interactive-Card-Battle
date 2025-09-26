@@ -15,8 +15,16 @@ MonoBehaviour:
   attackName: Multiattack
   attackDescription: Attack multiple times with claws
   offensive: 1
-  alsoHeals: 0
-  damage: 12
-  damageType: 2
-  attackCooldownTurns: 1
+  energyCost: 0
+  DamageData:
+    isMultiHitAttack: 1
+    HitsDifferentTargets: 0
+    multiHitCount: 2
+    valueTypes: 0
+    damageType: 0
+    DamageValue: 10
+    BlockValue: 0
+    HealValue: 0
+    statusEffectsForTarget: []
+    statusEffectsForSelf: []
   attackUseChance: 0.6

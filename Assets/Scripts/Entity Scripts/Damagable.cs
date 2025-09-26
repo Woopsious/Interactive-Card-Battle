@@ -21,12 +21,12 @@ namespace Woopsious
 		[Flags]
 		public enum ValueTypes
 		{
-			none = 0, dealsDamage = 1, blocks = 2, heals = 4
+			none = 0, damages = 1, blocks = 2, heals = 4
 		}
 		public DamageType damageType;
 		public enum DamageType
 		{
-			physical
+			physical, magical
 		}
 		[Tooltip("if marked as multihit attack put total damage")]
 		public int DamageValue;
@@ -73,7 +73,7 @@ namespace Woopsious
 			HitsDifferentTargets = false;
 			multiHitCount = 0;
 
-			valueTypes = ValueTypes.dealsDamage;
+			valueTypes = ValueTypes.damages;
 			damageType = DamageType.physical;
 			DamageValue = damageValue;
 		}

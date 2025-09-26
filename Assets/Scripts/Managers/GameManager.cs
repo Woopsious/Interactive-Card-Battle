@@ -125,15 +125,22 @@ namespace Woopsious
 		}
 		void EndCardCombat(Entity entity)
 		{
-			if (TurnOrderManager.Player() == entity)
+			if (TurnOrderManager.Player() == entity) //end on loss if player dies
 			{
 				PauseGame(true);
-				OnEndCardCombatEvent?.Invoke(false); //end on lose of player dies
+				OnEndCardCombatEvent?.Invoke(false);
 			}
 
-			if (TurnOrderManager.EnemyEntities().Count > 0) return;
+			int enemiesDead = 0;
 
-			OnEndCardCombatEvent?.Invoke(true); //end on win if no enemies left alive
+			foreach (Entity enemy in TurnOrderManager.EnemyEntities())
+			{
+				if (enemy.health <= 0)
+					enemiesDead++;
+			}
+
+			if (enemiesDead < TurnOrderManager.EnemyEntities().Count) return; //end on win if no enemies left
+			OnEndCardCombatEvent?.Invoke(true);
 		}
 		public static void ShowMap()
 		{
