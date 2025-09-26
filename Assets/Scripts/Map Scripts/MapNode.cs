@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Transactions;
+using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Woopsious
 {
@@ -264,14 +265,17 @@ namespace Woopsious
 			foreach (MapNode node in siblingNodes) //lock sibling nodes
 				node.LockNode();
 		}
-		public Task BuyEnemy(EntityData spawnedEntity)
+		public Task BuyEnemyAndUpdatePossibleEntities(EntityData spawnedEntity)
 		{
 			entityBudget -= spawnedEntity.GetEntityCost();
+			totalPossibleEntitiesSpawnChance = 0;
 
-			for (int i = PossibleEntities.Count - 1; i > 0; i--)
+			for (int i = PossibleEntities.Count - 1; i >= 0; i--)
 			{
 				if (entityBudget < PossibleEntities[i].GetEntityCost())
 					PossibleEntities.Remove(PossibleEntities[i]);
+				else
+					totalPossibleEntitiesSpawnChance += (int)PossibleEntities[i].entitySpawnChance;
 			}
 
 			return Task.CompletedTask;

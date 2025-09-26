@@ -12,6 +12,7 @@ namespace Woopsious
 		CardUi card;
 
 		[HideInInspector] public bool isBeingDragged;
+		[HideInInspector] public bool isBeingDiscarded;
 		private PlayerEntity touchingPlayerRef;
 		private Entity touchingEnemyRef;
 
@@ -20,6 +21,7 @@ namespace Woopsious
 		public static event Action<CardUi, bool> OnPlayerCardUsed;
 		public static event Action<CardUi> OnPlayerPickedUpCard;
 		public static event Action<CardUi> OnCardCleanUp;
+		public static event Action<CardUi> OnCardReplace;
 
 		void Awake()
 		{
@@ -40,6 +42,8 @@ namespace Woopsious
 				EntityTriggerEnter(other.GetComponent<Entity>());
 			else if (other.GetComponent<DrawnCardsUi>() != null)
 				DrawnCardsDeckTriggerEnter();
+			else if (other.GetComponent<ReplaceCardUi>() != null)
+				ReplaceCardTriggerEnter();
 		}
 		void OnTriggerExit2D(Collider2D other)
 		{
@@ -47,6 +51,8 @@ namespace Woopsious
 				EntityTriggerExit(other.GetComponent<Entity>());
 			else if (other.GetComponent<DrawnCardsUi>() != null)
 				DrawnCardsDeckTriggerExit();
+			else if (other.GetComponent<ReplaceCardUi>() != null)
+				ReplaceCardTriggerExit();
 		}
 
 		//trigger enter/exit funcs
@@ -72,6 +78,15 @@ namespace Woopsious
 		void DrawnCardsDeckTriggerExit()
 		{
 			transform.localScale = new Vector2(0.5f, 0.5f);
+		}
+
+		void ReplaceCardTriggerEnter()
+		{
+			isBeingDiscarded = true;
+		}
+		void ReplaceCardTriggerExit()
+		{
+			isBeingDiscarded = false;
 		}
 
 		//player mouse events
@@ -104,20 +119,21 @@ namespace Woopsious
 			transform.SetParent(CardCombatUi.instance.DraggedCardsTransform);
 			transform.rotation = new Quaternion(0, 0, 0, 0);
 			mousePos = Input.mousePosition;
-			card.ToggleReplaceCardButton(false);
 		}
 		void PlayerDeselectCard()
 		{
-			OnPlayerPickedUpCard?.Invoke(null);
-			isBeingDragged = false;
-
-			if (touchingPlayerRef != null && !card.Offensive)
+			if (isBeingDiscarded)
+				OnCardReplace?.Invoke(card);
+			else if (touchingPlayerRef != null && !card.Offensive)
 				UseCardOnTarget(cardOwner);
 			else if (touchingEnemyRef != null && card.Offensive)
 				UseCardOnTarget(touchingEnemyRef);
 			else
 				OnPlayerCardUsed?.Invoke(card, false);
 
+			OnPlayerPickedUpCard?.Invoke(null);
+			isBeingDragged = false;
+			isBeingDiscarded = false;
 			touchingPlayerRef = null;
 			touchingEnemyRef = null;
 		}

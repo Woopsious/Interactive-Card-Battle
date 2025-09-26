@@ -14,7 +14,6 @@ namespace Woopsious
 		public TMP_Text cardCostText;
 		public TMP_Text cardDescriptiontext;
 		public TMP_Text cardCountForCardDeckUi;
-		public RectTransform replaceCardButton;
 
 		[Header("Discard Card Ui")]
 		public GameObject discardCardUiPanel;
@@ -35,8 +34,6 @@ namespace Woopsious
 		public DamageData DamageData { get; private set; }
 
 		public bool selectable;
-
-		public static event Action<CardUi> OnCardReplace;
 
 		void Awake()
 		{
@@ -68,7 +65,6 @@ namespace Woopsious
 			DamageData = new(null, attackData.DamageData);
 
 			cardDescriptiontext.text = CreateDescription();
-			ToggleReplaceCardButton(false);
 
 			CardDeckCount = cardDeckCount;
 			cardCountForCardDeckUi.text = $"{cardDeckCount}x";
@@ -96,7 +92,6 @@ namespace Woopsious
 
 			cardDescriptiontext.text = CreateDescription();
 			cardCountForCardDeckUi.gameObject.SetActive(false);
-			ToggleReplaceCardButton(false);
 		}
 
 		public void SetupInGameCard(Entity cardOwner, AttackData attackData, bool playerCard)
@@ -125,7 +120,6 @@ namespace Woopsious
 
 			cardDescriptiontext.text = CreateDescription();
 			cardCountForCardDeckUi.gameObject.SetActive(false);
-			ToggleReplaceCardButton(false);
 		}
 		public void UpdateInGameCard(Entity cardOwner, bool playerCard)
 		{
@@ -213,15 +207,6 @@ namespace Woopsious
 			return description;
 		}
 
-		//replace card button toggle
-		public void ToggleReplaceCardButton(bool showButton)
-		{
-			if (showButton)
-				replaceCardButton.gameObject.SetActive(true);
-			else
-				replaceCardButton.gameObject.SetActive(false);
-		}
-
 		//discard card funcs
 		public void ToggleDiscardCardUi(bool show)
 		{
@@ -257,12 +242,6 @@ namespace Woopsious
 			}
 
 			discardCardCountText.text = $"{CardDiscardCount}";
-		}
-
-		//button call
-		public void ReplaceCard()
-		{
-			OnCardReplace?.Invoke(this);
 		}
 	}
 }

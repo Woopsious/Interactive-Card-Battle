@@ -71,6 +71,9 @@ namespace Woopsious
 			bool spawnEnemies = true;
 			while (spawnEnemies)
 			{
+				if (spawnedEntites.Count >= 5 || mapNode.entityBudget < mapNode.cheapistEnemyCost)
+					break;
+
 				Entity entity = ObjectPoolingManager.RequestEntity();
 
 				if (entity == null)
@@ -80,12 +83,9 @@ namespace Woopsious
 				entity.transform.SetParent(CardCombatUi.instance.spawnedEntitiesTransform);
 				entity.gameObject.SetActive(true);
 
-				await mapNode.BuyEnemy(entity.EntityData);
+				await mapNode.BuyEnemyAndUpdatePossibleEntities(entity.EntityData);
 				spawnedEntites.Add(entity);
 				OnEnemySpawned?.Invoke(entity);
-
-				if (spawnedEntites.Count >= 5 || mapNode.entityBudget < mapNode.cheapistEnemyCost)
-					spawnEnemies = false;
 			}
 
 			instance.SetEnemyPositions(spawnedEntites);
@@ -103,8 +103,8 @@ namespace Woopsious
 					return entity;
 			}
 
-			Debug.LogError("Failed to get weighted enemy to spawn, spawning default");
-			return GameManager.instance.enemyDataTypes[0];
+			Debug.LogError("Failed to get weighted enemy to spawn");
+			return null;
 		}
 		void SetEnemyPositions(List<Entity> entities)
 		{

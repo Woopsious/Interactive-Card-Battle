@@ -15,9 +15,7 @@ namespace Woopsious
 		[Header("Player Unique Stats")]
 		public Stat cardDrawAmount;
 		public int energy;
-		public int cardsReplacedThisTurn;
 
-		public static event Action HideReplaceCardsButton;
 		public static event Action<int> OnPlayerEnergyChanges;
 		public static event Action OnPlayerStatChanges;
 
@@ -32,14 +30,12 @@ namespace Woopsious
 		{
 			TurnOrderManager.OnNewTurnEvent += StartTurn;
 			CardHandler.OnCardCleanUp += UpdateCardsUsed;
-			CardUi.OnCardReplace += OnReplaceCard;
 			OnEntityDeath += RangerHealOnKill;
 		}
 		void OnDisable()
 		{
 			TurnOrderManager.OnNewTurnEvent -= StartTurn;
 			CardHandler.OnCardCleanUp -= UpdateCardsUsed;
-			CardUi.OnCardReplace -= OnReplaceCard;
 			OnEntityDeath += RangerHealOnKill;
 		}
 
@@ -64,7 +60,6 @@ namespace Woopsious
 			if (entity != this) return;
 
 			energy = EntityData.baseEnergy;
-			cardsReplacedThisTurn = 0;
 
 			UpdateEnergyUi();
 		}
@@ -159,21 +154,6 @@ namespace Woopsious
 				else
 					imageHighlight.color = _ColourDarkGreen;
 			}
-		}
-
-		void OnReplaceCard(CardUi card)
-		{
-			cardsReplacedThisTurn++;
-
-			if (HasReachedReplaceCardsLimit())
-				HideReplaceCardsButton?.Invoke();
-		}
-		public bool HasReachedReplaceCardsLimit()
-		{
-			if (cardsReplacedThisTurn >= EntityData.maxReplaceableCardsPerTurn)
-				return true;
-			else
-				return false;
 		}
 
 		protected void UpdateEnergyUi()

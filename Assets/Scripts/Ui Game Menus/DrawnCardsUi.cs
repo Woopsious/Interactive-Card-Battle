@@ -52,12 +52,12 @@ namespace Woopsious
 		void OnTriggerEnter2D(Collider2D other)
 		{
 			if (other.GetComponent<CardUi>() != null)
-				ThrowableCardEnter();
+				DraggedCardEnter();
 		}
 		void OnTriggerExit2D(Collider2D other)
 		{
 			if (other.GetComponent<CardUi>() != null)
-				ThrowableCardExit();
+				DraggedCardExit();
 		}
 
 		//UI
@@ -124,12 +124,12 @@ namespace Woopsious
 				imageHighlight.color = _ColourGrey;
 			}
 		}
-		void ThrowableCardEnter()
+		void DraggedCardEnter()
 		{
 			if (!playerPickedUpCard) return;
 			imageHighlight.color = _ColourYellow;
 		}
-		void ThrowableCardExit()
+		void DraggedCardExit()
 		{
 			if (!playerPickedUpCard) return;
 			imageHighlight.color = _ColourIceBlue;

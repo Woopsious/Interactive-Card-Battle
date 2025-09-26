@@ -27,11 +27,10 @@ namespace Woopsious
 
 			TurnOrderManager.OnNewTurnEvent += OnNewTurnStart;
 			OnThisSlotMouseEnter += OnOtherCardSlotsMouseEnters;
-			PlayerEntity.HideReplaceCardsButton += HideReplaceCardsButton;
 			PlayerEntity.OnPlayerStatChanges += UpdateCardsOnPlayerStatChanges;
 			PlayerEntity.OnPlayerEnergyChanges += OnPlayerEnergyChanges;
 			CardHandler.OnPlayerCardUsed += OnPlayerCardUsed;
-			CardUi.OnCardReplace += ReplaceCardInDeck;
+			CardHandler.OnCardReplace += ReplaceCardInDeck;
 
 			SetSlotRectTransforms();
 		}
@@ -39,11 +38,10 @@ namespace Woopsious
 		{
 			TurnOrderManager.OnNewTurnEvent -= OnNewTurnStart;
 			OnThisSlotMouseEnter -= OnOtherCardSlotsMouseEnters;
-			PlayerEntity.HideReplaceCardsButton -= HideReplaceCardsButton;
 			PlayerEntity.OnPlayerStatChanges -= UpdateCardsOnPlayerStatChanges;
 			PlayerEntity.OnPlayerEnergyChanges -= OnPlayerEnergyChanges;
 			CardHandler.OnPlayerCardUsed -= OnPlayerCardUsed;
-			CardUi.OnCardReplace -= ReplaceCardInDeck;
+			CardHandler.OnCardReplace -= ReplaceCardInDeck;
 		}
 
 		void SetSlotRectTransforms()
@@ -92,7 +90,7 @@ namespace Woopsious
 		//move card up on mouse 'hover'
 		public void OnPointerEnter(PointerEventData eventData)
 		{
-			if (!CardInSlot.selectable) return;
+			if (CardInSlot == null || !CardInSlot.selectable) return;
 			MoveCardUp();
 		}
 		void MoveCardUp()
@@ -106,7 +104,7 @@ namespace Woopsious
 
 		public void OnPointerExit(PointerEventData eventData)
 		{
-			if (!CardInSlot.selectable) return;
+			if (CardInSlot == null || !CardInSlot.selectable) return;
 			MoveCardDown();
 		}
 		void MoveCardDown()
@@ -149,15 +147,12 @@ namespace Woopsious
 		void OnOtherCardSlotsMouseEnters(DrawnCardSlotUi cardSlotUi)
 		{
 			if (cardSlotUi == this) return;
-			MoveCardDown();
-		}
-		void HideReplaceCardsButton()
-		{
-			showReplaceCardsButton = false;
-
 			if (CardInSlot == null) return;
 
-			CardInSlot.ToggleReplaceCardButton(false);
+			if (CardInSlot.selectable)
+				MoveCardDown();
+			else
+				HideCardInSlot();
 		}
 		void UpdateCardsOnPlayerStatChanges()
 		{
@@ -175,7 +170,6 @@ namespace Woopsious
 		void ReplaceCardInDeck(CardUi cardToReplace)
 		{
 			if (CardInSlot != cardToReplace) return;
-
 			CardInSlot.SetupInGameCard(TurnOrderManager.Player(), SpawnManager.GetRandomCard(PlayerCardDeckUi.PlayerCardsInDeck()), true);
 			AddCardToSlot(CardInSlot);
 		}
@@ -186,8 +180,6 @@ namespace Woopsious
 			if (CardInSlot == null) return;
 
 			CardInSlot.selectable = true;
-			CardInSlot.ToggleReplaceCardButton(showReplaceCardsButton);
-
 			UpdateCardSlotPositions(true);
 		}
 		void HideCardInSlot()
@@ -195,8 +187,6 @@ namespace Woopsious
 			if (CardInSlot == null) return;
 
 			CardInSlot.selectable = false;
-			CardInSlot.ToggleReplaceCardButton(showReplaceCardsButton);
-
 			UpdateCardSlotPositions(false);
 		}
 
