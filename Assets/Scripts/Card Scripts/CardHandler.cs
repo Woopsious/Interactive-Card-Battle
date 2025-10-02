@@ -197,10 +197,10 @@ namespace Woopsious
 		}
 		void ApplyBlockHealAndEffectsToCardOwner()
 		{
-			if (card.DamageData.valueTypes.HasFlag(DamageData.ValueTypes.blocks))
+			if (card.DamageData.valueTypes.HasFlag(ValueTypes.blocks))
 				cardOwner.RecieveBlock(card.DamageData);
 
-			if (card.DamageData.valueTypes.HasFlag(DamageData.ValueTypes.heals))
+			if (card.DamageData.valueTypes.HasFlag(ValueTypes.heals))
 				cardOwner.RecieveHealing(card.DamageData);
 
 			cardOwner.statusEffectsHandler.AddStatusEffects(card.DamageData.statusEffectsForSelf);

@@ -21,23 +21,18 @@ MonoBehaviour:
   entitySpawnChance: 40
   eliteEnemy: 0
   maxHealth: 60
+  baseBlock: 0
   minHealPercentage: 0
   playerClass: 0
   chanceOfDoubleDamage: 0
   healOnKillPercentage: 0
   damageReflectedPercentage: 0
-  extraBlockPerTurn: 0
-  maxCardsUsedPerTurn: 0
-  maxDamageCardsUsedPerTurn: 0
-  maxNonDamageCardsUsedPerTurn: 0
+  baseEnergy: 0
   maxReplaceableCardsPerTurn: 0
+  initialCardDrawAmount: 0
   cards: []
   moveSetOrder:
-  - moveSetMoves:
-    - {fileID: 11400000, guid: 6fe0d96667276b14096967e8b9c45606, type: 2}
-    - {fileID: 11400000, guid: 46a39df2c4b8bc6448a2807654e347a2, type: 2}
-  - moveSetMoves:
-    - {fileID: 11400000, guid: 46a39df2c4b8bc6448a2807654e347a2, type: 2}
-  - moveSetMoves:
-    - {fileID: 11400000, guid: bba36a84ede971945babb5c3261f4886, type: 2}
+  - moveSetMoves: []
+  - moveSetMoves: []
+  - moveSetMoves: []
   hitSfx: {fileID: 8300000, guid: f84e2c4d9f703b247890aec43610627e, type: 3}

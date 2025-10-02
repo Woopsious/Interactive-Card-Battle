@@ -75,7 +75,21 @@ namespace Woopsious
 					CreateAttackDataScriptableObject();
 				GUILayout.Space(10);
 
-				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.moveSetOrder)), true);
+				using (var check = new EditorGUI.ChangeCheckScope())
+				{
+					EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.moveSetOrder)), true);
+
+					foreach (int arraySize in attackDataListSizes)
+					{
+						if (arraySize == attackDataList.Count) continue;
+
+						GUI.changed = true;
+						break;
+					}
+
+					if (check.changed)
+						BuildLists();
+				}
 
 				BuildAttackEditorUi();
 			}
@@ -139,15 +153,9 @@ namespace Woopsious
 		}
 		void BuildAttackEditorUi()
 		{
-			for (int i = attackDataList.Count - 1; i >= 0; i--)
+			for (int i = 0; i < attackDataList.Count; i++)
 			{
-				if (!attackDataList[i].isArray || attackDataList[i].arraySize != attackDataListSizes[i])
-				{
-					Debug.LogError("reset");
-					attackDataList[i] = null;
-					BuildLists();
-					break;
-				}
+				if (attackDataList[i].serializedObject == null) return;
 				if (attackDataList[i].objectReferenceValue == null) return;
 
 				if (attackDataEditorList[i] == null || attackDataEditorList[i].target != attackDataList[i].objectReferenceValue)

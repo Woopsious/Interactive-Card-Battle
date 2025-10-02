@@ -13,23 +13,33 @@ namespace Woopsious
 	{
 		/// <summary>
 		/// TODO:
-		/// MAP NODES SYSTEM:
-		/// create a map ui where player moves across it from left to right through nodes that are semi randomly generated
-		/// player is given a choice of 1 to 3 nodes they can move to that starts a combat fight.
-		/// nodes will store the next nodes they link to + there travel state (locked, canTravel, currentlyAt) to allow player to move about
-		/// settings to dictate what type of enemies spawn on them, there difficulty (harder enemy variants/higher level) and a budget limit, 
-		/// a node will randomly spawn enemies that match type they spawn till they run out of budget.
 		/// 
-		/// PLAYER CARD DECK UPGRADE SYSTEM:
-		/// increase base health of player or other unique gimmicks (ignore x% of damage for x rounds/turns etc...)
-		/// increase total amount of cards that can be played per turn + amount of offensive/non offensive cards types that can be played per turn
-		/// increase amount of replace card actions a player has per turn, increasing amount of card options given besides the defult current 5.
-		/// add a system where player can upgrade there cards (more damage/heal/block)
+		/// DRAW/DISCARD/DESTROYED CARD PILES:
+		/// add lists for each type of pile + a collected cards pile not used in combat (all player cards at runtime are here)
+		/// overhaul replace card system to use new piles
+		/// overhaul draw card system to use new piles
 		/// 
-		/// DIFFICULTY SCALING:
-		/// difficulty scales up with the more fights player wins. leading to higher level enemies or harder/elite versions of regular enemies (or both)
+		///		DRAW PILE:
+		///		new card gets drawn from this draw pile. on new turn + when replacing card
+		///		when draw pile doesnt have enough cards, recall all cards in discard pile back into draw pile (excluding destroy pile)
+		///		
+		///		DISCARD PILE:
+		///		when replacing card, card gets added to discard pile,
+		///		
+		///		DESTROYED PILE:
+		///		for cards that are destroyed for what ever reason
+		///		
 		/// 
-		/// keep track of a score so once player dies they can see what they scored (currently dont have an end)
+		/// PLAYER CARD SYSTEM:
+		/// add rarities to cards, higher rarity = generally bettor or more unique 
+		/// EG: one time use cards per battle, 'ultimate' moves based on player class etc... 
+		/// card upgrade system, increasing effects of cards in some way, 1 card 
+		/// EG: (base, base+, base++) (dmg:10, dmg:12, dmg:15) (strength stacks: 2,2,3)
+		/// 
+		/// CUSTOM EDITOR FOR PLAYER CARD SYSTEM:
+		/// custom editor for AttackData since player cards and enemy attack moves both use this to make creating new ones easier
+		/// + including extra info that let me customize how cards get upgraded using a new class that contains data for each level upgrade
+		/// giving more control over a flat +20% each card level as it wouldnt work with above example as easily
 		/// 
 		/// </summary>
 

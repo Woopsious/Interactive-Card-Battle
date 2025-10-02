@@ -31,5 +31,10 @@ MonoBehaviour:
   maxReplaceableCardsPerTurn: 0
   initialCardDrawAmount: 0
   cards: []
-  moveSetOrder: []
+  moveSetOrder:
+  - moveSetMoves:
+    - {fileID: 0}
+    - {fileID: 0}
+  - moveSetMoves: []
+  - moveSetMoves: []
   hitSfx: {fileID: 0}
