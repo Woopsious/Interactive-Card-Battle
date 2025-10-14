@@ -1,8 +1,9 @@
 using System;
 using TMPro;
 using UnityEngine;
-using static Woopsious.DamageData;
 using UnityEngine.UI;
+using Woopsious.AbilitySystem;
+using static Woopsious.DamageData;
 
 namespace Woopsious
 {

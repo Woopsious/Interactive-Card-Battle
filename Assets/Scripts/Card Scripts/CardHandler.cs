@@ -169,13 +169,13 @@ namespace Woopsious
 					foreach (Entity aoeTarget in GetAoeTargets(target))
 					{
 						aoeTarget.RecieveDamage(card.DamageData);
-						aoeTarget.statusEffectsHandler.AddStatusEffects(card.DamageData.statusEffectsForTarget);
+						aoeTarget.StatusEffectsHandler.AddStatusEffects(card.DamageData.statusEffectsForTarget);
 					}
 				}
 				else
 				{
 					target.RecieveDamage(card.DamageData);
-					target.statusEffectsHandler.AddStatusEffects(card.DamageData.statusEffectsForTarget);
+					target.StatusEffectsHandler.AddStatusEffects(card.DamageData.statusEffectsForTarget);
 				}
 			}
 		}
@@ -203,7 +203,7 @@ namespace Woopsious
 			if (card.DamageData.valueTypes.HasFlag(ValueTypes.heals))
 				cardOwner.RecieveHealing(card.DamageData);
 
-			cardOwner.statusEffectsHandler.AddStatusEffects(card.DamageData.statusEffectsForSelf);
+			cardOwner.StatusEffectsHandler.AddStatusEffects(card.DamageData.statusEffectsForSelf);
 		}
 
 		//clean up card

@@ -224,7 +224,7 @@ GameObject:
   - component: {fileID: 5611256917527611009}
   - component: {fileID: 3525811030106715706}
   - component: {fileID: 837194938984598661}
-  - component: {fileID: 4378937113463337995}
+  - component: {fileID: -2045306996506821426}
   - component: {fileID: 4788387833801328170}
   - component: {fileID: -5167590167959173698}
   - component: {fileID: 2165728888666346268}
@@ -276,6 +276,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debugInitilizeEntity: 0
   entityNameText: {fileID: 7074107260620252129}
+  energyText: {fileID: 0}
   entityHealthText: {fileID: 1396649465573815591}
   entityblockText: {fileID: 5362072691124237724}
   turnIndicator: {fileID: 1893625026254256927}
@@ -286,11 +287,13 @@ MonoBehaviour:
   damageRecievedModifier:
     rid: -2
   damageBonus:
+    statId: 
     baseValue: 0
     valueModifiers: []
     Value: 0
     statType: 0
   blockBonus:
+    statId: 
     baseValue: 0
     valueModifiers: []
     Value: 0
@@ -314,7 +317,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   previousUsedMove: {fileID: 0}
   previousUsedMoveIndex: 0
---- !u!114 &4378937113463337995
+--- !u!114 &-2045306996506821426
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -323,12 +326,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 5386469954458961082}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc3446625c82105448097b0a839c8347, type: 3}
+  m_Script: {fileID: 11500000, guid: ad896d546692444448701a2e46985c7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentStatusEffects: []
   statusEffectsUiParent: {fileID: 5791568531775683009}
   statusEffectTemplate: {fileID: 1162239366311832148, guid: ea0c310f549f0ae40808f64a3161d065, type: 3}
+  isTurnBased: 1
 --- !u!114 &4788387833801328170
 MonoBehaviour:
   m_ObjectHideFlags: 0

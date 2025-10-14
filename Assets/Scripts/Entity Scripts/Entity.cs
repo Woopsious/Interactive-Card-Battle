@@ -1,11 +1,10 @@
 using System;
-using System.Runtime.InteropServices.WindowsRuntime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.Rendering.DebugUI;
-using static Woopsious.DamageData;
-using static Woopsious.Stat;
+using Woopsious.AbilitySystem;
+using Woopsious.ComplexStats;
+using static Woopsious.ComplexStats.Stat;
 
 namespace Woopsious
 {
@@ -14,7 +13,7 @@ namespace Woopsious
 		public bool debugInitilizeEntity;
 		public EntityData EntityData { get; private set; }
 		EntityMoves entityMoves;
-		public StatusEffectsHandler statusEffectsHandler { get; private set; }
+		public StatusEffectsHandler StatusEffectsHandler { get; private set; }
 		AudioHandler audioHandler;
 
 		//ui elements
@@ -51,7 +50,7 @@ namespace Woopsious
 		protected virtual void Awake()
 		{
 			entityMoves = GetComponent<EntityMoves>();
-			statusEffectsHandler = GetComponent<StatusEffectsHandler>();
+			StatusEffectsHandler = GetComponent<StatusEffectsHandler>();
 			imageHighlight = GetComponent<Image>();
 			imageHighlight.color = _ColourDarkRed;
 			audioHandler = GetComponent<AudioHandler>();
@@ -122,18 +121,18 @@ namespace Woopsious
 
 			imageHighlight.color = _ColourDarkRed;
 			entityMoves.InitilizeMoveSet(this);
-			statusEffectsHandler.ClearStatusEffects();
+			StatusEffectsHandler.ClearStatusEffects();
 		}
 		protected virtual void InitilizeStats()
 		{
 			health = EntityData.maxHealth;
 			block = EntityData.baseBlock;
 
-			damageDealtModifier = new Stat(1, StatType.damageDealt);
-			damageRecievedModifier = new Stat(1, StatType.damageRecieved);
+			damageDealtModifier = new Stat(, 1);
+			damageRecievedModifier = new Stat("Damage Recieved", 1);
 
-			damageBonus = new Stat(0, StatType.damageBonus);
-			blockBonus = new Stat(0, StatType.blockBonus);
+			damageBonus = new Stat("Damage Bonus", 0);
+			blockBonus = new Stat("Block Bonus", 0);
 		}
 
 		//start/end turn events
@@ -226,27 +225,27 @@ namespace Woopsious
 		}
 
 		//applying/removing stat modifiers
-		public virtual void AddStatModifier(float value, StatType statType)
+		public virtual void AddStatModifier(string statId, float value)
 		{
 			int blockToKeep = (int)(block - blockBonus.Value);
 
-			damageDealtModifier.AddModifier(value, statType);
-			damageRecievedModifier.AddModifier(value, statType);
+			damageDealtModifier.AddModifier(statId, value);
+			damageRecievedModifier.AddModifier(statId, value);
 
-			damageBonus.AddModifier(value, statType);
-			blockBonus.AddModifier(value, statType);
+			damageBonus.AddModifier(statId, value);
+			blockBonus.AddModifier(statId, value);
 
 			UpdateStatsAndUi(false, blockToKeep);
 		}
-		public virtual void RemoveStatModifier(float value, StatType statType)
+		public virtual void RemoveStatModifier(string statId, float value)
 		{
 			int blockToKeep = (int)(block - blockBonus.Value);
 
-			damageDealtModifier.RemoveModifier(value, statType);
-			damageRecievedModifier.RemoveModifier(value, statType);
+			damageDealtModifier.RemoveModifier(statId, value);
+			damageRecievedModifier.RemoveModifier(statId, value);
 
-			damageBonus.RemoveModifier(value, statType);
-			blockBonus.RemoveModifier(value, statType);
+			damageBonus.RemoveModifier(statId, value);
+			blockBonus.RemoveModifier(statId, value);
 
 			UpdateStatsAndUi(false, blockToKeep);
 		}

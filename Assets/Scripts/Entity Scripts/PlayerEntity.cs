@@ -1,8 +1,7 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using static Woopsious.DamageData;
-using static Woopsious.Stat;
+using Woopsious.ComplexStats;
 
 namespace Woopsious
 {
@@ -43,7 +42,7 @@ namespace Woopsious
 		{
 			base.InitilizeStats();
 
-			cardDrawAmount = new Stat(EntityData.initialCardDrawAmount, StatType.cardDrawAmount);
+			cardDrawAmount = new Stat("Draw Card Amount", EntityData.initialCardDrawAmount);
 		}
 
 		protected override void StartTurn(Entity entity)
@@ -86,14 +85,14 @@ namespace Woopsious
 		}
 
 		//applying/removing stat modifiers
-		public override void AddStatModifier(float value, StatType statType)
+		public override void AddStatModifier(string statId, float value)
 		{
-			base.AddStatModifier(value, statType);
+			base.AddStatModifier(statId, value);
 			OnPlayerStatChanges?.Invoke();
 		}
-		public override void RemoveStatModifier(float value, StatType statType)
+		public override void RemoveStatModifier(string statId, float value)
 		{
-			base.RemoveStatModifier(value, statType);
+			base.RemoveStatModifier(statId, value);
 			OnPlayerStatChanges?.Invoke();
 		}
 
