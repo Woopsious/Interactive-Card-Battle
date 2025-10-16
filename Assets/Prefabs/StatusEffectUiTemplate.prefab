@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6586291824634357507}
   - component: {fileID: 1877674458554681625}
   - component: {fileID: 8345332601926303985}
-  - component: {fileID: 2957890871154387264}
+  - component: {fileID: 3399789446698900474}
   - component: {fileID: 4409290543858748718}
   m_Layer: 5
   m_Name: StatusEffectUiTemplate
@@ -78,7 +78,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2957890871154387264
+--- !u!114 &3399789446698900474
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -87,7 +87,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1162239366311832148}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e63e6ab29ec55a4f883f4cf81060c4f, type: 3}
+  m_Script: {fileID: 11500000, guid: 8255e6b0dcf51dc47bec6e92b34097ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   effectName: 
@@ -109,7 +109,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tooltipType: 1
   tmpTextBox: {fileID: 0}
-  statusEffect: {fileID: 2957890871154387264}
+  statusEffect: {fileID: 0}
 --- !u!1 &4601156489610785518
 GameObject:
   m_ObjectHideFlags: 0

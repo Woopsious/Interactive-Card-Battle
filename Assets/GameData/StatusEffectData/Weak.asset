@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8761d35d959cba48b20137cd86d21c9, type: 3}
+  m_Script: {fileID: 11500000, guid: 2126e680802d351469ed727e28045e0d, type: 3}
   m_Name: Weak
   m_EditorClassIdentifier: 
   effectName: Weak
-  effectDescription: You feel weak
+  effectDescription: 
   hasStacks: 0
   effectStacks: 0
   maxEffectStacks: 0
@@ -22,4 +22,4 @@ MonoBehaviour:
   isDoT: 0
   isPercentage: 1
   effectValue: -0.25
-  effectStatModifierType: 2
+  statType: {fileID: 11400000, guid: ecdaca6f9ab947f4bad45d2dddbb320b, type: 2}

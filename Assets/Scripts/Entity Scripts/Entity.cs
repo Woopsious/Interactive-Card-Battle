@@ -4,11 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using Woopsious.AbilitySystem;
 using Woopsious.ComplexStats;
-using static Woopsious.ComplexStats.Stat;
 
 namespace Woopsious
 {
-	public class Entity : MonoBehaviour, IDamagable
+	public class Entity : MonoBehaviour, IDamagable, IStatusEffectsHandler
 	{
 		public bool debugInitilizeEntity;
 		public EntityData EntityData { get; private set; }
@@ -34,8 +33,8 @@ namespace Woopsious
 		public int block;
 
 		[Header("Modifiers %")]
-		[SerializeReference] public Stat damageDealtModifier;
-		[SerializeReference] public Stat damageRecievedModifier;
+		public Stat damageDealtModifier;
+		public Stat damageRecievedModifier;
 
 		[Header("Modifiers")]
 		public Stat damageBonus;
@@ -90,10 +89,7 @@ namespace Woopsious
 		public void InitilizeEntity(EntityData entityData)
 		{
 			if (entityData == null)
-			{
-				Debug.LogError("Entity data null");
-				return;
-			}
+			return;
 			else
 				EntityData = entityData;
 
@@ -128,11 +124,11 @@ namespace Woopsious
 			health = EntityData.maxHealth;
 			block = EntityData.baseBlock;
 
-			damageDealtModifier = new Stat(, 1);
-			damageRecievedModifier = new Stat("Damage Recieved", 1);
+			damageDealtModifier.InitilizeStat(1);
+			damageRecievedModifier.InitilizeStat(1);
 
-			damageBonus = new Stat("Damage Bonus", 0);
-			blockBonus = new Stat("Block Bonus", 0);
+			damageBonus.InitilizeStat(0);
+			blockBonus.InitilizeStat(0);
 		}
 
 		//start/end turn events
@@ -193,7 +189,7 @@ namespace Woopsious
 		}
 		int GetDamageRecievedModifier(DamageData damageData)
 		{
-			int damage = (int)(damageData.DamageValue * damageRecievedModifier.Value);
+			int damage = (int)(damageData.DamageValue * damageRecievedModifier.value);
 			return damage;
 		}
 		int GetBlockedDamage(DamageData damageData)
@@ -224,28 +220,34 @@ namespace Woopsious
 			}
 		}
 
-		//applying/removing stat modifiers
-		public virtual void AddStatModifier(string statId, float value)
+		//applying damage from DoT effects
+		public void ApplyDoTFromEffects(float damage)
 		{
-			int blockToKeep = (int)(block - blockBonus.Value);
+			RecieveDamage(new DamageData(this, false, true, (int)damage));
+		}
 
-			damageDealtModifier.AddModifier(statId, value);
-			damageRecievedModifier.AddModifier(statId, value);
+		//applying/removing stat modifiers
+		public virtual void AddStatModifier(StatType statType, float value)
+		{
+			int blockToKeep = (int)(block - blockBonus.value);
 
-			damageBonus.AddModifier(statId, value);
-			blockBonus.AddModifier(statId, value);
+			damageDealtModifier.AddModifier(statType, value);
+			damageRecievedModifier.AddModifier(statType, value);
+
+			damageBonus.AddModifier(statType, value);
+			blockBonus.AddModifier(statType, value);
 
 			UpdateStatsAndUi(false, blockToKeep);
 		}
-		public virtual void RemoveStatModifier(string statId, float value)
+		public virtual void RemoveStatModifier(StatType statType, float value)
 		{
-			int blockToKeep = (int)(block - blockBonus.Value);
+			int blockToKeep = (int)(block - blockBonus.value);
 
-			damageDealtModifier.RemoveModifier(statId, value);
-			damageRecievedModifier.RemoveModifier(statId, value);
+			damageDealtModifier.RemoveModifier(statType, value);
+			damageRecievedModifier.RemoveModifier(statType, value);
 
-			damageBonus.RemoveModifier(statId, value);
-			blockBonus.RemoveModifier(statId, value);
+			damageBonus.RemoveModifier(statType, value);
+			blockBonus.RemoveModifier(statType, value);
 
 			UpdateStatsAndUi(false, blockToKeep);
 		}
@@ -253,11 +255,11 @@ namespace Woopsious
 		{
 			if (newTurn)
 			{
-				block = (int)(EntityData.baseBlock + blockBonus.Value);
+				block = (int)(EntityData.baseBlock + blockBonus.value);
 			}
 			else
 			{
-				block = (int)(blockToKeep + blockBonus.Value);
+				block = (int)(blockToKeep + blockBonus.value);
 			}
 			UpdateUi();
 		}

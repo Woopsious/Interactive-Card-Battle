@@ -116,8 +116,8 @@ namespace Woopsious
 				energyBackground.SetActive(false);
 
 			DamageData = new(cardOwner, attackData.DamageData);
-			DamageData.DamageValue = (int)(DamageData.DamageValue + cardOwner.damageBonus.Value); //apply bonus damage
-			DamageData.DamageValue = (int)(DamageData.DamageValue * cardOwner.damageDealtModifier.Value); //apply damage dealt modifier
+			DamageData.DamageValue = (int)(DamageData.DamageValue + cardOwner.damageBonus.value); //apply bonus damage
+			DamageData.DamageValue = (int)(DamageData.DamageValue * cardOwner.damageDealtModifier.value); //apply damage dealt modifier
 
 			cardDescriptiontext.text = CreateDescription();
 			cardCountForCardDeckUi.gameObject.SetActive(false);
@@ -127,8 +127,8 @@ namespace Woopsious
 			PlayerCard = playerCard;
 
 			DamageData = new(cardOwner, AttackData.DamageData);
-			DamageData.DamageValue = (int)(DamageData.DamageValue + cardOwner.damageBonus.Value); //apply bonus damage
-			DamageData.DamageValue = (int)(DamageData.DamageValue * cardOwner.damageDealtModifier.Value); //apply damage dealt modifier
+			DamageData.DamageValue = (int)(DamageData.DamageValue + cardOwner.damageBonus.value); //apply bonus damage
+			DamageData.DamageValue = (int)(DamageData.DamageValue * cardOwner.damageDealtModifier.value); //apply damage dealt modifier
 
 			cardDescriptiontext.text = CreateDescription();
 		}

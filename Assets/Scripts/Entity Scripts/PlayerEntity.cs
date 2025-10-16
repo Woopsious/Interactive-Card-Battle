@@ -42,7 +42,7 @@ namespace Woopsious
 		{
 			base.InitilizeStats();
 
-			cardDrawAmount = new Stat("Draw Card Amount", EntityData.initialCardDrawAmount);
+			cardDrawAmount.InitilizeStat(EntityData.initialCardDrawAmount);
 		}
 
 		protected override void StartTurn(Entity entity)
@@ -85,14 +85,14 @@ namespace Woopsious
 		}
 
 		//applying/removing stat modifiers
-		public override void AddStatModifier(string statId, float value)
+		public override void AddStatModifier(StatType statType, float value)
 		{
-			base.AddStatModifier(statId, value);
+			base.AddStatModifier(statType, value);
 			OnPlayerStatChanges?.Invoke();
 		}
-		public override void RemoveStatModifier(string statId, float value)
+		public override void RemoveStatModifier(StatType statType, float value)
 		{
-			base.RemoveStatModifier(statId, value);
+			base.RemoveStatModifier(statType, value);
 			OnPlayerStatChanges?.Invoke();
 		}
 

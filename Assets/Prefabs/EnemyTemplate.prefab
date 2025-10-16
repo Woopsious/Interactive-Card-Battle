@@ -283,26 +283,25 @@ MonoBehaviour:
   health: 0
   block: 0
   damageDealtModifier:
-    rid: -2
+    statType: {fileID: 11400000, guid: ecdaca6f9ab947f4bad45d2dddbb320b, type: 2}
+    baseValue: 0
+    valueModifiers: []
+    value: 0
   damageRecievedModifier:
-    rid: -2
+    statType: {fileID: 11400000, guid: 3cab06129ae702840bb6764966e1f755, type: 2}
+    baseValue: 0
+    valueModifiers: []
+    value: 0
   damageBonus:
-    statId: 
+    statType: {fileID: 11400000, guid: f96f4baef2ebf4542b4dd410c6433df2, type: 2}
     baseValue: 0
     valueModifiers: []
-    Value: 0
-    statType: 0
+    value: 0
   blockBonus:
-    statId: 
+    statType: {fileID: 11400000, guid: 84690ce2be6104d4587e630e71862ca9, type: 2}
     baseValue: 0
     valueModifiers: []
-    Value: 0
-    statType: 0
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
+    value: 0
 --- !u!114 &837194938984598661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -332,6 +331,7 @@ MonoBehaviour:
   statusEffectsUiParent: {fileID: 5791568531775683009}
   statusEffectTemplate: {fileID: 1162239366311832148, guid: ea0c310f549f0ae40808f64a3161d065, type: 3}
   isTurnBased: 1
+  currentStatusEffects: []
 --- !u!114 &4788387833801328170
 MonoBehaviour:
   m_ObjectHideFlags: 0
