@@ -26,7 +26,7 @@ MonoBehaviour:
     BlockValue: 0
     HealValue: 0
     statusEffectsForTarget:
-    - {fileID: 11400000, guid: e47d70a91dfc6cd4fb8f8fb11951252b, type: 2}
+    - {fileID: 11400000, guid: 875e1fe63938a344fad8177eb6de183d, type: 2}
     - {fileID: 11400000, guid: 7fa2c7b7e75c387448dae4b78439db84, type: 2}
     statusEffectsForSelf:
     - {fileID: 11400000, guid: 25360e740435edb4eb2e0249b47998ce, type: 2}

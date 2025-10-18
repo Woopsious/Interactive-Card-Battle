@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a120b5568bb44d42a1ea36619818db9, type: 3}
   m_Name: BlockBonus
   m_EditorClassIdentifier: 
-  nameDescriptor: block bonus
+  nameDescriptor: block

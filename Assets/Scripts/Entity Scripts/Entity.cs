@@ -137,6 +137,7 @@ namespace Woopsious
 			if (entity != this) return; //not this entities turn
 
 			UpdateStatsAndUi(true, 0);
+			StatusEffectsHandler.OnNewTurn(entity.gameObject);
 
 			if (EntityData.isPlayer) return; //if is player shouldnt need to do anything else as other scripts handle it
 

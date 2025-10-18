@@ -83,6 +83,8 @@ namespace Woopsious
 				if (effectName == statusEffectsData.effectName)
 					return statusEffectsData.CreateEffectDescription();
 			}
+
+			Debug.LogError("FAILED TO GET STATUS EFFECT DESCRIPTION, make sure effect is in GameManager lists of effects");
 			return "FAILED TO GET STATUS EFFECT DESCRIPTION";
 		}
 

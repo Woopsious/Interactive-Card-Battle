@@ -13,13 +13,14 @@ MonoBehaviour:
   m_Name: Weak
   m_EditorClassIdentifier: 
   effectName: Weak
-  effectDescription: 
+  statType: {fileID: 11400000, guid: ecdaca6f9ab947f4bad45d2dddbb320b, type: 2}
   hasStacks: 0
   effectStacks: 0
   maxEffectStacks: 0
   hasLifetime: 1
-  effectTurnLifetime: 2
+  isTurnBased: 1
+  effectLifetime: 2
   isDoT: 0
+  timeBetweenDamageTicks: 0
   isPercentage: 1
   effectValue: -0.25
-  statType: {fileID: 11400000, guid: ecdaca6f9ab947f4bad45d2dddbb320b, type: 2}

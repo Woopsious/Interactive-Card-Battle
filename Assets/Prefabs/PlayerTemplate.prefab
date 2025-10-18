@@ -494,7 +494,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   statusEffectsUiParent: {fileID: 4103625343361749125}
   statusEffectTemplate: {fileID: 1162239366311832148, guid: ea0c310f549f0ae40808f64a3161d065, type: 3}
-  isTurnBased: 1
+  isTurnBased: 0
   currentStatusEffects: []
 --- !u!114 &3220206897846045916
 MonoBehaviour:

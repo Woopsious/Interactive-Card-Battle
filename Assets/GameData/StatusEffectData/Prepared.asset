@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Prepared
   m_EditorClassIdentifier: 
   effectName: Prepared
-  effectDescription: 
+  statType: {fileID: 11400000, guid: 84690ce2be6104d4587e630e71862ca9, type: 2}
   hasStacks: 1
   effectStacks: 2
   maxEffectStacks: 10
@@ -22,4 +22,3 @@ MonoBehaviour:
   isDoT: 0
   isPercentage: 0
   effectValue: 0.5
-  statType: {fileID: 11400000, guid: 84690ce2be6104d4587e630e71862ca9, type: 2}

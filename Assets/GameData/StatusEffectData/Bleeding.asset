@@ -13,13 +13,14 @@ MonoBehaviour:
   m_Name: Bleeding
   m_EditorClassIdentifier: 
   effectName: Bleeding
-  effectDescription: 
+  statType: {fileID: 0}
   hasStacks: 0
   effectStacks: 0
   maxEffectStacks: 0
   hasLifetime: 1
-  effectTurnLifetime: 2
+  isTurnBased: 1
+  effectLifetime: 2
   isDoT: 1
+  timeBetweenDamageTicks: 1
   isPercentage: 0
   effectValue: 3
-  statType: {fileID: 0}

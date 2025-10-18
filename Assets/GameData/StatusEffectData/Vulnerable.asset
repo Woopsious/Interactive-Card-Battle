@@ -13,13 +13,14 @@ MonoBehaviour:
   m_Name: Vulnerable
   m_EditorClassIdentifier: 
   effectName: Vulnerable
-  effectDescription: 
+  statType: {fileID: 11400000, guid: 3cab06129ae702840bb6764966e1f755, type: 2}
   hasStacks: 0
   effectStacks: 0
   maxEffectStacks: 0
   hasLifetime: 1
-  effectTurnLifetime: 2
+  isTurnBased: 1
+  effectLifetime: 2
   isDoT: 0
+  timeBetweenDamageTicks: 0
   isPercentage: 1
   effectValue: 0.5
-  statType: {fileID: 11400000, guid: 3cab06129ae702840bb6764966e1f755, type: 2}

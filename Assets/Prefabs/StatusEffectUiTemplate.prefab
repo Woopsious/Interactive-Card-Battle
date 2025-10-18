@@ -108,8 +108,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tooltipType: 1
-  tmpTextBox: {fileID: 0}
-  statusEffect: {fileID: 0}
+  tmpTextBox: {fileID: 2554466652703299368}
+  statusEffect: {fileID: 3399789446698900474}
 --- !u!1 &4601156489610785518
 GameObject:
   m_ObjectHideFlags: 0

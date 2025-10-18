@@ -5425,6 +5425,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 25360e740435edb4eb2e0249b47998ce, type: 2}
   - {fileID: 11400000, guid: 5061106d679be2b40b7715d9c5e88428, type: 2}
   - {fileID: 11400000, guid: 7fa2c7b7e75c387448dae4b78439db84, type: 2}
+  - {fileID: 11400000, guid: 875e1fe63938a344fad8177eb6de183d, type: 2}
   mapNodeDataTypes:
   - {fileID: 11400000, guid: 42339d39529da334bad5087e81b57d94, type: 2}
   - {fileID: 11400000, guid: 2a3a9e37f60c5364d883e05c0b679e95, type: 2}
