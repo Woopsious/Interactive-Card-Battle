@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Woopsious.AudioSystem;
 
 namespace Woopsious
 {
@@ -34,7 +35,10 @@ namespace Woopsious
 
 			PlayerData playerData = new()
 			{
-				audioVolume = AudioManager.AudioVolume,
+				masterVolume = AudioManager.GetMasterVolume(),
+				dialogueVolume = AudioManager.GetDialogueVolume(),
+				musicVolume = AudioManager.GetMusicVolume(),
+				sfxVolume = AudioManager.GetSfxVolume()
 			};
 
 			string data = JsonUtility.ToJson(playerData);
@@ -52,6 +56,7 @@ namespace Woopsious
 			string data = System.IO.File.ReadAllText(filePath);
 			PlayerData playerData = JsonUtility.FromJson<PlayerData>(data);
 
+			AudioManager.RestoreAudioVolumes(playerData.masterVolume, playerData.dialogueVolume, playerData.musicVolume, playerData.sfxVolume);
 			ReloadPlayerData?.Invoke(playerData);
 			Debug.LogError("LOAD PLAYER DATA");
 		}
@@ -142,7 +147,10 @@ namespace Woopsious
 	{
 		public string keybindsData;
 
-		public float audioVolume;
+		public float masterVolume;
+		public float dialogueVolume;
+		public float musicVolume;
+		public float sfxVolume;
 	}
 
 	//GAME DATA

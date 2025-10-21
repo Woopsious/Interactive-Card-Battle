@@ -5568,10 +5568,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1358287015}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21cb18d97083971469804c7f461f85c2, type: 3}
+  m_Script: {fileID: 11500000, guid: fc2baa104ab4f724b93ee096039e3cb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioType: 0
+  audioType: 3
+  playsBackgroundMusic: 0
+  audioClips: []
 --- !u!1001 &1392968149
 PrefabInstance:
   m_ObjectHideFlags: 0

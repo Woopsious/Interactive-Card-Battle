@@ -396,7 +396,7 @@ GameObject:
   - component: {fileID: 5611256917527611009}
   - component: {fileID: 4959695063293482393}
   - component: {fileID: 4406105294481225313}
-  - component: {fileID: 3220206897846045916}
+  - component: {fileID: 7307197893772303731}
   - component: {fileID: 2976199853928286207}
   - component: {fileID: 2165728888666346268}
   - component: {fileID: 1453047648358434025}
@@ -496,7 +496,7 @@ MonoBehaviour:
   statusEffectTemplate: {fileID: 1162239366311832148, guid: ea0c310f549f0ae40808f64a3161d065, type: 3}
   isTurnBased: 0
   currentStatusEffects: []
---- !u!114 &3220206897846045916
+--- !u!114 &7307197893772303731
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -505,10 +505,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 5386469954458961082}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21cb18d97083971469804c7f461f85c2, type: 3}
+  m_Script: {fileID: 11500000, guid: fc2baa104ab4f724b93ee096039e3cb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioType: 0
+  audioType: 3
+  playsBackgroundMusic: 0
+  audioClips:
+  - {fileID: 8300000, guid: f84e2c4d9f703b247890aec43610627e, type: 3}
 --- !u!82 &2976199853928286207
 AudioSource:
   m_ObjectHideFlags: 0
@@ -521,7 +524,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0

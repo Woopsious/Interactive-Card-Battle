@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Woopsious.AbilitySystem;
 using Woopsious.ComplexStats;
+using Woopsious.AudioSystem;
 
 namespace Woopsious
 {
