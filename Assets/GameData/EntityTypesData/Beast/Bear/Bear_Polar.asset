@@ -32,7 +32,15 @@ MonoBehaviour:
   initialCardDrawAmount: 0
   cards: []
   moveSetOrder:
-  - moveSetMoves: []
-  - moveSetMoves: []
-  - moveSetMoves: []
+  - moveSetMoves:
+    - {fileID: 11400000, guid: 38b929a6c67f86b4381e9a152d539c27, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: 6fe0d96667276b14096967e8b9c45606, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: 7e9c1004025b55f4991dd0cec6eed68b, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: 6fe0d96667276b14096967e8b9c45606, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: 7e9c1004025b55f4991dd0cec6eed68b, type: 2}
+    - {fileID: 11400000, guid: 38b929a6c67f86b4381e9a152d539c27, type: 2}
   hitSfx: {fileID: 8300000, guid: f84e2c4d9f703b247890aec43610627e, type: 3}

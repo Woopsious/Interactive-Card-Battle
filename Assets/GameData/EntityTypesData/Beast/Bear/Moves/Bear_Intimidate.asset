@@ -15,8 +15,16 @@ MonoBehaviour:
   attackName: Intimidate
   attackDescription: Stand on Hind Legs and Intimidate player
   offensive: 0
-  alsoHeals: 0
-  damage: 16
-  damageType: 0
-  attackCooldownTurns: 5
+  energyCost: 0
+  DamageData:
+    isMultiHitAttack: 0
+    HitsDifferentTargets: 0
+    multiHitCount: 0
+    valueTypes: 2
+    damageType: 0
+    DamageValue: 0
+    BlockValue: 6
+    HealValue: 0
+    statusEffectsForTarget: []
+    statusEffectsForSelf: []
   attackUseChance: 0.75

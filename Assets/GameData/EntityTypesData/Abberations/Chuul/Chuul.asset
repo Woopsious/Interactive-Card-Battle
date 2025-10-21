@@ -20,17 +20,16 @@ MonoBehaviour:
   foundWithLandModifiers: 5
   entitySpawnChance: 0.8
   eliteEnemy: 0
-  maxHealth: 70
+  maxHealth: 80
   baseBlock: 0
   minHealPercentage: 0
   playerClass: 0
   chanceOfDoubleDamage: 0
   healOnKillPercentage: 0
   damageReflectedPercentage: 0
-  maxCardsUsedPerTurn: 0
-  maxDamageCardsUsedPerTurn: 0
-  maxNonDamageCardsUsedPerTurn: 0
+  baseEnergy: 0
   maxReplaceableCardsPerTurn: 0
+  initialCardDrawAmount: 0
   cards: []
   moveSetOrder:
   - moveSetMoves:

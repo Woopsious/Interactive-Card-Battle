@@ -23,7 +23,7 @@ MonoBehaviour:
     valueTypes: 3
     damageType: 1
     DamageValue: 3
-    BlockValue: 6
+    BlockValue: 7
     HealValue: 0
     statusEffectsForTarget: []
     statusEffectsForSelf: []

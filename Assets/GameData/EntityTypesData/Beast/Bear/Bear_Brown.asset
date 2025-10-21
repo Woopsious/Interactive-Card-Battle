@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 862c4da70e93762488b165155f5dd2cb, type: 3}
-  m_Name: Nothic
+  m_Name: Bear_Brown
   m_EditorClassIdentifier: 
-  entityName: Nothic
-  entityDescription: 
+  entityName: Bear
+  entityDescription: A Hungry looking bear
   isPlayer: 0
-  enemyType: 32
-  foundInLandTypes: 0
-  foundWithLandModifiers: 5
-  entitySpawnChance: 0.8
+  enemyType: 2
+  foundInLandTypes: 3
+  foundWithLandModifiers: 16
+  entitySpawnChance: 40
   eliteEnemy: 0
-  maxHealth: 60
+  maxHealth: 50
   baseBlock: 0
   minHealPercentage: 0
   playerClass: 0
@@ -33,12 +33,9 @@ MonoBehaviour:
   cards: []
   moveSetOrder:
   - moveSetMoves:
-    - {fileID: 11400000, guid: 81d60cbf9bfae5748903e07e1b61ffa2, type: 2}
+    - {fileID: 11400000, guid: 6fe0d96667276b14096967e8b9c45606, type: 2}
   - moveSetMoves:
-    - {fileID: 11400000, guid: 238ee9401eca251418d79db17733e104, type: 2}
+    - {fileID: 11400000, guid: 7e9c1004025b55f4991dd0cec6eed68b, type: 2}
   - moveSetMoves:
-    - {fileID: 11400000, guid: 81d60cbf9bfae5748903e07e1b61ffa2, type: 2}
-  - moveSetMoves:
-    - {fileID: 11400000, guid: 81d60cbf9bfae5748903e07e1b61ffa2, type: 2}
-    - {fileID: 11400000, guid: 62dfabf2fc3cf7c419ad8919b4d26676, type: 2}
+    - {fileID: 11400000, guid: 38b929a6c67f86b4381e9a152d539c27, type: 2}
   hitSfx: {fileID: 8300000, guid: f84e2c4d9f703b247890aec43610627e, type: 3}

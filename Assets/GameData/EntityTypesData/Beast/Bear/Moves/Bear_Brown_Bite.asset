@@ -10,13 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
-  m_Name: Spider_Jump
+  m_Name: Bear_Brown_Bite
   m_EditorClassIdentifier: 
-  attackName: Jump
-  attackDescription: Jump away from player
-  offensive: 0
-  alsoHeals: 0
-  damage: 12
-  damageType: 0
-  attackCooldownTurns: 1
-  attackUseChance: 0.5
+  attackName: Bite
+  attackDescription: Bite player
+  offensive: 1
+  energyCost: 0
+  DamageData:
+    isMultiHitAttack: 0
+    HitsDifferentTargets: 0
+    multiHitCount: 0
+    valueTypes: 1
+    damageType: 0
+    DamageValue: 12
+    BlockValue: 0
+    HealValue: 0
+    statusEffectsForTarget: []
+    statusEffectsForSelf: []
+  attackUseChance: 0.25

@@ -22,7 +22,7 @@ MonoBehaviour:
     multiHitCount: 0
     valueTypes: 3
     damageType: 1
-    DamageValue: 12
+    DamageValue: 16
     BlockValue: 16
     HealValue: 0
     statusEffectsForTarget: []

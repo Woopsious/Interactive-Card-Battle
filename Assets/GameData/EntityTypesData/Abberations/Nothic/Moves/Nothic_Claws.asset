@@ -20,9 +20,9 @@ MonoBehaviour:
     isMultiHitAttack: 0
     HitsDifferentTargets: 0
     multiHitCount: 0
-    valueTypes: 0
+    valueTypes: 1
     damageType: 0
-    DamageValue: 6
+    DamageValue: 8
     BlockValue: 0
     HealValue: 0
     statusEffectsForTarget: []

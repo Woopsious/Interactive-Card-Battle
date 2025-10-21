@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
-  m_Name: Spider_ShootWeb
+  m_Name: Spider_Giant_Bite
   m_EditorClassIdentifier: 
-  attackName: Shoot Web
-  attackDescription: Shoot web at player
+  attackName: Bite
+  attackDescription: Bite player
   offensive: 1
   energyCost: 0
   DamageData:
@@ -21,8 +21,8 @@ MonoBehaviour:
     HitsDifferentTargets: 0
     multiHitCount: 0
     valueTypes: 1
-    damageType: 1
-    DamageValue: 8
+    damageType: 0
+    DamageValue: 18
     BlockValue: 0
     HealValue: 0
     statusEffectsForTarget: []

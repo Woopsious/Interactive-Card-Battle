@@ -24,7 +24,7 @@ MonoBehaviour:
     damageType: 0
     DamageValue: 0
     BlockValue: 0
-    HealValue: 20
+    HealValue: 30
     statusEffectsForTarget: []
     statusEffectsForSelf: []
   attackUseChance: 0.4

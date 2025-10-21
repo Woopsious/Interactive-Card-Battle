@@ -20,7 +20,7 @@ MonoBehaviour:
   foundWithLandModifiers: 5
   entitySpawnChance: 0.8
   eliteEnemy: 0
-  maxHealth: 90
+  maxHealth: 110
   baseBlock: 0
   minHealPercentage: 0
   playerClass: 0
@@ -32,13 +32,15 @@ MonoBehaviour:
   initialCardDrawAmount: 0
   cards: []
   moveSetOrder:
-  - moveSetMoves: []
-  - moveSetMoves: []
   - moveSetMoves:
-    - {fileID: 11400000, guid: 8fec4b2d29ef35d4c87fd1d4d57c38ad, type: 2}
-    - {fileID: 11400000, guid: 8fec4b2d29ef35d4c87fd1d4d57c38ad, type: 2}
-    - {fileID: 11400000, guid: 8fec4b2d29ef35d4c87fd1d4d57c38ad, type: 2}
-    - {fileID: 11400000, guid: 8fec4b2d29ef35d4c87fd1d4d57c38ad, type: 2}
-  - moveSetMoves: []
-  - moveSetMoves: []
+    - {fileID: 11400000, guid: e705ab42045678c45afae6cd624a38b0, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: f25d3415aac66234cbe272752ccd8c19, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: 65b595bedacee554cadcd8049d0280a9, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: 65b595bedacee554cadcd8049d0280a9, type: 2}
+    - {fileID: 11400000, guid: e705ab42045678c45afae6cd624a38b0, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: 99ae19d3c4c44e64ea8b3a80fb051e08, type: 2}
   hitSfx: {fileID: 8300000, guid: f84e2c4d9f703b247890aec43610627e, type: 3}

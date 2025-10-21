@@ -10,13 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
-  m_Name: Spider_Eat
+  m_Name: Wolf_Arctic_Bite
   m_EditorClassIdentifier: 
-  attackName: Eat
-  attackDescription: Eat a nearby cocooned animal
-  offensive: 0
-  alsoHeals: 0
-  damage: 15
-  damageType: 1
-  attackCooldownTurns: 5
-  attackUseChance: 0.25
+  attackName: Bite
+  attackDescription: Bite player
+  offensive: 1
+  energyCost: 0
+  DamageData:
+    isMultiHitAttack: 0
+    HitsDifferentTargets: 0
+    multiHitCount: 0
+    valueTypes: 1
+    damageType: 0
+    DamageValue: 11
+    BlockValue: 0
+    HealValue: 0
+    statusEffectsForTarget: []
+    statusEffectsForSelf: []
+  attackUseChance: 0.6

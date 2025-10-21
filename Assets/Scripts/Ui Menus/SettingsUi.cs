@@ -1,9 +1,5 @@
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using Woopsious;
-using Woopsious.AudioSystem;
 
 namespace Woopsious
 {
