@@ -14,9 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackName: Shield Bash
   attackDescription: Bash enemy with shield
-  offensive: 0
-  alsoHeals: 0
-  damage: 4
-  damageType: 0
-  attackCooldownTurns: 1
+  offensive: 1
+  energyCost: 0
+  DamageData:
+    isMultiHitAttack: 0
+    HitsDifferentTargets: 0
+    multiHitCount: 0
+    valueTypes: 3
+    damageType: 0
+    DamageValue: 5
+    BlockValue: 8
+    HealValue: 0
+    statusEffectsForTarget: []
+    statusEffectsForSelf: []
   attackUseChance: 0.4

@@ -18,7 +18,7 @@ MonoBehaviour:
   enemyType: 2
   foundInLandTypes: 3
   foundWithLandModifiers: 16
-  entitySpawnChance: 40
+  entitySpawnChance: 0.7
   eliteEnemy: 0
   maxHealth: 50
   baseBlock: 0

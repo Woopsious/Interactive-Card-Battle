@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
+  m_Name: Slime_Baby_Spit
+  m_EditorClassIdentifier: 
+  attackName: Spit
+  attackDescription: Slime spits acid
+  offensive: 1
+  energyCost: 0
+  DamageData:
+    isMultiHitAttack: 0
+    HitsDifferentTargets: 0
+    multiHitCount: 0
+    valueTypes: 0
+    damageType: 1
+    DamageValue: 5
+    BlockValue: 0
+    HealValue: 0
+    statusEffectsForTarget: []
+    statusEffectsForSelf: []
+  attackUseChance: 0.75

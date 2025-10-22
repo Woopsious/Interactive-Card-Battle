@@ -15,8 +15,16 @@ MonoBehaviour:
   attackName: Backup
   attackDescription: Back away from player
   offensive: 0
-  alsoHeals: 0
-  damage: 15
-  damageType: 0
-  attackCooldownTurns: 5
-  attackUseChance: 0.1
+  energyCost: 0
+  DamageData:
+    isMultiHitAttack: 0
+    HitsDifferentTargets: 0
+    multiHitCount: 0
+    valueTypes: 2
+    damageType: 0
+    DamageValue: 0
+    BlockValue: 6
+    HealValue: 0
+    statusEffectsForTarget: []
+    statusEffectsForSelf: []
+  attackUseChance: 0.3

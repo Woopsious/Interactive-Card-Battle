@@ -17,12 +17,12 @@ MonoBehaviour:
   offensive: 0
   energyCost: 0
   DamageData:
-    isMultiHitAttack: 0
+    isMultiHitAttack: 1
     HitsDifferentTargets: 0
-    multiHitCount: 0
+    multiHitCount: 3
     valueTypes: 1
     damageType: 0
-    DamageValue: 15
+    DamageValue: 18
     BlockValue: 0
     HealValue: 0
     statusEffectsForTarget: []

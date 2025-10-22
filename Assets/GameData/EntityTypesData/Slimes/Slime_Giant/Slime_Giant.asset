@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 862c4da70e93762488b165155f5dd2cb, type: 3}
+  m_Name: Slime_Giant
+  m_EditorClassIdentifier: 
+  entityName: Giant Slime
+  entityDescription: A Giant slime
+  isPlayer: 0
+  enemyType: 1
+  foundInLandTypes: 6
+  foundWithLandModifiers: 2
+  entitySpawnChance: 0.5
+  eliteEnemy: 0
+  maxHealth: 40
+  baseBlock: 0
+  minHealPercentage: 0.5
+  playerClass: 0
+  chanceOfDoubleDamage: 0
+  healOnKillPercentage: 0
+  damageReflectedPercentage: 0
+  baseEnergy: 0
+  maxReplaceableCardsPerTurn: 0
+  initialCardDrawAmount: 0
+  cards: []
+  moveSetOrder:
+  - moveSetMoves:
+    - {fileID: 11400000, guid: f22df0ceb2147f343b1f18aede9dbeda, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: cbfaadef4cc820248b39d0bd25c0290f, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: 153c9c2401b643448a2fd3d0650718c5, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: f22df0ceb2147f343b1f18aede9dbeda, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: 767f38c6cba8aed46bf252b18dd22e07, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: cbfaadef4cc820248b39d0bd25c0290f, type: 2}
+  hitSfx: {fileID: 8300000, guid: f84e2c4d9f703b247890aec43610627e, type: 3}

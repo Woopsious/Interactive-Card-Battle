@@ -163,17 +163,14 @@ namespace Woopsious
 			if (DamageData.isMultiHitAttack)
 			{
 				int splitDamage = DamageData.DamageValue / DamageData.multiHitCount;
+
 				if (DamageData.HitsDifferentTargets)
-				{
-					description += "\nDeal " + splitDamage + " damage to " + DamageData.multiHitCount + " enemies";
-				}
+					description += "\nDeals " + splitDamage + " damage to " + DamageData.multiHitCount + " different enemies";
 				else
-				{
-					description += "\nDeal " + splitDamage + " (" + DamageData.DamageValue + ") " + DamageData.multiHitCount + "x to enemy";
-				}
+					description += "\nDeals " + splitDamage + " damage " + DamageData.multiHitCount + "x times";
 			}
 			else
-				description += "\nDeal " + DamageData.DamageValue + " damage to enemy";
+				description += "\nDeals " + DamageData.DamageValue + " damage";
 
 			return description;
 		}	
@@ -187,7 +184,7 @@ namespace Woopsious
 					description += "<link=\"Test\"><color=\"blue\">" + statusEffect.effectName + "</color></link>, ";
 
 				description = RichTextManager.RemoveLastComma(description);
-				description += "to enemy";
+				description += "to enemies";
 			}
 
 			return description;

@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 862c4da70e93762488b165155f5dd2cb, type: 3}
+  m_Name: Golum_Stone
+  m_EditorClassIdentifier: 
+  entityName: Stone Golum
+  entityDescription: A Stone Golum
+  isPlayer: 0
+  enemyType: 8
+  foundInLandTypes: 40
+  foundWithLandModifiers: 25
+  entitySpawnChance: 0.6
+  eliteEnemy: 0
+  maxHealth: 60
+  baseBlock: 2
+  minHealPercentage: 0
+  playerClass: 0
+  chanceOfDoubleDamage: 0
+  healOnKillPercentage: 0
+  damageReflectedPercentage: 0
+  baseEnergy: 0
+  maxReplaceableCardsPerTurn: 0
+  initialCardDrawAmount: 0
+  cards: []
+  moveSetOrder:
+  - moveSetMoves:
+    - {fileID: 11400000, guid: e24156e1ba6aef14ebf5db60db45e6d9, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: e24156e1ba6aef14ebf5db60db45e6d9, type: 2}
+    - {fileID: 11400000, guid: 9963709fa73d51a49a163a4605a89aeb, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: 9963709fa73d51a49a163a4605a89aeb, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: a3cce5a24259e4249835dcf0e56bfded, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: 86abff3e9eaedef43b9791fb8005a4e3, type: 2}
+  hitSfx: {fileID: 8300000, guid: f84e2c4d9f703b247890aec43610627e, type: 3}

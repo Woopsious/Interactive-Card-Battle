@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 862c4da70e93762488b165155f5dd2cb, type: 3}
+  m_Name: Wight
+  m_EditorClassIdentifier: 
+  entityName: Wight
+  entityDescription: A heavily armored undead
+  isPlayer: 0
+  enemyType: 16
+  foundInLandTypes: 0
+  foundWithLandModifiers: 5
+  entitySpawnChance: 0.4
+  eliteEnemy: 0
+  maxHealth: 50
+  baseBlock: 2
+  minHealPercentage: 0
+  playerClass: 0
+  chanceOfDoubleDamage: 0
+  healOnKillPercentage: 0
+  damageReflectedPercentage: 0
+  baseEnergy: 0
+  maxReplaceableCardsPerTurn: 0
+  initialCardDrawAmount: 0
+  cards: []
+  moveSetOrder:
+  - moveSetMoves:
+    - {fileID: 11400000, guid: ffdcb1cf5932345419adba1f8745e685, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: 9d06f698e79a53944ad20657aadf5161, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: 418452cc641f6724bb692d883e2d3163, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: ffdcb1cf5932345419adba1f8745e685, type: 2}
+    - {fileID: 11400000, guid: 418452cc641f6724bb692d883e2d3163, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: ffdcb1cf5932345419adba1f8745e685, type: 2}
+    - {fileID: 11400000, guid: 418452cc641f6724bb692d883e2d3163, type: 2}
+  hitSfx: {fileID: 8300000, guid: f84e2c4d9f703b247890aec43610627e, type: 3}

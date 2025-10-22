@@ -15,8 +15,16 @@ MonoBehaviour:
   attackName: Stab
   attackDescription: Stab enemy
   offensive: 1
-  alsoHeals: 0
-  damage: 6
-  damageType: 2
-  attackCooldownTurns: 1
-  attackUseChance: 0.8
+  energyCost: 0
+  DamageData:
+    isMultiHitAttack: 0
+    HitsDifferentTargets: 0
+    multiHitCount: 0
+    valueTypes: 1
+    damageType: 0
+    DamageValue: 0
+    BlockValue: 10
+    HealValue: 0
+    statusEffectsForTarget: []
+    statusEffectsForSelf: []
+  attackUseChance: 0.4

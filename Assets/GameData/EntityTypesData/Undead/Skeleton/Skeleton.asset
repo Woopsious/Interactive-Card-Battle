@@ -13,31 +13,29 @@ MonoBehaviour:
   m_Name: Skeleton
   m_EditorClassIdentifier: 
   entityName: Skeleton
-  entityDescription: A normal human but just the bones
+  entityDescription: Whats left of a human, revived by magic
   isPlayer: 0
   enemyType: 16
   foundInLandTypes: 0
   foundWithLandModifiers: 7
-  entitySpawnChance: 50
+  entitySpawnChance: 0.7
   eliteEnemy: 0
-  maxHealth: 40
+  maxHealth: 25
+  baseBlock: 0
   minHealPercentage: 0
   playerClass: 0
   chanceOfDoubleDamage: 0
   healOnKillPercentage: 0
   damageReflectedPercentage: 0
-  extraBlockPerTurn: 0
-  maxCardsUsedPerTurn: 0
-  maxDamageCardsUsedPerTurn: 0
-  maxNonDamageCardsUsedPerTurn: 0
+  baseEnergy: 0
   maxReplaceableCardsPerTurn: 0
+  initialCardDrawAmount: 0
   cards: []
   moveSetOrder:
   - moveSetMoves:
     - {fileID: 11400000, guid: 57709d5571d446d41b7ac39c9824bf5d, type: 2}
   - moveSetMoves:
-    - {fileID: 11400000, guid: 02697854d430752418acd937816d968a, type: 2}
-  - moveSetMoves:
     - {fileID: 11400000, guid: c1ce9e36293543449b18e723dc544802, type: 2}
+  - moveSetMoves:
     - {fileID: 11400000, guid: b615aca36621f6249a3d2b3e239e0b25, type: 2}
   hitSfx: {fileID: 8300000, guid: f84e2c4d9f703b247890aec43610627e, type: 3}

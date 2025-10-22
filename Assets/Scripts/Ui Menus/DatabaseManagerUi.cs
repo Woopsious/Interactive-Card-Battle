@@ -203,6 +203,12 @@ namespace Woopsious
 		}
 		void SetupEnemiesOfTypeButton(int i, List<EntityData> enemiesOfType)
 		{
+			if (enemiesOfType.Count == 0)
+			{
+				Debug.LogWarning("No Enemies of this type to display");
+				return;
+			}
+
 			Button button = outerButtons[i];
 			button.onClick.AddListener(() => SetupEnemyButtons(enemiesOfType));
 

@@ -15,8 +15,16 @@ MonoBehaviour:
   attackName: Shield
   attackDescription: Block attacks with shield
   offensive: 0
-  alsoHeals: 0
-  damage: 6
-  damageType: 0
-  attackCooldownTurns: 1
+  energyCost: 0
+  DamageData:
+    isMultiHitAttack: 0
+    HitsDifferentTargets: 0
+    multiHitCount: 0
+    valueTypes: 2
+    damageType: 0
+    DamageValue: 0
+    BlockValue: 15
+    HealValue: 0
+    statusEffectsForTarget: []
+    statusEffectsForSelf: []
   attackUseChance: 0.8

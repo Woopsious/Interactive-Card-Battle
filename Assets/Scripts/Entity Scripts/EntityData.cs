@@ -23,7 +23,7 @@ namespace Woopsious
 		}
 		public LandTypes foundInLandTypes;
 		public LandModifiers foundWithLandModifiers;
-		[Range(0f, 100f)]
+		[Range(0f, 1f)]
 		public float entitySpawnChance;
 		public bool eliteEnemy;
 
@@ -74,7 +74,7 @@ namespace Woopsious
 
 			entityInfo += CreateFoundLandTypesAndModifiersInfo();
 
-			entityInfo += $"\n\nSpawn Chance: {entitySpawnChance}";
+			entityInfo += $"\n\nSpawn Chance: {entitySpawnChance * 100}";
 
 			return entityInfo;
 		}
