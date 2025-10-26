@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 862c4da70e93762488b165155f5dd2cb, type: 3}
   m_Name: Slime_Baby
   m_EditorClassIdentifier: 
-  entityName: Slime
-  entityDescription: A slime
+  entityName: Baby Slime
+  entityDescription: A baby slime
   isPlayer: 0
   enemyType: 1
   foundInLandTypes: 7

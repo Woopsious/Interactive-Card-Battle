@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a120b5568bb44d42a1ea36619818db9, type: 3}
+  m_Script: {fileID: 11500000, guid: 71e64c38f155f7744bf76ff7b3d7cd0e, type: 3}
   m_Name: DamageDealtMod
   m_EditorClassIdentifier: 
-  nameDescriptor: damage
+  nameDescriptor: damage dealt

@@ -20,7 +20,7 @@ MonoBehaviour:
     isMultiHitAttack: 0
     HitsDifferentTargets: 0
     multiHitCount: 0
-    valueTypes: 0
+    valueTypes: 1
     damageType: 1
     DamageValue: 2
     BlockValue: 0

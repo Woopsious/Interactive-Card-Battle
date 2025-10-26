@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Slime
   m_EditorClassIdentifier: 
   entityName: Slime
-  entityDescription: A slime
+  entityDescription: A regular slime
   isPlayer: 0
   enemyType: 1
   foundInLandTypes: 7

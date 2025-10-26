@@ -99,12 +99,12 @@ namespace Woopsious
 		//player card actions
 		public void OnPointerDown(PointerEventData eventData)
 		{
-			if (!card.selectable || eventData.button != PointerEventData.InputButton.Left) return;
+			if (!card.Selectable || eventData.button != PointerEventData.InputButton.Left) return;
 			PlayerSelectCard();
 		}
 		public void OnPointerUp(PointerEventData eventData)
 		{
-			if (!card.selectable || eventData.button != PointerEventData.InputButton.Left) return;
+			if (!card.Selectable || eventData.button != PointerEventData.InputButton.Left) return;
 			PlayerDeselectCard();
 		}
 

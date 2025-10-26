@@ -14,8 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackName: Spit
   attackDescription: Slime spits acid
+  isPlayerAttack: 0
   offensive: 1
   energyCost: 0
+  attackUseChance: 0.75
+  addDummyCardsForEffects: 1
+  effectDummyCards:
+  - {fileID: 11400000, guid: 407b2dba35ddeaf41b621f8e7f141ea8, type: 2}
   DamageData:
     isMultiHitAttack: 0
     HitsDifferentTargets: 0
@@ -25,6 +30,6 @@ MonoBehaviour:
     DamageValue: 7
     BlockValue: 0
     HealValue: 0
-    statusEffectsForTarget: []
+    statusEffectsForTarget:
+    - {fileID: 11400000, guid: 407b2dba35ddeaf41b621f8e7f141ea8, type: 2}
     statusEffectsForSelf: []
-  attackUseChance: 0.75

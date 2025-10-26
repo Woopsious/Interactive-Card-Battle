@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Woopsious.AbilitySystem;
 using static Woopsious.DrawnCardsUi;
 
 namespace Woopsious
@@ -8,7 +9,6 @@ namespace Woopsious
 	public class DrawnCardSlotUi : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 	{
 		RectTransform slotRectTransform;
-		bool showReplaceCardsButton;
 
 		//slot move positions
 		RectTransformData showCardRectTransform;
@@ -25,23 +25,21 @@ namespace Woopsious
 			slotRectTransform = GetComponent<RectTransform>();
 			cardSlotIndex = gameObject.transform.GetSiblingIndex() - 1; //-1 due to background element
 
-			TurnOrderManager.OnNewTurnEvent += OnNewTurnStart;
 			OnThisSlotMouseEnter += OnOtherCardSlotsMouseEnters;
 			PlayerEntity.OnPlayerStatChanges += UpdateCardsOnPlayerStatChanges;
 			PlayerEntity.OnPlayerEnergyChanges += OnPlayerEnergyChanges;
 			CardHandler.OnPlayerCardUsed += OnPlayerCardUsed;
-			CardHandler.OnCardReplace += ReplaceCardInDeck;
+			CardHandler.OnCardReplace += ReplaceCard;
 
 			SetSlotRectTransforms();
 		}
 		private void OnDestroy()
 		{
-			TurnOrderManager.OnNewTurnEvent -= OnNewTurnStart;
 			OnThisSlotMouseEnter -= OnOtherCardSlotsMouseEnters;
 			PlayerEntity.OnPlayerStatChanges -= UpdateCardsOnPlayerStatChanges;
 			PlayerEntity.OnPlayerEnergyChanges -= OnPlayerEnergyChanges;
 			CardHandler.OnPlayerCardUsed -= OnPlayerCardUsed;
-			CardHandler.OnCardReplace -= ReplaceCardInDeck;
+			CardHandler.OnCardReplace -= ReplaceCard;
 		}
 
 		void SetSlotRectTransforms()
@@ -66,31 +64,31 @@ namespace Woopsious
 			slotRectTransform.rotation = showCardRectTransform.rotation;
 		}
 
-		//card spawning
-		void OnNewTurnStart(Entity entity)
-		{
-			if (entity.EntityData.isPlayer)
-			{
-				showReplaceCardsButton = true;
-
-				if (CardInSlot == null)
-					SpawnNewPlayerCard();
-				ShowCardInSlot();
-			}
-			else
-				HideCardInSlot();
-		}
-		void SpawnNewPlayerCard()
+		//card generation
+		public void SpawnNewCard()
 		{
 			CardUi card = SpawnManager.SpawnCard();
 			card.SetupInGameCard(TurnOrderManager.Player(), SpawnManager.GetRandomCard(PlayerCardDeckUi.PlayerCardsInDeck()), true);
 			AddCardToSlot(card);
 		}
+		public void ReplaceCard(CardUi cardToReplace)
+		{
+			if (CardInSlot != cardToReplace) return;
+			CardInSlot.SetupInGameCard(TurnOrderManager.Player(), SpawnManager.GetRandomCard(PlayerCardDeckUi.PlayerCardsInDeck()), true);
+			AddCardToSlot(CardInSlot);
+		}
+		public void SetDummyCard(StatusEffectsData effectData)
+		{
+			if (CardInSlot == null)
+				SpawnNewCard();
+
+			CardInSlot.SetupDummyCard(effectData);
+		}
 
 		//move card up on mouse 'hover'
 		public void OnPointerEnter(PointerEventData eventData)
 		{
-			if (CardInSlot == null || !CardInSlot.selectable) return;
+			if (CardInSlot == null || !CardInSlot.Selectable) return;
 			MoveCardUp();
 		}
 		void MoveCardUp()
@@ -104,7 +102,7 @@ namespace Woopsious
 
 		public void OnPointerExit(PointerEventData eventData)
 		{
-			if (CardInSlot == null || !CardInSlot.selectable) return;
+			if (CardInSlot == null || !CardInSlot.Selectable) return;
 			MoveCardDown();
 		}
 		void MoveCardDown()
@@ -149,7 +147,7 @@ namespace Woopsious
 			if (cardSlotUi == this) return;
 			if (CardInSlot == null) return;
 
-			if (CardInSlot.selectable)
+			if (CardInSlot.Selectable)
 				MoveCardDown();
 			else
 				HideCardInSlot();
@@ -166,27 +164,19 @@ namespace Woopsious
 				HideCardInSlot();
 		}
 
-		//card replacing
-		void ReplaceCardInDeck(CardUi cardToReplace)
-		{
-			if (CardInSlot != cardToReplace) return;
-			CardInSlot.SetupInGameCard(TurnOrderManager.Player(), SpawnManager.GetRandomCard(PlayerCardDeckUi.PlayerCardsInDeck()), true);
-			AddCardToSlot(CardInSlot);
-		}
-
 		//show/hide cards
-		void ShowCardInSlot()
+		public void ShowCardInSlot()
 		{
 			if (CardInSlot == null) return;
 
-			CardInSlot.selectable = true;
+			CardInSlot.EnableCard();
 			UpdateCardSlotPositions(true);
 		}
-		void HideCardInSlot()
+		public void HideCardInSlot()
 		{
 			if (CardInSlot == null) return;
 
-			CardInSlot.selectable = false;
+			CardInSlot.DisableCard();
 			UpdateCardSlotPositions(false);
 		}
 

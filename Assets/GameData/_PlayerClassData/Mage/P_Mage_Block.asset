@@ -14,8 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackName: Magic Shield
   attackDescription: Shield yourself from attacks
+  isPlayerAttack: 1
   offensive: 0
   energyCost: 1
+  attackUseChance: 0
+  addDummyCardsForEffects: 0
+  effectDummyCards: []
   DamageData:
     isMultiHitAttack: 1
     HitsDifferentTargets: 0
@@ -27,4 +31,3 @@ MonoBehaviour:
     HealValue: 0
     statusEffectsForTarget: []
     statusEffectsForSelf: []
-  attackUseChance: 0

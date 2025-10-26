@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Woopsious.AbilitySystem;
 using Woopsious.AudioSystem;
 
 namespace Woopsious
@@ -20,6 +21,8 @@ namespace Woopsious
 
 		public DrawnCardSlotUi[] cardSlots = new DrawnCardSlotUi[9];
 		public List<DrawnCardSlotUi> activeCardSlots = new();
+
+		public List<StatusEffectsData> dummyCardsToForceAdd = new();
 
 		public Transform movingCardsTransform;
 		bool playerPickedUpCard;
@@ -74,8 +77,18 @@ namespace Woopsious
 			imageHighlight.color = _ColourGrey;
 			audioHandler.PlayAudio(cardAudioSfx, true);
 
-			if (activeCardSlots.Count == playerEntity.cardDrawAmount.value) return;
-			SetupDynamicCardSlots((int)playerEntity.cardDrawAmount.value);
+			if (activeCardSlots.Count != playerEntity.cardDrawAmount.value)
+				SetupDynamicCardSlots((int)playerEntity.cardDrawAmount.value);
+
+			foreach (DrawnCardSlotUi cardSlot in activeCardSlots)
+			{
+				if (cardSlot.CardInSlot == null)
+					cardSlot.SpawnNewCard();
+				else
+					cardSlot.ReplaceCard(cardSlot.CardInSlot);
+
+				cardSlot.ShowCardInSlot();
+			}
 		}
 		void SetupDynamicCardSlots(int slotsToSetup)
 		{
@@ -106,6 +119,11 @@ namespace Woopsious
 		void HideCardDeck()
 		{
 			imageHighlight.color = _ColourGrey;
+
+			foreach (DrawnCardSlotUi cardSlot in activeCardSlots)
+			{
+				cardSlot.HideCardInSlot();
+			}
 		}
 
 		//update image border highlight

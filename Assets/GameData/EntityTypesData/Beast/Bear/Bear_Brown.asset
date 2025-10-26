@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 862c4da70e93762488b165155f5dd2cb, type: 3}
   m_Name: Bear_Brown
   m_EditorClassIdentifier: 
-  entityName: Bear
-  entityDescription: A Hungry looking bear
+  entityName: Brown Bear
+  entityDescription: A Hungry looking brown bear
   isPlayer: 0
   enemyType: 2
   foundInLandTypes: 3

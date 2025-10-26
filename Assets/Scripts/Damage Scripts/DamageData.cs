@@ -57,10 +57,7 @@ namespace Woopsious
 			BlockValue = damageData.BlockValue;
 			HealValue = damageData.HealValue;
 
-			//statusEffectsForTarget.Clear();
 			statusEffectsForTarget = damageData.statusEffectsForTarget;
-
-			//statusEffectsForSelf.Clear();
 			statusEffectsForSelf = damageData.statusEffectsForSelf;
 		}
 
@@ -90,12 +87,5 @@ namespace Woopsious
 			else
 				Debug.LogError("Damage done in different overload method");
 		}
-	}
-
-	public interface IDamagable
-	{
-		void RecieveDamage(DamageData damageData);
-		void RecieveBlock(DamageData damageData);
-		void RecieveHealing(DamageData damageData);
 	}
 }

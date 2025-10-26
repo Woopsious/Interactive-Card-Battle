@@ -30,11 +30,11 @@ namespace Woopsious
 		[HideInInspector] public CardHandler cardHandler;
 		public RectTransform CardRectTransform { get; private set; }
 		public AttackData AttackData { get; private set; }
-		public bool PlayerCard { get; private set; }
-		public bool Offensive { get; private set; }
 		public DamageData DamageData { get; private set; }
-
-		public bool selectable;
+		public bool PlayerCard { get; private set; }
+		public bool DummyCard { get; private set; }
+		public bool Offensive { get; private set; }
+		public bool Selectable { get; private set; }
 
 		void Awake()
 		{
@@ -45,17 +45,42 @@ namespace Woopsious
 			ToggleDiscardCardUi(false);
 		}
 
-		//card initilization
-		public void SetupUiCard(AttackData attackData, int cardDeckCount)
+		bool AttackDataNullCheck(AttackData attackData)
 		{
 			if (attackData == null)
 			{
 				Debug.LogError("Attack data null");
-				return;
+				return true;
 			}
+			else
+				return false;
+		}
+		void DummyCardEffectMatchCheck()
+		{
+			if (!AttackData.addDummyCardsForEffects) return;
+
+			foreach (var dummyCardEffect in AttackData.effectDummyCards)
+			{
+				foreach (var targetEffect in AttackData.DamageData.statusEffectsForTarget)
+				{
+					if (dummyCardEffect == targetEffect)
+						continue;
+				}
+			}
+
+			Debug.LogError("Failed to find match in status effects for target for dummy effect");
+		}
+
+		//card initilization
+		public void SetupUiCard(AttackData attackData, int cardDeckCount)
+		{
+			if (AttackDataNullCheck(attackData))
+				return;
 
 			GetComponent<BoxCollider2D>().enabled = false;
 			AttackData = attackData;
+			PlayerCard = false;
+			//DummyCard = false;
 			Offensive = attackData.offensive;
 
 			string cardName = attackData.attackName;
@@ -73,14 +98,13 @@ namespace Woopsious
 		}
 		public void SetupUiCard(AttackData attackData)
 		{
-			if (attackData == null)
-			{
-				Debug.LogError("Attack data null");
+			if (AttackDataNullCheck(attackData))
 				return;
-			}
 
 			GetComponent<BoxCollider2D>().enabled = false;
 			AttackData = attackData;
+			PlayerCard = false;
+		    //DummyCard = false;
 			Offensive = attackData.offensive;
 
 			string cardName = attackData.attackName;
@@ -97,14 +121,12 @@ namespace Woopsious
 
 		public void SetupInGameCard(Entity cardOwner, AttackData attackData, bool playerCard)
 		{
-			if (attackData == null)
-			{
-				Debug.LogError("Attack data null");
+			if (AttackDataNullCheck(attackData))
 				return;
-			}
 
 			AttackData = attackData;
 			PlayerCard = playerCard;
+			//DummyCard = false;
 			Offensive = attackData.offensive;
 
 			string cardName = attackData.attackName;
@@ -125,12 +147,28 @@ namespace Woopsious
 		public void UpdateInGameCard(Entity cardOwner, bool playerCard)
 		{
 			PlayerCard = playerCard;
+			//DummyCard = false;
 
 			DamageData = new(cardOwner, AttackData.DamageData);
 			DamageData.DamageValue = (int)(DamageData.DamageValue + cardOwner.damageBonus.value); //apply bonus damage
 			DamageData.DamageValue = (int)(DamageData.DamageValue * cardOwner.damageDealtModifier.value); //apply damage dealt modifier
 
 			cardDescriptiontext.text = CreateDescription();
+		}
+
+		//special dummy card initilization
+		public void SetupDummyCard(StatusEffectsData dummyCardEffectData)
+		{
+			PlayerCard = false;
+			//DummyCard = false;
+
+			string cardName = dummyCardEffectData.effectName;
+			gameObject.name = cardName;
+			cardNametext.text = cardName;
+			cardDescriptiontext.text = "Unplayable card\nDissapears next turn";
+
+			energyBackground.SetActive(false);
+			cardCountForCardDeckUi.gameObject.SetActive(false);
 		}
 
 		//description creation
@@ -203,6 +241,18 @@ namespace Woopsious
 			}
 
 			return description;
+		}
+
+		public void EnableCard()
+		{
+			if (!PlayerCard)
+				Selectable = false;
+			else
+				Selectable = true;
+		}
+		public void DisableCard()
+		{
+			Selectable = false;
 		}
 
 		//discard card funcs
