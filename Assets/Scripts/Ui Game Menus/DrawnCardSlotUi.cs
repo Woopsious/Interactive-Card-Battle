@@ -65,23 +65,25 @@ namespace Woopsious
 		}
 
 		//card generation
-		public void SpawnNewCard()
+		public void DrawNewCard()
 		{
-			CardUi card = SpawnManager.SpawnCard();
-			card.SetupInGameCard(TurnOrderManager.Player(), SpawnManager.GetRandomCard(PlayerCardDeckUi.PlayerCardsInDeck()), true);
-			AddCardToSlot(card);
+			if (CardInSlot == null)
+				CardInSlot = SpawnManager.SpawnCard();
+
+			ReplaceCard(CardInSlot);
 		}
-		public void ReplaceCard(CardUi cardToReplace)
+		void ReplaceCard(CardUi cardToReplace)
 		{
 			if (CardInSlot != cardToReplace) return;
 			CardInSlot.SetupInGameCard(TurnOrderManager.Player(), SpawnManager.GetRandomCard(PlayerCardDeckUi.PlayerCardsInDeck()), true);
 			AddCardToSlot(CardInSlot);
 		}
-		public void SetDummyCard(StatusEffectsData effectData)
+		public void DrawDummyCard(StatusEffectsData effectData)
 		{
 			if (CardInSlot == null)
-				SpawnNewCard();
+				CardInSlot = SpawnManager.SpawnCard();
 
+			ReplaceCard(CardInSlot);
 			CardInSlot.SetupDummyCard(effectData);
 		}
 
@@ -130,10 +132,15 @@ namespace Woopsious
 			CardInSlot.transform.SetParent(gameObject.transform, false);
 			CardInSlot.CardRectTransform.anchoredPosition = new(0, 87.5f);
 
-			if (CardInSlot.AttackData.energyCost > TurnOrderManager.Player().energy)
-				HideCardInSlot();
-			else
+			if (CardInSlot.DummyCard)
 				ShowCardInSlot();
+			else
+			{
+				if (CardInSlot.AttackData.energyCost > TurnOrderManager.Player().energy)
+					HideCardInSlot();
+				else
+					ShowCardInSlot();
+			}
 		}
 		void RemoveCardFromSlot(CardUi card)
 		{
@@ -147,10 +154,15 @@ namespace Woopsious
 			if (cardSlotUi == this) return;
 			if (CardInSlot == null) return;
 
-			if (CardInSlot.Selectable)
+			if (CardInSlot.DummyCard)
 				MoveCardDown();
 			else
-				HideCardInSlot();
+			{
+				if (CardInSlot.Selectable)
+					MoveCardDown();
+				else if (!CardInSlot.Selectable)
+					HideCardInSlot();
+			}
 		}
 		void UpdateCardsOnPlayerStatChanges()
 		{
@@ -160,8 +172,14 @@ namespace Woopsious
 		void OnPlayerEnergyChanges(int energy)
 		{
 			if (CardInSlot == null) return;
-			if (CardInSlot.AttackData.energyCost > energy)
-				HideCardInSlot();
+
+			if (CardInSlot.DummyCard)
+				MoveCardDown();
+			else
+			{
+				if (CardInSlot.AttackData.energyCost > energy)
+					HideCardInSlot();
+			}
 		}
 
 		//show/hide cards

@@ -153,6 +153,7 @@ namespace Woopsious
 
 			ApplyDamageAndEffectsToTarget(target);
 			ApplyBlockHealAndEffectsToCardOwner();
+			AddDummyCardsIfExists();
 
 			CleanUpCard();
 		}
@@ -204,6 +205,11 @@ namespace Woopsious
 				cardOwner.RecieveHealing(card.DamageData);
 
 			cardOwner.StatusEffectsHandler.AddStatusEffects(card.DamageData.statusEffectsForSelf);
+		}
+		void AddDummyCardsIfExists()
+		{
+			if (!card.AttackData.addDummyCardsForEffects) return;
+			PlayerCardDeckUi.AddDummyCards(card.AttackData.effectDummyCards);
 		}
 
 		//clean up card

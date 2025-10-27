@@ -80,7 +80,7 @@ namespace Woopsious
 			GetComponent<BoxCollider2D>().enabled = false;
 			AttackData = attackData;
 			PlayerCard = false;
-			//DummyCard = false;
+			DummyCard = false;
 			Offensive = attackData.offensive;
 
 			string cardName = attackData.attackName;
@@ -104,7 +104,7 @@ namespace Woopsious
 			GetComponent<BoxCollider2D>().enabled = false;
 			AttackData = attackData;
 			PlayerCard = false;
-		    //DummyCard = false;
+		    DummyCard = false;
 			Offensive = attackData.offensive;
 
 			string cardName = attackData.attackName;
@@ -126,7 +126,7 @@ namespace Woopsious
 
 			AttackData = attackData;
 			PlayerCard = playerCard;
-			//DummyCard = false;
+			DummyCard = false;
 			Offensive = attackData.offensive;
 
 			string cardName = attackData.attackName;
@@ -147,7 +147,7 @@ namespace Woopsious
 		public void UpdateInGameCard(Entity cardOwner, bool playerCard)
 		{
 			PlayerCard = playerCard;
-			//DummyCard = false;
+			DummyCard = false;
 
 			DamageData = new(cardOwner, AttackData.DamageData);
 			DamageData.DamageValue = (int)(DamageData.DamageValue + cardOwner.damageBonus.value); //apply bonus damage
@@ -160,7 +160,7 @@ namespace Woopsious
 		public void SetupDummyCard(StatusEffectsData dummyCardEffectData)
 		{
 			PlayerCard = false;
-			//DummyCard = false;
+			DummyCard = true;
 
 			string cardName = dummyCardEffectData.effectName;
 			gameObject.name = cardName;

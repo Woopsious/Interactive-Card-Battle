@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Woopsious.AbilitySystem;
 
 namespace Woopsious
 {
@@ -27,6 +28,8 @@ namespace Woopsious
 		public List<AttackData> playerCardDeck = new();
 		//queued cards to be discarded
 		public List<AttackData> cardsToRemoveFromPlayerDeck = new();
+		//dummy cards list
+		[SerializeField] private List<StatusEffectsData> dummyCardsToForceAdd = new();
 
 		private void Awake()
 		{
@@ -148,6 +151,34 @@ namespace Woopsious
 				instance.cardsToRemoveFromPlayerDeck.Remove(cardData);
 			else
 				Debug.LogError("Tried removing card that doesnt exist from queue of card to be discarded");
+		}
+
+		//cards to force add on new turns;
+		public static void DebugAddDummyCard()
+		{
+			List<StatusEffectsData> debugDummyCards = new()
+			{
+				GameManager.instance.statusEffectsDataTypes[UnityEngine.Random.Range(0, GameManager.instance.statusEffectsDataTypes.Count)]
+			};
+
+			AddDummyCards(debugDummyCards);
+		}
+		public static void AddDummyCards(List<StatusEffectsData> dummmyCardsToAdd)
+		{
+			foreach (StatusEffectsData dummyCard in dummmyCardsToAdd)
+				instance.dummyCardsToForceAdd.Add(dummyCard);
+		}
+		public static void ResetDummyCards()
+		{
+			instance.dummyCardsToForceAdd.Clear();
+		}
+		public static StatusEffectsData GetDummyCard(int i)
+		{
+			return instance.dummyCardsToForceAdd[i];
+		}
+		public static int DummyCardCount()
+		{
+			return instance.dummyCardsToForceAdd.Count;
 		}
 
 		//discard card ui + actions

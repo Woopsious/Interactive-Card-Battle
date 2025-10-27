@@ -12,17 +12,19 @@ namespace Woopsious
 		public static DrawnCardsUi instance;
 
 		BoxCollider2D boxCollider2D;
-		RectTransform drawnCardsTransform;
-		RectTransform drawnCardsBackgroundTransform;
+
+		//highlights
 		Image imageHighlight;
 		Color _ColourGrey = new(0.3921569f, 0.3921569f, 0.3921569f, 1);
 		Color _ColourIceBlue = new(0, 1, 1, 1);
 		Color _ColourYellow = new(0.7843137f, 0.6862745f, 0, 1);
 
+		//card slots + transforms
 		public DrawnCardSlotUi[] cardSlots = new DrawnCardSlotUi[9];
 		public List<DrawnCardSlotUi> activeCardSlots = new();
 
-		public List<StatusEffectsData> dummyCardsToForceAdd = new();
+		RectTransform drawnCardsTransform;
+		RectTransform drawnCardsBackgroundTransform;
 
 		public Transform movingCardsTransform;
 		bool playerPickedUpCard;
@@ -39,16 +41,13 @@ namespace Woopsious
 			drawnCardsBackgroundTransform = drawnCardsTransform.GetChild(0).GetComponentInChildren<RectTransform>();
 			imageHighlight = GetComponent<Image>();
 			audioHandler = GetComponent<AudioHandler>();
-		}
 
-		void OnEnable()
-		{
-			TurnOrderManager.OnNewTurnEvent += OnNewTurnStart;
+			TurnOrderManager.OnNewTurnEvent += UpdateDrawnCardsDeck;
 			CardHandler.OnPlayerPickedUpCard += OnCardPicked;
 		}
 		void OnDestroy()
 		{
-			TurnOrderManager.OnNewTurnEvent -= OnNewTurnStart;
+			TurnOrderManager.OnNewTurnEvent -= UpdateDrawnCardsDeck;
 			CardHandler.OnPlayerPickedUpCard -= OnCardPicked;
 		}
 
@@ -65,10 +64,13 @@ namespace Woopsious
 
 		//UI
 		//show/hide deck + all cards
-		void OnNewTurnStart(Entity entity)
+		void UpdateDrawnCardsDeck(Entity entity)
 		{
 			if (entity.EntityData.isPlayer)
+			{
 				ShowCardDeck(entity as PlayerEntity);
+				DrawNewPlayerCards();
+			}
 			else
 				HideCardDeck();
 		}
@@ -79,16 +81,6 @@ namespace Woopsious
 
 			if (activeCardSlots.Count != playerEntity.cardDrawAmount.value)
 				SetupDynamicCardSlots((int)playerEntity.cardDrawAmount.value);
-
-			foreach (DrawnCardSlotUi cardSlot in activeCardSlots)
-			{
-				if (cardSlot.CardInSlot == null)
-					cardSlot.SpawnNewCard();
-				else
-					cardSlot.ReplaceCard(cardSlot.CardInSlot);
-
-				cardSlot.ShowCardInSlot();
-			}
 		}
 		void SetupDynamicCardSlots(int slotsToSetup)
 		{
@@ -115,6 +107,25 @@ namespace Woopsious
 				else
 					cardSlotUi.gameObject.SetActive(false);
 			}
+		}
+		void DrawNewPlayerCards()
+		{
+			int dummyCardsAdded = 0;
+
+			foreach (DrawnCardSlotUi cardSlot in activeCardSlots)
+			{
+				if (dummyCardsAdded < PlayerCardDeckUi.DummyCardCount())
+				{
+					cardSlot.DrawDummyCard(PlayerCardDeckUi.GetDummyCard(dummyCardsAdded));
+					dummyCardsAdded++;
+				}
+				else
+					cardSlot.DrawNewCard();
+
+				cardSlot.ShowCardInSlot();
+			}
+
+			PlayerCardDeckUi.ResetDummyCards();
 		}
 		void HideCardDeck()
 		{

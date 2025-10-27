@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Intimidated
   m_EditorClassIdentifier: 
   effectName: Intimidated
-  statType: {fileID: 0}
+  statType: {fileID: 11400000, guid: f96f4baef2ebf4542b4dd410c6433df2, type: 2}
   hasStacks: 0
   effectStacks: 0
   maxEffectStacks: 0
