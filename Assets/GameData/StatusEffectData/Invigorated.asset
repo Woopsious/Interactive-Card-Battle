@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2126e680802d351469ed727e28045e0d, type: 3}
-  m_Name: Weak
+  m_Name: Invigorated
   m_EditorClassIdentifier: 
-  effectName: Weak
-  statType: {fileID: 11400000, guid: ecdaca6f9ab947f4bad45d2dddbb320b, type: 2}
+  effectName: Invigorated
+  statType: {fileID: 11400000, guid: 8723a9b7b8ce00948b42c29c64b43e87, type: 2}
   hasStacks: 0
   effectStacks: 0
   maxEffectStacks: 0
@@ -23,4 +23,4 @@ MonoBehaviour:
   isDoT: 0
   timeBetweenDamageTicks: 0
   isPercentage: 1
-  effectValue: -0.25
+  effectValue: 0.25

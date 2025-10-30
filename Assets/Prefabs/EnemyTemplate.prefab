@@ -282,6 +282,11 @@ MonoBehaviour:
   turnIndicator: {fileID: 1893625026254256927}
   health: 0
   block: 0
+  maxHealthModifier:
+    statType: {fileID: 11400000, guid: 8723a9b7b8ce00948b42c29c64b43e87, type: 2}
+    baseValue: 0
+    valueModifiers: []
+    value: 0
   damageDealtModifier:
     statType: {fileID: 11400000, guid: ecdaca6f9ab947f4bad45d2dddbb320b, type: 2}
     baseValue: 0
@@ -292,13 +297,13 @@ MonoBehaviour:
     baseValue: 0
     valueModifiers: []
     value: 0
-  damageBonus:
-    statType: {fileID: 11400000, guid: f96f4baef2ebf4542b4dd410c6433df2, type: 2}
+  blockBonus:
+    statType: {fileID: 11400000, guid: 84690ce2be6104d4587e630e71862ca9, type: 2}
     baseValue: 0
     valueModifiers: []
     value: 0
-  blockBonus:
-    statType: {fileID: 11400000, guid: 84690ce2be6104d4587e630e71862ca9, type: 2}
+  damageBonus:
+    statType: {fileID: 11400000, guid: f96f4baef2ebf4542b4dd410c6433df2, type: 2}
     baseValue: 0
     valueModifiers: []
     value: 0

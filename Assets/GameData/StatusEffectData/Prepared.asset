@@ -18,7 +18,9 @@ MonoBehaviour:
   effectStacks: 2
   maxEffectStacks: 10
   hasLifetime: 0
-  effectTurnLifetime: 0
+  isTurnBased: 0
+  effectLifetime: 0
   isDoT: 0
+  timeBetweenDamageTicks: 0
   isPercentage: 0
   effectValue: 0.5
