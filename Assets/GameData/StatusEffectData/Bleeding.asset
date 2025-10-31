@@ -22,5 +22,6 @@ MonoBehaviour:
   effectLifetime: 2
   isDoT: 1
   timeBetweenDamageTicks: 1
-  isPercentage: 0
-  effectValue: 3
+  effectData:
+    isPercentage: 0
+    value: 3

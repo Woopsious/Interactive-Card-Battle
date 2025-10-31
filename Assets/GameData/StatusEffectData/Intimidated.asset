@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Intimidated
   m_EditorClassIdentifier: 
   effectName: Intimidated
-  statType: {fileID: 11400000, guid: f96f4baef2ebf4542b4dd410c6433df2, type: 2}
+  statType: {fileID: 11400000, guid: ecdaca6f9ab947f4bad45d2dddbb320b, type: 2}
   hasStacks: 0
   effectStacks: 0
   maxEffectStacks: 0
@@ -22,5 +22,6 @@ MonoBehaviour:
   effectLifetime: 2
   isDoT: 0
   timeBetweenDamageTicks: 0
-  isPercentage: 0
-  effectValue: 0
+  effectData:
+    isPercentage: 1
+    value: -0.5

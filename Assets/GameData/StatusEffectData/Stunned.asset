@@ -13,14 +13,15 @@ MonoBehaviour:
   m_Name: Stunned
   m_EditorClassIdentifier: 
   effectName: Stunned
-  statType: {fileID: 11400000, guid: ecdaca6f9ab947f4bad45d2dddbb320b, type: 2}
-  hasStacks: 0
-  effectStacks: 0
-  maxEffectStacks: 0
-  hasLifetime: 1
+  statType: {fileID: 11400000, guid: 84690ce2be6104d4587e630e71862ca9, type: 2}
+  hasStacks: 1
+  effectStacks: 2
+  maxEffectStacks: 10
+  hasLifetime: 0
   isTurnBased: 1
-  effectLifetime: 2
+  effectLifetime: 0
   isDoT: 0
   timeBetweenDamageTicks: 0
-  isPercentage: 1
-  effectValue: -0.25
+  effectData:
+    isPercentage: 0
+    value: -0.5

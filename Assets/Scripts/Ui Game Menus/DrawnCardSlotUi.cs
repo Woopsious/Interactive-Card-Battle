@@ -136,7 +136,7 @@ namespace Woopsious
 				ShowCardInSlot();
 			else
 			{
-				if (CardInSlot.AttackData.energyCost > TurnOrderManager.Player().energy)
+				if (CardInSlot.AttackData.energyCost > TurnOrderManager.Player().energy.value)
 					HideCardInSlot();
 				else
 					ShowCardInSlot();

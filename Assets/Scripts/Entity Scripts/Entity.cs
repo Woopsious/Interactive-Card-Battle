@@ -38,6 +38,7 @@ namespace Woopsious
 		public Stat damageRecievedModifier;
 
 		[Header("Modifiers")]
+		public Stat healthMax;
 		public Stat damageBonus;
 		public Stat blockBonus;
 
@@ -128,6 +129,7 @@ namespace Woopsious
 			damageDealtModifier.InitilizeStat(1);
 			damageRecievedModifier.InitilizeStat(1);
 
+			healthMax.InitilizeStat(EntityData.maxHealth);
 			damageBonus.InitilizeStat(0);
 			blockBonus.InitilizeStat(0);
 		}
@@ -174,8 +176,8 @@ namespace Woopsious
 		public virtual void RecieveHealing(DamageData damageData)
 		{
 			health += damageData.HealValue;
-			if (health > EntityData.maxHealth)
-				health = EntityData.maxHealth;
+			if (health > healthMax.value)
+				health = (int)healthMax.value;
 
 			UpdateUi();
 		}
@@ -229,27 +231,27 @@ namespace Woopsious
 		}
 
 		//applying/removing stat modifiers
-		public virtual void AddStatModifier(StatType statType, float value)
+		public virtual void AddStatModifier(StatType statType, StatData statData)
 		{
 			int blockToKeep = (int)(block - blockBonus.value);
 
-			damageDealtModifier.AddModifier(statType, value);
-			damageRecievedModifier.AddModifier(statType, value);
+			damageDealtModifier.AddModifier(statType, statData);
+			damageRecievedModifier.AddModifier(statType, statData);
 
-			damageBonus.AddModifier(statType, value);
-			blockBonus.AddModifier(statType, value);
+			damageBonus.AddModifier(statType, statData);
+			blockBonus.AddModifier(statType, statData);
 
 			UpdateStatsAndUi(false, blockToKeep);
 		}
-		public virtual void RemoveStatModifier(StatType statType, float value)
+		public virtual void RemoveStatModifier(StatType statType, StatData statData)
 		{
 			int blockToKeep = (int)(block - blockBonus.value);
 
-			damageDealtModifier.RemoveModifier(statType, value);
-			damageRecievedModifier.RemoveModifier(statType, value);
+			damageDealtModifier.RemoveModifier(statType, statData);
+			damageRecievedModifier.RemoveModifier(statType, statData);
 
-			damageBonus.RemoveModifier(statType, value);
-			blockBonus.RemoveModifier(statType, value);
+			damageBonus.RemoveModifier(statType, statData);
+			blockBonus.RemoveModifier(statType, statData);
 
 			UpdateStatsAndUi(false, blockToKeep);
 		}
@@ -313,7 +315,7 @@ namespace Woopsious
 
 		protected void UpdateUi()
 		{
-			entityHealthText.text = "HP:" + health + "/" + EntityData.maxHealth;
+			entityHealthText.text = "HP:" + health + "/" + healthMax.value;
 			entityblockText.text = "BLOCK: " + block;
 		}
 	}

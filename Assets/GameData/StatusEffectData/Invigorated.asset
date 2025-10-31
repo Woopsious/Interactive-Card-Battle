@@ -14,13 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   effectName: Invigorated
   statType: {fileID: 11400000, guid: 8723a9b7b8ce00948b42c29c64b43e87, type: 2}
-  hasStacks: 0
-  effectStacks: 0
-  maxEffectStacks: 0
-  hasLifetime: 1
+  hasStacks: 1
+  effectStacks: 2
+  maxEffectStacks: 10
+  hasLifetime: 0
   isTurnBased: 1
-  effectLifetime: 2
+  effectLifetime: 0
   isDoT: 0
   timeBetweenDamageTicks: 0
-  isPercentage: 1
-  effectValue: 0.25
+  effectData:
+    isPercentage: 0
+    value: 2

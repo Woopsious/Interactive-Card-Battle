@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Woopsious.AbilitySystem;
+using Woopsious.ComplexStats;
 
 namespace Woopsious
 {
@@ -19,6 +20,14 @@ namespace Woopsious
 		public int energyCost;
 		[Range(0f, 1f)]
 		public float attackUseChance;
+
+		[Header("Special Player Card Drawing")]
+		public bool canDrawExtraCards;
+		public StatData drawExtraCardData;
+
+		[Header("Special Player Card Playing")]
+		public bool canPlayExtraCards;
+		public StatData playExtraCardData;
 
 		[Header("Dummy Card Settings")]
 		[Tooltip("set to true to make this attack force add unplayable dummy cards to players next hand")]

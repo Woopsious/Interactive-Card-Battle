@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
-using static Woopsious.DamageData;
+using Woopsious.AbilitySystem;
 using Woopsious.ComplexStats;
+using static Woopsious.DamageData;
 
 namespace Woopsious
 {
@@ -13,7 +15,10 @@ namespace Woopsious
 
 		[Header("Player Unique Stats")]
 		public Stat cardDrawAmount;
-		public int energy;
+		public Stat energy;
+
+		[Header("Runtime Debug Inspector")]
+		public List<StatusEffectsData> statusEffectsToDebugAdd;
 
 		public static event Action<int> OnPlayerEnergyChanges;
 		public static event Action OnPlayerStatChanges;
@@ -43,6 +48,7 @@ namespace Woopsious
 			base.InitilizeStats();
 
 			cardDrawAmount.InitilizeStat(EntityData.initialCardDrawAmount);
+			energy.InitilizeStat(EntityData.baseEnergy);
 		}
 
 		protected override void StartTurn(Entity entity)
@@ -58,7 +64,7 @@ namespace Woopsious
 
 			if (entity != this) return;
 
-			energy = EntityData.baseEnergy;
+			energy.ResetStat();
 
 			UpdateEnergyUi();
 		}
@@ -66,11 +72,18 @@ namespace Woopsious
 		{
 			if (!card.PlayerCard) return;
 
-			energy -= card.AttackData.energyCost;
-			UpdateEnergyUi();
-			OnPlayerEnergyChanges?.Invoke(energy);
+			energy.AddModifier(energy.statType, new(false, -card.AttackData.energyCost));
 
-			if (energy <= 0)
+			if (card.AttackData.canPlayExtraCards)
+				energy.AddModifier(energy.statType, card.AttackData.playExtraCardData); //add extra energy
+
+			if (card.AttackData.canDrawExtraCards)
+				cardDrawAmount.AddModifier(cardDrawAmount.statType, card.AttackData.drawExtraCardData);
+
+			UpdateEnergyUi();
+			OnPlayerEnergyChanges?.Invoke((int)energy.value);
+
+			if (energy.value <= 0)
 			{
 				EndTurn();
 				return;
@@ -85,14 +98,14 @@ namespace Woopsious
 		}
 
 		//applying/removing stat modifiers
-		public override void AddStatModifier(StatType statType, float value)
+		public override void AddStatModifier(StatType statType, StatData statData)
 		{
-			base.AddStatModifier(statType, value);
+			base.AddStatModifier(statType, statData);
 			OnPlayerStatChanges?.Invoke();
 		}
-		public override void RemoveStatModifier(StatType statType, float value)
+		public override void RemoveStatModifier(StatType statType, StatData statData)
 		{
-			base.RemoveStatModifier(statType, value);
+			base.RemoveStatModifier(statType, statData);
 			OnPlayerStatChanges?.Invoke();
 		}
 
@@ -102,7 +115,7 @@ namespace Woopsious
 			if (entity == this) return;
 			if (EntityData.playerClass != EntityData.PlayerClass.Ranger) return;
 
-			int healOnKill = (int)(EntityData.maxHealth / EntityData.healOnKillPercentage);
+			int healOnKill = (int)(healthMax.value / EntityData.healOnKillPercentage);
 			RecieveHealing(new(ValueTypes.heals, healOnKill));
 		}
 		void RogueReflectDamageRecieved(DamageData damageData)
@@ -157,7 +170,13 @@ namespace Woopsious
 
 		protected void UpdateEnergyUi()
 		{
-			energyText.text = $"{energy}";
+			energyText.text = $"{energy.value}";
+		}
+
+		//debug
+		public void DebugAddStatusEffect()
+		{
+			StatusEffectsHandler.AddStatusEffects(statusEffectsToDebugAdd);
 		}
 	}
 }
