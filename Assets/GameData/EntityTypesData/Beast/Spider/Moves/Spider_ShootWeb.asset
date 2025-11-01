@@ -14,17 +14,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackName: Shoot Web
   attackDescription: Shoot web at player
+  isPlayerAttack: 0
   offensive: 1
+  attackUseChance: 0.5
   energyCost: 0
+  canDrawExtraCards: 0
+  drawExtraCardData:
+    isPercentage: 0
+    value: 0
+  addDummyCardsForEffects: 0
+  effectDummyCards: []
   DamageData:
     isMultiHitAttack: 0
     HitsDifferentTargets: 0
     multiHitCount: 0
     valueTypes: 1
     damageType: 1
-    DamageValue: 8
+    DamageValue: 5
     BlockValue: 0
     HealValue: 0
-    statusEffectsForTarget: []
+    statusEffectsForTarget:
+    - {fileID: 11400000, guid: 5b80629ec7d24e44cb25c72e3fd8faca, type: 2}
     statusEffectsForSelf: []
-  attackUseChance: 0.5

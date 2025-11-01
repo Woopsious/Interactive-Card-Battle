@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
-  m_Name: Bear_Intimidate
+  m_Name: Bear_Black_Swipe
   m_EditorClassIdentifier: 
-  attackName: Intimidate
-  attackDescription: Stand on Hind Legs and Intimidate player
-  offensive: 0
+  attackName: Swipe
+  attackDescription: Swipe at player with claws
+  offensive: 1
   energyCost: 0
   DamageData:
     isMultiHitAttack: 0
     HitsDifferentTargets: 0
     multiHitCount: 0
-    valueTypes: 2
+    valueTypes: 1
     damageType: 0
-    DamageValue: 0
-    BlockValue: 6
+    DamageValue: 6
+    BlockValue: 0
     HealValue: 0
     statusEffectsForTarget: []
     statusEffectsForSelf: []

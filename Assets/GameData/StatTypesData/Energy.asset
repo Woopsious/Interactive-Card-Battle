@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71e64c38f155f7744bf76ff7b3d7cd0e, type: 3}
   m_Name: Energy
   m_EditorClassIdentifier: 
-  nameDescriptor: card draw amount
+  nameDescriptor: energy

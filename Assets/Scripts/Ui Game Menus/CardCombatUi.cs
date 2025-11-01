@@ -1,7 +1,7 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Woopsious
 {
@@ -24,6 +24,9 @@ namespace Woopsious
 		public GameObject DebugReturnToMapButtonObj;
 		public GameObject EndPlayerTurnButtonObj;
 		public GameObject DebugEndTurnButtonObj;
+
+		[Header("DEBUG FIGHT ENEMIES AT RUNTIME")]
+		public List<EntityData> listOfEntitiesToFight = new();
 
 		void Awake()
 		{
@@ -130,6 +133,17 @@ namespace Woopsious
 		{
 			if (TurnOrderManager.CurrentEntitiesTurn() == TurnOrderManager.Player())
 				TurnOrderManager.SkipCurrentEntitiesTurn();
+		}
+
+		//debug funcs for buttons
+		public void DebugStartCombat()
+		{
+			if (listOfEntitiesToFight.Count == 0)
+			{
+				Debug.LogError("add entity data to list of entities to fight in inspector");
+				return;
+			}
+			GameManager.DebugBeginCardCombat(listOfEntitiesToFight);
 		}
 		public void DebugSkipTurn()
 		{

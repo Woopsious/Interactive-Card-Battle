@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2126e680802d351469ed727e28045e0d, type: 3}
   m_Name: Stunned
   m_EditorClassIdentifier: 
+  treatEffectsOfSameNameAsOne: 0
   effectName: Stunned
   statType: {fileID: 11400000, guid: 84690ce2be6104d4587e630e71862ca9, type: 2}
   hasStacks: 1
-  effectStacks: 2
+  effectStacks: 1
   maxEffectStacks: 10
   hasLifetime: 0
   isTurnBased: 1

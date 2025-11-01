@@ -33,6 +33,7 @@ namespace Woopsious
 		{
 			GameManager.OnShowMapEvent += ResetListsAndEntities;
 			GameManager.OnStartCardCombatEvent += CreateTurnOrder;
+			GameManager.OnDebugStartCardCombatEvent += DebugCreateTurnOrder;
 			SpawnManager.OnPlayerSpawned += AddPlayerOnSpawnComplete;
 			SpawnManager.OnEnemySpawned += AddEnemyOnSpawnComplete;
 			Entity.OnTurnEndEvent += StartNewTurn;
@@ -42,6 +43,7 @@ namespace Woopsious
 		{
 			GameManager.OnShowMapEvent -= ResetListsAndEntities;
 			GameManager.OnStartCardCombatEvent -= CreateTurnOrder;
+			GameManager.OnDebugStartCardCombatEvent += DebugCreateTurnOrder;
 			SpawnManager.OnPlayerSpawned -= AddPlayerOnSpawnComplete;
 			SpawnManager.OnEnemySpawned -= AddEnemyOnSpawnComplete;
 			Entity.OnTurnEndEvent -= StartNewTurn;
@@ -53,6 +55,19 @@ namespace Woopsious
 		{
 			//await SpawnManager.DebugSpawnAllEntities();
 			await SpawnManager.SpawnEntitiesForCardBattle(mapNode);
+
+			turnOrder.Clear();
+			turnOrder.Add(player);
+
+			foreach (var entity in enemyEntities)
+				turnOrder.Add(entity);
+
+			StartInitialTurn(turnOrder[0]);
+		}
+		async void DebugCreateTurnOrder(List<EntityData> entitiesToSpawn)
+		{
+			//await SpawnManager.DebugSpawnAllEntities();
+			await SpawnManager.DebugSpawnEntities(entitiesToSpawn);
 
 			turnOrder.Clear();
 			turnOrder.Add(player);

@@ -10,21 +10,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
-  m_Name: Spider_Giant_Bite
+  m_Name: Spider_Giant_ShootWeb
   m_EditorClassIdentifier: 
-  attackName: Bite
-  attackDescription: Bite player
+  attackName: Shoot Web
+  attackDescription: Shoot web at player
+  isPlayerAttack: 0
   offensive: 1
+  attackUseChance: 0.5
   energyCost: 0
+  canDrawExtraCards: 0
+  drawExtraCardData:
+    isPercentage: 0
+    value: 0
+  addDummyCardsForEffects: 0
+  effectDummyCards: []
   DamageData:
     isMultiHitAttack: 0
     HitsDifferentTargets: 0
     multiHitCount: 0
     valueTypes: 1
-    damageType: 0
-    DamageValue: 18
+    damageType: 1
+    DamageValue: 12
     BlockValue: 0
     HealValue: 0
-    statusEffectsForTarget: []
+    statusEffectsForTarget:
+    - {fileID: 11400000, guid: a92d59cb44493bd4ea30d690d19f394a, type: 2}
     statusEffectsForSelf: []
-  attackUseChance: 0.5

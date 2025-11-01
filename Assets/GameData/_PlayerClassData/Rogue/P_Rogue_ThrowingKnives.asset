@@ -16,8 +16,12 @@ MonoBehaviour:
   attackDescription: Throw knives at multiple enemies
   isPlayerAttack: 1
   offensive: 1
-  energyCost: 1
   attackUseChance: 0
+  energyCost: -1
+  canDrawExtraCards: 0
+  drawExtraCardData:
+    isPercentage: 0
+    value: 0
   addDummyCardsForEffects: 0
   effectDummyCards: []
   DamageData:
@@ -29,7 +33,5 @@ MonoBehaviour:
     DamageValue: 16
     BlockValue: 0
     HealValue: 0
-    statusEffectsForTarget:
-    - {fileID: 11400000, guid: e47d70a91dfc6cd4fb8f8fb11951252b, type: 2}
-    statusEffectsForSelf:
-    - {fileID: 11400000, guid: 8a7b57d8c146a224f963b45380561446, type: 2}
+    statusEffectsForTarget: []
+    statusEffectsForSelf: []

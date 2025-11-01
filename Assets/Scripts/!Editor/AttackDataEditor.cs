@@ -33,32 +33,12 @@ namespace Woopsious
 				data.attackUseChance = 0;
 
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.energyCost)));
-
-				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.canDrawExtraCards)));
-
-				if (data.canDrawExtraCards)
-				{
-					EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.drawExtraCardData)));
-				}
-				else
-				{
-					data.drawExtraCardData = null;
-				}
-
-				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.canPlayExtraCards)));
-
-				if (data.canPlayExtraCards)
-				{
-					EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.playExtraCardData)));
-				}
-				else
-				{
-					data.playExtraCardData = null;
-				}
+				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.extraCardsToDraw)));
 			}
 			else
 			{
 				data.energyCost = 0;
+				data.extraCardsToDraw = 0;
 
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.attackUseChance)));
 

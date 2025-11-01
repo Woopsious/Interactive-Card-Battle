@@ -65,6 +65,7 @@ namespace Woopsious
 			if (entity != this) return;
 
 			energy.ResetStat();
+			cardDrawAmount.ResetStat();
 
 			UpdateEnergyUi();
 		}
@@ -72,13 +73,8 @@ namespace Woopsious
 		{
 			if (!card.PlayerCard) return;
 
-			energy.AddModifier(energy.statType, new(false, -card.AttackData.energyCost));
-
-			if (card.AttackData.canPlayExtraCards)
-				energy.AddModifier(energy.statType, card.AttackData.playExtraCardData); //add extra energy
-
-			if (card.AttackData.canDrawExtraCards)
-				cardDrawAmount.AddModifier(cardDrawAmount.statType, card.AttackData.drawExtraCardData);
+			energy.AddModifier(energy.statType, new(false, card.AttackData.energyCost));
+			cardDrawAmount.AddModifier(cardDrawAmount.statType, new(false, card.AttackData.extraCardsToDraw));
 
 			UpdateEnergyUi();
 			OnPlayerEnergyChanges?.Invoke((int)energy.value);

@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2126e680802d351469ed727e28045e0d, type: 3}
   m_Name: Weak
   m_EditorClassIdentifier: 
+  treatEffectsOfSameNameAsOne: 0
   effectName: Weak
   statType: {fileID: 11400000, guid: f96f4baef2ebf4542b4dd410c6433df2, type: 2}
   hasStacks: 1
-  effectStacks: 2
+  effectStacks: 1
   maxEffectStacks: 10
   hasLifetime: 0
   isTurnBased: 1

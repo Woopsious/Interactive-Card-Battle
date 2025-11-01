@@ -1041,8 +1041,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -10, y: 10}
-  m_SizeDelta: {x: 25, y: 25}
+  m_AnchoredPosition: {x: -12, y: 12}
+  m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &5898175207487740444
 CanvasRenderer:
@@ -1502,7 +1502,6 @@ MonoBehaviour:
   addCardToDiscardList: {fileID: 1211937234921456598}
   removeCardFromDiscardList: {fileID: 605374203914694443}
   cardHandler: {fileID: 0}
-  selectable: 0
 --- !u!114 &2216728023845142203
 MonoBehaviour:
   m_ObjectHideFlags: 0

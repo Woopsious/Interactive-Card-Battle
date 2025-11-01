@@ -33,23 +33,28 @@ namespace Woopsious
 			await SpawnPlayer();
 			await SpawnEnemies(mapNode);
 		}
-		public static async Task DebugSpawnAllEntities()
+		public static async Task DebugSpawnEntities(List<EntityData> entitiesToSpawn)
 		{
 			await SpawnPlayer();
 
-			float spacing = (Screen.width - 
-				GameManager.instance.enemyDataTypes.Count * instance.widthOfEntities) / (GameManager.instance.enemyDataTypes.Count + 1);
+			List<Entity> spawnedEntites = new();
 
-			for (int i = 0; i < GameManager.instance.enemyDataTypes.Count; i++)
+			foreach (EntityData entityData in entitiesToSpawn)
 			{
-				Entity spawnedEntity = Instantiate(instance.EntityPrefab, CardCombatUi.instance.spawnedEntitiesTransform).GetComponent<Entity>();
+				Entity entity = ObjectPoolingManager.RequestEntity();
 
-				spawnedEntity.InitilizeEntity(GameManager.instance.enemyDataTypes[i]);
-				instance.SetEnemyPosition(spawnedEntity.GetComponent<RectTransform>(), spacing, i + 1);
-				OnEnemySpawned?.Invoke(spawnedEntity);
+				if (entity == null)
+					entity = Instantiate(instance.EntityPrefab, CardCombatUi.instance.spawnedEntitiesTransform).GetComponent<Entity>();
 
-				Debug.LogError(spawnedEntity.EntityData.entityName + " cost: " + spawnedEntity.EntityData.GetEntityCost());
+				entity.InitilizeEntity(entityData);
+				entity.transform.SetParent(CardCombatUi.instance.spawnedEntitiesTransform);
+				entity.gameObject.SetActive(true);
+
+				spawnedEntites.Add(entity);
+				OnEnemySpawned?.Invoke(entity);
 			}
+
+			instance.SetEnemyPositions(spawnedEntites);
 		}
 
 		//entity spawning

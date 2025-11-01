@@ -86,7 +86,11 @@ namespace Woopsious
 			string cardName = attackData.attackName;
 			gameObject.name = cardName;
 			cardNametext.text = cardName;
-			cardCostText.text = $"{attackData.energyCost}";
+
+			if (attackData.energyCost > 0)
+				cardCostText.text = $"+{attackData.energyCost}";
+			else
+				cardCostText.text = $"{attackData.energyCost}";
 
 			DamageData = new(null, attackData.DamageData);
 
@@ -111,7 +115,11 @@ namespace Woopsious
 			gameObject.name = cardName;
 			cardNametext.text = cardName;
 			energyBackground.SetActive(false);
-			cardCostText.text = $"{attackData.energyCost}";
+
+			if (attackData.energyCost > 0)
+				cardCostText.text = $"+{attackData.energyCost}";
+			else
+				cardCostText.text = $"{attackData.energyCost}";
 
 			DamageData = new(null, attackData.DamageData);
 
@@ -132,7 +140,11 @@ namespace Woopsious
 			string cardName = attackData.attackName;
 			gameObject.name = cardName;
 			cardNametext.text = cardName;
-			cardCostText.text = $"{attackData.energyCost}";
+
+			if (attackData.energyCost > 0)
+				cardCostText.text = $"+{attackData.energyCost}";
+			else
+				cardCostText.text = $"{attackData.energyCost}";
 
 			if (!playerCard)
 				energyBackground.SetActive(false);
@@ -179,6 +191,14 @@ namespace Woopsious
 
 			if (DamageData.valueTypes == ValueTypes.none)
 				Debug.LogError("Value type not set");
+
+			if (AttackData.extraCardsToDraw != 0)
+			{
+				if (AttackData.extraCardsToDraw == 1)
+					description += $"+{AttackData.extraCardsToDraw} card next turn\n(Max: 9)\n";
+				else
+					description += $"+{AttackData.extraCardsToDraw} cards next turn\n(Max: 9)\n";
+			}
 
 			if (DamageData.valueTypes.HasFlag(ValueTypes.damages))
 				description = CreateDamageDescription(description);

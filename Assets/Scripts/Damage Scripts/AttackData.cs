@@ -17,17 +17,17 @@ namespace Woopsious
 		[Header("Special Settings")]
 		public bool isPlayerAttack;
 		public bool offensive;
-		public int energyCost;
 		[Range(0f, 1f)]
 		public float attackUseChance;
 
-		[Header("Special Player Card Drawing")]
-		public bool canDrawExtraCards;
-		public StatData drawExtraCardData;
+		[Header("Player Energy Cost")]
+		[Tooltip("negative value gives energy to use on current turn, 0 is a free card to play")]
+		[Range(-5, 5)]
+		public int energyCost;
 
-		[Header("Special Player Card Playing")]
-		public bool canPlayExtraCards;
-		public StatData playExtraCardData;
+		[Header("Special Player Card Drawing")]
+		[Range(0, 5)]
+		public int extraCardsToDraw;
 
 		[Header("Dummy Card Settings")]
 		[Tooltip("set to true to make this attack force add unplayable dummy cards to players next hand")]

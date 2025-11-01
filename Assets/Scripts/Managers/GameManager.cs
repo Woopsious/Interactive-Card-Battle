@@ -76,6 +76,7 @@ namespace Woopsious
 
 		//game events
 		public static event Action<MapNode> OnStartCardCombatEvent;
+		public static event Action<List<EntityData>> OnDebugStartCardCombatEvent;
 		public static event Action OnStartCardCombatUiEvent;
 		public static event Action<bool> OnEndCardCombatEvent;
 		public static event Action OnShowMapEvent;
@@ -130,6 +131,12 @@ namespace Woopsious
 		{
 			PauseGame(false);
 			OnStartCardCombatEvent?.Invoke(mapNode);
+			OnStartCardCombatUiEvent?.Invoke();
+		}
+		public static void DebugBeginCardCombat(List<EntityData> entityDatas)
+		{
+			PauseGame(false);
+			OnDebugStartCardCombatEvent?.Invoke(entityDatas);
 			OnStartCardCombatUiEvent?.Invoke();
 		}
 		void EndCardCombat(Entity entity)

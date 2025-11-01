@@ -35,11 +35,13 @@ MonoBehaviour:
   - moveSetMoves:
     - {fileID: 11400000, guid: 7cc3537799080034488262b487bc169c, type: 2}
   - moveSetMoves:
-    - {fileID: 11400000, guid: e3ff4da0335bb8c458508b2502bdb1e5, type: 2}
+    - {fileID: 11400000, guid: 0de11a1203870ce4fa01ef124b62bd47, type: 2}
   - moveSetMoves:
     - {fileID: 11400000, guid: 1c5120165af6bac4f9ccb027646cf3d4, type: 2}
   - moveSetMoves:
     - {fileID: 11400000, guid: 7cc3537799080034488262b487bc169c, type: 2}
   - moveSetMoves:
-    - {fileID: 11400000, guid: e3ff4da0335bb8c458508b2502bdb1e5, type: 2}
+    - {fileID: 11400000, guid: 7cc3537799080034488262b487bc169c, type: 2}
+  - moveSetMoves:
+    - {fileID: 11400000, guid: 0de11a1203870ce4fa01ef124b62bd47, type: 2}
   hitSfx: {fileID: 8300000, guid: f84e2c4d9f703b247890aec43610627e, type: 3}

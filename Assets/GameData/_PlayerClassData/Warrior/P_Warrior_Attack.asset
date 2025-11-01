@@ -16,8 +16,12 @@ MonoBehaviour:
   attackDescription: Slash enemy with sword
   isPlayerAttack: 1
   offensive: 1
-  energyCost: 1
   attackUseChance: 0
+  energyCost: -1
+  canDrawExtraCards: 0
+  drawExtraCardData:
+    isPercentage: 0
+    value: 0
   addDummyCardsForEffects: 0
   effectDummyCards: []
   DamageData:

@@ -14,8 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackName: Leap
   attackDescription: Leap away
+  isPlayerAttack: 0
   offensive: 0
+  attackUseChance: 0.25
   energyCost: 0
+  canDrawExtraCards: 0
+  drawExtraCardData:
+    isPercentage: 0
+    value: 0
+  addDummyCardsForEffects: 0
+  effectDummyCards: []
   DamageData:
     isMultiHitAttack: 0
     HitsDifferentTargets: 0
@@ -23,8 +31,7 @@ MonoBehaviour:
     valueTypes: 2
     damageType: 0
     DamageValue: 0
-    BlockValue: 10
+    BlockValue: 8
     HealValue: 0
     statusEffectsForTarget: []
     statusEffectsForSelf: []
-  attackUseChance: 0.25

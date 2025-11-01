@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
-  m_Name: P_Ranger_Shoot
+  m_Name: Bear_Intimidate
   m_EditorClassIdentifier: 
-  attackName: Shoot Arrow
-  attackDescription: Shoot arrow at enemy
-  isPlayerAttack: 1
-  offensive: 1
-  attackUseChance: 0
-  energyCost: -1
+  attackName: Intimidate
+  attackDescription: Stand on Hind Legs and Intimidate target
+  isPlayerAttack: 0
+  offensive: 0
+  attackUseChance: 0.75
+  energyCost: 0
   canDrawExtraCards: 0
   drawExtraCardData:
     isPercentage: 0
@@ -28,10 +28,11 @@ MonoBehaviour:
     isMultiHitAttack: 0
     HitsDifferentTargets: 0
     multiHitCount: 0
-    valueTypes: 1
+    valueTypes: 2
     damageType: 0
-    DamageValue: 12
-    BlockValue: 0
+    DamageValue: 0
+    BlockValue: 6
     HealValue: 0
-    statusEffectsForTarget: []
+    statusEffectsForTarget:
+    - {fileID: 11400000, guid: 407b2dba35ddeaf41b621f8e7f141ea8, type: 2}
     statusEffectsForSelf: []

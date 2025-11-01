@@ -16,8 +16,12 @@ MonoBehaviour:
   attackDescription: Dodge incoming attacks
   isPlayerAttack: 1
   offensive: 0
-  energyCost: 1
   attackUseChance: 0
+  energyCost: -1
+  canDrawExtraCards: 1
+  drawExtraCardData:
+    isPercentage: 0
+    value: 2
   addDummyCardsForEffects: 0
   effectDummyCards: []
   DamageData:

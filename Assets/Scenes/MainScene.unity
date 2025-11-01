@@ -5136,10 +5136,18 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b1f5e72def15b49449f3393518ec0963, type: 2}
   statusEffectsDataTypes:
   - {fileID: 11400000, guid: e47d70a91dfc6cd4fb8f8fb11951252b, type: 2}
+  - {fileID: 11400000, guid: 7fa2c7b7e75c387448dae4b78439db84, type: 2}
+  - {fileID: 11400000, guid: 40061349b754c7e42af528cd2c1d0e0b, type: 2}
+  - {fileID: 11400000, guid: fb56b8d55565f0645bac7cf740989c12, type: 2}
+  - {fileID: 11400000, guid: 407b2dba35ddeaf41b621f8e7f141ea8, type: 2}
+  - {fileID: 11400000, guid: d567fb9b753ae6b4d9efed647bee80c0, type: 2}
   - {fileID: 11400000, guid: 8a7b57d8c146a224f963b45380561446, type: 2}
   - {fileID: 11400000, guid: 25360e740435edb4eb2e0249b47998ce, type: 2}
+  - {fileID: 11400000, guid: abc4a7d866707d645a469a5ed6dad75f, type: 2}
   - {fileID: 11400000, guid: 5061106d679be2b40b7715d9c5e88428, type: 2}
-  - {fileID: 11400000, guid: 7fa2c7b7e75c387448dae4b78439db84, type: 2}
+  - {fileID: 11400000, guid: f78cba8cf83da314380371d46b7aecf6, type: 2}
+  - {fileID: 11400000, guid: 5b80629ec7d24e44cb25c72e3fd8faca, type: 2}
+  - {fileID: 11400000, guid: a92d59cb44493bd4ea30d690d19f394a, type: 2}
   mapNodeDataTypes:
   - {fileID: 11400000, guid: 42339d39529da334bad5087e81b57d94, type: 2}
   - {fileID: 11400000, guid: 2a3a9e37f60c5364d883e05c0b679e95, type: 2}
