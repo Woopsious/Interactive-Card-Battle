@@ -18,12 +18,10 @@ MonoBehaviour:
   offensive: 1
   attackUseChance: 0.5
   energyCost: 0
-  canDrawExtraCards: 0
-  drawExtraCardData:
-    isPercentage: 0
-    value: 0
-  addDummyCardsForEffects: 0
-  effectDummyCards: []
+  extraCardsToDraw: 0
+  addDummyCardsForEffects: 1
+  effectDummyCards:
+  - {fileID: 11400000, guid: 5b80629ec7d24e44cb25c72e3fd8faca, type: 2}
   DamageData:
     isMultiHitAttack: 0
     HitsDifferentTargets: 0
@@ -34,5 +32,6 @@ MonoBehaviour:
     BlockValue: 0
     HealValue: 0
     statusEffectsForTarget:
-    - {fileID: 11400000, guid: a92d59cb44493bd4ea30d690d19f394a, type: 2}
+    - {fileID: 11400000, guid: 5b80629ec7d24e44cb25c72e3fd8faca, type: 2}
+    - {fileID: 11400000, guid: 5b80629ec7d24e44cb25c72e3fd8faca, type: 2}
     statusEffectsForSelf: []

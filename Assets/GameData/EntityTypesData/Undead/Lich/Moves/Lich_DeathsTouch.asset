@@ -14,17 +14,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackName: Deaths Touch
   attackDescription: Touch target with death
+  isPlayerAttack: 0
   offensive: 1
+  attackUseChance: 0.7
   energyCost: 0
+  extraCardsToDraw: 0
+  addDummyCardsForEffects: 0
+  effectDummyCards: []
   DamageData:
     isMultiHitAttack: 0
     HitsDifferentTargets: 0
     multiHitCount: 0
     valueTypes: 1
     damageType: 1
-    DamageValue: 18
+    DamageValue: 22
     BlockValue: 0
     HealValue: 0
     statusEffectsForTarget: []
     statusEffectsForSelf: []
-  attackUseChance: 0.7

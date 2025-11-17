@@ -14,17 +14,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackName: Disrupt Life
   attackDescription: Disrupt the life of living things around self
+  isPlayerAttack: 0
   offensive: 1
+  attackUseChance: 0.7
   energyCost: 0
+  extraCardsToDraw: 0
+  addDummyCardsForEffects: 1
+  effectDummyCards:
+  - {fileID: 11400000, guid: 417078f7c2c266a428371cae29a78d8e, type: 2}
+  - {fileID: 11400000, guid: 417078f7c2c266a428371cae29a78d8e, type: 2}
   DamageData:
     isMultiHitAttack: 0
     HitsDifferentTargets: 0
     multiHitCount: 0
     valueTypes: 1
     damageType: 1
-    DamageValue: 25
+    DamageValue: 10
     BlockValue: 0
     HealValue: 0
-    statusEffectsForTarget: []
+    statusEffectsForTarget:
+    - {fileID: 11400000, guid: 417078f7c2c266a428371cae29a78d8e, type: 2}
+    - {fileID: 11400000, guid: f78cba8cf83da314380371d46b7aecf6, type: 2}
+    - {fileID: 11400000, guid: f78cba8cf83da314380371d46b7aecf6, type: 2}
+    - {fileID: 11400000, guid: f78cba8cf83da314380371d46b7aecf6, type: 2}
+    - {fileID: 11400000, guid: f78cba8cf83da314380371d46b7aecf6, type: 2}
     statusEffectsForSelf: []
-  attackUseChance: 0.7

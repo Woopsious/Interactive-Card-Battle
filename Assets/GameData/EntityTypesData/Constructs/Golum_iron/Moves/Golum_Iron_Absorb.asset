@@ -14,8 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackName: Absord Iron
   attackDescription: Absorb iron in surrounding area
+  isPlayerAttack: 0
   offensive: 0
+  attackUseChance: 0.2
   energyCost: 0
+  extraCardsToDraw: 0
+  addDummyCardsForEffects: 0
+  effectDummyCards: []
   DamageData:
     isMultiHitAttack: 0
     HitsDifferentTargets: 0
@@ -26,5 +31,7 @@ MonoBehaviour:
     BlockValue: 0
     HealValue: 16
     statusEffectsForTarget: []
-    statusEffectsForSelf: []
-  attackUseChance: 0.2
+    statusEffectsForSelf:
+    - {fileID: 11400000, guid: 5061106d679be2b40b7715d9c5e88428, type: 2}
+    - {fileID: 11400000, guid: 25360e740435edb4eb2e0249b47998ce, type: 2}
+    - {fileID: 11400000, guid: 25360e740435edb4eb2e0249b47998ce, type: 2}

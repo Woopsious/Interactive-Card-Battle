@@ -14,8 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackName: Life Drain
   attackDescription: Drain the life from target
+  isPlayerAttack: 0
   offensive: 1
+  attackUseChance: 0.6
   energyCost: 0
+  extraCardsToDraw: 0
+  addDummyCardsForEffects: 1
+  effectDummyCards:
+  - {fileID: 11400000, guid: 5bf5217ea88342d43accf4d74575ebc7, type: 2}
   DamageData:
     isMultiHitAttack: 0
     HitsDifferentTargets: 0
@@ -25,6 +31,8 @@ MonoBehaviour:
     DamageValue: 8
     BlockValue: 0
     HealValue: 16
-    statusEffectsForTarget: []
+    statusEffectsForTarget:
+    - {fileID: 11400000, guid: 5bf5217ea88342d43accf4d74575ebc7, type: 2}
+    - {fileID: 11400000, guid: 7fa2c7b7e75c387448dae4b78439db84, type: 2}
+    - {fileID: 11400000, guid: 7fa2c7b7e75c387448dae4b78439db84, type: 2}
     statusEffectsForSelf: []
-  attackUseChance: 0.6

@@ -14,17 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackName: Multiattack
   attackDescription: Attack multiple times with claws
+  isPlayerAttack: 0
   offensive: 1
+  attackUseChance: 0.6
   energyCost: 0
+  extraCardsToDraw: 0
+  addDummyCardsForEffects: 0
+  effectDummyCards: []
   DamageData:
     isMultiHitAttack: 1
     HitsDifferentTargets: 0
     multiHitCount: 2
     valueTypes: 1
     damageType: 0
-    DamageValue: 12
+    DamageValue: 11
     BlockValue: 0
     HealValue: 0
     statusEffectsForTarget: []
-    statusEffectsForSelf: []
-  attackUseChance: 0.6
+    statusEffectsForSelf:
+    - {fileID: 11400000, guid: f4d4f8863dd14074f8edad5cf8030290, type: 2}

@@ -14,8 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackName: Slam
   attackDescription: Slam ground
+  isPlayerAttack: 0
   offensive: 1
+  attackUseChance: 0.6
   energyCost: 0
+  extraCardsToDraw: 0
+  addDummyCardsForEffects: 1
+  effectDummyCards:
+  - {fileID: 11400000, guid: abc4a7d866707d645a469a5ed6dad75f, type: 2}
   DamageData:
     isMultiHitAttack: 0
     HitsDifferentTargets: 0
@@ -25,6 +31,7 @@ MonoBehaviour:
     DamageValue: 10
     BlockValue: 0
     HealValue: 0
-    statusEffectsForTarget: []
+    statusEffectsForTarget:
+    - {fileID: 11400000, guid: abc4a7d866707d645a469a5ed6dad75f, type: 2}
+    - {fileID: 11400000, guid: abc4a7d866707d645a469a5ed6dad75f, type: 2}
     statusEffectsForSelf: []
-  attackUseChance: 0.6

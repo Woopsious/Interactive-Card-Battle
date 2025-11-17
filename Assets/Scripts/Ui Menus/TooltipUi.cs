@@ -72,15 +72,16 @@ namespace Woopsious
 				OnTooltipTextLinkClicked?.Invoke(this, GetStatusEffectDescriptionToolTip(linkInfo.GetLinkText()), eventData.position);
 			}
 			else
-			{
 				Debug.LogError("no link found");
-			}
 		}
 		string GetStatusEffectDescriptionToolTip(string effectName)
 		{
 			foreach (StatusEffectsData statusEffectsData in GameManager.instance.statusEffectsDataTypes)
 			{
-				if (effectName == statusEffectsData.effectName)
+				int spaceIndex = effectName.IndexOf(' ');
+				string appendedName = effectName[(spaceIndex + 1)..]; //append text after blank space
+
+				if (appendedName == statusEffectsData.effectName)
 					return statusEffectsData.CreateEffectDescription();
 			}
 

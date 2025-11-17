@@ -14,8 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackName: Shred
   attackDescription: Wildly swing at player with sharp claws
+  isPlayerAttack: 0
   offensive: 1
+  attackUseChance: 0.2
   energyCost: 0
+  extraCardsToDraw: 0
+  addDummyCardsForEffects: 0
+  effectDummyCards: []
   DamageData:
     isMultiHitAttack: 1
     HitsDifferentTargets: 0
@@ -25,6 +30,7 @@ MonoBehaviour:
     DamageValue: 12
     BlockValue: 0
     HealValue: 0
-    statusEffectsForTarget: []
-    statusEffectsForSelf: []
-  attackUseChance: 0.2
+    statusEffectsForTarget:
+    - {fileID: 11400000, guid: e47d70a91dfc6cd4fb8f8fb11951252b, type: 2}
+    statusEffectsForSelf:
+    - {fileID: 11400000, guid: 5061106d679be2b40b7715d9c5e88428, type: 2}

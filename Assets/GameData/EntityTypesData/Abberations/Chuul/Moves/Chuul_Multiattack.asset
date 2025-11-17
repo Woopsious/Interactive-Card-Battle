@@ -12,10 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
   m_Name: Chuul_Multiattack
   m_EditorClassIdentifier: 
-  attackName: Eat Tentacles
-  attackDescription: Eat summoned tentacles
+  attackName: Pincer Multiattack
+  attackDescription: Attack target rapidly with pincers
+  isPlayerAttack: 0
   offensive: 0
+  attackUseChance: 0.5
   energyCost: 0
+  extraCardsToDraw: 0
+  addDummyCardsForEffects: 0
+  effectDummyCards: []
   DamageData:
     isMultiHitAttack: 1
     HitsDifferentTargets: 0
@@ -26,5 +31,5 @@ MonoBehaviour:
     BlockValue: 0
     HealValue: 0
     statusEffectsForTarget: []
-    statusEffectsForSelf: []
-  attackUseChance: 0.5
+    statusEffectsForSelf:
+    - {fileID: 11400000, guid: f4d4f8863dd14074f8edad5cf8030290, type: 2}

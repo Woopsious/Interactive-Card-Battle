@@ -14,8 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackName: Block
   attackDescription: Block attacks
+  isPlayerAttack: 0
   offensive: 0
+  attackUseChance: 0.7
   energyCost: 0
+  extraCardsToDraw: 0
+  addDummyCardsForEffects: 0
+  effectDummyCards: []
   DamageData:
     isMultiHitAttack: 0
     HitsDifferentTargets: 0
@@ -26,5 +31,5 @@ MonoBehaviour:
     BlockValue: 22
     HealValue: 0
     statusEffectsForTarget: []
-    statusEffectsForSelf: []
-  attackUseChance: 0.7
+    statusEffectsForSelf:
+    - {fileID: 11400000, guid: fb56b8d55565f0645bac7cf740989c12, type: 2}

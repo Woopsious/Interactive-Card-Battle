@@ -37,10 +37,10 @@ MonoBehaviour:
   - moveSetMoves:
     - {fileID: 11400000, guid: 07cf4c7add2ef654cb65bf900cfca1c7, type: 2}
   - moveSetMoves:
-    - {fileID: 11400000, guid: a3cce5a24259e4249835dcf0e56bfded, type: 2}
+    - {fileID: 11400000, guid: e43aa4517ac34664d98875e06c9dbbd3, type: 2}
   - moveSetMoves:
     - {fileID: 11400000, guid: 4af9060441ce45a488f83f2da246c3f4, type: 2}
-    - {fileID: 11400000, guid: 09e69b9aaf40e3e49a4ea7cec2096d15, type: 2}
+    - {fileID: 11400000, guid: 07cf4c7add2ef654cb65bf900cfca1c7, type: 2}
   - moveSetMoves:
     - {fileID: 11400000, guid: 4af9060441ce45a488f83f2da246c3f4, type: 2}
     - {fileID: 11400000, guid: 07cf4c7add2ef654cb65bf900cfca1c7, type: 2}

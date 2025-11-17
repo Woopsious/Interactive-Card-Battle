@@ -14,8 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackName: Fade Away
   attackDescription: Temporarily fade into an object
+  isPlayerAttack: 0
   offensive: 0
+  attackUseChance: 0.4
   energyCost: 0
+  extraCardsToDraw: 0
+  addDummyCardsForEffects: 0
+  effectDummyCards: []
   DamageData:
     isMultiHitAttack: 0
     HitsDifferentTargets: 0
@@ -26,5 +31,6 @@ MonoBehaviour:
     BlockValue: 20
     HealValue: 0
     statusEffectsForTarget: []
-    statusEffectsForSelf: []
-  attackUseChance: 0.4
+    statusEffectsForSelf:
+    - {fileID: 11400000, guid: 8a7b57d8c146a224f963b45380561446, type: 2}
+    - {fileID: 11400000, guid: 8a7b57d8c146a224f963b45380561446, type: 2}

@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -237,9 +237,23 @@ namespace Woopsious
 			if (DamageData.statusEffectsForTarget.Count != 0)
 			{
 				description += "\nApplies ";
+				Dictionary<StatusEffectsData, int> statusEffectsCount = new();
 
 				foreach (StatusEffectsData statusEffect in DamageData.statusEffectsForTarget)
-					description += "<link=\"Test\"><color=\"blue\">" + statusEffect.effectName + "</color></link>, ";
+				{
+					if (statusEffectsCount.ContainsKey(statusEffect))
+						statusEffectsCount[statusEffect]++;
+					else
+						statusEffectsCount.Add(statusEffect, 1);
+				}
+
+				foreach (var entry in statusEffectsCount)
+				{
+					if (entry.Value == 1)
+						description += "<link=\"Test\"><color=\"blue\">" + entry.Key.effectName + "</color></link>, ";
+					else
+						description += "<link=\"Test\"><color=\"blue\">" + entry.Value + "x " + entry.Key.effectName + "</color></link>, ";
+				}
 
 				description = RichTextManager.RemoveLastComma(description);
 				description += "to enemies";
@@ -252,9 +266,23 @@ namespace Woopsious
 			if (DamageData.statusEffectsForSelf.Count != 0)
 			{
 				description += "\nApplies ";
+				Dictionary<StatusEffectsData, int> statusEffectsCount = new();
 
 				foreach (StatusEffectsData statusEffect in DamageData.statusEffectsForSelf)
-					description += "<link=\"Test\"><color=\"blue\">" + statusEffect.effectName + "</color></link>, ";
+				{
+					if (statusEffectsCount.ContainsKey(statusEffect))
+						statusEffectsCount[statusEffect]++;
+					else
+						statusEffectsCount.Add(statusEffect, 1);
+				}
+
+				foreach (var entry in statusEffectsCount)
+				{
+					if (entry.Value == 1)
+						description += "<link=\"Test\"><color=\"blue\">" + entry.Key.effectName + "</color></link>, ";
+					else
+						description += "<link=\"Test\"><color=\"blue\">" + entry.Value + "x " + entry.Key.effectName + "</color></link>, ";
+				}
 
 				description = RichTextManager.RemoveLastComma(description);
 				description += "to self";

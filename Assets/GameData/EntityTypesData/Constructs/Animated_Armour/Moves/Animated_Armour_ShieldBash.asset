@@ -14,8 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackName: Shield Bash
   attackDescription: Bash enemy with shield
+  isPlayerAttack: 0
   offensive: 1
+  attackUseChance: 0.4
   energyCost: 0
+  extraCardsToDraw: 0
+  addDummyCardsForEffects: 0
+  effectDummyCards: []
   DamageData:
     isMultiHitAttack: 0
     HitsDifferentTargets: 0
@@ -25,6 +30,7 @@ MonoBehaviour:
     DamageValue: 5
     BlockValue: 8
     HealValue: 0
-    statusEffectsForTarget: []
+    statusEffectsForTarget:
+    - {fileID: 11400000, guid: abc4a7d866707d645a469a5ed6dad75f, type: 2}
+    - {fileID: 11400000, guid: abc4a7d866707d645a469a5ed6dad75f, type: 2}
     statusEffectsForSelf: []
-  attackUseChance: 0.4

@@ -14,17 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackName: Necrotic Touch
   attackDescription: Touch enemy whilst casting
+  isPlayerAttack: 0
   offensive: 1
+  attackUseChance: 0.8
   energyCost: 0
+  extraCardsToDraw: 0
+  addDummyCardsForEffects: 0
+  effectDummyCards: []
   DamageData:
     isMultiHitAttack: 0
     HitsDifferentTargets: 0
     multiHitCount: 0
     valueTypes: 1
     damageType: 1
-    DamageValue: 20
+    DamageValue: 5
     BlockValue: 0
     HealValue: 0
-    statusEffectsForTarget: []
+    statusEffectsForTarget:
+    - {fileID: 11400000, guid: cd430251df9d5f540ad345bb95f370dc, type: 2}
     statusEffectsForSelf: []
-  attackUseChance: 0.8

@@ -14,9 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackName: Stab
   attackDescription: Stab enemy
+  isPlayerAttack: 0
   offensive: 1
-  energyCost: 0
   attackUseChance: 0.4
+  energyCost: 0
+  extraCardsToDraw: 0
+  addDummyCardsForEffects: 0
+  effectDummyCards: []
   DamageData:
     isMultiHitAttack: 0
     HitsDifferentTargets: 0
@@ -26,5 +30,6 @@ MonoBehaviour:
     DamageValue: 9
     BlockValue: 0
     HealValue: 0
-    statusEffectsForTarget: []
+    statusEffectsForTarget:
+    - {fileID: 11400000, guid: e47d70a91dfc6cd4fb8f8fb11951252b, type: 2}
     statusEffectsForSelf: []

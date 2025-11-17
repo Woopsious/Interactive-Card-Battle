@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2126e680802d351469ed727e28045e0d, type: 3}
+  m_Name: Chuul_Paralyzed
+  m_EditorClassIdentifier: 
+  effectName: Paralyzed
+  statType: {fileID: 11400000, guid: 5e178a2a3f3029844ab5c3aa1dea2821, type: 2}
+  hasStacks: 0
+  effectStacks: 0
+  maxEffectStacks: 0
+  hasLifetime: 1
+  isTurnBased: 1
+  effectLifetime: 1
+  isDoT: 0
+  timeBetweenDamageTicks: 0
+  effectData:
+    isPercentage: 0
+    value: -1

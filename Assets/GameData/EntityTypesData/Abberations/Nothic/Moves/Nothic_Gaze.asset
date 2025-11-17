@@ -14,17 +14,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackName: Gaze
   attackDescription: Gaze at and stun enemy
+  isPlayerAttack: 0
   offensive: 1
+  attackUseChance: 0.3
   energyCost: 0
+  extraCardsToDraw: 0
+  addDummyCardsForEffects: 0
+  effectDummyCards: []
   DamageData:
     isMultiHitAttack: 0
     HitsDifferentTargets: 0
     multiHitCount: 0
     valueTypes: 3
     damageType: 1
-    DamageValue: 6
-    BlockValue: 10
+    DamageValue: 3
+    BlockValue: 7
     HealValue: 0
-    statusEffectsForTarget: []
-    statusEffectsForSelf: []
-  attackUseChance: 0.3
+    statusEffectsForTarget:
+    - {fileID: 11400000, guid: abc4a7d866707d645a469a5ed6dad75f, type: 2}
+    - {fileID: 11400000, guid: abc4a7d866707d645a469a5ed6dad75f, type: 2}
+    statusEffectsForSelf:
+    - {fileID: 11400000, guid: 8a7b57d8c146a224f963b45380561446, type: 2}
+    - {fileID: 11400000, guid: 8a7b57d8c146a224f963b45380561446, type: 2}

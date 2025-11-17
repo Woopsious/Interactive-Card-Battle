@@ -18,10 +18,7 @@ MonoBehaviour:
   offensive: 1
   attackUseChance: 0.5
   energyCost: 0
-  canDrawExtraCards: 0
-  drawExtraCardData:
-    isPercentage: 0
-    value: 0
+  extraCardsToDraw: 0
   addDummyCardsForEffects: 0
   effectDummyCards: []
   DamageData:

@@ -10,21 +10,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
-  m_Name: Chuul_SummonTentacles
+  m_Name: Chuul_TentacleGrapple
   m_EditorClassIdentifier: 
-  attackName: Summon Tentacles
-  attackDescription: Summon Tentacles below enemy
+  attackName: Tentacle Grapple
+  attackDescription: Grapple enemy with tentacles
+  isPlayerAttack: 0
   offensive: 1
+  attackUseChance: 0.5
   energyCost: 0
+  extraCardsToDraw: 0
+  addDummyCardsForEffects: 1
+  effectDummyCards:
+  - {fileID: 11400000, guid: 0e1e88108048a2f45bab4ee537a2beef, type: 2}
   DamageData:
     isMultiHitAttack: 0
     HitsDifferentTargets: 0
     multiHitCount: 0
     valueTypes: 3
     damageType: 1
-    DamageValue: 8
-    BlockValue: 8
+    DamageValue: 6
+    BlockValue: 6
     HealValue: 0
-    statusEffectsForTarget: []
+    statusEffectsForTarget:
+    - {fileID: 11400000, guid: 0e1e88108048a2f45bab4ee537a2beef, type: 2}
     statusEffectsForSelf: []
-  attackUseChance: 0.5
