@@ -54,8 +54,12 @@ namespace Woopsious
 		public int maxReplaceableCardsPerTurn;
 		public int initialCardDrawAmount;
 
+		[Header("Player Deck Info")]
 		[Header("Player Starting Deck")]
 		public List<AttackData> cards = new();
+
+		[Header("Collectable Cards")]
+		public List<AttackData> collectableCards = new();
 
 		[Header("Enemy Move Set Order")] //shown as non player
 		public List<MoveSetData> moveSetOrder = new();

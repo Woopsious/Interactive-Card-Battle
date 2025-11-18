@@ -10,28 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
-  m_Name: P_Warrior_Bash
+  m_Name: P_Mage_Fireball
   m_EditorClassIdentifier: 
-  attackName: Shield Bash
-  attackDescription: Bash enemy with shield
+  attackName: Fireball
+  attackDescription: Cast a fireball
   isPlayerAttack: 1
   offensive: 1
   attackUseChance: 0
-  energyCost: -1
-  canDrawExtraCards: 0
-  drawExtraCardData:
-    isPercentage: 0
-    value: 0
+  energyCost: -2
+  extraCardsToDraw: 0
   addDummyCardsForEffects: 0
   effectDummyCards: []
   DamageData:
-    isMultiHitAttack: 0
-    HitsDifferentTargets: 0
-    multiHitCount: 0
-    valueTypes: 3
+    isMultiHitAttack: 1
+    HitsDifferentTargets: 1
+    multiHitCount: 3
+    valueTypes: 1
     damageType: 0
-    DamageValue: 4
-    BlockValue: 6
+    DamageValue: 10
+    BlockValue: 0
     HealValue: 0
-    statusEffectsForTarget: []
+    statusEffectsForTarget:
+    - {fileID: 11400000, guid: 98570f74df7c3734394c5d41ba3879d6, type: 2}
     statusEffectsForSelf: []

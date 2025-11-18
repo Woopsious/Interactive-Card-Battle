@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
-  m_Name: P_Rogue_Block
+  m_Name: Warrior_Stalwart
   m_EditorClassIdentifier: 
-  attackName: Dodge
-  attackDescription: Dodge incoming attacks
+  attackName: Stalwart
+  attackDescription: Raise shield for attack
   isPlayerAttack: 1
   offensive: 0
   attackUseChance: 0
-  energyCost: -1
+  energyCost: -2
   extraCardsToDraw: 0
   addDummyCardsForEffects: 0
   effectDummyCards: []
@@ -28,7 +28,9 @@ MonoBehaviour:
     valueTypes: 2
     damageType: 0
     DamageValue: 0
-    BlockValue: 6
+    BlockValue: 16
     HealValue: 0
     statusEffectsForTarget: []
-    statusEffectsForSelf: []
+    statusEffectsForSelf:
+    - {fileID: 11400000, guid: 8a7b57d8c146a224f963b45380561446, type: 2}
+    - {fileID: 11400000, guid: 8a7b57d8c146a224f963b45380561446, type: 2}

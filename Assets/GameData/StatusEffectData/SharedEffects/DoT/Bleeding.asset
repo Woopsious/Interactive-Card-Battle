@@ -24,4 +24,4 @@ MonoBehaviour:
   timeBetweenDamageTicks: 1
   effectData:
     isPercentage: 0
-    value: 3
+    value: 4

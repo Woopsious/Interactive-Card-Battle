@@ -10,27 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
-  m_Name: P_Rogue_ThrowingKnives
+  m_Name: P_Warrior_Attack
   m_EditorClassIdentifier: 
-  attackName: Throwing Knives
-  attackDescription: Throw knives at multiple enemies
+  attackName: Sword Slash
+  attackDescription: Slash enemy with sword
   isPlayerAttack: 1
   offensive: 1
   attackUseChance: 0
-  energyCost: -1
-  canDrawExtraCards: 0
-  drawExtraCardData:
-    isPercentage: 0
-    value: 0
+  energyCost: -2
+  extraCardsToDraw: 0
   addDummyCardsForEffects: 0
   effectDummyCards: []
   DamageData:
-    isMultiHitAttack: 1
-    HitsDifferentTargets: 1
-    multiHitCount: 2
+    isMultiHitAttack: 0
+    HitsDifferentTargets: 0
+    multiHitCount: 0
     valueTypes: 1
     damageType: 0
-    DamageValue: 16
+    DamageValue: 10
     BlockValue: 0
     HealValue: 0
     statusEffectsForTarget: []

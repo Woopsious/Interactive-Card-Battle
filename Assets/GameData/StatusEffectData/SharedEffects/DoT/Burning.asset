@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2126e680802d351469ed727e28045e0d, type: 3}
-  m_Name: Necrosis
+  m_Name: Burning
   m_EditorClassIdentifier: 
-  effectName: Necrosis
+  effectName: Burning
   statType: {fileID: 0}
   hasStacks: 0
   effectStacks: 0
   maxEffectStacks: 0
   hasLifetime: 1
   isTurnBased: 1
-  effectLifetime: 4
+  effectLifetime: 2
   isDoT: 1
   timeBetweenDamageTicks: 1
   effectData:
     isPercentage: 0
-    value: 5
+    value: 4

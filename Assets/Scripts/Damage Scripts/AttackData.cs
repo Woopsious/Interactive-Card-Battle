@@ -20,6 +20,13 @@ namespace Woopsious
 		[Range(0f, 1f)]
 		public float attackUseChance;
 
+		[Header("Player Card Rarity")]
+		public CardRarity cardRarity;
+		public enum CardRarity
+		{
+			StartingCard, Common, Uncommon, Rare
+		}
+
 		[Header("Player Energy Cost")]
 		[Tooltip("negative value gives energy to use on current turn, 0 is a free card to play")]
 		[Range(-5, 5)]

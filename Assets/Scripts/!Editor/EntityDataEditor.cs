@@ -53,6 +53,8 @@ namespace Woopsious
 
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.cards)), true);
 
+				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.collectableCards)), true);
+
 				GUILayout.Space(10);
 				EditorGUILayout.LabelField("Create New Card For Player", EditorStyles.boldLabel);
 				if (GUILayout.Button("Create New AttackData"))

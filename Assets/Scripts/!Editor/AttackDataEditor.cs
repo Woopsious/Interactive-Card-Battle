@@ -32,6 +32,7 @@ namespace Woopsious
 			{
 				data.attackUseChance = 0;
 
+				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.cardRarity)));
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.energyCost)));
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.extraCardsToDraw)));
 			}
@@ -41,17 +42,17 @@ namespace Woopsious
 				data.extraCardsToDraw = 0;
 
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.attackUseChance)));
+			}
 
-				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.addDummyCardsForEffects)));
+			EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.addDummyCardsForEffects)));
 
-				if (data.addDummyCardsForEffects)
-				{
-					EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.effectDummyCards)));
-				}
-				else
-				{
-					data.effectDummyCards.Clear();
-				}
+			if (data.addDummyCardsForEffects)
+			{
+				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.effectDummyCards)));
+			}
+			else
+			{
+				data.effectDummyCards?.Clear();
 			}
 
 			EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.DamageData)));

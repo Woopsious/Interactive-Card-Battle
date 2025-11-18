@@ -27,7 +27,7 @@ MonoBehaviour:
   chanceOfDoubleDamage: 0
   healOnKillPercentage: 0
   damageReflectedPercentage: 0
-  baseEnergy: 3
+  baseEnergy: 5
   maxReplaceableCardsPerTurn: 2
   initialCardDrawAmount: 5
   cards:
@@ -39,5 +39,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 36c2985c82d9d4d4bb054124d4d5186d, type: 2}
   - {fileID: 11400000, guid: 36c2985c82d9d4d4bb054124d4d5186d, type: 2}
   - {fileID: 11400000, guid: 9a140e42577c85d4f808910b0982cdc2, type: 2}
+  collectableCards: []
   moveSetOrder: []
   hitSfx: {fileID: 8300000, guid: f84e2c4d9f703b247890aec43610627e, type: 3}
