@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
-  m_Name: Warrior_SecondWind
+  m_Name: Ranger_Fallback
   m_EditorClassIdentifier: 
-  attackName: Second Wind
-  attackDescription: Get a second wind
+  attackName: Fallback
+  attackDescription: Fall back temporarily
   isPlayerAttack: 1
   offensive: 0
   attackUseChance: 0
@@ -23,16 +23,15 @@ MonoBehaviour:
   addDummyCardsForEffects: 0
   effectDummyCards: []
   DamageData:
-    isMultiHitAttack: 0
+    isMultiHitAttack: 1
     HitsDifferentTargets: 0
-    multiHitCount: 0
-    valueTypes: 4
+    multiHitCount: 3
+    valueTypes: 2
     damageType: 0
     DamageValue: 0
-    BlockValue: 0
-    HealValue: 8
+    BlockValue: 10
+    HealValue: 0
     statusEffectsForTarget: []
     statusEffectsForSelf:
-    - {fileID: 11400000, guid: d567fb9b753ae6b4d9efed647bee80c0, type: 2}
-    - {fileID: 11400000, guid: 25360e740435edb4eb2e0249b47998ce, type: 2}
-    - {fileID: 11400000, guid: 25360e740435edb4eb2e0249b47998ce, type: 2}
+    - {fileID: 11400000, guid: 5061106d679be2b40b7715d9c5e88428, type: 2}
+    - {fileID: 11400000, guid: f78cba8cf83da314380371d46b7aecf6, type: 2}

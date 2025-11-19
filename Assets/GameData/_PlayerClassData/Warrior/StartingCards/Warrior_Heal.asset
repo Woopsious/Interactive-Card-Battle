@@ -10,15 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
-  m_Name: Warrior_SecondWind
+  m_Name: Warrior_Heal
   m_EditorClassIdentifier: 
-  attackName: Second Wind
-  attackDescription: Get a second wind
+  attackName: Heal
+  attackDescription: Heal self
   isPlayerAttack: 1
   offensive: 0
   attackUseChance: 0
-  cardRarity: 2
-  energyCost: -1
+  energyCost: -2
   extraCardsToDraw: 0
   addDummyCardsForEffects: 0
   effectDummyCards: []
@@ -32,7 +31,4 @@ MonoBehaviour:
     BlockValue: 0
     HealValue: 8
     statusEffectsForTarget: []
-    statusEffectsForSelf:
-    - {fileID: 11400000, guid: d567fb9b753ae6b4d9efed647bee80c0, type: 2}
-    - {fileID: 11400000, guid: 25360e740435edb4eb2e0249b47998ce, type: 2}
-    - {fileID: 11400000, guid: 25360e740435edb4eb2e0249b47998ce, type: 2}
+    statusEffectsForSelf: []

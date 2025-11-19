@@ -192,9 +192,6 @@ namespace Woopsious
 			string description = AttackData.attackDescription;
 			description += "\n";
 
-			if (DamageData.valueTypes == ValueTypes.none)
-				Debug.LogError("Value type not set");
-
 			if (AttackData.extraCardsToDraw != 0)
 			{
 				if (AttackData.extraCardsToDraw == 1)

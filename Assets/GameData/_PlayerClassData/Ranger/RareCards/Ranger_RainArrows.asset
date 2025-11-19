@@ -10,29 +10,27 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
-  m_Name: Warrior_SecondWind
+  m_Name: Ranger_RainArrows
   m_EditorClassIdentifier: 
-  attackName: Second Wind
-  attackDescription: Get a second wind
+  attackName: Rain Arrows
+  attackDescription: Fire a rain of arrows into the air
   isPlayerAttack: 1
   offensive: 0
   attackUseChance: 0
   cardRarity: 2
-  energyCost: -1
-  extraCardsToDraw: 0
+  energyCost: -3
+  extraCardsToDraw: 2
   addDummyCardsForEffects: 0
   effectDummyCards: []
   DamageData:
-    isMultiHitAttack: 0
-    HitsDifferentTargets: 0
-    multiHitCount: 0
-    valueTypes: 4
+    isMultiHitAttack: 1
+    HitsDifferentTargets: 1
+    multiHitCount: 3
+    valueTypes: 1
     damageType: 0
-    DamageValue: 0
+    DamageValue: 60
     BlockValue: 0
-    HealValue: 8
+    HealValue: 0
     statusEffectsForTarget: []
     statusEffectsForSelf:
-    - {fileID: 11400000, guid: d567fb9b753ae6b4d9efed647bee80c0, type: 2}
-    - {fileID: 11400000, guid: 25360e740435edb4eb2e0249b47998ce, type: 2}
-    - {fileID: 11400000, guid: 25360e740435edb4eb2e0249b47998ce, type: 2}
+    - {fileID: 11400000, guid: f4d4f8863dd14074f8edad5cf8030290, type: 2}

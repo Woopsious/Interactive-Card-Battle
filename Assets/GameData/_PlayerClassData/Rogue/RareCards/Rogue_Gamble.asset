@@ -10,29 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
-  m_Name: Warrior_SecondWind
+  m_Name: Rogue_Gamble
   m_EditorClassIdentifier: 
-  attackName: Second Wind
-  attackDescription: Get a second wind
+  attackName: Gamble
+  attackDescription: Take a gamble
   isPlayerAttack: 1
   offensive: 0
   attackUseChance: 0
-  cardRarity: 2
-  energyCost: -1
-  extraCardsToDraw: 0
+  cardRarity: 3
+  energyCost: -3
+  extraCardsToDraw: 2
   addDummyCardsForEffects: 0
   effectDummyCards: []
   DamageData:
     isMultiHitAttack: 0
     HitsDifferentTargets: 0
     multiHitCount: 0
-    valueTypes: 4
+    valueTypes: 0
     damageType: 0
     DamageValue: 0
     BlockValue: 0
-    HealValue: 8
+    HealValue: 0
     statusEffectsForTarget: []
     statusEffectsForSelf:
-    - {fileID: 11400000, guid: d567fb9b753ae6b4d9efed647bee80c0, type: 2}
-    - {fileID: 11400000, guid: 25360e740435edb4eb2e0249b47998ce, type: 2}
-    - {fileID: 11400000, guid: 25360e740435edb4eb2e0249b47998ce, type: 2}
+    - {fileID: 11400000, guid: 5061106d679be2b40b7715d9c5e88428, type: 2}
+    - {fileID: 11400000, guid: 40061349b754c7e42af528cd2c1d0e0b, type: 2}
