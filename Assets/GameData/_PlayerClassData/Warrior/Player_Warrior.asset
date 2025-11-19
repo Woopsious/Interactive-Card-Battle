@@ -39,6 +39,16 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 36c2985c82d9d4d4bb054124d4d5186d, type: 2}
   - {fileID: 11400000, guid: 36c2985c82d9d4d4bb054124d4d5186d, type: 2}
   - {fileID: 11400000, guid: 9a140e42577c85d4f808910b0982cdc2, type: 2}
-  collectableCards: []
+  collectableCards:
+  - {fileID: 11400000, guid: ee68dc22e97612f488123420f2edc600, type: 2}
+  - {fileID: 11400000, guid: f973c6af71fd16b42ab0588a810960d4, type: 2}
+  - {fileID: 11400000, guid: e4ffbdaeb9989de40adb6aa120cb1250, type: 2}
+  - {fileID: 11400000, guid: 1fb6de5bfeac8c049aa4cbd4394110c5, type: 2}
+  - {fileID: 11400000, guid: de52f5c0392ab394c830080f2046bcf7, type: 2}
+  - {fileID: 11400000, guid: a2e2b8bb6edc125488ce969ae5560b51, type: 2}
+  - {fileID: 11400000, guid: 13c27f608363bde4ba81797f4fc4ba3c, type: 2}
+  - {fileID: 11400000, guid: 405e4c374d69bc144ac746811c597456, type: 2}
+  - {fileID: 11400000, guid: fdecab693df6453458847ad037d644e0, type: 2}
+  - {fileID: 11400000, guid: 0a6f89c14dd46424a81543c47c6ca0df, type: 2}
   moveSetOrder: []
   hitSfx: {fileID: 8300000, guid: f84e2c4d9f703b247890aec43610627e, type: 3}

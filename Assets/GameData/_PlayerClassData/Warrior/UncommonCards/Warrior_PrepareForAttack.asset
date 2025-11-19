@@ -10,13 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
-  m_Name: Warrior_Stalwart
+  m_Name: Warrior_PrepareForAttack
   m_EditorClassIdentifier: 
-  attackName: Stalwart
-  attackDescription: Raise shield for attack
+  attackName: Prepare For Attack
+  attackDescription: Raise your shield and prepare for an attack
   isPlayerAttack: 1
   offensive: 0
   attackUseChance: 0
+  cardRarity: 2
   energyCost: -2
   extraCardsToDraw: 0
   addDummyCardsForEffects: 0
@@ -28,7 +29,7 @@ MonoBehaviour:
     valueTypes: 2
     damageType: 0
     DamageValue: 0
-    BlockValue: 16
+    BlockValue: 8
     HealValue: 0
     statusEffectsForTarget: []
     statusEffectsForSelf:

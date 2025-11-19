@@ -101,7 +101,9 @@ namespace Woopsious
 
 			classInfo += entityName + "\n\n";
 
-			classInfo += $"Health: {maxHealth}\n\n";
+			classInfo += $"Health: {maxHealth}\n";
+			classInfo += $"Block: {baseBlock}\n";
+			classInfo += $"Energy: {baseEnergy}\n\n";
 
 			classInfo += "STARTING CARDS\n";
 			classInfo += SetPlayerClassCardsInfo() + "\n\n";

@@ -96,9 +96,12 @@ namespace Woopsious
 
 			cardDescriptiontext.text = CreateDescription();
 
-			CardDeckCount = cardDeckCount;
-			cardCountForCardDeckUi.text = $"{cardDeckCount}x";
-			cardCountForCardDeckUi.gameObject.SetActive(true);
+			if (cardDeckCount != 0)
+			{
+				CardDeckCount = cardDeckCount;
+				cardCountForCardDeckUi.text = $"{cardDeckCount}x";
+				cardCountForCardDeckUi.gameObject.SetActive(true);
+			}
 		}
 		public void SetupUiCard(AttackData attackData)
 		{

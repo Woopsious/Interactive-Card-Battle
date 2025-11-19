@@ -4,8 +4,7 @@ using System.Drawing;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.EventSystems.EventTrigger;
-using static Woopsious.EntityData;
+using static Woopsious.AttackData;
 
 namespace Woopsious
 {
@@ -38,7 +37,18 @@ namespace Woopsious
 		public TMP_Text infoToDisplayText;
 		public TMP_Text ClassesMovesText;
 
+		[Header("Collectable Player Cards Panel")]
+		public GameObject collectableCardsPanel;
+		public GameObject collectableCardsParent;
+
+		public Button viewStartingCardsButton;
+		public Button viewCommonCardsButton;
+		public Button viewUncommonCardsButton;
+		public Button viewRareCardsButton;
+		public Button hideCollectableCardsButton;
+
 		List<CardUi> cardUiList = new();
+		List<CardUi> collectableCardUiList = new();
 
 		void OnEnable()
 		{
@@ -104,7 +114,7 @@ namespace Woopsious
 			rectTransform.anchoredPosition = new Vector2(10, (-64f * i) - 25);
 		}
 
-		//main database panel
+		//MAIN DATABASE UI
 		void ShowDatabaseUi()
 		{
 			MainMenuUi.Instance.backButton.gameObject.transform.SetParent(databasePanel.transform);
@@ -144,7 +154,7 @@ namespace Woopsious
 			infoToDisplayText.text = "Click button to view land type info";
 		}
 
-		//player classes database
+		//PLAYER CLASSES DATABASE
 		void SetupPlayerClassesButtons()
 		{
 			for (int i = 0; i < GameManager.instance.playerClassDataTypes.Count; i++)
@@ -162,6 +172,7 @@ namespace Woopsious
 		void ShowPlayerClassInfo(EntityData playerClassData)
 		{
 			ClearCardUiList();
+			ClearCollectableCardUiList();
 			infoToDisplayText.text = playerClassData.CreatePlayerClassInfo();
 
 			//create new starting deck info
@@ -181,17 +192,59 @@ namespace Woopsious
 				DisplayStartingCardInfo(entry, index);
 				index++;
 			}
+
+			SetupCollectableCardsPanel(playerClassData);
 		}
+
 		void DisplayStartingCardInfo(KeyValuePair<AttackData, int> entry, int index)
 		{
 			CardUi cardUi = Instantiate(cardUiPrefab).GetComponent<CardUi>();
-			cardUi.gameObject.transform.SetParent(databaseInnerPanel.transform);
+			cardUi.transform.SetParent(databaseInnerPanel.transform);
 			cardUi.SetupUiCard(entry.Key, entry.Value);
 			cardUiList.Add(cardUi);
 			SetCardUiPosition(cardUi.GetComponent<RectTransform>(), index);
 		}
 
-		//entities database
+		//players collectable cards mini panel
+		void SetupCollectableCardsPanel(EntityData playerClassData)
+		{
+			collectableCardsPanel.SetActive(true);
+
+			viewCommonCardsButton.onClick.RemoveAllListeners();
+			viewUncommonCardsButton.onClick.RemoveAllListeners();
+			viewRareCardsButton.onClick.RemoveAllListeners();
+
+			viewCommonCardsButton.onClick.AddListener(() => DisplayCollectableCards(playerClassData.collectableCards, CardRarity.Common));
+			viewUncommonCardsButton.onClick.AddListener(() => DisplayCollectableCards(playerClassData.collectableCards, CardRarity.Uncommon));
+			viewRareCardsButton.onClick.AddListener(() => DisplayCollectableCards(playerClassData.collectableCards, CardRarity.Rare));
+		}
+		void DisplayCollectableCards(List<AttackData> cards, CardRarity cardRarity)
+		{
+			collectableCardsParent.SetActive(true);
+			ClearCollectableCardUiList();
+
+			int cardsFound = 0;
+
+			for (int i = 0; i < cards.Count; i++)
+			{
+				if (cards[i].cardRarity != cardRarity) continue;
+
+				CardUi cardUi = Instantiate(cardUiPrefab).GetComponent<CardUi>();
+				cardUi.transform.SetParent(collectableCardsParent.transform);
+				cardUi.SetupUiCard(cards[i], 0);
+				collectableCardUiList.Add(cardUi);
+				SetCollectableCardUiPosition(cardUi.GetComponent<RectTransform>(), cardsFound);
+				cardsFound++;
+			}
+		}
+
+		//button call
+		public void HideCollectableCardsParent()
+		{
+			collectableCardsParent.SetActive(false);
+		}
+
+		//ENTITIES DATABASE
 		void SetupEnemiesOfTypeButtons()
 		{
 			SetupEnemiesOfTypeButton(0, GameManager.instance.AbberationsEnemyData);
@@ -238,6 +291,7 @@ namespace Woopsious
 		void ShowEnemyInfo(EntityData entityData)
 		{
 			ClearCardUiList();
+			ClearCollectableCardUiList();
 			infoToDisplayText.text = entityData.CreateEntityInfo();
 			List<AttackData> entityMoves = new();
 
@@ -266,7 +320,7 @@ namespace Woopsious
 			SetCardUiPosition(cardUi.GetComponent<RectTransform>(), index);
 		}
 
-		//Map Node types database
+		//MAP NODES DATABASE
 		void SetupLandTypeButtons()
 		{
 			for (int i = 0; i < GameManager.instance.mapNodeDataTypes.Count; i++)
@@ -313,6 +367,32 @@ namespace Woopsious
 			rectTransform.pivot = new Vector2(0.5f, 1);
 			rectTransform.anchoredPosition = new Vector2(posX, posY);
 		}
+		void SetCollectableCardUiPosition(RectTransform rectTransform, int index)
+		{
+			int posX;
+			int posY;
+
+			if (index < 6)
+			{
+				posX = (220 * index) - 560;
+				posY = (-250 * 0) + -50;
+			}
+			else if (index >= 6 && index < 12)
+			{
+				posX = (220 * (index - 3)) - 560;
+				posY = (-250 * 1) + -50;
+			}
+			else
+			{
+				posX = (220 * (index - 6)) - 560;
+				posY = (-250 * 2) + -50;
+			}
+
+			rectTransform.anchorMin = new Vector2(0.5f, 1);
+			rectTransform.anchorMax = new Vector2(0.5f, 1);
+			rectTransform.pivot = new Vector2(0.5f, 1);
+			rectTransform.anchoredPosition = new Vector2(posX, posY);
+		}
 
 		//reset ui elements
 		void ResetAllUiElements()
@@ -324,6 +404,10 @@ namespace Woopsious
 			ResetOuterButtons();
 			ResetInnerButtons();
 			ClearCardUiList();
+
+			collectableCardsPanel.SetActive(false);
+			collectableCardsParent.SetActive(false);
+			ClearCollectableCardUiList();
 		}
 		void ResetOuterButtons()
 		{
@@ -353,6 +437,13 @@ namespace Woopsious
 				Destroy(cardUiList[i].gameObject);
 
 			cardUiList.Clear();
+		}
+		void ClearCollectableCardUiList()
+		{
+			for (int i = collectableCardUiList.Count - 1; i >= 0; i--)
+				Destroy(collectableCardUiList[i].gameObject);
+
+			collectableCardUiList.Clear();
 		}
 	}
 }

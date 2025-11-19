@@ -17,6 +17,7 @@ MonoBehaviour:
   isPlayerAttack: 1
   offensive: 1
   attackUseChance: 0
+  cardRarity: 2
   energyCost: -2
   extraCardsToDraw: 0
   addDummyCardsForEffects: 0
