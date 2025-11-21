@@ -26,6 +26,9 @@ namespace Woopsious
 		{
 			StartingCard, Common, Uncommon, Rare
 		}
+		[Header("Values Controlled By Rarity")]
+		public float cardDropChance;
+		public float cardDrawChance;
 
 		[Header("Player Energy Cost")]
 		[Tooltip("negative value gives energy to use on current turn, 0 is a free card to play")]

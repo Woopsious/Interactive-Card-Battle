@@ -4,11 +4,18 @@ using UnityEngine;
 using UnityEngine.UI;
 using Woopsious.AbilitySystem;
 using static Woopsious.DamageData;
+using static Woopsious.AttackData;
 
 namespace Woopsious
 {
 	public class CardUi : MonoBehaviour
 	{
+		//card rarity and border colours
+		Image cardBorderImage;
+		Color _Amber = new(1f, 0.669654f, 0f, 1f); //rare
+		Color _BrightBlue = new(0f, 0.298039f, 1f, 1f); //uncommon
+		Color _Gray = new(1f, 1f, 1f, 1f); //common
+
 		[Header("Card Ui")]
 		public TMP_Text cardNametext;
 		public GameObject energyBackground;
@@ -40,6 +47,7 @@ namespace Woopsious
 		{
 			CardRectTransform = GetComponent<RectTransform>();
 			cardHandler = GetComponent<CardHandler>();
+			cardBorderImage = GetComponent<Image>();
 			addCardToDiscardList.onClick.AddListener(() => AddCardToDiscardList());
 			removeCardFromDiscardList.onClick.AddListener(() => RemoveCardFromDiscardList());
 			ToggleDiscardCardUi(false);
@@ -86,6 +94,7 @@ namespace Woopsious
 			string cardName = attackData.attackName;
 			gameObject.name = cardName;
 			cardNametext.text = cardName;
+			ChangeBorderColour(attackData.cardRarity);
 
 			if (attackData.energyCost > 0)
 				cardCostText.text = $"+{attackData.energyCost}";
@@ -102,6 +111,8 @@ namespace Woopsious
 				cardCountForCardDeckUi.text = $"{cardDeckCount}x";
 				cardCountForCardDeckUi.gameObject.SetActive(true);
 			}
+			else
+				cardCountForCardDeckUi.gameObject.SetActive(false);
 		}
 		public void SetupUiCard(AttackData attackData)
 		{
@@ -118,6 +129,7 @@ namespace Woopsious
 			gameObject.name = cardName;
 			cardNametext.text = cardName;
 			energyBackground.SetActive(false);
+			ChangeBorderColour(attackData.cardRarity);
 
 			if (attackData.energyCost > 0)
 				cardCostText.text = $"+{attackData.energyCost}";
@@ -143,6 +155,7 @@ namespace Woopsious
 			string cardName = attackData.attackName;
 			gameObject.name = cardName;
 			cardNametext.text = cardName;
+			ChangeBorderColour(attackData.cardRarity);
 
 			if (attackData.energyCost > 0)
 				cardCostText.text = $"+{attackData.energyCost}";
@@ -203,15 +216,15 @@ namespace Woopsious
 			if (DamageData.valueTypes.HasFlag(ValueTypes.damages))
 				description = CreateDamageDescription(description);
 
-			description = CreateTargetStatusEffectDescription(description);
+			description = CreateStatusEffectDescriptions(description, DamageData.statusEffectsForTarget, true);
 
 			if (DamageData.valueTypes.HasFlag(ValueTypes.blocks))
-				description += "\nGain " + DamageData.BlockValue + " block";
+				description += $"\nGain {RichTextManager.AddColour($"{DamageData.BlockValue} block", RichTextManager.steelBlue)}";
 
 			if (DamageData.valueTypes.HasFlag(ValueTypes.heals))
-				description += "\nHeal self for " + DamageData.HealValue;
+				description += $"\nRestore {RichTextManager.AddColour($"{DamageData.HealValue} health", RichTextManager.darkGreen)}";
 
-			description = CreateSelfStatusEffectDescription(description);
+			description = CreateStatusEffectDescriptions(description, DamageData.statusEffectsForSelf, false);
 
 			return description;
 		}
@@ -221,25 +234,29 @@ namespace Woopsious
 			if (DamageData.isMultiHitAttack)
 			{
 				int splitDamage = DamageData.DamageValue / DamageData.multiHitCount;
+				string damageString = $"{splitDamage} damage";
 
 				if (DamageData.HitsDifferentTargets)
-					description += "\nDeals " + splitDamage + " damage to " + DamageData.multiHitCount + " different enemies";
+				{
+					description += $"\nDeals {RichTextManager.AddColour(damageString, RichTextManager.crimsonRed)} " +
+						$"to {DamageData.multiHitCount} different enemies";
+				}
 				else
-					description += "\nDeals " + splitDamage + " damage " + DamageData.multiHitCount + "x times";
+					description += $"\nDeals {RichTextManager.AddColour(damageString, RichTextManager.crimsonRed)} {DamageData.multiHitCount}x times";
 			}
 			else
-				description += "\nDeals " + DamageData.DamageValue + " damage";
+				description += $"\nDeals {RichTextManager.AddColour($"{DamageData.DamageValue} damage", RichTextManager.crimsonRed)}";
 
 			return description;
 		}	
-		string CreateTargetStatusEffectDescription(string description)
+		string CreateStatusEffectDescriptions(string description, List<StatusEffectsData> statusEffects, bool enemyEffects)
 		{
-			if (DamageData.statusEffectsForTarget.Count != 0)
+			if (statusEffects.Count != 0)
 			{
 				description += "\nApplies ";
 				Dictionary<StatusEffectsData, int> statusEffectsCount = new();
 
-				foreach (StatusEffectsData statusEffect in DamageData.statusEffectsForTarget)
+				foreach (StatusEffectsData statusEffect in statusEffects)
 				{
 					if (statusEffectsCount.ContainsKey(statusEffect))
 						statusEffectsCount[statusEffect]++;
@@ -250,45 +267,29 @@ namespace Woopsious
 				foreach (var entry in statusEffectsCount)
 				{
 					if (entry.Value == 1)
-						description += "<link=\"Test\"><color=\"blue\">" + entry.Key.effectName + "</color></link>, ";
+						description += "<link=Test><color=blue>" + entry.Key.effectName + "</color></link>, ";
 					else
-						description += "<link=\"Test\"><color=\"blue\">" + entry.Value + "x " + entry.Key.effectName + "</color></link>, ";
+						description += "<link=Test><color=blue>" + entry.Value + "x " + entry.Key.effectName + "</color></link>, ";
 				}
 
 				description = RichTextManager.RemoveLastComma(description);
-				description += "to enemies";
+
+				if (enemyEffects)
+					description += "to enemies";
+				else
+					description += "to self";
 			}
 
 			return description;
 		}
-		string CreateSelfStatusEffectDescription(string description)
+		void ChangeBorderColour(CardRarity cardRarity)
 		{
-			if (DamageData.statusEffectsForSelf.Count != 0)
-			{
-				description += "\nApplies ";
-				Dictionary<StatusEffectsData, int> statusEffectsCount = new();
-
-				foreach (StatusEffectsData statusEffect in DamageData.statusEffectsForSelf)
-				{
-					if (statusEffectsCount.ContainsKey(statusEffect))
-						statusEffectsCount[statusEffect]++;
-					else
-						statusEffectsCount.Add(statusEffect, 1);
-				}
-
-				foreach (var entry in statusEffectsCount)
-				{
-					if (entry.Value == 1)
-						description += "<link=\"Test\"><color=\"blue\">" + entry.Key.effectName + "</color></link>, ";
-					else
-						description += "<link=\"Test\"><color=\"blue\">" + entry.Value + "x " + entry.Key.effectName + "</color></link>, ";
-				}
-
-				description = RichTextManager.RemoveLastComma(description);
-				description += "to self";
-			}
-
-			return description;
+			if (cardRarity == CardRarity.Rare)
+				cardBorderImage.color = _Amber;
+			else if (cardRarity == CardRarity.Uncommon)
+				cardBorderImage.color = _BrightBlue;
+			else
+				cardBorderImage.color = _Gray;
 		}
 
 		public void EnableCard()

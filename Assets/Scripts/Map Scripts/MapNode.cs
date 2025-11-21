@@ -5,8 +5,6 @@ using TMPro;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Transactions;
-using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Woopsious
 {
@@ -25,6 +23,8 @@ namespace Woopsious
 		[Header("Runtime data")]
 		public MapNodeData mapNodeData;
 		public float encounterDifficulty;
+		public int encounterCardRewardsCount;
+		public float encounterCardRarityBoost;
 		public int entityBudget;
 		public NodeState nodeState;
 		public EnemyTypes enemyTypes;
@@ -76,7 +76,10 @@ namespace Woopsious
 			ApplyRandomizedSettings(bossFightNode);
 			CheckAndForceDebugSettings();
 			SetEnemyTypes();
+
 			encounterDifficulty = mapNodeData.CalculateEncounterDifficultyFromModifiers(columnIndex, this);
+			encounterCardRewardsCount = mapNodeData.CalculateEncounterCardRewardsSelection(this);
+			encounterCardRarityBoost = mapNodeData.CalculateEncounterCardRarityBoost(this);
 			entityBudget = Mathf.RoundToInt(mapNodeData.baseEntityBudget * encounterDifficulty);
 
 			encounterTitleText.text = UpdateEncounterTitleUi();

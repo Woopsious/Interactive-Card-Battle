@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
-  m_Name: Ranger_DistantAmbush
+  m_Name: Mage_SenseMana
   m_EditorClassIdentifier: 
-  attackName: Distant Ambush
-  attackDescription: Ambush enemy from a distance
+  attackName: Sense Mana
+  attackDescription: Sense the mana of your enemy, learning there weak points
   isPlayerAttack: 1
   offensive: 1
   attackUseChance: 0
-  cardRarity: 3
-  energyCost: -3
+  cardRarity: 1
+  energyCost: -1
   extraCardsToDraw: 0
   addDummyCardsForEffects: 0
   effectDummyCards: []
@@ -26,14 +26,14 @@ MonoBehaviour:
     isMultiHitAttack: 0
     HitsDifferentTargets: 0
     multiHitCount: 0
-    valueTypes: 1
+    valueTypes: 0
     damageType: 0
-    DamageValue: 16
+    DamageValue: 0
     BlockValue: 0
     HealValue: 0
     statusEffectsForTarget:
-    - {fileID: 11400000, guid: 5061106d679be2b40b7715d9c5e88428, type: 2}
-    - {fileID: 11400000, guid: 407b2dba35ddeaf41b621f8e7f141ea8, type: 2}
+    - {fileID: 11400000, guid: f78cba8cf83da314380371d46b7aecf6, type: 2}
+    - {fileID: 11400000, guid: f78cba8cf83da314380371d46b7aecf6, type: 2}
     statusEffectsForSelf:
     - {fileID: 11400000, guid: 25360e740435edb4eb2e0249b47998ce, type: 2}
     - {fileID: 11400000, guid: 25360e740435edb4eb2e0249b47998ce, type: 2}

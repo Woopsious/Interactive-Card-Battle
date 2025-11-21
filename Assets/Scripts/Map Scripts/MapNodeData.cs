@@ -1,5 +1,3 @@
-using Unity.Android.Gradle;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Woopsious
@@ -64,6 +62,18 @@ namespace Woopsious
 		[Tooltip("Base Value: 10%")]
 		public float chanceOfFreeCardUpgrade;
 
+		//encounter Difficulty modifiers (CHANGE THEM HERE)
+		private readonly float eliteFightDifficultyModifier = 0.025f;
+		private readonly float bossFightDifficultyModifier = 0.05f;
+		private readonly float eliteBossFightDifficultyModifier = 0.1f;
+
+		private readonly float ruinsDifficultyModifier = 0.025f;
+		private readonly float townDifficultyModifier = 0.1f;
+		private readonly float cursedDifficultyModifier = 0.05f;
+		private readonly float volcanicDifficultyModifier = 0.025f;
+		private readonly float cavesDifficultyModifier = 0.025f;
+
+
 		public float CalculateEncounterDifficultyFromModifiers(int columnIndex, MapNode mapNode)
 		{
 			float difficultyModifier = baseEncounterDifficulty;
@@ -75,34 +85,73 @@ namespace Woopsious
 				difficultyModifier += 0.2f;
 
 			if (mapNode.landModifiers.HasFlag(LandModifiers.ruins))
-				difficultyModifier += 0.025f;
+				difficultyModifier += ruinsDifficultyModifier;
 			if (mapNode.landModifiers.HasFlag(LandModifiers.town))
-				difficultyModifier -= 0.1f;
+				difficultyModifier -= townDifficultyModifier;
 			if (mapNode.landModifiers.HasFlag(LandModifiers.cursed))
-				difficultyModifier += 0.05f;
+				difficultyModifier += cursedDifficultyModifier;
 			if (mapNode.landModifiers.HasFlag(LandModifiers.volcanic))
-				difficultyModifier += 0.025f;
+				difficultyModifier += volcanicDifficultyModifier;
 			if (mapNode.landModifiers.HasFlag(LandModifiers.caves))
-				difficultyModifier += 0.025f;
+				difficultyModifier += cavesDifficultyModifier;
 
 			switch (mapNode.nodeEncounterType)
 			{
 				case NodeEncounterType.eliteFight:
-				difficultyModifier += 0.025f;
+				difficultyModifier += eliteFightDifficultyModifier;
 				break;
 				case NodeEncounterType.bossFight:
-				difficultyModifier += 0.05f;
+				difficultyModifier += bossFightDifficultyModifier;
 				break;
 				case NodeEncounterType.eliteBossFight:
-				difficultyModifier += 0.1f;
+				difficultyModifier += eliteBossFightDifficultyModifier;
 				break;
-				default:
-				difficultyModifier += 0f;
-				break;
+				default: break;
 			}
 
 			return difficultyModifier;
 		}
+		public int CalculateEncounterCardRewardsSelection(MapNode mapNode)
+		{
+			int cardRewards = 2;
+
+			switch (mapNode.nodeEncounterType)
+			{
+				case NodeEncounterType.eliteFight:
+				cardRewards = 3;
+				break;
+				case NodeEncounterType.bossFight:
+				cardRewards = 3;
+				break;
+				case NodeEncounterType.eliteBossFight:
+				cardRewards = 4;
+				break;
+				default: break;
+			}
+
+			return cardRewards;
+		}
+		public float CalculateEncounterCardRarityBoost(MapNode mapNode)
+		{
+			float cardRarityBoost = 0f;
+
+			switch (mapNode.nodeEncounterType)
+			{
+				case NodeEncounterType.eliteFight:
+				cardRarityBoost = 0.05f;
+				break;
+				case NodeEncounterType.bossFight:
+				cardRarityBoost = 0.05f;
+				break;
+				case NodeEncounterType.eliteBossFight:
+				cardRarityBoost = 0.01f;
+				break;
+				default: break;
+			}
+
+			return cardRarityBoost;
+		}
+
 		public string CreateMapNodeLandTypeInfo()
 		{
 			string landTypeInfo = RichTextManager.GetLandTypesTextColour(landTypes);

@@ -10,27 +10,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
-  m_Name: Ranger_RainArrows
+  m_Name: Mage_BloodPact
   m_EditorClassIdentifier: 
-  attackName: Rain Arrows
-  attackDescription: Fire a rain of arrows into the air
+  attackName: Blood Pact
+  attackDescription: Sacrifice part of you for damage
   isPlayerAttack: 1
-  offensive: 0
+  offensive: 1
   attackUseChance: 0
   cardRarity: 3
   energyCost: -3
-  extraCardsToDraw: 2
-  addDummyCardsForEffects: 0
-  effectDummyCards: []
+  extraCardsToDraw: 0
+  addDummyCardsForEffects: 1
+  effectDummyCards:
+  - {fileID: 11400000, guid: f4d4f8863dd14074f8edad5cf8030290, type: 2}
   DamageData:
-    isMultiHitAttack: 1
-    HitsDifferentTargets: 1
-    multiHitCount: 3
+    isMultiHitAttack: 0
+    HitsDifferentTargets: 0
+    multiHitCount: 0
     valueTypes: 1
     damageType: 0
-    DamageValue: 60
+    DamageValue: 40
     BlockValue: 0
     HealValue: 0
-    statusEffectsForTarget: []
+    statusEffectsForTarget:
+    - {fileID: 11400000, guid: f78cba8cf83da314380371d46b7aecf6, type: 2}
     statusEffectsForSelf:
     - {fileID: 11400000, guid: f4d4f8863dd14074f8edad5cf8030290, type: 2}
+    - {fileID: 11400000, guid: e47d70a91dfc6cd4fb8f8fb11951252b, type: 2}
