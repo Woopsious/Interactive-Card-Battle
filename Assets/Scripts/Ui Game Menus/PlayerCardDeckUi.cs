@@ -11,12 +11,20 @@ namespace Woopsious
 	{
 		public static PlayerCardDeckUi instance;
 
-		[Header("Ui Elements")]
+		[Header("Ui Panels")]
 		public GameObject cardDeckUiPanel;
+		public GameObject cardRewardsUiPanel;
 
 		public Button cardDeckToggleButton;
 		TMP_Text cardDeckToggleButtonText;
 
+		[Header("Card Add Rewards Ui Elements")]
+		public TMP_Text cardRewardsText;
+		public TMP_Text selectedCardRewardsInfo;
+		public Button acceptCardRewardsButton;
+		public Button warningAcceptCardRewardsButton;
+
+		[Header("Card Discard Ui Elements")]
 		public Button startDiscardCardsButton;
 		public Button CompleteDiscardCardsButton;
 		public Button CancelDiscardCardsButton;
@@ -26,8 +34,13 @@ namespace Woopsious
 		[Header("Runtime data")]
 		//player card deck data
 		public List<AttackData> playerCardDeck = new();
+
+		//queued cards to be added
+		public List<AttackData> cardsToAddToPlayerDeck = new();
+
 		//queued cards to be discarded
 		public List<AttackData> cardsToRemoveFromPlayerDeck = new();
+
 		//dummy cards list
 		[SerializeField] private List<StatusEffectsData> dummyCardsToForceAdd = new();
 
@@ -51,6 +64,15 @@ namespace Woopsious
 			startDiscardCardsButton.onClick.AddListener(() => StartCardDiscard());
 			CompleteDiscardCardsButton.onClick.AddListener(() => CompleteCardDiscard());
 			CancelDiscardCardsButton.onClick.AddListener(() => CancelCardDiscard());
+		}
+
+		private void OnEnable()
+		{
+			GameManager.OnEndCardCombatEvent += ShowCardRewardsUi;
+		}
+		private void OnDisable()
+		{
+			GameManager.OnEndCardCombatEvent -= ShowCardRewardsUi;
 		}
 
 		void ShowHideCardDeckUi()
@@ -140,6 +162,24 @@ namespace Woopsious
 			}
 		}
 
+		//queue cards to be added
+		public static void AddCardToBeAdded(AttackData cardData)
+		{
+			instance.cardsToAddToPlayerDeck.Add(cardData);
+		}
+		public static void RemoveCardFromBeingAdded(AttackData cardData)
+		{
+			if (instance.cardsToAddToPlayerDeck.Contains(cardData))
+				instance.cardsToAddToPlayerDeck.Remove(cardData);
+			else
+				Debug.LogError("Tried removing card that doesnt exist from queue of cards to be added");
+		}
+		public static void CompleteCardAdd()
+		{
+			foreach (AttackData attackData in instance.cardsToAddToPlayerDeck)
+				instance.playerCardDeck.Add(attackData);
+		}
+
 		//queue cards to be discarded
 		public static void AddCardToBeDiscarded(AttackData cardData)
 		{
@@ -150,35 +190,47 @@ namespace Woopsious
 			if (instance.cardsToRemoveFromPlayerDeck.Contains(cardData))
 				instance.cardsToRemoveFromPlayerDeck.Remove(cardData);
 			else
-				Debug.LogError("Tried removing card that doesnt exist from queue of card to be discarded");
+				Debug.LogError("Tried removing card that doesnt exist from queue of cards to be discarded");
 		}
 
-		//cards to force add on new turns;
-		public static void DebugAddDummyCard()
+		//card rewards ui
+		void ShowCardRewardsUi(bool playerWins)
 		{
-			List<StatusEffectsData> debugDummyCards = new()
-			{
-				GameManager.instance.statusEffectsDataTypes[UnityEngine.Random.Range(0, GameManager.instance.statusEffectsDataTypes.Count)]
-			};
+			if (!playerWins) return; //nothing to do
 
-			AddDummyCards(debugDummyCards);
+			GenerateCardRewards();
+			cardRewardsUiPanel.SetActive(true);
 		}
-		public static void AddDummyCards(List<StatusEffectsData> dummmyCardsToAdd)
+		void HideCardRewardsUi()
 		{
-			foreach (StatusEffectsData dummyCard in dummmyCardsToAdd)
-				instance.dummyCardsToForceAdd.Add(dummyCard);
+			cardRewardsUiPanel.SetActive(false);
 		}
-		public static void ResetDummyCards()
+		void GenerateCardRewards()
 		{
-			instance.dummyCardsToForceAdd.Clear();
+			MapNode mapNode = GameManager.CurrentlyVisitedMapNode; //generate card rewards here
+			int cardChoiceCount = mapNode.cardRewardChoiceCount;
+			int cardRewardSelectionLimit = mapNode.cardRewardSelectionCount;
+
+			cardRewardsText.text = $"Select {cardRewardSelectionLimit} cards to add to your deck";
+
+			///<summery>
+			///create dynamic ui that generates cards based on mapNode choice count + buttons to pick cards, limiting it based on mapNode selection count
+			///<summery>
 		}
-		public static StatusEffectsData GetDummyCard(int i)
+		void AcceptRewards() //button call
 		{
-			return instance.dummyCardsToForceAdd[i];
+			///<summery>
+			///only allow player to accept rewards once selection count matches list of chosen cards
+			///<summery>
+
+			HideCardRewardsUi();
 		}
-		public static int DummyCardCount()
+		public static bool CanSelectCardAsReward()
 		{
-			return instance.dummyCardsToForceAdd.Count;
+			if (instance.cardsToAddToPlayerDeck.Count >= GameManager.CurrentlyVisitedMapNode.cardRewardSelectionCount)
+				return false;
+			else
+				return true;
 		}
 
 		//discard card ui + actions
@@ -221,6 +273,34 @@ namespace Woopsious
 
 			cardsToRemoveFromPlayerDeck.Clear();
 			ToggleDiscardCardButtons(false);
+		}
+
+		//cards to force add on new turns;
+		public static void DebugAddDummyCard()
+		{
+			List<StatusEffectsData> debugDummyCards = new()
+			{
+				GameManager.instance.statusEffectsDataTypes[UnityEngine.Random.Range(0, GameManager.instance.statusEffectsDataTypes.Count)]
+			};
+
+			AddDummyCards(debugDummyCards);
+		}
+		public static void AddDummyCards(List<StatusEffectsData> dummmyCardsToAdd)
+		{
+			foreach (StatusEffectsData dummyCard in dummmyCardsToAdd)
+				instance.dummyCardsToForceAdd.Add(dummyCard);
+		}
+		public static void ResetDummyCards()
+		{
+			instance.dummyCardsToForceAdd.Clear();
+		}
+		public static StatusEffectsData GetDummyCard(int i)
+		{
+			return instance.dummyCardsToForceAdd[i];
+		}
+		public static int DummyCardCount()
+		{
+			return instance.dummyCardsToForceAdd.Count;
 		}
 	}
 }

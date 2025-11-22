@@ -29,9 +29,15 @@ namespace Woopsious
 		public Button addCardToDiscardList;
 		public Button removeCardFromDiscardList;
 
-		//runtime card counts
+		[Header("Reward Card Ui")]
+		public GameObject rewardCardUiPanel;
+		public TMP_Text rewardCardSelectedText;
+		public Button toggleSelectRewardCardButton;
+
+		//runtime card Info
 		public int CardDeckCount { get; private set; }
 		public int CardDiscardCount { get; private set; }
+		public bool CardSelectedAsReward { get; private set; }
 
 		//runtime
 		[HideInInspector] public CardHandler cardHandler;
@@ -50,6 +56,7 @@ namespace Woopsious
 			cardBorderImage = GetComponent<Image>();
 			addCardToDiscardList.onClick.AddListener(() => AddCardToDiscardList());
 			removeCardFromDiscardList.onClick.AddListener(() => RemoveCardFromDiscardList());
+			toggleSelectRewardCardButton.onClick.AddListener(() => ToggleSelectCardAsReward());
 			ToggleDiscardCardUi(false);
 		}
 
@@ -182,6 +189,43 @@ namespace Woopsious
 			DamageData.DamageValue = (int)(DamageData.DamageValue * cardOwner.damageDealtModifier.value); //apply damage dealt modifier
 
 			cardDescriptiontext.text = CreateDescription();
+		}
+
+		public void SetupCardRewards(AttackData attackData, int similarCardsInDeck)
+		{
+			if (AttackDataNullCheck(attackData))
+				return;
+
+			GetComponent<BoxCollider2D>().enabled = false;
+			AttackData = attackData;
+			PlayerCard = false;
+			DummyCard = false;
+			Offensive = attackData.offensive;
+
+			string cardName = attackData.attackName;
+			gameObject.name = cardName;
+			cardNametext.text = cardName;
+			ChangeBorderColour(attackData.cardRarity);
+
+			if (attackData.energyCost > 0)
+				cardCostText.text = $"+{attackData.energyCost}";
+			else
+				cardCostText.text = $"{attackData.energyCost}";
+
+			DamageData = new(null, attackData.DamageData);
+
+			cardDescriptiontext.text = CreateDescription();
+
+			if (similarCardsInDeck != 0)
+			{
+				CardDeckCount = similarCardsInDeck;
+				if (similarCardsInDeck == 1)
+					cardCountForCardDeckUi.text = $"{similarCardsInDeck} card in deck";
+				else
+					cardCountForCardDeckUi.text = $"{similarCardsInDeck} cards in deck";
+
+				cardCountForCardDeckUi.gameObject.SetActive(true);
+			}
 		}
 
 		//special dummy card initilization
@@ -336,6 +380,47 @@ namespace Woopsious
 			{
 				CardDiscardCount--;
 				PlayerCardDeckUi.RemoveCardFromBeingDiscarded(AttackData);
+			}
+
+			discardCardCountText.text = $"{CardDiscardCount}";
+		}
+
+		//reward card funcs
+		public void ToggleRewardCardUi(bool show)
+		{
+			discardCardUiPanel.SetActive(show);
+			rewardCardSelectedText.text = $"Unselected";
+		}
+		void ToggleSelectCardAsReward()
+		{
+			//cant select anymore
+			if (!PlayerCardDeckUi.CanSelectCardAsReward())
+			{
+				return;
+			}
+
+			if (CardSelectedAsReward)
+			{
+				CardSelectedAsReward = false;
+				PlayerCardDeckUi.RemoveCardFromBeingAdded(AttackData);
+				rewardCardSelectedText.text = $"Selected";
+			}
+			else
+			{
+				CardSelectedAsReward = true;
+				PlayerCardDeckUi.AddCardToBeAdded(AttackData);
+				rewardCardSelectedText.text = $"Unselected";
+			}
+
+			if (CardDiscardCount >= CardDeckCount)
+			{
+				CardDiscardCount = CardDeckCount;
+				Debug.LogError($"card discard count already at {CardDeckCount}");
+			}
+			else
+			{
+				CardDiscardCount++;
+				PlayerCardDeckUi.AddCardToBeDiscarded(AttackData);
 			}
 
 			discardCardCountText.text = $"{CardDiscardCount}";
