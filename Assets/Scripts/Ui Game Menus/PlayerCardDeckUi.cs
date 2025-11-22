@@ -119,22 +119,22 @@ namespace Woopsious
 		{
 			return instance.playerCardDeck;
 		}
-		public void AddNewCardsToPlayerDeck(List<AttackData> cardDatas)
+		public static void AddNewCardsToPlayerDeck(List<AttackData> cardDatas)
 		{
 			for (int i = 0; i < cardDatas.Count; i++)
 			{
 				AttackData cardData = cardDatas[i];
-				playerCardDeck.Add(cardData);
+				instance.playerCardDeck.Add(cardData);
 			}
 		}
-		public void RemoveCardsFromPlayerDeck(List<AttackData> cardDatas)
+		public static void RemoveCardsFromPlayerDeck(List<AttackData> cardDatas)
 		{
 			for (int i = cardDatas.Count - 1;  i >= 0; i--)
 			{
 				AttackData cardData = cardDatas[i];
 
-				if (playerCardDeck.Contains(cardData))
-					playerCardDeck.Remove(cardData);
+				if (instance.playerCardDeck.Contains(cardData))
+					instance.playerCardDeck.Remove(cardData);
 				else
 					Debug.LogError("Tried removing card that doesnt exist in player card deck");
 			}

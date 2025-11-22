@@ -111,7 +111,7 @@ namespace Woopsious
 
 			return difficultyModifier;
 		}
-		public int CalculateEncounterCardRewardsSelection(MapNode mapNode)
+		public int CalculateCardRewardChoiceCount(MapNode mapNode)
 		{
 			int cardRewards = 2;
 
@@ -121,17 +121,37 @@ namespace Woopsious
 				cardRewards = 3;
 				break;
 				case NodeEncounterType.bossFight:
-				cardRewards = 3;
+				cardRewards = 4;
 				break;
 				case NodeEncounterType.eliteBossFight:
-				cardRewards = 4;
+				cardRewards = 5;
 				break;
 				default: break;
 			}
 
 			return cardRewards;
 		}
-		public float CalculateEncounterCardRarityBoost(MapNode mapNode)
+		public int CalculateCardRewardsSelectionCount(MapNode mapNode)
+		{
+			int cardRewards = 1;
+
+			switch (mapNode.nodeEncounterType)
+			{
+				case NodeEncounterType.eliteFight:
+				cardRewards = 1;
+				break;
+				case NodeEncounterType.bossFight:
+				cardRewards = 2;
+				break;
+				case NodeEncounterType.eliteBossFight:
+				cardRewards = 2;
+				break;
+				default: break;
+			}
+
+			return cardRewards;
+		}
+		public float CalculateCardRewardRarityBoost(MapNode mapNode)
 		{
 			float cardRarityBoost = 0f;
 

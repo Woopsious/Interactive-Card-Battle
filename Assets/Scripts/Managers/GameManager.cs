@@ -47,6 +47,9 @@ namespace Woopsious
 		//player runtime class
 		public static EntityData PlayerClass { get; private set; }
 
+		//current map node
+		public static MapNode CurrentlyVisitedMapNode { get; private set; }
+
 		//scene names
 		public readonly string mainScene = "MainScene";
 		public readonly string gameScene = "GameScene";
@@ -131,6 +134,7 @@ namespace Woopsious
 		{
 			PauseGame(false);
 			OnStartCardCombatEvent?.Invoke(mapNode);
+			CurrentlyVisitedMapNode = mapNode;
 			OnStartCardCombatUiEvent?.Invoke();
 		}
 		public static void DebugBeginCardCombat(List<EntityData> entityDatas)
@@ -144,7 +148,7 @@ namespace Woopsious
 			if (TurnOrderManager.Player() == entity) //end on loss if player dies
 			{
 				PauseGame(true);
-				OnEndCardCombatEvent?.Invoke(false);
+				OnEndCardCombatEvent?.Invoke(false); //loss
 			}
 
 			int enemiesDead = 0;
@@ -156,7 +160,7 @@ namespace Woopsious
 			}
 
 			if (enemiesDead < TurnOrderManager.EnemyEntities().Count) return; //end on win if no enemies left
-			OnEndCardCombatEvent?.Invoke(true);
+			OnEndCardCombatEvent?.Invoke(true); //win
 		}
 		public static void ShowMap()
 		{

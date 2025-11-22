@@ -23,8 +23,9 @@ namespace Woopsious
 		[Header("Runtime data")]
 		public MapNodeData mapNodeData;
 		public float encounterDifficulty;
-		public int encounterCardRewardsCount;
-		public float encounterCardRarityBoost;
+		public int cardRewardChoiceCount;
+		public int cardRewardSelectionCount;
+		public float cardRewardRarityBoost;
 		public int entityBudget;
 		public NodeState nodeState;
 		public EnemyTypes enemyTypes;
@@ -78,8 +79,9 @@ namespace Woopsious
 			SetEnemyTypes();
 
 			encounterDifficulty = mapNodeData.CalculateEncounterDifficultyFromModifiers(columnIndex, this);
-			encounterCardRewardsCount = mapNodeData.CalculateEncounterCardRewardsSelection(this);
-			encounterCardRarityBoost = mapNodeData.CalculateEncounterCardRarityBoost(this);
+			cardRewardChoiceCount = mapNodeData.CalculateCardRewardChoiceCount(this);
+			cardRewardSelectionCount = mapNodeData.CalculateCardRewardsSelectionCount(this);
+			cardRewardRarityBoost = mapNodeData.CalculateCardRewardRarityBoost(this);
 			entityBudget = Mathf.RoundToInt(mapNodeData.baseEntityBudget * encounterDifficulty);
 
 			encounterTitleText.text = UpdateEncounterTitleUi();

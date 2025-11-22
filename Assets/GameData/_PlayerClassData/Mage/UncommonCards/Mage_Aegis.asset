@@ -18,6 +18,8 @@ MonoBehaviour:
   offensive: 0
   attackUseChance: 0
   cardRarity: 2
+  cardDropChance: 0.15
+  cardDrawChance: 0.2
   energyCost: -2
   extraCardsToDraw: 0
   addDummyCardsForEffects: 0

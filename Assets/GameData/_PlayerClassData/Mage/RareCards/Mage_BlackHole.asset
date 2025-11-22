@@ -12,21 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfa07762339c65149a5e4df63bea8f12, type: 3}
   m_Name: Mage_BlackHole
   m_EditorClassIdentifier: 
-  attackName: Blood Pact
-  attackDescription: Sacrifice part of you for damage
+  attackName: Black Hole
+  attackDescription: Create a black hole for a split second
   isPlayerAttack: 1
   offensive: 1
   attackUseChance: 0
   cardRarity: 3
+  cardDropChance: 0.025
+  cardDrawChance: 0.05
   energyCost: -3
   extraCardsToDraw: 0
   addDummyCardsForEffects: 1
   effectDummyCards:
   - {fileID: 11400000, guid: f4d4f8863dd14074f8edad5cf8030290, type: 2}
   DamageData:
-    isMultiHitAttack: 0
-    HitsDifferentTargets: 0
-    multiHitCount: 0
+    isMultiHitAttack: 1
+    HitsDifferentTargets: 1
+    multiHitCount: 4
     valueTypes: 1
     damageType: 0
     DamageValue: 40
@@ -34,6 +36,7 @@ MonoBehaviour:
     HealValue: 0
     statusEffectsForTarget:
     - {fileID: 11400000, guid: f78cba8cf83da314380371d46b7aecf6, type: 2}
-    statusEffectsForSelf:
+    - {fileID: 11400000, guid: f78cba8cf83da314380371d46b7aecf6, type: 2}
+    - {fileID: 11400000, guid: 407b2dba35ddeaf41b621f8e7f141ea8, type: 2}
     - {fileID: 11400000, guid: f4d4f8863dd14074f8edad5cf8030290, type: 2}
-    - {fileID: 11400000, guid: e47d70a91dfc6cd4fb8f8fb11951252b, type: 2}
+    statusEffectsForSelf: []
