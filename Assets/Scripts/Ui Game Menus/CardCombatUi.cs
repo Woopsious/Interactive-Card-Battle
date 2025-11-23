@@ -12,18 +12,18 @@ namespace Woopsious
 		[Header("Ui Panels")]
 		public GameObject CardDeckUi;
 		public GameObject PlayedCardUi;
+		public GameObject GameLostUi;
 		public RectTransform spawnedEntitiesTransform;
 		public RectTransform DraggedCardsTransform;
 
 		[Header("Ui Elements")]
 		public TMP_Text currentRoundInfoText;
 		public TMP_Text currentTurnInfoText;
-		public TMP_Text winLooseText;
 
-		public GameObject returnToMapButtonObj;
-		public GameObject DebugReturnToMapButtonObj;
 		public GameObject EndPlayerTurnButtonObj;
 		public GameObject DebugEndTurnButtonObj;
+		public GameObject debugStartCombatButton;
+		public GameObject debugEndCombatButton;
 
 		[Header("DEBUG FIGHT ENEMIES AT RUNTIME")]
 		public List<EntityData> listOfEntitiesToFight = new();
@@ -83,13 +83,13 @@ namespace Woopsious
 		{
 			CardDeckUi.SetActive(false);
 			PlayedCardUi.SetActive(false);
+			GameLostUi.SetActive(false);
 
 			currentRoundInfoText.gameObject.SetActive(false);
 			currentTurnInfoText.gameObject.SetActive(false);
 
-			winLooseText.gameObject.SetActive(false);
-			returnToMapButtonObj.SetActive(false);
-			DebugReturnToMapButtonObj.SetActive(false);
+			debugStartCombatButton.SetActive(true);
+			debugEndCombatButton.SetActive(false);
 
 			EndPlayerTurnButtonObj.SetActive(false);
 			DebugEndTurnButtonObj.SetActive(false);
@@ -98,35 +98,28 @@ namespace Woopsious
 		{
 			CardDeckUi.SetActive(true);
 			PlayedCardUi.SetActive(true);
+			GameLostUi.SetActive(false);
 
 			currentRoundInfoText.gameObject.SetActive(true);
 			currentTurnInfoText.gameObject.SetActive(true);
 
-			winLooseText.gameObject.SetActive(false);
-			returnToMapButtonObj.SetActive(false);
-			DebugReturnToMapButtonObj.SetActive(true);
+			debugStartCombatButton.SetActive(false);
+			debugEndCombatButton.SetActive(true);
 
 			EndPlayerTurnButtonObj.SetActive(true);
 			DebugEndTurnButtonObj.SetActive(true);
 		}
 		void EndCardCombat(bool playerWon)
 		{
-			if (playerWon)
-			{
-				winLooseText.text = "Player Won";
-			}
-			else
-			{
-				winLooseText.text = "Player Lost";
-			}
+			if (playerWon) return;
 
-			winLooseText.gameObject.SetActive(true);
-			returnToMapButtonObj.SetActive(true);
+			GameLostUi.SetActive(true);
 		}
 
 		//BUTTON CALLS
-		public void ReturnToMap()
+		public void QuitToMainMenuOnLoss()
 		{
+			//for now just show map again
 			GameManager.ShowMap();
 		}
 		public void SkipPlayerTurn()
@@ -144,6 +137,10 @@ namespace Woopsious
 				return;
 			}
 			GameManager.DebugBeginCardCombat(listOfEntitiesToFight);
+		}
+		public void DebugEndCombat()
+		{
+			GameManager.DebugEndCardCombat();
 		}
 		public void DebugSkipTurn()
 		{

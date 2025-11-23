@@ -11,6 +11,8 @@ namespace Woopsious
 	{
 		public static PlayerCardDeckUi instance;
 
+		public GameObject cardUiPrefab;
+
 		[Header("Ui Panels")]
 		public GameObject cardDeckUiPanel;
 		public GameObject cardRewardsUiPanel;
@@ -18,11 +20,18 @@ namespace Woopsious
 		public Button cardDeckToggleButton;
 		TMP_Text cardDeckToggleButtonText;
 
+		[Header("Debug Generate Card Rewards")]
+		public int cardChoicesCount;
+		public int cardSelectionCount;
+
 		[Header("Card Add Rewards Ui Elements")]
 		public TMP_Text cardRewardsText;
 		public TMP_Text selectedCardRewardsInfo;
+		public GameObject cardRewardsParent;
 		public Button acceptCardRewardsButton;
 		public Button warningAcceptCardRewardsButton;
+
+		public List<CardUi> cardRewardsSelection = new();
 
 		[Header("Card Discard Ui Elements")]
 		public Button startDiscardCardsButton;
@@ -49,6 +58,7 @@ namespace Woopsious
 			instance = this;
 			SetupButtons();
 			cardDeckUiPanel.SetActive(false);
+			cardRewardsUiPanel.SetActive(false);
 			ToggleDiscardCardButtons(false);
 		}
 		private void Start()
@@ -166,6 +176,7 @@ namespace Woopsious
 		public static void AddCardToBeAdded(AttackData cardData)
 		{
 			instance.cardsToAddToPlayerDeck.Add(cardData);
+			instance.UpdateCardsSelectedForRewardsCount();
 		}
 		public static void RemoveCardFromBeingAdded(AttackData cardData)
 		{
@@ -173,6 +184,8 @@ namespace Woopsious
 				instance.cardsToAddToPlayerDeck.Remove(cardData);
 			else
 				Debug.LogError("Tried removing card that doesnt exist from queue of cards to be added");
+
+			instance.UpdateCardsSelectedForRewardsCount();
 		}
 		public static void CompleteCardAdd()
 		{
@@ -200,6 +213,7 @@ namespace Woopsious
 
 			GenerateCardRewards();
 			cardRewardsUiPanel.SetActive(true);
+			UpdateCardsSelectedForRewardsCount();
 		}
 		void HideCardRewardsUi()
 		{
@@ -211,11 +225,55 @@ namespace Woopsious
 			int cardChoiceCount = mapNode.cardRewardChoiceCount;
 			int cardRewardSelectionLimit = mapNode.cardRewardSelectionCount;
 
-			cardRewardsText.text = $"Select {cardRewardSelectionLimit} cards to add to your deck";
+			if (cardRewardSelectionLimit == 1)
+				cardRewardsText.text = $"YOU WON\nSelect {cardRewardSelectionLimit} card to add to your deck";
+			else
+				cardRewardsText.text = $"YOU WON\nSelect {cardRewardSelectionLimit} cards to add to your deck";
+
+			bool evenAmountOfCards = false;
+			if (cardChoiceCount % 2 == 0)
+				evenAmountOfCards = true;
+
+			for (int i = 0; i < cardChoiceCount; i++)
+				GenerateNewCardReward(i, evenAmountOfCards);
 
 			///<summery>
 			///create dynamic ui that generates cards based on mapNode choice count + buttons to pick cards, limiting it based on mapNode selection count
 			///<summery>
+		}
+		void GenerateNewCardReward(int index, bool evenAmountOfCards)
+		{
+			CardUi cardUi = Instantiate(cardUiPrefab).GetComponent<CardUi>();
+			cardUi.transform.SetParent(cardRewardsParent.transform);
+			AttackData cardAttackData = SpawnManager.GetRandomCard(GameManager.PlayerClass.collectableCards);
+
+			cardUi.SetupCardRewards(cardAttackData, CountSimilarCardsInDeck(cardAttackData));
+			SetCardPosition(cardUi.GetComponent<RectTransform>(), index, evenAmountOfCards);
+			cardRewardsSelection.Add(cardUi);
+		}
+		int CountSimilarCardsInDeck(AttackData attackData)
+		{
+			int similarCards = 0;
+
+			foreach (AttackData cardInDeck in playerCardDeck)
+			{
+				if (cardInDeck == attackData)
+					similarCards++;
+			}
+			return similarCards;
+		}
+		void SetCardPosition(RectTransform cardTransform, int cardChoiceCount, bool evenAmountOfCards)
+		{
+			int spacing = 200;
+			// Calculate the initial position for the first card
+			float startPos = -(cardChoiceCount / 2) * spacing - 100;
+
+			float xPos = startPos + (cardChoiceCount * spacing);
+
+			cardTransform.anchorMin = new Vector2(0.5f, 1);
+			cardTransform.anchorMax = new Vector2(0.5f, 1);
+			cardTransform.pivot = new Vector2(0.5f, 1);
+			cardTransform.anchoredPosition = new Vector2(xPos, -200);
 		}
 		void AcceptRewards() //button call
 		{
@@ -224,6 +282,7 @@ namespace Woopsious
 			///<summery>
 
 			HideCardRewardsUi();
+			GameManager.ShowMap();
 		}
 		public static bool CanSelectCardAsReward()
 		{
@@ -231,6 +290,12 @@ namespace Woopsious
 				return false;
 			else
 				return true;
+		}
+
+		void UpdateCardsSelectedForRewardsCount()
+		{
+			int cardsSelectionLimit = GameManager.CurrentlyVisitedMapNode.cardRewardSelectionCount;
+			selectedCardRewardsInfo.text = $"Selected Cards {cardsToAddToPlayerDeck.Count}/{cardsSelectionLimit}";
 		}
 
 		//discard card ui + actions

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Woopsious.AbilitySystem;
@@ -141,7 +142,12 @@ namespace Woopsious
 		{
 			PauseGame(false);
 			OnDebugStartCardCombatEvent?.Invoke(entityDatas);
+			CurrentlyVisitedMapNode = InteractiveMapHandler.Instance.MapNodeTable[0][0]; //grab first map node in first column
 			OnStartCardCombatUiEvent?.Invoke();
+		}
+		public static void DebugEndCardCombat()
+		{
+			instance.EndCardCombat(TurnOrderManager.Player());
 		}
 		void EndCardCombat(Entity entity)
 		{

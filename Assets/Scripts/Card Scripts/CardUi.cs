@@ -31,8 +31,8 @@ namespace Woopsious
 
 		[Header("Reward Card Ui")]
 		public GameObject rewardCardUiPanel;
-		public TMP_Text rewardCardSelectedText;
 		public Button toggleSelectRewardCardButton;
+		TMP_Text rewardCardSelectedText;
 
 		//runtime card Info
 		public int CardDeckCount { get; private set; }
@@ -57,7 +57,9 @@ namespace Woopsious
 			addCardToDiscardList.onClick.AddListener(() => AddCardToDiscardList());
 			removeCardFromDiscardList.onClick.AddListener(() => RemoveCardFromDiscardList());
 			toggleSelectRewardCardButton.onClick.AddListener(() => ToggleSelectCardAsReward());
+			rewardCardSelectedText = toggleSelectRewardCardButton.GetComponentInChildren<TMP_Text>();
 			ToggleDiscardCardUi(false);
+			ToggleRewardCardUi(false);
 		}
 
 		bool AttackDataNullCheck(AttackData attackData)
@@ -216,16 +218,14 @@ namespace Woopsious
 
 			cardDescriptiontext.text = CreateDescription();
 
-			if (similarCardsInDeck != 0)
-			{
-				CardDeckCount = similarCardsInDeck;
-				if (similarCardsInDeck == 1)
-					cardCountForCardDeckUi.text = $"{similarCardsInDeck} card in deck";
-				else
-					cardCountForCardDeckUi.text = $"{similarCardsInDeck} cards in deck";
+			CardDeckCount = similarCardsInDeck;
+			if (similarCardsInDeck == 1)
+				cardCountForCardDeckUi.text = $"{similarCardsInDeck} duplicate";
+			else
+				cardCountForCardDeckUi.text = $"{similarCardsInDeck} duplicates";
 
-				cardCountForCardDeckUi.gameObject.SetActive(true);
-			}
+			cardCountForCardDeckUi.gameObject.SetActive(true);
+			ToggleRewardCardUi(true);
 		}
 
 		//special dummy card initilization
@@ -388,42 +388,25 @@ namespace Woopsious
 		//reward card funcs
 		public void ToggleRewardCardUi(bool show)
 		{
-			discardCardUiPanel.SetActive(show);
+			rewardCardUiPanel.SetActive(show);
 			rewardCardSelectedText.text = $"Unselected";
 		}
 		void ToggleSelectCardAsReward()
 		{
-			//cant select anymore
-			if (!PlayerCardDeckUi.CanSelectCardAsReward())
-			{
-				return;
-			}
-
-			if (CardSelectedAsReward)
-			{
-				CardSelectedAsReward = false;
-				PlayerCardDeckUi.RemoveCardFromBeingAdded(AttackData);
-				rewardCardSelectedText.text = $"Selected";
-			}
-			else
+			if (PlayerCardDeckUi.CanSelectCardAsReward() && !CardSelectedAsReward)
 			{
 				CardSelectedAsReward = true;
 				PlayerCardDeckUi.AddCardToBeAdded(AttackData);
-				rewardCardSelectedText.text = $"Unselected";
+				rewardCardSelectedText.text = $"Unselect";
+				rewardCardSelectedText.color = new(1f, 0.2941177f, 0f);
 			}
-
-			if (CardDiscardCount >= CardDeckCount)
+			else if (CardSelectedAsReward)
 			{
-				CardDiscardCount = CardDeckCount;
-				Debug.LogError($"card discard count already at {CardDeckCount}");
+				CardSelectedAsReward = false;
+				PlayerCardDeckUi.RemoveCardFromBeingAdded(AttackData);
+				rewardCardSelectedText.text = $"Select";
+				rewardCardSelectedText.color = new(0f, 0.5882353f, 0f);
 			}
-			else
-			{
-				CardDiscardCount++;
-				PlayerCardDeckUi.AddCardToBeDiscarded(AttackData);
-			}
-
-			discardCardCountText.text = $"{CardDiscardCount}";
 		}
 	}
 }

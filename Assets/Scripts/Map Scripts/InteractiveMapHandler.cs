@@ -9,6 +9,8 @@ namespace Woopsious
 {
 	public class InteractiveMapHandler : MonoBehaviour, IDragHandler
 	{
+		public static InteractiveMapHandler Instance;
+
 		public Camera mapCamera;
 		public RectTransform interactiveMapRectTransform;
 		public RectTransform nodeLinksRectTransform;
@@ -38,10 +40,11 @@ namespace Woopsious
 
 		//runtime node table
 		private readonly System.Random systemRandom = new();
-		Dictionary<int, Dictionary<int, MapNode>> mapNodeTable = new();
+		public Dictionary<int, Dictionary<int, MapNode>> MapNodeTable { get; private set; } = new();
 
 		void Awake()
 		{
+			Instance = this;
 			heightOfNodes = MapNodePrefab.GetComponent<RectTransform>().sizeDelta.y;
 			widthOfNodes = MapNodePrefab.GetComponent<RectTransform>().sizeDelta.x;
 
@@ -84,14 +87,14 @@ namespace Woopsious
 			for (int columnIndex = 0; columnIndex < mapNodesToSpawnPerColumn.Count; columnIndex++)
 			{
 				Dictionary<int, MapNode> newColumn = GenerateMapColumn(columnIndex, mapNodesToSpawnPerColumn[columnIndex]);
-				mapNodeTable.Add(columnIndex, newColumn);
+				MapNodeTable.Add(columnIndex, newColumn);
 				SetNodeColumnPositions(newColumn, mapNodesToSpawnPerColumn.Count, columnIndex);
 
 				for (int rowIndex = 0; rowIndex < newColumn.Count; rowIndex++)
 					newColumn[rowIndex].AddSiblingNodes(newColumn);
 
 				if (columnIndex == 0) continue;
-				LinkPreviousAndCurrentNodes(mapNodeTable[columnIndex - 1], mapNodeTable[columnIndex]);
+				LinkPreviousAndCurrentNodes(MapNodeTable[columnIndex - 1], MapNodeTable[columnIndex]);
 			}
 		}
 		Dictionary<int, MapNode> GenerateMapColumn(int columnIndex, int nodesToSpawn)
@@ -139,7 +142,7 @@ namespace Woopsious
 			if (!logLandTypeSpawns) return;
 			Dictionary<MapNodeData.LandTypes, int> landTypeCount = new();
 
-			foreach (var columnPair in mapNodeTable)
+			foreach (var columnPair in MapNodeTable)
 			{
 				foreach (var nodePair in columnPair.Value)
 				{

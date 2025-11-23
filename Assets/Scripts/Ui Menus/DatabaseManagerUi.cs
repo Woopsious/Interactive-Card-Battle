@@ -209,6 +209,7 @@ namespace Woopsious
 		void SetupCollectableCardsPanel(EntityData playerClassData)
 		{
 			collectableCardsPanel.SetActive(true);
+			collectableCardsParent.SetActive(false);
 
 			viewCommonCardsButton.onClick.RemoveAllListeners();
 			viewUncommonCardsButton.onClick.RemoveAllListeners();
