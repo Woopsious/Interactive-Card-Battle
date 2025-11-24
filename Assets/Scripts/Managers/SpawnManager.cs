@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -136,10 +137,37 @@ namespace Woopsious
 		}
 
 		//types of cards to get
-		public static AttackData GetRandomCard(List<AttackData> cardDataList)
+		public static AttackData GetWeightedPlayerCardReward(float totalCardDropChance)
 		{
-			AttackData cardData = cardDataList[instance.systemRandom.Next(cardDataList.Count)];
-			return cardData;
+			float roll = (float)(instance.systemRandom.NextDouble() * totalCardDropChance);
+			float cumulativeChance = 0;
+
+			foreach (AttackData card in GameManager.PlayerClass.collectableCards)
+			{
+				cumulativeChance += card.CardDropChance();
+
+				if (roll <= cumulativeChance)
+					return card;
+			}
+
+			Debug.LogError("Failed to get weighted card reward");
+			return null;
+		}
+		public static AttackData GetWeightedPlayerCardDraw(List<AttackData> playerCardDeck, float totalCardDrawChance)
+		{
+			float roll = (float)(instance.systemRandom.NextDouble() * totalCardDrawChance);
+			float cumulativeChance = 0;
+
+			foreach (AttackData card in playerCardDeck)
+			{
+				cumulativeChance += card.CardDrawChance();
+
+				if (roll <= cumulativeChance)
+					return card;
+			}
+
+			Debug.LogError("Failed to get weighted card draw");
+			return null;
 		}
 	}
 }

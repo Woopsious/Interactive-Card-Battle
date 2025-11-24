@@ -34,17 +34,17 @@ namespace Woopsious
 		}
 		void OnEnable()
 		{
-			GameManager.OnShowMapEvent += ShowMap;
-			GameManager.OnStartCardCombatUiEvent += StartCardCombat;
-			GameManager.OnEndCardCombatEvent += EndCardCombat;
+			GameManager.OnShowMapEvent += HideCardCombatUi;
+			GameManager.OnStartCardCombatUiEvent += ShowCardCombatUi;
+			GameManager.OnEndCardCombatEvent += ShowGameLossUi;
 			TurnOrderManager.OnNewRoundStartEvent += OnNewRound;
 			TurnOrderManager.OnNewTurnEvent += OnNewTurn;
 		}
 		void OnDisable()
 		{
-			GameManager.OnShowMapEvent -= ShowMap;
-			GameManager.OnStartCardCombatUiEvent -= StartCardCombat;
-			GameManager.OnEndCardCombatEvent -= EndCardCombat;
+			GameManager.OnShowMapEvent -= HideCardCombatUi;
+			GameManager.OnStartCardCombatUiEvent -= ShowCardCombatUi;
+			GameManager.OnEndCardCombatEvent -= ShowGameLossUi;
 			TurnOrderManager.OnNewRoundStartEvent -= OnNewRound;
 			TurnOrderManager.OnNewTurnEvent -= OnNewTurn;
 		}
@@ -79,7 +79,7 @@ namespace Woopsious
 		}
 
 		//event listeners
-		void ShowMap()
+		void HideCardCombatUi()
 		{
 			CardDeckUi.SetActive(false);
 			PlayedCardUi.SetActive(false);
@@ -94,7 +94,7 @@ namespace Woopsious
 			EndPlayerTurnButtonObj.SetActive(false);
 			DebugEndTurnButtonObj.SetActive(false);
 		}
-		void StartCardCombat()
+		void ShowCardCombatUi()
 		{
 			CardDeckUi.SetActive(true);
 			PlayedCardUi.SetActive(true);
@@ -109,7 +109,7 @@ namespace Woopsious
 			EndPlayerTurnButtonObj.SetActive(true);
 			DebugEndTurnButtonObj.SetActive(true);
 		}
-		void EndCardCombat(bool playerWon)
+		void ShowGameLossUi(bool playerWon)
 		{
 			if (playerWon) return;
 

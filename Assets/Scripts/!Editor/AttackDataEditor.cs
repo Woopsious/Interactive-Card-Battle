@@ -32,8 +32,6 @@ namespace Woopsious
 				data.attackUseChance = 0;
 
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.cardRarity)));
-				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.cardDropChance)));
-				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.cardDrawChance)));
 
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.energyCost)));
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.extraCardsToDraw)));
@@ -58,27 +56,6 @@ namespace Woopsious
 			}
 
 			EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.DamageData)));
-
-			if (data.cardRarity == CardRarity.Rare)
-			{
-				data.cardDropChance = 0.025f;
-				data.cardDrawChance = 0.05f;
-			}
-			else if (data.cardRarity == CardRarity.Uncommon)
-			{
-				data.cardDropChance = 0.15f;
-				data.cardDrawChance = 0.2f;
-			}
-			else if (data.cardRarity == CardRarity.Common)
-			{
-				data.cardDropChance = 0.75f;
-				data.cardDrawChance = 0.75f;
-			}
-			else
-			{
-				data.cardDropChance = 0f;
-				data.cardDrawChance = 0.75f;
-			}
 
 			// Write back changed values
 			// This also handles all marking dirty, saving, undo/redo etc

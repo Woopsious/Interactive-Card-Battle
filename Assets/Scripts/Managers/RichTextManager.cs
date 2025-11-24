@@ -43,7 +43,7 @@ namespace Woopsious
 				text = "Basic Fight";
 				break;
 				case NodeEncounterType.eliteFight:
-				text = $"<color={eldritchPurple}Elite Fight</color>";
+				text = $"<color={eldritchPurple}>Elite Fight</color>";
 				break;
 				case NodeEncounterType.bossFight:
 				text = $"<color={red}>Boss Fight</color>";

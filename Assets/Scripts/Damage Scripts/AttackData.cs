@@ -26,9 +26,43 @@ namespace Woopsious
 		{
 			StartingCard, Common, Uncommon, Rare
 		}
-		[Header("Values Controlled By Rarity")]
-		public float cardDropChance;
-		public float cardDrawChance;
+		//set card drop chance and draw chance base on rarity
+		public float CardDropChance()
+		{
+			switch (cardRarity)
+			{
+				case CardRarity.Rare:
+				return 0.025f;
+				case CardRarity.Uncommon:
+				return 0.15f;
+				case CardRarity.Common:
+				return 0.75f;
+				case CardRarity.StartingCard:
+				return 0;
+				default:
+				break;
+			}
+
+			return 0;
+		}
+		public float CardDrawChance()
+		{
+			switch (cardRarity)
+			{
+				case CardRarity.Rare:
+				return 0.05f;
+				case CardRarity.Uncommon:
+				return 0.3f;
+				case CardRarity.Common:
+				return 0.75f;
+				case CardRarity.StartingCard:
+				return 0.75f;
+				default:
+				break;
+			}
+
+			return 0;
+		}
 
 		[Header("Player Energy Cost")]
 		[Tooltip("negative value gives energy to use on current turn, 0 is a free card to play")]

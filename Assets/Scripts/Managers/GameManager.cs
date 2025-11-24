@@ -45,12 +45,6 @@ namespace Woopsious
 
 		public static GameManager instance;
 
-		//player runtime class
-		public static EntityData PlayerClass { get; private set; }
-
-		//current map node
-		public static MapNode CurrentlyVisitedMapNode { get; private set; }
-
 		//scene names
 		public readonly string mainScene = "MainScene";
 		public readonly string gameScene = "GameScene";
@@ -77,6 +71,14 @@ namespace Woopsious
 
 		[Header("Map Node Scriptable Objects")]
 		public List<MapNodeData> mapNodeDataTypes = new();
+
+		//RUNTIME DATA
+		//player class
+		public static EntityData PlayerClass { get; private set; }
+		//current map node
+		public static MapNode CurrentlyVisitedMapNode { get; private set; }
+		//game state
+		public bool InCardCombat { get; private set; }
 
 		//game events
 		public static event Action<MapNode> OnStartCardCombatEvent;
@@ -134,6 +136,7 @@ namespace Woopsious
 		public static void BeginCardCombat(MapNode mapNode)
 		{
 			PauseGame(false);
+			instance.InCardCombat = true;
 			OnStartCardCombatEvent?.Invoke(mapNode);
 			CurrentlyVisitedMapNode = mapNode;
 			OnStartCardCombatUiEvent?.Invoke();
@@ -141,16 +144,20 @@ namespace Woopsious
 		public static void DebugBeginCardCombat(List<EntityData> entityDatas)
 		{
 			PauseGame(false);
+			instance.InCardCombat = true;
 			OnDebugStartCardCombatEvent?.Invoke(entityDatas);
 			CurrentlyVisitedMapNode = InteractiveMapHandler.Instance.MapNodeTable[0][0]; //grab first map node in first column
 			OnStartCardCombatUiEvent?.Invoke();
 		}
 		public static void DebugEndCardCombat()
 		{
-			instance.EndCardCombat(TurnOrderManager.Player());
+			OnEndCardCombatEvent?.Invoke(true); //debug end as win
+			instance.InCardCombat = false;
 		}
 		void EndCardCombat(Entity entity)
 		{
+			if (!instance.InCardCombat) return;
+
 			if (TurnOrderManager.Player() == entity) //end on loss if player dies
 			{
 				PauseGame(true);
@@ -167,6 +174,7 @@ namespace Woopsious
 
 			if (enemiesDead < TurnOrderManager.EnemyEntities().Count) return; //end on win if no enemies left
 			OnEndCardCombatEvent?.Invoke(true); //win
+			instance.InCardCombat = false;
 		}
 		public static void ShowMap()
 		{

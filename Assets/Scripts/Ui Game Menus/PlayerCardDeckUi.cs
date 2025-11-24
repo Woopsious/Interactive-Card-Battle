@@ -29,9 +29,13 @@ namespace Woopsious
 		public TMP_Text selectedCardRewardsInfo;
 		public GameObject cardRewardsParent;
 		public Button acceptCardRewardsButton;
-		public Button warningAcceptCardRewardsButton;
+		public Button confirmAcceptCardRewardsButton;
 
 		public List<CardUi> cardRewardsSelection = new();
+
+		//card spawn table
+		public float TotalCardDropChance { get; private set; }
+		public float TotalCardDrawChance { get; private set; }
 
 		[Header("Card Discard Ui Elements")]
 		public Button startDiscardCardsButton;
@@ -60,6 +64,12 @@ namespace Woopsious
 			cardDeckUiPanel.SetActive(false);
 			cardRewardsUiPanel.SetActive(false);
 			ToggleDiscardCardButtons(false);
+
+			foreach (AttackData card in GameManager.PlayerClass.collectableCards)
+			{
+				TotalCardDropChance += card.CardDropChance();
+				TotalCardDrawChance += card.CardDrawChance();
+			}
 		}
 		private void Start()
 		{
@@ -67,6 +77,9 @@ namespace Woopsious
 		}
 		void SetupButtons()
 		{
+			acceptCardRewardsButton.onClick.AddListener(() => AcceptRewards());
+			confirmAcceptCardRewardsButton.onClick.AddListener(() => ConfirmAcceptRewards());
+
 			cardDeckToggleButtonText = cardDeckToggleButton.GetComponentInChildren<TMP_Text>();
 			cardDeckToggleButton.onClick.AddListener(() => ShowHideCardDeckUi());
 			cardDeckToggleButtonText.text = "Show Card Deck";
@@ -213,12 +226,16 @@ namespace Woopsious
 
 			GenerateCardRewards();
 			cardRewardsUiPanel.SetActive(true);
+			confirmAcceptCardRewardsButton.gameObject.SetActive(false);
 			UpdateCardsSelectedForRewardsCount();
 		}
 		void HideCardRewardsUi()
 		{
 			cardRewardsUiPanel.SetActive(false);
+			confirmAcceptCardRewardsButton.gameObject.SetActive(false);
 		}
+
+		//card rewards generation
 		void GenerateCardRewards()
 		{
 			MapNode mapNode = GameManager.CurrentlyVisitedMapNode; //generate card rewards here
@@ -235,20 +252,20 @@ namespace Woopsious
 				evenAmountOfCards = true;
 
 			for (int i = 0; i < cardChoiceCount; i++)
-				GenerateNewCardReward(i, evenAmountOfCards);
+				GenerateNewCardReward(i, cardChoiceCount, evenAmountOfCards);
 
 			///<summery>
 			///create dynamic ui that generates cards based on mapNode choice count + buttons to pick cards, limiting it based on mapNode selection count
 			///<summery>
 		}
-		void GenerateNewCardReward(int index, bool evenAmountOfCards)
+		void GenerateNewCardReward(int index, int cardCount, bool evenAmountOfCards)
 		{
 			CardUi cardUi = Instantiate(cardUiPrefab).GetComponent<CardUi>();
 			cardUi.transform.SetParent(cardRewardsParent.transform);
-			AttackData cardAttackData = SpawnManager.GetRandomCard(GameManager.PlayerClass.collectableCards);
+			AttackData cardAttackData = SpawnManager.GetWeightedPlayerCardReward(TotalCardDropChance);
 
 			cardUi.SetupCardRewards(cardAttackData, CountSimilarCardsInDeck(cardAttackData));
-			SetCardPosition(cardUi.GetComponent<RectTransform>(), index, evenAmountOfCards);
+			SetCardPosition(cardUi.GetComponent<RectTransform>(), index, cardCount,  evenAmountOfCards);
 			cardRewardsSelection.Add(cardUi);
 		}
 		int CountSimilarCardsInDeck(AttackData attackData)
@@ -262,27 +279,52 @@ namespace Woopsious
 			}
 			return similarCards;
 		}
-		void SetCardPosition(RectTransform cardTransform, int cardChoiceCount, bool evenAmountOfCards)
+		void SetCardPosition(RectTransform cardTransform, int index, int cardCount, bool evenAmountOfCards)
 		{
 			int spacing = 200;
-			// Calculate the initial position for the first card
-			float startPos = -(cardChoiceCount / 2) * spacing - 100;
+			float startPos;
+			float xPos;
 
-			float xPos = startPos + (cardChoiceCount * spacing);
+			if (evenAmountOfCards)
+				startPos = -(cardCount / 2) * spacing + 100;
+			else
+				startPos = -((cardCount - 1) / 2) * spacing;
+
+			xPos = startPos + (index * spacing);
 
 			cardTransform.anchorMin = new Vector2(0.5f, 1);
 			cardTransform.anchorMax = new Vector2(0.5f, 1);
 			cardTransform.pivot = new Vector2(0.5f, 1);
 			cardTransform.anchoredPosition = new Vector2(xPos, -200);
 		}
-		void AcceptRewards() //button call
+		void UpdateCardsSelectedForRewardsCount()
 		{
-			///<summery>
-			///only allow player to accept rewards once selection count matches list of chosen cards
-			///<summery>
+			int cardsSelectionLimit = GameManager.CurrentlyVisitedMapNode.cardRewardSelectionCount;
+			selectedCardRewardsInfo.text = $"Selected Cards {cardsToAddToPlayerDeck.Count}/{cardsSelectionLimit}";
+		}
 
+		//accept card rewards
+		void AcceptRewards()
+		{
+			if (CanStillSelectCardRewards())
+				confirmAcceptCardRewardsButton.gameObject.SetActive(true);
+			else
+				ConfirmAcceptRewards();
+		}
+		void ConfirmAcceptRewards()
+		{
 			HideCardRewardsUi();
+			AddNewCardsToPlayerDeck(cardsToAddToPlayerDeck);
+			ClearCardRewardsSelectionList();
 			GameManager.ShowMap();
+		}
+		void ClearCardRewardsSelectionList()
+		{
+			for (int i = cardRewardsSelection.Count - 1; i >= 0; i--)
+				Destroy(cardRewardsSelection[i].gameObject);
+
+			cardsToAddToPlayerDeck.Clear();
+			cardRewardsSelection.Clear();
 		}
 		public static bool CanSelectCardAsReward()
 		{
@@ -291,11 +333,12 @@ namespace Woopsious
 			else
 				return true;
 		}
-
-		void UpdateCardsSelectedForRewardsCount()
+		bool CanStillSelectCardRewards()
 		{
-			int cardsSelectionLimit = GameManager.CurrentlyVisitedMapNode.cardRewardSelectionCount;
-			selectedCardRewardsInfo.text = $"Selected Cards {cardsToAddToPlayerDeck.Count}/{cardsSelectionLimit}";
+			if (instance.cardsToAddToPlayerDeck.Count < GameManager.CurrentlyVisitedMapNode.cardRewardSelectionCount)
+				return true;
+			else
+				return false;
 		}
 
 		//discard card ui + actions

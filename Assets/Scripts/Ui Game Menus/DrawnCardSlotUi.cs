@@ -1,4 +1,7 @@
+using NUnit.Framework;
 using System;
+using System.Collections.Generic;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Woopsious.AbilitySystem;
@@ -75,7 +78,11 @@ namespace Woopsious
 		void ReplaceCard(CardUi cardToReplace)
 		{
 			if (CardInSlot != cardToReplace) return;
-			CardInSlot.SetupInGameCard(TurnOrderManager.Player(), SpawnManager.GetRandomCard(PlayerCardDeckUi.PlayerCardsInDeck()), true);
+
+			List<AttackData> playerCards = PlayerCardDeckUi.instance.playerCardDeck;
+			float totalCardDrawChance = PlayerCardDeckUi.instance.TotalCardDrawChance;
+
+			CardInSlot.SetupInGameCard(TurnOrderManager.Player(), SpawnManager.GetWeightedPlayerCardDraw(playerCards, totalCardDrawChance), true);
 			AddCardToSlot(CardInSlot);
 		}
 		public void DrawDummyCard(StatusEffectsData effectData)
