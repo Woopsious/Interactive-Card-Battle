@@ -120,7 +120,7 @@ namespace Woopsious
 					dummyCardsAdded++;
 				}
 				else
-					cardSlot.DrawNewCard();
+					cardSlot.DrawCard();
 
 				cardSlot.ShowCardInSlot();
 			}

@@ -68,33 +68,20 @@ namespace Woopsious
 		}
 
 		//card generation
-		public void DrawNewCard()
+		public void DrawCard()
 		{
-			if (CardInSlot == null)
-				CardInSlot = SpawnManager.SpawnCard();
-
+			CardInSlot = PlayerCardDeckHandler.GenerateCard(CardInSlot);
+			ReplaceCard(CardInSlot);
+		}
+		public void DrawDummyCard(StatusEffectsData effectData)
+		{
+			CardInSlot = PlayerCardDeckHandler.GenerateDummyCard(CardInSlot, effectData);
 			ReplaceCard(CardInSlot);
 		}
 		void ReplaceCard(CardHandler cardToReplace)
 		{
 			if (CardInSlot != cardToReplace) return;
-
-			List<AttackData> playerCards = PlayerCardDeckHandler.Instance.PlayerCardDeck;
-			float totalCardDrawChance = PlayerCardDeckHandler.Instance.TotalCardDrawChance;
-			AttackData cardAttackData = SpawnManager.GetWeightedPlayerCardDraw(playerCards, totalCardDrawChance);
-
-			CardInSlot.SetupCard(TurnOrderManager.Player(), cardAttackData, true, true);
-			CardInSlot.Ui.SetupInGameCardUi(cardAttackData, true);
 			AddCardToSlot(CardInSlot);
-		}
-		public void DrawDummyCard(StatusEffectsData effectData)
-		{
-			if (CardInSlot == null)
-				CardInSlot = SpawnManager.SpawnCard();
-
-			ReplaceCard(CardInSlot);
-			CardInSlot.SetupDummyCard(effectData);
-			CardInSlot.Ui.SetupDummyCardUi(effectData);
 		}
 
 		//move card up on mouse 'hover'

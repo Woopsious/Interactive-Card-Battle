@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using Woopsious.AbilitySystem;
 
 namespace Woopsious
 {
@@ -21,7 +22,10 @@ namespace Woopsious
 		public TMP_Text currentTurnInfoText;
 
 		public GameObject EndPlayerTurnButtonObj;
+
+		[Header("Debug Ui Elements")]
 		public GameObject DebugEndTurnButtonObj;
+		public GameObject debugAddDummyCardButton;
 		public GameObject debugStartCombatButton;
 		public GameObject debugEndCombatButton;
 
@@ -88,6 +92,7 @@ namespace Woopsious
 			currentRoundInfoText.gameObject.SetActive(false);
 			currentTurnInfoText.gameObject.SetActive(false);
 
+			debugAddDummyCardButton.SetActive(false);
 			debugStartCombatButton.SetActive(true);
 			debugEndCombatButton.SetActive(false);
 
@@ -103,6 +108,7 @@ namespace Woopsious
 			currentRoundInfoText.gameObject.SetActive(true);
 			currentTurnInfoText.gameObject.SetActive(true);
 
+			debugAddDummyCardButton.SetActive(true);
 			debugStartCombatButton.SetActive(false);
 			debugEndCombatButton.SetActive(true);
 
@@ -145,6 +151,15 @@ namespace Woopsious
 		public void DebugSkipTurn()
 		{
 			TurnOrderManager.SkipCurrentEntitiesTurn();
+		}
+		public void DebugAddDummyCard()
+		{
+			List<StatusEffectsData> debugDummyCards = new()
+			{
+				GameManager.instance.statusEffectsDataTypes[UnityEngine.Random.Range(0, GameManager.instance.statusEffectsDataTypes.Count)]
+			};
+
+			PlayerCardDeckHandler.AddDummyCards(debugDummyCards);
 		}
 	}
 }

@@ -139,6 +139,28 @@ namespace Woopsious
 		}
 
 		//CARD GENERATION
+		public static CardHandler GenerateCard(CardHandler card)
+		{
+			if (card == null)
+				card = SpawnManager.SpawnCard();
+
+			float totalCardDrawChance = Instance.TotalCardDrawChance;
+			List<AttackData> playerCards = Instance.PlayerCardDeck;
+			AttackData cardAttackData = SpawnManager.GetWeightedPlayerCardDraw(playerCards, totalCardDrawChance);
+
+			card.SetupCard(TurnOrderManager.Player(), cardAttackData, true, true);
+			card.Ui.SetupInGameCardUi(cardAttackData, true);
+			return card;
+		}
+		public static CardHandler GenerateDummyCard(CardHandler card, StatusEffectsData effectData)
+		{
+			if (card == null)
+				card = SpawnManager.SpawnCard();
+
+			card.SetupDummyCard(effectData);
+			card.Ui.SetupDummyCardUi(effectData);
+			return card;
+		}
 		public static List<CardHandler> GenerateCardRewards(GameObject parent)
 		{
 			MapNode mapNode = GameManager.CurrentlyVisitedMapNode; //generate card rewards here

@@ -20,10 +20,6 @@ namespace Woopsious
 		public Button cardDeckToggleButton;
 		TMP_Text cardDeckToggleButtonText;
 
-		[Header("Debug Generate Card Rewards")]
-		public int cardChoicesCount;
-		public int cardSelectionCount;
-
 		[Header("Card Add Rewards Ui Elements")]
 		public TMP_Text cardRewardsText;
 		public TMP_Text selectedCardRewardsInfo;
@@ -38,6 +34,7 @@ namespace Woopsious
 		public Button CompleteDiscardCardsButton;
 		public Button CancelDiscardCardsButton;
 
+		[Header("Cards To Display deck data")]
 		public List<CardHandler> cardsForDisplay = new();
 
 		private void Awake()
@@ -252,17 +249,6 @@ namespace Woopsious
 
 			PlayerCardDeckHandler.DiscardCardsFromDeck(false);
 			ToggleDiscardCardButtons(false);
-		}
-
-		//cards to force add on new turns;
-		public static void DebugAddDummyCard()
-		{
-			List<StatusEffectsData> debugDummyCards = new()
-			{
-				GameManager.instance.statusEffectsDataTypes[UnityEngine.Random.Range(0, GameManager.instance.statusEffectsDataTypes.Count)]
-			};
-
-			PlayerCardDeckHandler.AddDummyCards(debugDummyCards);
 		}
 	}
 }

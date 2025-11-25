@@ -2374,6 +2374,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
+--- !u!114 &524992971 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2216728023845142203, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
+  m_PrefabInstance: {fileID: 524992970}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a72927b9351d48c458800546f2aeca54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &524992972 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4699779821799226237, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
@@ -2411,7 +2422,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 603082111}
-  m_Father: {fileID: 1698422765}
+  m_Father: {fileID: 1074505741}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2462,8 +2473,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1698422766}
-        m_TargetAssemblyTypeName: Woopsious.PlayerCardDeckUi, Assembly-CSharp
+      - m_Target: {fileID: 1074505740}
+        m_TargetAssemblyTypeName: Woopsious.CardCombatUi, Assembly-CSharp
         m_MethodName: DebugAddDummyCard
         m_Mode: 1
         m_Arguments:
@@ -5248,6 +5259,7 @@ MonoBehaviour:
   currentTurnInfoText: {fileID: 2025988289}
   EndPlayerTurnButtonObj: {fileID: 1538604957}
   DebugEndTurnButtonObj: {fileID: 2096148737}
+  debugAddDummyCardButton: {fileID: 602537367}
   debugStartCombatButton: {fileID: 700017761}
   debugEndCombatButton: {fileID: 1063411311}
   listOfEntitiesToFight:
@@ -5275,6 +5287,7 @@ RectTransform:
   - {fileID: 2011851598}
   - {fileID: 1538604961}
   - {fileID: 2096148741}
+  - {fileID: 602537368}
   - {fileID: 700017762}
   - {fileID: 1063411315}
   m_Father: {fileID: 0}
@@ -7790,7 +7803,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayedCardUi: {fileID: 1453082820}
-  card: {fileID: 0}
+  card: {fileID: 524992971}
 --- !u!224 &1667818791
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7909,7 +7922,6 @@ RectTransform:
   - {fileID: 1720185040}
   - {fileID: 655835418}
   - {fileID: 1268207397}
-  - {fileID: 602537368}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -7933,8 +7945,6 @@ MonoBehaviour:
   cardDeckUiPanel: {fileID: 655835417}
   cardRewardsUiPanel: {fileID: 1720185037}
   cardDeckToggleButton: {fileID: 1268207398}
-  cardChoicesCount: 0
-  cardSelectionCount: 0
   cardRewardsText: {fileID: 1202174949}
   selectedCardRewardsInfo: {fileID: 1938669782}
   cardRewardsParent: {fileID: 1704084813}
