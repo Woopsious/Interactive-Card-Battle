@@ -265,7 +265,7 @@ namespace Woopsious
 			else
 			{
 				CardDiscardCount++;
-				PlayerCardDeckUi.AddCardToBeDiscarded(cardHandler.AttackData);
+				PlayerCardDeckHandler.QueueCardToBeDiscarded(cardHandler.AttackData);
 			}
 
 			discardCardCountText.text = $"{CardDiscardCount}";
@@ -280,7 +280,7 @@ namespace Woopsious
 			else
 			{
 				CardDiscardCount--;
-				PlayerCardDeckUi.RemoveCardFromBeingDiscarded(cardHandler.AttackData);
+				PlayerCardDeckHandler.UnqueueCardFromBeingDiscarded(cardHandler.AttackData);
 			}
 
 			discardCardCountText.text = $"{CardDiscardCount}";
@@ -294,17 +294,17 @@ namespace Woopsious
 		}
 		void ToggleSelectCardAsReward()
 		{
-			if (PlayerCardDeckUi.CanSelectCardAsReward() && !CardSelectedAsReward)
+			if (PlayerCardDeckHandler.CanSelectCardAsReward() && !CardSelectedAsReward)
 			{
 				CardSelectedAsReward = true;
-				PlayerCardDeckUi.AddCardToBeAdded(cardHandler.AttackData);
+				PlayerCardDeckHandler.QueueCardToBeAdded(cardHandler.AttackData);
 				rewardCardSelectedText.text = $"Unselect";
 				rewardCardSelectedText.color = new(1f, 0.2941177f, 0f);
 			}
 			else if (CardSelectedAsReward)
 			{
 				CardSelectedAsReward = false;
-				PlayerCardDeckUi.RemoveCardFromBeingAdded(cardHandler.AttackData);
+				PlayerCardDeckHandler.UnqueueCardFromBeingAdded(cardHandler.AttackData);
 				rewardCardSelectedText.text = $"Select";
 				rewardCardSelectedText.color = new(0f, 0.5882353f, 0f);
 			}

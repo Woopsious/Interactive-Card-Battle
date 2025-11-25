@@ -303,7 +303,7 @@ namespace Woopsious
 		void AddDummyCardsIfExists()
 		{
 			if (!AttackData.addDummyCardsForEffects) return;
-			PlayerCardDeckUi.AddDummyCards(AttackData.effectDummyCards);
+			PlayerCardDeckHandler.AddDummyCards(AttackData.effectDummyCards);
 		}
 
 		//clean up card

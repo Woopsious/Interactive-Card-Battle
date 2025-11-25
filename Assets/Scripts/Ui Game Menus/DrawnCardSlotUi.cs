@@ -79,8 +79,8 @@ namespace Woopsious
 		{
 			if (CardInSlot != cardToReplace) return;
 
-			List<AttackData> playerCards = PlayerCardDeckUi.instance.playerCardDeck;
-			float totalCardDrawChance = PlayerCardDeckUi.instance.TotalCardDrawChance;
+			List<AttackData> playerCards = PlayerCardDeckHandler.Instance.PlayerCardDeck;
+			float totalCardDrawChance = PlayerCardDeckHandler.Instance.TotalCardDrawChance;
 			AttackData cardAttackData = SpawnManager.GetWeightedPlayerCardDraw(playerCards, totalCardDrawChance);
 
 			CardInSlot.SetupCard(TurnOrderManager.Player(), cardAttackData, true, true);
@@ -140,6 +140,7 @@ namespace Woopsious
 			CardInSlot = newCard;
 			CardInSlot.gameObject.SetActive(true);
 			CardInSlot.transform.SetParent(gameObject.transform, false);
+			CardInSlot.Ui.RectTransform.localScale = new Vector2(1, 1);
 			CardInSlot.Ui.RectTransform.anchoredPosition = new(0, 87.5f);
 
 			if (CardInSlot.DummyCard)

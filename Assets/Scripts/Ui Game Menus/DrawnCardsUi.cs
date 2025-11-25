@@ -114,9 +114,9 @@ namespace Woopsious
 
 			foreach (DrawnCardSlotUi cardSlot in activeCardSlots)
 			{
-				if (dummyCardsAdded < PlayerCardDeckUi.DummyCardCount())
+				if (dummyCardsAdded < PlayerCardDeckHandler.DummyCardCount())
 				{
-					cardSlot.DrawDummyCard(PlayerCardDeckUi.GetDummyCard(dummyCardsAdded));
+					cardSlot.DrawDummyCard(PlayerCardDeckHandler.GetDummyCard(dummyCardsAdded));
 					dummyCardsAdded++;
 				}
 				else
@@ -125,7 +125,7 @@ namespace Woopsious
 				cardSlot.ShowCardInSlot();
 			}
 
-			PlayerCardDeckUi.ResetDummyCards();
+			PlayerCardDeckHandler.ResetDummyCards();
 		}
 		void HideCardDeck()
 		{
