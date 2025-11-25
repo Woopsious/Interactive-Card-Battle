@@ -80,12 +80,12 @@ namespace Woopsious
 		void OnTriggerEnter2D(Collider2D other)
 		{
 			if (other.GetComponent<CardUi>() != null)
-				CardEnter(other.GetComponent<CardUi>());
+				CardEnter(other.GetComponent<CardHandler>());
 		}
 		void OnTriggerExit2D(Collider2D other)
 		{
 			if (other.GetComponent<CardUi>() != null)
-				CardExit(other.GetComponent<CardUi>());
+				CardExit(other.GetComponent<CardHandler>());
 		}
 
 		public void InitilizeEntity(EntityData entityData)
@@ -276,7 +276,7 @@ namespace Woopsious
 		}
 
 		//update image border highlight
-		protected virtual void OnCardPicked(CardUi card)
+		protected virtual void OnCardPicked(CardHandler card)
 		{
 			if (card == null)
 				imageHighlight.color = _ColourDarkRed;
@@ -288,7 +288,7 @@ namespace Woopsious
 					imageHighlight.color = _ColourDarkRed;
 			}
 		}
-		protected virtual void CardEnter(CardUi card)
+		protected virtual void CardEnter(CardHandler card)
 		{
 			if (card == null)
 				imageHighlight.color = _ColourDarkRed;
@@ -300,13 +300,13 @@ namespace Woopsious
 					imageHighlight.color = _ColourDarkRed;
 			}
 		}
-		protected virtual void CardExit(CardUi card)
+		protected virtual void CardExit(CardHandler card)
 		{
 			if (card == null)
 				imageHighlight.color = _ColourDarkRed;
 			else
 			{
-				if (card.Offensive && card.cardHandler.isBeingDragged)
+				if (card.Offensive && card.isBeingDragged)
 					imageHighlight.color = _ColourIceBlue;
 				else
 					imageHighlight.color = _ColourDarkRed;

@@ -19,7 +19,7 @@ namespace Woopsious
 		RectTransformData mouseHoverRectTransform;
 
 		public int cardSlotIndex;
-		public CardUi CardInSlot;
+		public CardHandler CardInSlot;
 
 		public static event Action<DrawnCardSlotUi> OnThisSlotMouseEnter;
 
@@ -75,14 +75,16 @@ namespace Woopsious
 
 			ReplaceCard(CardInSlot);
 		}
-		void ReplaceCard(CardUi cardToReplace)
+		void ReplaceCard(CardHandler cardToReplace)
 		{
 			if (CardInSlot != cardToReplace) return;
 
 			List<AttackData> playerCards = PlayerCardDeckUi.instance.playerCardDeck;
 			float totalCardDrawChance = PlayerCardDeckUi.instance.TotalCardDrawChance;
+			AttackData cardAttackData = SpawnManager.GetWeightedPlayerCardDraw(playerCards, totalCardDrawChance);
 
-			CardInSlot.SetupInGameCard(TurnOrderManager.Player(), SpawnManager.GetWeightedPlayerCardDraw(playerCards, totalCardDrawChance), true);
+			CardInSlot.SetupCard(TurnOrderManager.Player(), cardAttackData, true, true);
+			CardInSlot.Ui.SetupInGameCardUi(cardAttackData, true);
 			AddCardToSlot(CardInSlot);
 		}
 		public void DrawDummyCard(StatusEffectsData effectData)
@@ -92,6 +94,7 @@ namespace Woopsious
 
 			ReplaceCard(CardInSlot);
 			CardInSlot.SetupDummyCard(effectData);
+			CardInSlot.Ui.SetupDummyCardUi(effectData);
 		}
 
 		//move card up on mouse 'hover'
@@ -123,7 +126,7 @@ namespace Woopsious
 		}
 
 		//card adding/removing + being used
-		void OnPlayerCardUsed(CardUi card, bool wasUsed)
+		void OnPlayerCardUsed(CardHandler card, bool wasUsed)
 		{
 			if (CardInSlot != card) return;
 
@@ -132,12 +135,12 @@ namespace Woopsious
 			else
 				AddCardToSlot(card);
 		}
-		void AddCardToSlot(CardUi newCard)
+		void AddCardToSlot(CardHandler newCard)
 		{
 			CardInSlot = newCard;
 			CardInSlot.gameObject.SetActive(true);
 			CardInSlot.transform.SetParent(gameObject.transform, false);
-			CardInSlot.CardRectTransform.anchoredPosition = new(0, 87.5f);
+			CardInSlot.Ui.RectTransform.anchoredPosition = new(0, 87.5f);
 
 			if (CardInSlot.DummyCard)
 				ShowCardInSlot();
@@ -149,7 +152,7 @@ namespace Woopsious
 					ShowCardInSlot();
 			}
 		}
-		void RemoveCardFromSlot(CardUi card)
+		void RemoveCardFromSlot(CardHandler card)
 		{
 			if (card == CardInSlot)
 				CardInSlot = null;
@@ -174,7 +177,8 @@ namespace Woopsious
 		void UpdateCardsOnPlayerStatChanges()
 		{
 			if (CardInSlot == null) return;
-			CardInSlot.UpdateInGameCard(TurnOrderManager.Player(), true);
+			CardInSlot.UpdateCard(TurnOrderManager.Player(), true);
+			CardInSlot.Ui.UpdateInGameCardUi();
 		}
 		void OnPlayerEnergyChanges(int energy)
 		{
@@ -194,14 +198,14 @@ namespace Woopsious
 		{
 			if (CardInSlot == null) return;
 
-			CardInSlot.EnableCard();
+			CardInSlot.CardSelectable();
 			UpdateCardSlotPositions(true);
 		}
 		public void HideCardInSlot()
 		{
 			if (CardInSlot == null) return;
 
-			CardInSlot.DisableCard();
+			CardInSlot.CardUnselectable();
 			UpdateCardSlotPositions(false);
 		}
 

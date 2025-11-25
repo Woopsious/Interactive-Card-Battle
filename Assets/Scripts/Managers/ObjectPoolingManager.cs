@@ -14,7 +14,7 @@ namespace Woopsious
 
 		public GameObject inactiveCardsParent;
 		readonly int cardsToSave = 10;
-		List<CardUi> inactiveCards = new List<CardUi>();
+		List<CardHandler> inactiveCards = new List<CardHandler>();
 
 		private void Awake()
 		{
@@ -61,9 +61,9 @@ namespace Woopsious
 		}
 
 		//card object pooling
-		public static CardUi RequestCard()
+		public static CardHandler RequestCard()
 		{
-			CardUi card = null;
+			CardHandler card = null;
 
 			if (instance.inactiveCards.Count > 0)
 			{
@@ -73,7 +73,7 @@ namespace Woopsious
 
 			return card;
 		}
-		void AddCardToInactiveList(CardUi card)
+		void AddCardToInactiveList(CardHandler card)
 		{
 			card.transform.SetParent(inactiveCardsParent.transform);
 

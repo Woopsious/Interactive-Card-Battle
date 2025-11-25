@@ -31,7 +31,7 @@ namespace Woopsious
 		public Button acceptCardRewardsButton;
 		public Button confirmAcceptCardRewardsButton;
 
-		public List<CardUi> cardRewardsSelection = new();
+		public List<CardHandler> cardRewardsSelection = new();
 
 		//card spawn table
 		public float TotalCardDropChance { get; private set; }
@@ -42,7 +42,7 @@ namespace Woopsious
 		public Button CompleteDiscardCardsButton;
 		public Button CancelDiscardCardsButton;
 
-		public List<CardUi> cardUisForDisplay = new();
+		public List<CardHandler> cardsForDisplay = new();
 
 		[Header("Runtime data")]
 		//player card deck data
@@ -128,34 +128,35 @@ namespace Woopsious
 			}
 
 			int index = 0;
-			for (int i = 0; i < cardUisForDisplay.Count; i++)
+			for (int i = 0; i < cardsForDisplay.Count; i++)
 			{
-				CardUi cardUi = cardUisForDisplay[i];
+				CardHandler card = cardsForDisplay[i];
 
 				if (i < cardDeckCount.Count)
 				{
-					cardUi.gameObject.SetActive(true);
+					card.gameObject.SetActive(true);
 				}
 				else
 				{
-					cardUi.gameObject.SetActive(false);
+					card.gameObject.SetActive(false);
 				}
 			}
 
 			foreach (KeyValuePair<AttackData, int> entry in cardDeckCount)
 			{
-				if (index > cardUisForDisplay.Count)
+				if (index > cardsForDisplay.Count)
 					Debug.LogError("cards to set up greater than ui slots avalable to display info");
 
-				cardUisForDisplay[index].SetupUiCard(entry.Key, entry.Value);
-				cardUisForDisplay[index].gameObject.SetActive(true);
+				cardsForDisplay[index].SetupCard(null, entry.Key, false, false);
+				cardsForDisplay[index].Ui.SetupCardDeckCardUi(entry.Key, entry.Value);
+				cardsForDisplay[index].gameObject.SetActive(true);
 				index++;
 			}
 
 			// Hide the rest of the UIs if there are more than cardDeckCount
-			for (int i = index; i < cardUisForDisplay.Count; i++)
+			for (int i = index; i < cardsForDisplay.Count; i++)
 			{
-				cardUisForDisplay[i].gameObject.SetActive(false);
+				cardsForDisplay[i].gameObject.SetActive(false);
 			}
 		}
 
@@ -253,20 +254,17 @@ namespace Woopsious
 
 			for (int i = 0; i < cardChoiceCount; i++)
 				GenerateNewCardReward(i, cardChoiceCount, evenAmountOfCards);
-
-			///<summery>
-			///create dynamic ui that generates cards based on mapNode choice count + buttons to pick cards, limiting it based on mapNode selection count
-			///<summery>
 		}
 		void GenerateNewCardReward(int index, int cardCount, bool evenAmountOfCards)
 		{
-			CardUi cardUi = Instantiate(cardUiPrefab).GetComponent<CardUi>();
-			cardUi.transform.SetParent(cardRewardsParent.transform);
+			CardHandler card = Instantiate(cardUiPrefab).GetComponent<CardHandler>();
+			card.transform.SetParent(cardRewardsParent.transform);
 			AttackData cardAttackData = SpawnManager.GetWeightedPlayerCardReward(TotalCardDropChance);
 
-			cardUi.SetupCardRewards(cardAttackData, CountSimilarCardsInDeck(cardAttackData));
-			SetCardPosition(cardUi.GetComponent<RectTransform>(), index, cardCount,  evenAmountOfCards);
-			cardRewardsSelection.Add(cardUi);
+			card.SetupCard(null, cardAttackData, true, false);
+			card.Ui.SetupRewardCardUi(cardAttackData, CountSimilarCardsInDeck(cardAttackData));
+			SetCardPosition(card.GetComponent<RectTransform>(), index, cardCount,  evenAmountOfCards);
+			cardRewardsSelection.Add(card);
 		}
 		int CountSimilarCardsInDeck(AttackData attackData)
 		{
@@ -359,15 +357,15 @@ namespace Woopsious
 		}
 		void StartCardDiscard()
 		{
-			foreach (CardUi cardUi in cardUisForDisplay)
-				cardUi.ToggleDiscardCardUi(true);
+			foreach (CardHandler card in cardsForDisplay)
+				card.Ui.ToggleDiscardCardUi(true);
 
 			ToggleDiscardCardButtons(true);
 		}
 		void CompleteCardDiscard()
 		{
-			foreach (CardUi cardUi in cardUisForDisplay)
-				cardUi.ToggleDiscardCardUi(false);
+			foreach (CardHandler card in cardsForDisplay)
+				card.Ui.ToggleDiscardCardUi(false);
 
 			RemoveCardsFromPlayerDeck(cardsToRemoveFromPlayerDeck);
 
@@ -376,8 +374,8 @@ namespace Woopsious
 		}
 		void CancelCardDiscard()
 		{
-			foreach (CardUi cardUi in cardUisForDisplay)
-				cardUi.ToggleDiscardCardUi(false);
+			foreach (CardHandler card in cardsForDisplay)
+				card.Ui.ToggleDiscardCardUi(false);
 
 			cardsToRemoveFromPlayerDeck.Clear();
 			ToggleDiscardCardButtons(false);

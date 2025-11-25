@@ -56,7 +56,7 @@ namespace Woopsious
 			cardsReplacedThisTurn = 0;
 		}
 
-		void OnCardPicked(CardUi card)
+		void OnCardPicked(CardHandler card)
 		{
 			if (card != null && CanReplaceCardThisTurn())
 			{
@@ -78,7 +78,7 @@ namespace Woopsious
 			else return false;
 		}
 
-		void OnReplaceCard(CardUi card)
+		void OnReplaceCard(CardHandler card)
 		{
 			cardsReplacedThisTurn++;
 		}

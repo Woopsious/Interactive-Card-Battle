@@ -47,8 +47,8 @@ namespace Woopsious
 		public Button viewRareCardsButton;
 		public Button hideCollectableCardsButton;
 
-		List<CardUi> cardUiList = new();
-		List<CardUi> collectableCardUiList = new();
+		List<CardHandler> cardList = new();
+		List<CardHandler> collectableCardList = new();
 
 		void OnEnable()
 		{
@@ -198,11 +198,12 @@ namespace Woopsious
 
 		void DisplayStartingCardInfo(KeyValuePair<AttackData, int> entry, int index)
 		{
-			CardUi cardUi = Instantiate(cardUiPrefab).GetComponent<CardUi>();
-			cardUi.transform.SetParent(databaseInnerPanel.transform);
-			cardUi.SetupUiCard(entry.Key, entry.Value);
-			cardUiList.Add(cardUi);
-			SetCardUiPosition(cardUi.GetComponent<RectTransform>(), index);
+			CardHandler card = Instantiate(cardUiPrefab).GetComponent<CardHandler>();
+			card.transform.SetParent(databaseInnerPanel.transform);
+			card.SetupCard(null, entry.Key, false, false);
+			card.Ui.SetupCardDeckCardUi(entry.Key, entry.Value);
+			cardList.Add(card);
+			SetCardUiPosition(card.GetComponent<RectTransform>(), index);
 		}
 
 		//players collectable cards mini panel
@@ -230,11 +231,12 @@ namespace Woopsious
 			{
 				if (cards[i].cardRarity != cardRarity) continue;
 
-				CardUi cardUi = Instantiate(cardUiPrefab).GetComponent<CardUi>();
-				cardUi.transform.SetParent(collectableCardsParent.transform);
-				cardUi.SetupUiCard(cards[i], 0);
-				collectableCardUiList.Add(cardUi);
-				SetCollectableCardUiPosition(cardUi.GetComponent<RectTransform>(), cardsFound);
+				CardHandler card = Instantiate(cardUiPrefab).GetComponent<CardHandler>();
+				card.transform.SetParent(collectableCardsParent.transform);
+				card.SetupCard(null, cards[i], false, false);
+				card.Ui.SetupInGameCardUi(cards[i], false);
+				collectableCardList.Add(card);
+				SetCollectableCardUiPosition(card.GetComponent<RectTransform>(), cardsFound);
 				cardsFound++;
 			}
 		}
@@ -314,11 +316,12 @@ namespace Woopsious
 		}
 		void ShowEnemyMovesInfo(AttackData attackMove, int index)
 		{
-			CardUi cardUi = Instantiate(cardUiPrefab).GetComponent<CardUi>();
-			cardUi.gameObject.transform.SetParent(databaseInnerPanel.transform);
-			cardUi.SetupUiCard(attackMove);
-			cardUiList.Add(cardUi);
-			SetCardUiPosition(cardUi.GetComponent<RectTransform>(), index);
+			CardHandler card = Instantiate(cardUiPrefab).GetComponent<CardHandler>();
+			card.gameObject.transform.SetParent(databaseInnerPanel.transform);
+			card.SetupCard(attackMove);
+			card.Ui.SetupInGameCardUi(attackMove, false);
+			cardList.Add(card);
+			SetCardUiPosition(card.GetComponent<RectTransform>(), index);
 		}
 
 		//MAP NODES DATABASE
@@ -434,17 +437,17 @@ namespace Woopsious
 		//reset reusable card ui list
 		void ClearCardUiList()
 		{
-			for (int i = cardUiList.Count - 1; i >= 0; i--)
-				Destroy(cardUiList[i].gameObject);
+			for (int i = cardList.Count - 1; i >= 0; i--)
+				Destroy(cardList[i].gameObject);
 
-			cardUiList.Clear();
+			cardList.Clear();
 		}
 		void ClearCollectableCardUiList()
 		{
-			for (int i = collectableCardUiList.Count - 1; i >= 0; i--)
-				Destroy(collectableCardUiList[i].gameObject);
+			for (int i = collectableCardList.Count - 1; i >= 0; i--)
+				Destroy(collectableCardList[i].gameObject);
 
-			collectableCardUiList.Clear();
+			collectableCardList.Clear();
 		}
 	}
 }

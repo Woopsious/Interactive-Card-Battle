@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Woopsious.AbilitySystem;
 using static Woopsious.DamageData;
 
 namespace Woopsious
@@ -9,7 +11,7 @@ namespace Woopsious
 	public class CardHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 	{
 		[HideInInspector] public Entity cardOwner;
-		CardUi card;
+		public CardUi Ui { get; private set; }
 
 		[HideInInspector] public bool isBeingDragged;
 		[HideInInspector] public bool isBeingDiscarded;
@@ -18,14 +20,21 @@ namespace Woopsious
 
 		Vector3 mousePos;
 
-		public static event Action<CardUi, bool> OnPlayerCardUsed;
-		public static event Action<CardUi> OnPlayerPickedUpCard;
-		public static event Action<CardUi> OnCardCleanUp;
-		public static event Action<CardUi> OnCardReplace;
+		public AttackData AttackData { get; private set; }
+		public DamageData DamageData { get; private set; }
+		public bool PlayerCard { get; private set; }
+		public bool DummyCard { get; private set; }
+		public bool Offensive { get; private set; }
+		public bool Selectable { get; private set; }
+
+		public static event Action<CardHandler, bool> OnPlayerCardUsed;
+		public static event Action<CardHandler> OnPlayerPickedUpCard;
+		public static event Action<CardHandler> OnCardCleanUp;
+		public static event Action<CardHandler> OnCardReplace;
 
 		void Awake()
 		{
-			card = GetComponent<CardUi>();
+			Ui = GetComponent<CardUi>();
 			isBeingDragged = false;
 			touchingPlayerRef = null;
 			touchingEnemyRef = null;
@@ -53,6 +62,78 @@ namespace Woopsious
 				DrawnCardsDeckTriggerExit();
 			else if (other.GetComponent<ReplaceCardUi>() != null)
 				ReplaceCardTriggerExit();
+		}
+
+		bool AttackDataNullCheck(AttackData attackData)
+		{
+			if (attackData == null)
+			{
+				Debug.LogError("Attack data null");
+				return true;
+			}
+			else
+				return false;
+		}
+
+		//card initilization
+		public void SetupCard(Entity cardOwner, AttackData attackData, bool playerCard, bool colliderActive)
+		{
+			if (AttackDataNullCheck(attackData))
+				return;
+
+			GetComponent<BoxCollider2D>().enabled = colliderActive;
+			AttackData = attackData;
+			PlayerCard = playerCard;
+			DummyCard = false;
+			Offensive = attackData.offensive;
+
+			if (cardOwner != null) //apply entity modifiers
+			{
+				DamageData = new(cardOwner, attackData.DamageData);
+				DamageData.DamageValue = (int)(DamageData.DamageValue + cardOwner.damageBonus.value);
+				DamageData.DamageValue = (int)(DamageData.DamageValue * cardOwner.damageDealtModifier.value);
+			}
+			else
+				DamageData = new(null, attackData.DamageData);
+		}
+		public void SetupCard(AttackData attackData)
+		{
+			if (AttackDataNullCheck(attackData))
+				return;
+
+			GetComponent<BoxCollider2D>().enabled = false;
+			AttackData = attackData;
+			PlayerCard = false;
+			DummyCard = false;
+			Offensive = attackData.offensive;
+
+			if (cardOwner != null) //apply entity modifiers
+			{
+				DamageData = new(cardOwner, attackData.DamageData);
+				DamageData.DamageValue = (int)(DamageData.DamageValue + cardOwner.damageBonus.value);
+				DamageData.DamageValue = (int)(DamageData.DamageValue * cardOwner.damageDealtModifier.value);
+			}
+			else
+				DamageData = new(null, attackData.DamageData);
+		}
+		public void UpdateCard(Entity cardOwner, bool playerCard)
+		{
+			PlayerCard = playerCard;
+			DummyCard = false;
+
+			DamageData = new(cardOwner, AttackData.DamageData);
+			DamageData.DamageValue = (int)(DamageData.DamageValue + cardOwner.damageBonus.value); //apply bonus damage
+			DamageData.DamageValue = (int)(DamageData.DamageValue * cardOwner.damageDealtModifier.value); //apply damage dealt modifier
+		}
+
+		//special dummy card initilization
+		public void SetupDummyCard(StatusEffectsData dummyCardEffectData)
+		{
+			PlayerCard = false;
+			DummyCard = true;
+
+			string cardName = dummyCardEffectData.effectName;
+			gameObject.name = cardName;
 		}
 
 		//trigger enter/exit funcs
@@ -99,18 +180,18 @@ namespace Woopsious
 		//player card actions
 		public void OnPointerDown(PointerEventData eventData)
 		{
-			if (!card.Selectable || eventData.button != PointerEventData.InputButton.Left) return;
+			if (!Selectable || eventData.button != PointerEventData.InputButton.Left) return;
 			PlayerSelectCard();
 		}
 		public void OnPointerUp(PointerEventData eventData)
 		{
-			if (!card.Selectable || eventData.button != PointerEventData.InputButton.Left) return;
+			if (!Selectable || eventData.button != PointerEventData.InputButton.Left) return;
 			PlayerDeselectCard();
 		}
 
 		void PlayerSelectCard()
 		{
-			OnPlayerPickedUpCard?.Invoke(card);
+			OnPlayerPickedUpCard?.Invoke(this);
 			isBeingDragged = true;
 			touchingPlayerRef = null;
 			touchingEnemyRef = null;
@@ -123,19 +204,32 @@ namespace Woopsious
 		void PlayerDeselectCard()
 		{
 			if (isBeingDiscarded)
-				OnCardReplace?.Invoke(card);
-			else if (touchingPlayerRef != null && !card.Offensive)
+				OnCardReplace?.Invoke(this);
+			else if (touchingPlayerRef != null && !Offensive)
 				UseCardOnTarget(cardOwner);
-			else if (touchingEnemyRef != null && card.Offensive)
+			else if (touchingEnemyRef != null && Offensive)
 				UseCardOnTarget(touchingEnemyRef);
 			else
-				OnPlayerCardUsed?.Invoke(card, false);
+				OnPlayerCardUsed?.Invoke(this, false);
 
 			OnPlayerPickedUpCard?.Invoke(null);
 			isBeingDragged = false;
 			isBeingDiscarded = false;
 			touchingPlayerRef = null;
 			touchingEnemyRef = null;
+		}
+
+		//card selectable by player
+		public void CardSelectable()
+		{
+			if (!PlayerCard)
+				Selectable = false;
+			else
+				Selectable = true;
+		}
+		public void CardUnselectable()
+		{
+			Selectable = false;
 		}
 
 		//enemy card actions
@@ -148,7 +242,7 @@ namespace Woopsious
 		//shared actions
 		void UseCardOnTarget(Entity target)
 		{
-			if (card.DamageData.valueTypes == ValueTypes.none)
+			if (DamageData.valueTypes == ValueTypes.none)
 				Debug.LogError("Value type not set");
 
 			ApplyDamageAndEffectsToTarget(target);
@@ -161,29 +255,29 @@ namespace Woopsious
 		//handle applying value types and status effects to correct entities
 		void ApplyDamageAndEffectsToTarget(Entity target)
 		{
-			if (card.DamageData.valueTypes.HasFlag(ValueTypes.damages))
+			if (DamageData.valueTypes.HasFlag(ValueTypes.damages))
 			{
-				if (card.DamageData.isMultiHitAttack && card.DamageData.HitsDifferentTargets)
+				if (DamageData.isMultiHitAttack &&DamageData.HitsDifferentTargets)
 				{
-					card.DamageData.DamageValue = card.DamageData.DamageValue / card.DamageData.multiHitCount; //split damage for multiple targets
+					DamageData.DamageValue = DamageData.DamageValue / DamageData.multiHitCount; //split damage for multiple targets
 
 					foreach (Entity aoeTarget in GetAoeTargets(target))
 					{
-						aoeTarget.RecieveDamage(card.DamageData);
-						aoeTarget.StatusEffectsHandler.AddStatusEffects(card.DamageData.statusEffectsForTarget);
+						aoeTarget.RecieveDamage(DamageData);
+						aoeTarget.StatusEffectsHandler.AddStatusEffects(DamageData.statusEffectsForTarget);
 					}
 				}
 				else
 				{
-					target.RecieveDamage(card.DamageData);
-					target.StatusEffectsHandler.AddStatusEffects(card.DamageData.statusEffectsForTarget);
+					target.RecieveDamage(DamageData);
+					target.StatusEffectsHandler.AddStatusEffects(DamageData.statusEffectsForTarget);
 				}
 			}
 		}
 		List<Entity> GetAoeTargets(Entity initialTarget)
 		{
 			List<Entity> targets = new() { initialTarget };
-			int targetsToFind = card.DamageData.multiHitCount - 1;
+			int targetsToFind = DamageData.multiHitCount - 1;
 
 			foreach (Entity entity in TurnOrderManager.Instance.turnOrder) //find and damage others in turn order (excluding initial + player)
 			{
@@ -198,30 +292,30 @@ namespace Woopsious
 		}
 		void ApplyBlockHealAndEffectsToCardOwner()
 		{
-			if (card.DamageData.valueTypes.HasFlag(ValueTypes.blocks))
-				cardOwner.RecieveBlock(card.DamageData);
+			if (DamageData.valueTypes.HasFlag(ValueTypes.blocks))
+				cardOwner.RecieveBlock(DamageData);
 
-			if (card.DamageData.valueTypes.HasFlag(ValueTypes.heals))
-				cardOwner.RecieveHealing(card.DamageData);
+			if (DamageData.valueTypes.HasFlag(ValueTypes.heals))
+				cardOwner.RecieveHealing(DamageData);
 
-			cardOwner.StatusEffectsHandler.AddStatusEffects(card.DamageData.statusEffectsForSelf);
+			cardOwner.StatusEffectsHandler.AddStatusEffects(DamageData.statusEffectsForSelf);
 		}
 		void AddDummyCardsIfExists()
 		{
-			if (!card.AttackData.addDummyCardsForEffects) return;
-			PlayerCardDeckUi.AddDummyCards(card.AttackData.effectDummyCards);
+			if (!AttackData.addDummyCardsForEffects) return;
+			PlayerCardDeckUi.AddDummyCards(AttackData.effectDummyCards);
 		}
 
 		//clean up card
 		void CleanUpCard()
 		{
-			if (card.PlayerCard)
-				OnPlayerCardUsed?.Invoke(card, true);
+			if (PlayerCard)
+				OnPlayerCardUsed?.Invoke(this, true);
 			else
 				cardOwner.EndTurn();
 
 			gameObject.SetActive(false);
-			OnCardCleanUp?.Invoke(card);
+			OnCardCleanUp?.Invoke(this);
 		}
 	}
 }

@@ -9,7 +9,7 @@ namespace Woopsious
 		public static ShowPlayedCardUi instance;
 
 		public GameObject PlayedCardUi;
-		public CardUi cardUi;
+		public CardHandler card;
 
 		void Awake()
 		{
@@ -35,7 +35,8 @@ namespace Woopsious
 
 		void ShowPlayedCard(Entity entity, AttackData data)
 		{
-			cardUi.SetupInGameCard(entity, data, false);
+			card.SetupCard(entity, data, false, false);
+			card.Ui.SetupInGameCardUi(data, false);
 			PlayedCardUi.SetActive(true);
 		}
 		void HidePlayedCard()

@@ -69,7 +69,7 @@ namespace Woopsious
 
 			UpdateEnergyUi();
 		}
-		public void UpdateCardsUsed(CardUi card)
+		public void UpdateCardsUsed(CardHandler card)
 		{
 			if (!card.PlayerCard) return;
 
@@ -127,7 +127,7 @@ namespace Woopsious
 		}
 
 		//update image border highlight
-		protected override void OnCardPicked(CardUi card)
+		protected override void OnCardPicked(CardHandler card)
 		{
 			if (card == null)
 				imageHighlight.color = _ColourDarkGreen;
@@ -139,7 +139,7 @@ namespace Woopsious
 					imageHighlight.color = _ColourDarkGreen;
 			}
 		}
-		protected override void CardEnter(CardUi card)
+		protected override void CardEnter(CardHandler card)
 		{
 			if (card == null)
 				imageHighlight.color = _ColourDarkGreen;
@@ -151,13 +151,13 @@ namespace Woopsious
 					imageHighlight.color = _ColourDarkGreen;
 			}
 		}
-		protected override void CardExit(CardUi card)
+		protected override void CardExit(CardHandler card)
 		{
 			if (card == null)
 				imageHighlight.color = _ColourDarkGreen;
 			else
 			{
-				if (!card.Offensive && card.cardHandler.isBeingDragged)
+				if (!card.Offensive && card.isBeingDragged)
 					imageHighlight.color = _ColourIceBlue;
 				else
 					imageHighlight.color = _ColourDarkGreen;

@@ -126,12 +126,12 @@ namespace Woopsious
 		}
 
 		//card spawning
-		public static CardUi SpawnCard()
+		public static CardHandler SpawnCard()
 		{
-			CardUi card = ObjectPoolingManager.RequestCard();
+			CardHandler card = ObjectPoolingManager.RequestCard();
 
 			if (card == null)
-				card = Instantiate(instance.cardPrefab).GetComponent<CardUi>();
+				card = Instantiate(instance.cardPrefab).GetComponent<CardHandler>();
 
 			return card;
 		}

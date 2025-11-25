@@ -28,7 +28,7 @@ namespace Woopsious
 		public TMP_Text classInfoText;
 		public Button startGameAsClassButton;
 		TMP_Text startGameAsClassText;
-		List<CardUi> cardUiList = new();
+		List<CardHandler> cardList = new();
 
 		void OnEnable()
 		{
@@ -112,11 +112,12 @@ namespace Woopsious
 		}
 		void DisplayStartingCardInfo(KeyValuePair<AttackData, int> entry, int index)
 		{
-			CardUi cardUi = Instantiate(DatabaseManagerUi.instance.cardUiPrefab).GetComponent<CardUi>();
-			cardUi.gameObject.transform.SetParent(classInfoPanel.transform);
-			cardUi.SetupUiCard(entry.Key, entry.Value);
-			cardUiList.Add(cardUi);
-			SetCardUiPosition(cardUi.GetComponent<RectTransform>(), index);
+			CardHandler card = Instantiate(DatabaseManagerUi.instance.cardUiPrefab).GetComponent<CardHandler>();
+			card.gameObject.transform.SetParent(classInfoPanel.transform);
+			card.SetupCard(null, entry.Key, false, false);
+			card.Ui.SetupCardDeckCardUi(entry.Key, entry.Value);
+			cardList.Add(card);
+			SetCardUiPosition(card.GetComponent<RectTransform>(), index);
 		}
 
 		//set card ui positions when showing player class and enemy info
@@ -150,10 +151,10 @@ namespace Woopsious
 		//reset reusable card ui list
 		void ClearCardUiList()
 		{
-			for (int i = cardUiList.Count - 1; i >= 0; i--)
-				Destroy(cardUiList[i].gameObject);
+			for (int i = cardList.Count - 1; i >= 0; i--)
+				Destroy(cardList[i].gameObject);
 
-			cardUiList.Clear();
+			cardList.Clear();
 		}
 
 		//scene change events

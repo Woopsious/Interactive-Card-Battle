@@ -138,7 +138,7 @@ namespace Woopsious
 		}
 
 		//update image border highlight
-		void OnCardPicked(CardUi card)
+		void OnCardPicked(CardHandler card)
 		{
 			audioHandler.PlayAudio(cardAudioSfx, true);
 
