@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
-using static Woopsious.DamageData;
+using static Woopsious.CardHandler;
 
 namespace Woopsious
 {
@@ -124,7 +124,7 @@ namespace Woopsious
 			if (TurnOrderManager.Player() == null) return;
 
 			CardHandler card = SpawnManager.SpawnCard();
-			card.SetupCard(entity, attackData, false, false);
+			card.SetupCard(CardInitType.InGame, entity, attackData, false, 0);
 
 			if (card.Offensive)
 				card.EnemyUseCard(entity, TurnOrderManager.Player());

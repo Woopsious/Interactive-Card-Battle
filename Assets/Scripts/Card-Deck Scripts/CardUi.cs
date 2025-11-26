@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Woopsious.AbilitySystem;
 using static Woopsious.DamageData;
 using static Woopsious.AttackData;
+using static Woopsious.CardHandler;
 
 namespace Woopsious
 {
@@ -60,97 +61,102 @@ namespace Woopsious
 			rewardCardSelectedText = toggleSelectRewardCardButton.GetComponentInChildren<TMP_Text>();
 			ToggleDiscardCardUi(false);
 			ToggleRewardCardUi(false);
+
+			cardHandler.InitilzeInformationalCardUi += InitilizeInformationalCard;
+			cardHandler.InitilzeCardUi += InitilizeCardUi;
+			cardHandler.InitilzeDummyCardUi += InitilizeDummyCardUi;
+			cardHandler.InitilzeRewardCardUi += InitilizeRewardCardUi;
+			cardHandler.UpdateCardDescriptionUi += UpdateCardDescriptionUi;
+		}
+		private void OnDestroy()
+		{
+			cardHandler.InitilzeInformationalCardUi -= InitilizeInformationalCard;
+			cardHandler.InitilzeCardUi -= InitilizeCardUi;
+			cardHandler.InitilzeDummyCardUi -= InitilizeDummyCardUi;
+			cardHandler.InitilzeRewardCardUi -= InitilizeRewardCardUi;
+			cardHandler.UpdateCardDescriptionUi -= UpdateCardDescriptionUi;
 		}
 
 		//card Ui initilization
-		public void SetupCardDeckCardUi(AttackData attackData, int cardDeckCount)
+		private void InitilizeInformationalCard(CardInitType cardInitType, int cardDeckCount)
 		{
-			string cardName = attackData.attackName;
-			gameObject.name = cardName;
-			cardNametext.text = cardName;
-			ChangeBorderColour(attackData.cardRarity);
+			UpdateCardName(cardHandler.AttackData.attackName);
+			ChangeBorderColour(cardHandler.AttackData.cardRarity);
 
-			if (attackData.energyCost > 0)
-				cardCostText.text = $"+{attackData.energyCost}";
-			else
-				cardCostText.text = $"{attackData.energyCost}";
+			UpdateCardEnergyUi(false);
+			UpdateCardCountUi(true, true, cardDeckCount);
+			ToggleRewardCardUi(false);
+			UpdateCardDescriptionUi(cardInitType);
+		}
+		private void InitilizeCardUi(CardInitType cardInitType, bool playerCard, int cardDeckCount)
+		{
+			UpdateCardName(cardHandler.AttackData.attackName);
+			ChangeBorderColour(cardHandler.AttackData.cardRarity);
 
-			cardDescriptiontext.text = CreateDescription();
+			UpdateCardEnergyUi(playerCard);
+			UpdateCardCountUi(false, false, cardDeckCount);
+			ToggleRewardCardUi(false);
+			UpdateCardDescriptionUi(cardInitType);
+		}
+		private void InitilizeDummyCardUi(CardInitType cardInitType, StatusEffectsData statusEffectsData)
+		{
+			UpdateCardName(statusEffectsData.effectName);
+			ChangeBorderColour(CardRarity.Common);
 
-			if (cardDeckCount != 0)
-			{
-				CardDeckCount = cardDeckCount;
-				cardCountForCardDeckUi.text = $"{cardDeckCount}x";
-				cardCountForCardDeckUi.gameObject.SetActive(true);
-			}
-			else
-				cardCountForCardDeckUi.gameObject.SetActive(false);
+			UpdateCardEnergyUi(false);
+			UpdateCardCountUi(false, false, 0);
+			ToggleRewardCardUi(false);
+			UpdateCardDescriptionUi(cardInitType);
+		}
+		private void InitilizeRewardCardUi(CardInitType cardInitType, int cardDeckCount)
+		{
+			UpdateCardName(cardHandler.AttackData.attackName);
+			ChangeBorderColour(cardHandler.AttackData.cardRarity);
+
+			UpdateCardEnergyUi(false);
+			UpdateCardCountUi(true, false, cardDeckCount);
+			ToggleRewardCardUi(true);
+			UpdateCardDescriptionUi(cardInitType);
 		}
 
-		public void SetupInGameCardUi(AttackData attackData, bool playerCard)
+		//sub ui funcs
+		private void UpdateCardName(string cardName)
 		{
-			string cardName = attackData.attackName;
 			gameObject.name = cardName;
 			cardNametext.text = cardName;
-			ChangeBorderColour(attackData.cardRarity);
-
-			if (attackData.energyCost > 0)
-				cardCostText.text = $"+{attackData.energyCost}";
+		}
+		public void UpdateCardDescriptionUi(CardInitType cardInitType)
+		{
+			if (cardInitType == CardInitType.Dummy)
+				cardDescriptiontext.text = "Unplayable card\nDissapears next turn";
 			else
-				cardCostText.text = $"{attackData.energyCost}";
-
-			if (playerCard)
+				cardDescriptiontext.text = CreateDescription();
+		}
+		private void UpdateCardEnergyUi(bool showUi)
+		{
+			if (showUi)
 			{
-				if (attackData.energyCost > 0)
-					cardCostText.text = $"+{attackData.energyCost}";
+				if (cardHandler.AttackData.energyCost > 0)
+					cardCostText.text = $"+{cardHandler.AttackData.energyCost}";
 				else
-					cardCostText.text = $"{attackData.energyCost}";
+					cardCostText.text = $"{cardHandler.AttackData.energyCost}";
 			}
 			else
 				energyBackground.SetActive(false);
-
-			cardDescriptiontext.text = CreateDescription();
-			cardCountForCardDeckUi.gameObject.SetActive(false);
 		}
-		public void UpdateInGameCardUi()
+		private void UpdateCardCountUi(bool showUi, bool ignoreZeroCount, int cardCount)
 		{
-			cardDescriptiontext.text = CreateDescription();
-		}
+			if (showUi)
+			{
+				CardDeckCount = cardCount;
+				cardCountForCardDeckUi.text = $"{cardCount}x";
+				cardCountForCardDeckUi.gameObject.SetActive(true);
 
-		public void SetupRewardCardUi(AttackData attackData, int similarCardsInDeck)
-		{
-			string cardName = attackData.attackName;
-			gameObject.name = cardName;
-			cardNametext.text = cardName;
-			ChangeBorderColour(attackData.cardRarity);
-
-			if (attackData.energyCost > 0)
-				cardCostText.text = $"+{attackData.energyCost}";
+				if (ignoreZeroCount && cardCount == 0)
+					cardCountForCardDeckUi.gameObject.SetActive(false);
+			}
 			else
-				cardCostText.text = $"{attackData.energyCost}";
-
-			cardDescriptiontext.text = CreateDescription();
-
-			CardDeckCount = similarCardsInDeck;
-			if (similarCardsInDeck == 1)
-				cardCountForCardDeckUi.text = $"{similarCardsInDeck} duplicate";
-			else
-				cardCountForCardDeckUi.text = $"{similarCardsInDeck} duplicates";
-
-			cardCountForCardDeckUi.gameObject.SetActive(true);
-			ToggleRewardCardUi(true);
-		}
-
-		//special dummy card initilization
-		public void SetupDummyCardUi(StatusEffectsData dummyCardEffectData)
-		{
-			string cardName = dummyCardEffectData.effectName;
-			gameObject.name = cardName;
-			cardNametext.text = cardName;
-			cardDescriptiontext.text = "Unplayable card\nDissapears next turn";
-
-			energyBackground.SetActive(false);
-			cardCountForCardDeckUi.gameObject.SetActive(false);
+				cardCountForCardDeckUi.gameObject.SetActive(false);
 		}
 
 		//description creation
@@ -185,8 +191,7 @@ namespace Woopsious
 
 			return description;
 		}
-
-		string CreateDamageDescription(DamageData damageData, string description)
+		private string CreateDamageDescription(DamageData damageData, string description)
 		{
 			if (damageData.isMultiHitAttack)
 			{
@@ -205,8 +210,8 @@ namespace Woopsious
 				description += $"\nDeals {RichTextManager.AddColour($"{damageData.DamageValue} damage", RichTextManager.crimsonRed)}";
 
 			return description;
-		}	
-		string CreateStatusEffectDescriptions(string description, List<StatusEffectsData> statusEffects, bool enemyEffects)
+		}
+		private string CreateStatusEffectDescriptions(string description, List<StatusEffectsData> statusEffects, bool enemyEffects)
 		{
 			if (statusEffects.Count != 0)
 			{
@@ -239,7 +244,7 @@ namespace Woopsious
 
 			return description;
 		}
-		void ChangeBorderColour(CardRarity cardRarity)
+		private void ChangeBorderColour(CardRarity cardRarity)
 		{
 			if (cardRarity == CardRarity.Rare)
 				cardBorderImage.color = _Amber;
@@ -255,7 +260,7 @@ namespace Woopsious
 			discardCardUiPanel.SetActive(show);
 			discardCardCountText.text = "0";
 		}
-		void AddCardToDiscardList()
+		private void AddCardToDiscardList()
 		{
 			if (CardDiscardCount >= CardDeckCount)
 			{
@@ -270,7 +275,7 @@ namespace Woopsious
 
 			discardCardCountText.text = $"{CardDiscardCount}";
 		}
-		void RemoveCardFromDiscardList()
+		private void RemoveCardFromDiscardList()
 		{
 			if (CardDiscardCount <= 0)
 			{
@@ -292,7 +297,7 @@ namespace Woopsious
 			rewardCardUiPanel.SetActive(show);
 			rewardCardSelectedText.text = $"Unselected";
 		}
-		void ToggleSelectCardAsReward()
+		private void ToggleSelectCardAsReward()
 		{
 			if (PlayerCardDeckHandler.CanSelectCardAsReward() && !CardSelectedAsReward)
 			{

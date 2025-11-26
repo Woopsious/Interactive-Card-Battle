@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using UnityEngine;
+using static Woopsious.CardHandler;
 
 namespace Woopsious
 {
@@ -35,8 +36,7 @@ namespace Woopsious
 
 		void ShowPlayedCard(Entity entity, AttackData data)
 		{
-			card.SetupCard(entity, data, false, false);
-			card.Ui.SetupInGameCardUi(data, false);
+			card.SetupCard(CardInitType.Informational, entity, data, false, 0);
 			PlayedCardUi.SetActive(true);
 		}
 		void HidePlayedCard()

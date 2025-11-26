@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Woopsious.AbilitySystem;
+using static Woopsious.CardHandler;
 
 namespace Woopsious
 {
@@ -29,7 +29,6 @@ namespace Woopsious
 		[Header("Debug Generate Card Rewards")]
 		public int cardChoicesCount;
 		public int cardSelectionCount;
-
 
 		private void Awake()
 		{
@@ -148,8 +147,7 @@ namespace Woopsious
 			List<AttackData> playerCards = Instance.PlayerCardDeck;
 			AttackData cardAttackData = SpawnManager.GetWeightedPlayerCardDraw(playerCards, totalCardDrawChance);
 
-			card.SetupCard(TurnOrderManager.Player(), cardAttackData, true, true);
-			card.Ui.SetupInGameCardUi(cardAttackData, true);
+			card.SetupCard(CardInitType.InGame, TurnOrderManager.Player(), cardAttackData, true, 0);
 			return card;
 		}
 		public static CardHandler GenerateDummyCard(CardHandler card, StatusEffectsData effectData)
@@ -157,8 +155,7 @@ namespace Woopsious
 			if (card == null)
 				card = SpawnManager.SpawnCard();
 
-			card.SetupDummyCard(effectData);
-			card.Ui.SetupDummyCardUi(effectData);
+			card.SetupDummyCard(CardInitType.Dummy, effectData);
 			return card;
 		}
 		public static List<CardHandler> GenerateCardRewards(GameObject parent)
@@ -174,8 +171,7 @@ namespace Woopsious
 				AttackData cardAttackData = SpawnManager.GetWeightedPlayerCardReward(Instance.TotalCardDropChance);
 
 				card.transform.SetParent(parent.transform);
-				card.SetupCard(null, cardAttackData, true, false);
-				card.Ui.SetupRewardCardUi(cardAttackData, CountSimilarCardsInDeck(cardAttackData));
+				card.SetupCard(CardInitType.Reward, null, cardAttackData, true, CountSimilarCardsInDeck(cardAttackData));
 				cardRewards.Add(card);
 			}
 			return cardRewards;

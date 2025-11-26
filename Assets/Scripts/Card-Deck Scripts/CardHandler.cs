@@ -11,14 +11,19 @@ namespace Woopsious
 	public class CardHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 	{
 		[HideInInspector] public Entity cardOwner;
-		public CardUi Ui { get; private set; }
-
 		[HideInInspector] public bool isBeingDragged;
 		[HideInInspector] public bool isBeingDiscarded;
 		private PlayerEntity touchingPlayerRef;
 		private Entity touchingEnemyRef;
 
-		Vector3 mousePos;
+		private Vector3 mousePos;
+		private BoxCollider2D boxCollider;
+
+		public CardInitType CardType { get; private set; }
+		public enum CardInitType
+		{
+			Informational, InGame, Dummy, Reward
+		}
 
 		public AttackData AttackData { get; private set; }
 		public DamageData DamageData { get; private set; }
@@ -32,9 +37,15 @@ namespace Woopsious
 		public static event Action<CardHandler> OnCardCleanUp;
 		public static event Action<CardHandler> OnCardReplace;
 
+		public event Action<CardInitType, int> InitilzeInformationalCardUi;
+		public event Action<CardInitType, bool, int> InitilzeCardUi;
+		public event Action<CardInitType, StatusEffectsData> InitilzeDummyCardUi;
+		public event Action<CardInitType, int> InitilzeRewardCardUi;
+		public event Action<CardInitType> UpdateCardDescriptionUi;
+
 		void Awake()
 		{
-			Ui = GetComponent<CardUi>();
+			boxCollider = GetComponent<BoxCollider2D>();
 			isBeingDragged = false;
 			touchingPlayerRef = null;
 			touchingEnemyRef = null;
@@ -76,36 +87,21 @@ namespace Woopsious
 		}
 
 		//card initilization
-		public void SetupCard(Entity cardOwner, AttackData attackData, bool playerCard, bool colliderActive)
+		public void SetupCard(CardInitType cardType, Entity cardOwner, AttackData attackData, bool playerCard, int cardDeckCount)
 		{
 			if (AttackDataNullCheck(attackData))
 				return;
 
-			GetComponent<BoxCollider2D>().enabled = colliderActive;
+			CardType = cardType;
 			AttackData = attackData;
 			PlayerCard = playerCard;
 			DummyCard = false;
 			Offensive = attackData.offensive;
 
-			if (cardOwner != null) //apply entity modifiers
-			{
-				DamageData = new(cardOwner, attackData.DamageData);
-				DamageData.DamageValue = (int)(DamageData.DamageValue + cardOwner.damageBonus.value);
-				DamageData.DamageValue = (int)(DamageData.DamageValue * cardOwner.damageDealtModifier.value);
-			}
+			if (cardType == CardInitType.InGame)
+				boxCollider.enabled = true;
 			else
-				DamageData = new(null, attackData.DamageData);
-		}
-		public void SetupCard(AttackData attackData)
-		{
-			if (AttackDataNullCheck(attackData))
-				return;
-
-			GetComponent<BoxCollider2D>().enabled = false;
-			AttackData = attackData;
-			PlayerCard = false;
-			DummyCard = false;
-			Offensive = attackData.offensive;
+				boxCollider.enabled = false;
 
 			if (cardOwner != null) //apply entity modifiers
 			{
@@ -115,7 +111,23 @@ namespace Woopsious
 			}
 			else
 				DamageData = new(null, attackData.DamageData);
+
+			switch (cardType)
+			{
+				case CardInitType.Informational:
+				InitilzeInformationalCardUi?.Invoke(cardType, cardDeckCount);
+				break;
+
+				case CardInitType.InGame:
+				InitilzeCardUi?.Invoke(cardType, playerCard, cardDeckCount);
+				break;
+
+				case CardInitType.Reward:
+				InitilzeRewardCardUi?.Invoke(cardType, cardDeckCount);
+				break;
+			}
 		}
+
 		public void UpdateCard(Entity cardOwner, bool playerCard)
 		{
 			PlayerCard = playerCard;
@@ -124,16 +136,21 @@ namespace Woopsious
 			DamageData = new(cardOwner, AttackData.DamageData);
 			DamageData.DamageValue = (int)(DamageData.DamageValue + cardOwner.damageBonus.value); //apply bonus damage
 			DamageData.DamageValue = (int)(DamageData.DamageValue * cardOwner.damageDealtModifier.value); //apply damage dealt modifier
+
+			UpdateCardDescriptionUi?.Invoke(CardType);
 		}
 
 		//special dummy card initilization
-		public void SetupDummyCard(StatusEffectsData dummyCardEffectData)
+		public void SetupDummyCard(CardInitType cardType, StatusEffectsData dummyCardEffectData)
 		{
+			CardType = cardType;
 			PlayerCard = false;
 			DummyCard = true;
 
 			string cardName = dummyCardEffectData.effectName;
 			gameObject.name = cardName;
+
+			InitilzeDummyCardUi?.Invoke(cardType, dummyCardEffectData);
 		}
 
 		//trigger enter/exit funcs

@@ -960,6 +960,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3454814259182032011}
+  - component: {fileID: 2454195987836232006}
   - component: {fileID: 3706165381044679610}
   - component: {fileID: 5076225201847140388}
   - component: {fileID: 2864538321035244784}
@@ -999,6 +1000,25 @@ RectTransform:
   m_AnchoredPosition: {x: 150, y: 150}
   m_SizeDelta: {x: 300, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2454195987836232006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6702147471770271347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db17f64bf8fb4a34489fb8946e377dc6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  encounterTitleText: {fileID: 3089413806394144565}
+  encounterLandTypeText: {fileID: 7278704782486411124}
+  encounterModifiersText: {fileID: 7362749078913552833}
+  encounterEnemiesText: {fileID: 4109628199958571988}
+  startEncounterButton: {fileID: 1472118485792794359}
+  debugDataText: {fileID: 9091390084622525535}
+  DisplayEncounterEnemies: 0
 --- !u!114 &3706165381044679610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1011,15 +1031,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 288cdde0a6e80404586f31ff7181c19b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  encounterTitleText: {fileID: 3089413806394144565}
-  encounterLandTypeText: {fileID: 7278704782486411124}
-  encounterModifiersText: {fileID: 7362749078913552833}
-  encounterEnemiesText: {fileID: 4109628199958571988}
-  startEncounterButton: {fileID: 5773046162818408377}
-  backgroundImage: {fileID: 2864538321035244784}
-  debugDataText: {fileID: 9091390084622525535}
   mapNodeData: {fileID: 0}
   encounterDifficulty: 0
+  cardRewardChoiceCount: 0
+  cardRewardSelectionCount: 0
+  cardRewardRarityBoost: 0
   entityBudget: 0
   nodeState: 0
   enemyTypes: 0
@@ -1033,7 +1049,6 @@ MonoBehaviour:
   nextLinkedNodes: []
   siblingNodes: []
   debugRuntimeData: 0
-  DisplayEncounterEnemies: 0
   forceEliteFight: 0
   forceLandModifier: 0
   forceEncounterType: 0

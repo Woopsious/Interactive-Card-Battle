@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Woopsious.AbilitySystem;
+using static Woopsious.CardHandler;
 
 namespace Woopsious
 {
@@ -36,6 +36,7 @@ namespace Woopsious
 
 		[Header("Cards To Display deck data")]
 		public List<CardHandler> cardsForDisplay = new();
+		private List<CardUi> cardUis = new();
 
 		private void Awake()
 		{
@@ -44,6 +45,9 @@ namespace Woopsious
 			cardDeckUiPanel.SetActive(false);
 			cardRewardsUiPanel.SetActive(false);
 			ToggleDiscardCardButtons(false);
+
+			foreach (CardHandler card in cardsForDisplay)
+				cardUis.Add(card.GetComponent<CardUi>());
 		}
 		private void SetupButtons()
 		{
@@ -117,8 +121,7 @@ namespace Woopsious
 				if (index > cardsForDisplay.Count)
 					Debug.LogError("cards to set up greater than ui slots avalable to display info");
 
-				cardsForDisplay[index].SetupCard(null, entry.Key, false, false);
-				cardsForDisplay[index].Ui.SetupCardDeckCardUi(entry.Key, entry.Value);
+				cardsForDisplay[index].SetupCard(CardInitType.Informational, null, entry.Key, false, entry.Value);
 				cardsForDisplay[index].gameObject.SetActive(true);
 				index++;
 			}
@@ -227,15 +230,15 @@ namespace Woopsious
 		}
 		private void StartCardDiscard()
 		{
-			foreach (CardHandler card in cardsForDisplay)
-				card.Ui.ToggleDiscardCardUi(true);
+			foreach (CardUi card in cardUis)
+				card.ToggleDiscardCardUi(true);
 
 			ToggleDiscardCardButtons(true);
 		}
 		private void CompleteCardDiscard()
 		{
-			foreach (CardHandler card in cardsForDisplay)
-				card.Ui.ToggleDiscardCardUi(false);
+			foreach (CardUi card in cardUis)
+				card.ToggleDiscardCardUi(false);
 
 			PlayerCardDeckHandler.DiscardCardsFromDeck(true);
 
@@ -244,8 +247,8 @@ namespace Woopsious
 		}
 		private void CancelCardDiscard()
 		{
-			foreach (CardHandler card in cardsForDisplay)
-				card.Ui.ToggleDiscardCardUi(false);
+			foreach (CardUi card in cardUis)
+				card.ToggleDiscardCardUi(false);
 
 			PlayerCardDeckHandler.DiscardCardsFromDeck(false);
 			ToggleDiscardCardButtons(false);

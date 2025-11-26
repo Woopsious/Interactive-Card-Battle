@@ -5,21 +5,12 @@ using TMPro;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System;
 
 namespace Woopsious
 {
 	public class MapNode : MonoBehaviour
 	{
-		[Header("Ui")]
-		public TMP_Text encounterTitleText;
-		public TMP_Text encounterLandTypeText;
-		public TMP_Text encounterModifiersText;
-		public TMP_Text encounterEnemiesText;
-		public Button startEncounterButton;
-
-		Image backgroundImage;
-		public TMP_Text debugDataText;
-
 		[Header("Runtime data")]
 		public MapNodeData mapNodeData;
 		public float encounterDifficulty;
@@ -45,7 +36,6 @@ namespace Woopsious
 
 		[Header("Debug options")]
 		public bool debugRuntimeData;
-		public bool DisplayEncounterEnemies;
 		public bool forceEliteFight;
 		public LandModifiers forceLandModifier;
 		public ForceEncounterType forceEncounterType;
@@ -54,17 +44,9 @@ namespace Woopsious
 			noForceEncounter, forceBossFight, forceCardUpgrade
 		}
 
-		private Color _ColourRed = new(0.55f, 0.25f, 0.25f);
-		private Color _ColourGreen = new(0.25f, 0.5f, 0.25f);
-		private Color _ColourGold = new(1f, 0.85f, 0f);
-
 		private readonly System.Random systemRandom = new();
-
-		void Awake()
-		{
-			backgroundImage = GetComponent<Image>();
-			startEncounterButton.onClick.AddListener(() => BeginEncounter());
-		}
+		public event Action InitilizeUi;
+		public event Action<NodeState> NodeStateChange;
 
 		public void Initilize(int columnIndex, MapNodeData mapNodeData, bool startingNode, bool bossFightNode)
 		{
@@ -84,21 +66,12 @@ namespace Woopsious
 			cardRewardRarityBoost = mapNodeData.CalculateCardRewardRarityBoost(this);
 			entityBudget = Mathf.RoundToInt(mapNodeData.baseEntityBudget * encounterDifficulty);
 
-			encounterTitleText.text = UpdateEncounterTitleUi();
-			encounterLandTypeText.text = UpdateEncounterLandTypeUi();
-			encounterModifiersText.text = UpdateEncounterModifiersUi();
-			encounterEnemiesText.text = UpdateEncounterEnemiesUi();
-
-			if (debugDataText)
-			{
-				debugDataText.text = DebugDataTextToUi();
-				debugDataText.gameObject.SetActive(true);
-			}
-
 			if (startingNode)
-				CanTravelToNode();
+				UpdateNodeState(NodeState.canTravel);
 			else
-				LockNode();
+				UpdateNodeState(NodeState.locked);
+
+			InitilizeUi?.Invoke();
 		}
 
 		//node linking
@@ -251,24 +224,24 @@ namespace Woopsious
 		}
 
 		//start encounter
-		void BeginEncounter()
+		public void BeginEncounter()
 		{
 			GameManager.BeginCardCombat(this);
-			CurrentlyAtNode();
+			UpdateNodeState(NodeState.currentlyAt);
 
 			foreach (MapNode previousNode in previousLinkedNodes) //lock prev nodes
 			{
 				if (previousNode.nodeState == NodeState.currentlyAt)
-					previousNode.PreviouslyVisitedNode();
+					UpdateNodeState(NodeState.previouslyVisited);
 				else
-					previousNode.LockNode();
+					UpdateNodeState(NodeState.locked);
 			}
 
 			foreach (MapNode nextNode in nextLinkedNodes) //unlock next nodes
-				nextNode.CanTravelToNode();
+				UpdateNodeState(NodeState.canTravel);
 
 			foreach (MapNode node in siblingNodes) //lock sibling nodes
-				node.LockNode();
+				UpdateNodeState(NodeState.locked);
 		}
 		public Task BuyEnemyAndUpdatePossibleEntities(EntityData spawnedEntity)
 		{
@@ -287,106 +260,25 @@ namespace Woopsious
 		}
 
 		//update node state
-		public void LockNode()
+		public void UpdateNodeState(NodeState nodeState)
 		{
-			nodeState = NodeState.locked;
-			startEncounterButton.gameObject.SetActive(false);
-			backgroundImage.color = _ColourRed;
-		}
-		void CanTravelToNode()
-		{
-			nodeState = NodeState.canTravel;
-			startEncounterButton.gameObject.SetActive(true);
-			backgroundImage.color = _ColourGreen;
-		}
-		void CurrentlyAtNode()
-		{
-			nodeState = NodeState.currentlyAt;
-			startEncounterButton.gameObject.SetActive(false);
-			backgroundImage.color = _ColourGold;
-		}
-		void PreviouslyVisitedNode()
-		{
-			nodeState = NodeState.previouslyVisited;
-			startEncounterButton.gameObject.SetActive(false);
-			backgroundImage.color = _ColourGold;
-		}
-
-		//update ui
-		string UpdateEncounterTitleUi()
-		{
-			return RichTextManager.GetEncounterTypeTextColour(nodeEncounterType);
-		}
-		string UpdateEncounterLandTypeUi()
-		{
-			return RichTextManager.GetLandTypesTextColour(landTypes);
-		}
-		string UpdateEncounterModifiersUi()
-		{
-			string encounterModifiers = "Modifiers: \n";
-			encounterModifiers += RichTextManager.GetLandModifiersTextColour(landModifiers);
-			return encounterModifiers;
-		}
-		string UpdateEncounterEnemiesUi()
-		{
-			string encounterEnemies = "Possible Enemies: \n";
-
-			if (nodeEncounterType == NodeEncounterType.freeCardUpgrade)
+			switch (nodeState)
 			{
-				encounterEnemies += "None";
-				return encounterEnemies;
+				case NodeState.locked:
+				nodeState = NodeState.locked;
+				break;
+				case NodeState.canTravel:
+				nodeState = NodeState.canTravel;
+				break;
+				case NodeState.currentlyAt:
+				nodeState = NodeState.currentlyAt;
+				break;
+				case NodeState.previouslyVisited:
+				nodeState = NodeState.previouslyVisited;
+				break;
 			}
 
-			if (DisplayEncounterEnemies)
-				encounterEnemies += DisplayEncouterEnemiesIndividualy();
-			else
-				encounterEnemies += DisplayEncouterEnemyTypes();
-
-			return encounterEnemies;
-		}
-		string DisplayEncouterEnemiesIndividualy()
-		{
-			string encounterEnemies = "";
-
-			foreach (EntityData entity in GameManager.instance.enemyDataTypes)
-			{
-				//check if any LandType/LandModifier flags match
-				if ((landTypes & entity.foundInLandTypes) != LandTypes.none || (landModifiers & entity.foundWithLandModifiers) != LandModifiers.none)
-				{
-					switch (entity.enemyType)
-					{
-						case EnemyTypes.slime:
-						encounterEnemies += "<color=#90EE90>" + entity.name + "</color>" + ", "; //light green
-						break;
-						case EnemyTypes.beast:
-						encounterEnemies += "<color=#8B4513>" + entity.name + "</color>" + ", "; //Earthy Brown
-						break;
-						case EnemyTypes.humanoid:
-						encounterEnemies += "" + entity.name + "" + ", "; //
-						break;
-						case EnemyTypes.construct:
-						encounterEnemies += "<color=#2a3439>" + entity.name + "</color>" + ", "; //Gun Metal
-						break;
-						case EnemyTypes.undead:
-						encounterEnemies += "<color=#2F4F4F>" + entity.name + "</color>" + ", "; //Bloodless Gray
-						break;
-						case EnemyTypes.Abberration:
-						encounterEnemies += "<color=#800080>" + entity.name + "</color>" + ", "; //Eldritch Purple
-						break;
-					}
-				}
-			}
-			encounterEnemies = RichTextManager.RemoveLastComma(encounterEnemies);
-			return encounterEnemies;
-		}
-		string DisplayEncouterEnemyTypes()
-		{
-			return RichTextManager.GetEnemyTypesTextColour(enemyTypes);
-		}
-		string DebugDataTextToUi()
-		{
-			string debugData = "Encounter Difficulty: " + encounterDifficulty + "\nEncounterBudget: " + entityBudget;
-			return debugData;
+			NodeStateChange?.Invoke(nodeState);
 		}
 	}
 }

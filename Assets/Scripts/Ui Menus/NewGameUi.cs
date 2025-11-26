@@ -3,8 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static Woopsious.EntityData;
-using static Woopsious.DamageData;
-using NUnit.Framework;
+using static Woopsious.CardHandler;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
@@ -114,8 +113,7 @@ namespace Woopsious
 		{
 			CardHandler card = Instantiate(DatabaseManagerUi.instance.cardUiPrefab).GetComponent<CardHandler>();
 			card.gameObject.transform.SetParent(classInfoPanel.transform);
-			card.SetupCard(null, entry.Key, false, false);
-			card.Ui.SetupCardDeckCardUi(entry.Key, entry.Value);
+			card.SetupCard(CardInitType.Informational, null, entry.Key, false, entry.Value);
 			cardList.Add(card);
 			SetCardUiPosition(card.GetComponent<RectTransform>(), index);
 		}

@@ -20,6 +20,7 @@ namespace Woopsious
 
 		public int cardSlotIndex;
 		public CardHandler CardInSlot;
+		private RectTransform CardRectTransform;
 
 		public static event Action<DrawnCardSlotUi> OnThisSlotMouseEnter;
 
@@ -126,9 +127,10 @@ namespace Woopsious
 		{
 			CardInSlot = newCard;
 			CardInSlot.gameObject.SetActive(true);
-			CardInSlot.transform.SetParent(gameObject.transform, false);
-			CardInSlot.Ui.RectTransform.localScale = new Vector2(1, 1);
-			CardInSlot.Ui.RectTransform.anchoredPosition = new(0, 87.5f);
+			CardRectTransform = CardInSlot.GetComponent<RectTransform>();
+			CardRectTransform.SetParent(gameObject.transform, false);
+			CardRectTransform.localScale = new Vector2(1, 1);
+			CardRectTransform.anchoredPosition = new(0, 87.5f);
 
 			if (CardInSlot.DummyCard)
 				ShowCardInSlot();
@@ -166,7 +168,6 @@ namespace Woopsious
 		{
 			if (CardInSlot == null) return;
 			CardInSlot.UpdateCard(TurnOrderManager.Player(), true);
-			CardInSlot.Ui.UpdateInGameCardUi();
 		}
 		void OnPlayerEnergyChanges(int energy)
 		{

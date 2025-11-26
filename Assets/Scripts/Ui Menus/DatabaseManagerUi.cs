@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static Woopsious.AttackData;
+using static Woopsious.CardHandler;
 
 namespace Woopsious
 {
@@ -200,8 +200,7 @@ namespace Woopsious
 		{
 			CardHandler card = Instantiate(cardUiPrefab).GetComponent<CardHandler>();
 			card.transform.SetParent(databaseInnerPanel.transform);
-			card.SetupCard(null, entry.Key, false, false);
-			card.Ui.SetupCardDeckCardUi(entry.Key, entry.Value);
+			card.SetupCard(CardInitType.Informational, null, entry.Key, false, entry.Value);
 			cardList.Add(card);
 			SetCardUiPosition(card.GetComponent<RectTransform>(), index);
 		}
@@ -233,8 +232,7 @@ namespace Woopsious
 
 				CardHandler card = Instantiate(cardUiPrefab).GetComponent<CardHandler>();
 				card.transform.SetParent(collectableCardsParent.transform);
-				card.SetupCard(null, cards[i], false, false);
-				card.Ui.SetupInGameCardUi(cards[i], false);
+				card.SetupCard(CardInitType.Informational, null, cards[i], false, 0);
 				collectableCardList.Add(card);
 				SetCollectableCardUiPosition(card.GetComponent<RectTransform>(), cardsFound);
 				cardsFound++;
@@ -318,8 +316,7 @@ namespace Woopsious
 		{
 			CardHandler card = Instantiate(cardUiPrefab).GetComponent<CardHandler>();
 			card.gameObject.transform.SetParent(databaseInnerPanel.transform);
-			card.SetupCard(attackMove);
-			card.Ui.SetupInGameCardUi(attackMove, false);
+			card.SetupCard(CardInitType.Informational, null, attackMove, false, 0);
 			cardList.Add(card);
 			SetCardUiPosition(card.GetComponent<RectTransform>(), index);
 		}
