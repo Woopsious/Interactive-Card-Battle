@@ -5,6 +5,7 @@ using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Woopsious.AbilitySystem;
+using static Woopsious.CardHandler;
 using static Woopsious.DrawnCardsUi;
 
 namespace Woopsious
@@ -30,8 +31,8 @@ namespace Woopsious
 			cardSlotIndex = gameObject.transform.GetSiblingIndex() - 1; //-1 due to background element
 
 			OnThisSlotMouseEnter += OnOtherCardSlotsMouseEnters;
-			PlayerEntity.OnPlayerStatChanges += UpdateCardsOnPlayerStatChanges;
-			PlayerEntity.OnPlayerEnergyChanges += OnPlayerEnergyChanges;
+			PlayerEntity.OnEnergyChange += OnPlayerEnergyChanges;
+			PlayerEntity.OnStatChanges += UpdateCardsOnPlayerStatChanges;
 			CardHandler.OnPlayerCardUsed += OnPlayerCardUsed;
 			CardHandler.OnCardReplace += ReplaceCard;
 
@@ -40,8 +41,8 @@ namespace Woopsious
 		private void OnDestroy()
 		{
 			OnThisSlotMouseEnter -= OnOtherCardSlotsMouseEnters;
-			PlayerEntity.OnPlayerStatChanges -= UpdateCardsOnPlayerStatChanges;
-			PlayerEntity.OnPlayerEnergyChanges -= OnPlayerEnergyChanges;
+			PlayerEntity.OnEnergyChange -= OnPlayerEnergyChanges;
+			PlayerEntity.OnStatChanges -= UpdateCardsOnPlayerStatChanges;
 			CardHandler.OnPlayerCardUsed -= OnPlayerCardUsed;
 			CardHandler.OnCardReplace -= ReplaceCard;
 		}
@@ -71,12 +72,18 @@ namespace Woopsious
 		//card generation
 		public void DrawCard()
 		{
-			CardInSlot = PlayerCardDeckHandler.GenerateCard(CardInSlot);
+			if (CardInSlot == null)
+				CardInSlot = SpawnManager.SpawnCard();
+
+			CardInSlot.SetupCard(CardInitType.InGame, TurnOrderManager.Player(), PlayerCardDeckHandler.GenerateCardData(), true, 0);
 			ReplaceCard(CardInSlot);
 		}
 		public void DrawDummyCard(StatusEffectsData effectData)
 		{
-			CardInSlot = PlayerCardDeckHandler.GenerateDummyCard(CardInSlot, effectData);
+			if (CardInSlot == null)
+				CardInSlot = SpawnManager.SpawnCard();
+
+			CardInSlot.SetupDummyCard(CardInitType.Dummy, effectData);
 			ReplaceCard(CardInSlot);
 		}
 		void ReplaceCard(CardHandler cardToReplace)

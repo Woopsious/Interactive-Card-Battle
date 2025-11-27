@@ -42,7 +42,7 @@ namespace Woopsious
 			GameManager.OnStartCardCombatUiEvent += ShowCardCombatUi;
 			GameManager.OnEndCardCombatEvent += ShowGameLossUi;
 			TurnOrderManager.OnNewRoundStartEvent += OnNewRound;
-			TurnOrderManager.OnNewTurnEvent += OnNewTurn;
+			TurnOrderManager.OnStartTurn += OnNewTurn;
 		}
 		void OnDisable()
 		{
@@ -50,7 +50,7 @@ namespace Woopsious
 			GameManager.OnStartCardCombatUiEvent -= ShowCardCombatUi;
 			GameManager.OnEndCardCombatEvent -= ShowGameLossUi;
 			TurnOrderManager.OnNewRoundStartEvent -= OnNewRound;
-			TurnOrderManager.OnNewTurnEvent -= OnNewTurn;
+			TurnOrderManager.OnStartTurn -= OnNewTurn;
 		}
 
 		//Event Listeners

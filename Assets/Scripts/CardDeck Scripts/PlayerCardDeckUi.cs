@@ -66,10 +66,12 @@ namespace Woopsious
 		private void OnEnable()
 		{
 			GameManager.OnEndCardCombatEvent += ShowCardRewardsUi;
+			PlayerCardDeckHandler.OnRewardSelectionChanged += UpdateCardsSelectedForRewardsCount;
 		}
 		private void OnDisable()
 		{
 			GameManager.OnEndCardCombatEvent -= ShowCardRewardsUi;
+			PlayerCardDeckHandler.OnRewardSelectionChanged -= UpdateCardsSelectedForRewardsCount;
 		}
 
 		private void ShowHideCardDeckUi()
@@ -93,7 +95,7 @@ namespace Woopsious
 			//create new starting deck info
 			Dictionary<AttackData, int> cardDeckCount = new();
 
-			foreach (AttackData cardAttackData in PlayerCardDeckHandler.Instance.PlayerCardDeck)
+			foreach (AttackData cardAttackData in PlayerCardDeckHandler.GetCardDeck())
 			{
 				if (cardDeckCount.ContainsKey(cardAttackData))
 					cardDeckCount[cardAttackData]++;
@@ -138,7 +140,7 @@ namespace Woopsious
 		{
 			if (!playerWins) return; //nothing to do
 
-			SetUpNewCardRewardsUi();
+			SetUpCardRewardsUi();
 			cardRewardsUiPanel.SetActive(true);
 			confirmAcceptCardRewardsButton.gameObject.SetActive(false);
 			UpdateCardsSelectedForRewardsCount(0);
@@ -150,8 +152,9 @@ namespace Woopsious
 		}
 
 		//card rewards ui set up
-		private void SetUpNewCardRewardsUi()
+		private void SetUpCardRewardsUi()
 		{
+			cardRewardsSelection.Clear();
 			MapNode mapNode = GameManager.CurrentlyVisitedMapNode; //generate card rewards here
 			int cardChoiceCount = mapNode.cardRewardChoiceCount;
 			int cardRewardSelectionLimit = mapNode.cardRewardSelectionCount;
@@ -165,10 +168,20 @@ namespace Woopsious
 			if (cardChoiceCount % 2 == 0)
 				evenAmountOfCards = true;
 
-			cardRewardsSelection = PlayerCardDeckHandler.GenerateCardRewards(cardRewardsParent);
-
+			SetUpCardRewards(cardChoiceCount, evenAmountOfCards);
+		}
+		private void SetUpCardRewards(int cardChoiceCount, bool evenAmountOfCards)
+		{
 			for (int i = 0; i < cardChoiceCount; i++)
-				SetCardPosition(cardRewardsSelection[i].GetComponent<RectTransform>(), i, cardChoiceCount, evenAmountOfCards);
+			{
+				CardHandler card = SpawnManager.SpawnCard();
+				AttackData attackData = PlayerCardDeckHandler.GenerateCardRewardData();
+
+				card.transform.SetParent(cardRewardsParent.transform);
+				card.SetupCard(CardInitType.Reward, null, attackData, true, PlayerCardDeckHandler.CountSimilarCardsInDeck(attackData));
+				SetCardPosition(card.GetComponent<RectTransform>(), i, cardChoiceCount, evenAmountOfCards);
+				cardRewardsSelection.Add(card);
+			}
 		}
 		private void SetCardPosition(RectTransform cardTransform, int index, int cardCount, bool evenAmountOfCards)
 		{
@@ -188,10 +201,10 @@ namespace Woopsious
 			cardTransform.pivot = new Vector2(0.5f, 1);
 			cardTransform.anchoredPosition = new Vector2(xPos, -200);
 		}
-		public static void UpdateCardsSelectedForRewardsCount(int count)
+		private void UpdateCardsSelectedForRewardsCount(int count)
 		{
 			int cardsSelectionLimit = GameManager.CurrentlyVisitedMapNode.cardRewardSelectionCount;
-			instance.selectedCardRewardsInfo.text = $"Selected Cards {count}/{cardsSelectionLimit}";
+			selectedCardRewardsInfo.text = $"Selected Cards {count}/{cardsSelectionLimit}";
 		}
 
 		//accept card rewards button calls
@@ -208,8 +221,8 @@ namespace Woopsious
 			PlayerCardDeckHandler.AddCardsToDeck(true);
 			GameManager.ShowMap();
 
-			for (int i = instance.cardRewardsSelection.Count - 1; i >= 0; i--)
-				Destroy(instance.cardRewardsSelection[i]);
+			for (int i = cardRewardsSelection.Count - 1; i >= 0; i--)
+				Destroy(cardRewardsSelection[i].gameObject);
 		}
 
 		//discard card ui updates
@@ -230,16 +243,12 @@ namespace Woopsious
 		}
 		private void StartCardDiscard()
 		{
-			foreach (CardUi card in cardUis)
-				card.ToggleDiscardCardUi(true);
-
+			ToggleAllDiscardCardsUi(true);
 			ToggleDiscardCardButtons(true);
 		}
 		private void CompleteCardDiscard()
 		{
-			foreach (CardUi card in cardUis)
-				card.ToggleDiscardCardUi(false);
-
+			ToggleAllDiscardCardsUi(false);
 			PlayerCardDeckHandler.DiscardCardsFromDeck(true);
 
 			ToggleDiscardCardButtons(false);
@@ -247,11 +256,14 @@ namespace Woopsious
 		}
 		private void CancelCardDiscard()
 		{
-			foreach (CardUi card in cardUis)
-				card.ToggleDiscardCardUi(false);
-
+			ToggleAllDiscardCardsUi(false);
 			PlayerCardDeckHandler.DiscardCardsFromDeck(false);
 			ToggleDiscardCardButtons(false);
+		}
+		private void ToggleAllDiscardCardsUi(bool active)
+		{
+			foreach (CardUi card in cardUis)
+				card.ToggleDiscardCardUi(active);
 		}
 	}
 }

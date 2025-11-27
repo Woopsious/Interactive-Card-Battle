@@ -1,7 +1,7 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Woopsious.AbilitySystem;
-using static Woopsious.CardHandler;
 
 namespace Woopsious
 {
@@ -11,24 +11,27 @@ namespace Woopsious
 
 		[Header("Runtime data")]
 		//player card deck data
-		public List<AttackData> PlayerCardDeck = new();
+		[SerializeField] private List<AttackData> PlayerCardDeck = new();
 
 		//queued cards to be added
-		public List<AttackData> CardsToAddToDeck = new();
+		[SerializeField] private List<AttackData> CardsToAddToDeck = new();
 
 		//queued cards to be discarded
-		public List<AttackData> CardsToDiscardFromDeck = new();
+		[SerializeField] private List<AttackData> CardsToDiscardFromDeck = new();
 
 		//dummy cards list
-		public List<StatusEffectsData> DummyCardsToForceAdd = new();
+		[SerializeField] private List<StatusEffectsData> DummyCardsToForceAdd = new();
 
 		//card spawn table
-		public float TotalCardDropChance { get; private set; }
-		public float TotalCardDrawChance { get; private set; }
+		private float TotalCardDropChance;
+		private float TotalCardDrawChance;
 
 		[Header("Debug Generate Card Rewards")]
 		public int cardChoicesCount;
 		public int cardSelectionCount;
+
+		//events
+		public static event Action<int> OnRewardSelectionChanged;
 
 		private void Awake()
 		{
@@ -59,6 +62,11 @@ namespace Woopsious
 				TotalCardDrawChance += card.CardDrawChance();
 		}
 
+		public static IReadOnlyList<AttackData> GetCardDeck()
+		{
+			return Instance.PlayerCardDeck;
+		}
+
 		//ADDING CARDS TO DECK
 		public static void AddCardsToDeck(bool completeAdd)
 		{
@@ -76,7 +84,7 @@ namespace Woopsious
 		public static void QueueCardToBeAdded(AttackData cardData)
 		{
 			Instance.CardsToAddToDeck.Add(cardData);
-			PlayerCardDeckUi.UpdateCardsSelectedForRewardsCount(Instance.CardsToAddToDeck.Count);
+			OnRewardSelectionChanged?.Invoke(Instance.CardsToAddToDeck.Count);
 		}
 		public static void UnqueueCardFromBeingAdded(AttackData cardData)
 		{
@@ -85,7 +93,7 @@ namespace Woopsious
 			else
 				Debug.LogError("Tried removing card that doesnt exist from queue of cards to be added");
 
-			PlayerCardDeckUi.UpdateCardsSelectedForRewardsCount(Instance.CardsToAddToDeck.Count);
+			OnRewardSelectionChanged?.Invoke(Instance.CardsToAddToDeck.Count);
 		}
 
 		//DISCARDING CARDS FROM DECK
@@ -138,43 +146,13 @@ namespace Woopsious
 		}
 
 		//CARD GENERATION
-		public static CardHandler GenerateCard(CardHandler card)
+		public static AttackData GenerateCardData()
 		{
-			if (card == null)
-				card = SpawnManager.SpawnCard();
-
-			float totalCardDrawChance = Instance.TotalCardDrawChance;
-			List<AttackData> playerCards = Instance.PlayerCardDeck;
-			AttackData cardAttackData = SpawnManager.GetWeightedPlayerCardDraw(playerCards, totalCardDrawChance);
-
-			card.SetupCard(CardInitType.InGame, TurnOrderManager.Player(), cardAttackData, true, 0);
-			return card;
+			return SpawnManager.GetWeightedPlayerCardDraw(Instance.PlayerCardDeck, Instance.TotalCardDrawChance);
 		}
-		public static CardHandler GenerateDummyCard(CardHandler card, StatusEffectsData effectData)
+		public static AttackData GenerateCardRewardData()
 		{
-			if (card == null)
-				card = SpawnManager.SpawnCard();
-
-			card.SetupDummyCard(CardInitType.Dummy, effectData);
-			return card;
-		}
-		public static List<CardHandler> GenerateCardRewards(GameObject parent)
-		{
-			MapNode mapNode = GameManager.CurrentlyVisitedMapNode; //generate card rewards here
-			int cardChoiceCount = mapNode.cardRewardChoiceCount;
-
-			List<CardHandler> cardRewards = new();
-
-			for (int i = 0; i < cardChoiceCount; i++)
-			{
-				CardHandler card = SpawnManager.SpawnCard();
-				AttackData cardAttackData = SpawnManager.GetWeightedPlayerCardReward(Instance.TotalCardDropChance);
-
-				card.transform.SetParent(parent.transform);
-				card.SetupCard(CardInitType.Reward, null, cardAttackData, true, CountSimilarCardsInDeck(cardAttackData));
-				cardRewards.Add(card);
-			}
-			return cardRewards;
+			return SpawnManager.GetWeightedPlayerCardReward(Instance.TotalCardDropChance);
 		}
 
 		//CHECKS

@@ -67,6 +67,19 @@ namespace Woopsious
 		[Header("Entity Audio")]
 		public AudioClip hitSfx;
 
+		public string CreateEntityName(EntityData entityData)
+		{
+			return entityData.playerClass switch
+			{
+				PlayerClass.Mage => "Player (Mage)",
+				PlayerClass.Ranger => "Player (Ranger)",
+				PlayerClass.Rogue => "Player (Rogue)",
+				PlayerClass.Warrior => "Player (Warrior)",
+				PlayerClass.NotPlayer => entityData.entityName,
+				_ => "Name not found",
+			};
+		}
+
 		//set info for enemy entities
 		public string CreateEntityInfo()
 		{

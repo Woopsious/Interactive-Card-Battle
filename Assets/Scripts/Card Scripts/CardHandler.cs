@@ -280,13 +280,13 @@ namespace Woopsious
 
 					foreach (Entity aoeTarget in GetAoeTargets(target))
 					{
-						aoeTarget.RecieveDamage(DamageData);
+						aoeTarget.ReceiveDamage(DamageData);
 						aoeTarget.StatusEffectsHandler.AddStatusEffects(DamageData.statusEffectsForTarget);
 					}
 				}
 				else
 				{
-					target.RecieveDamage(DamageData);
+					target.ReceiveDamage(DamageData);
 					target.StatusEffectsHandler.AddStatusEffects(DamageData.statusEffectsForTarget);
 				}
 			}
@@ -310,10 +310,10 @@ namespace Woopsious
 		void ApplyBlockHealAndEffectsToCardOwner()
 		{
 			if (DamageData.valueTypes.HasFlag(ValueTypes.blocks))
-				cardOwner.RecieveBlock(DamageData);
+				cardOwner.ReceiveBlock(DamageData);
 
 			if (DamageData.valueTypes.HasFlag(ValueTypes.heals))
-				cardOwner.RecieveHealing(DamageData);
+				cardOwner.ReceiveHealing(DamageData);
 
 			cardOwner.StatusEffectsHandler.AddStatusEffects(DamageData.statusEffectsForSelf);
 		}
@@ -329,7 +329,7 @@ namespace Woopsious
 			if (PlayerCard)
 				OnPlayerCardUsed?.Invoke(this, true);
 			else
-				cardOwner.EndTurn();
+				TurnOrderManager.EndCurrentTurn(cardOwner);
 
 			gameObject.SetActive(false);
 			OnCardCleanUp?.Invoke(this);

@@ -16,19 +16,6 @@ namespace Woopsious
 		public StatusEffectsHandler StatusEffectsHandler { get; private set; }
 		AudioHandler audioHandler;
 
-		//ui elements
-		public TMP_Text entityNameText;
-		public TMP_Text energyText;
-		public TMP_Text entityHealthText;
-		public TMP_Text entityblockText;
-		public GameObject turnIndicator;
-
-		//background image highlight
-		protected Image imageHighlight;
-		Color _ColourDarkRed = new(0.3921569f, 0, 0, 1);
-		protected Color _ColourIceBlue = new(0, 1, 1, 1);
-		protected Color _ColourYellow = new(0.7843137f, 0.6862745f, 0, 1);
-
 		[Header("Runtime Stats")]
 		public int health;
 		public int block;
@@ -42,9 +29,18 @@ namespace Woopsious
 		public Stat damageBonus;
 		public Stat blockBonus;
 
+		//hihglight colurs
+		protected Color _ColourDarkRed = new(0.3921569f, 0, 0, 1);
+		protected Color _ColourIceBlue = new(0, 1, 1, 1);
+		protected Color _ColourYellow = new(0.7843137f, 0.6862745f, 0, 1);
+
 		//events + rnd number
-		public static event Action<Entity> OnTurnEndEvent;
 		public static event Action<Entity> OnEntityDeath;
+
+		public event Action<string> OnEntityInitialize;
+		public event Action<int, int> OnHealthChange;
+		public event Action<int> OnBlockChange;
+		public event Action<Color> OnUpdateHighlightColour;
 
 		private readonly System.Random systemRandom = new();
 
@@ -52,8 +48,6 @@ namespace Woopsious
 		{
 			entityMoves = GetComponent<EntityMoves>();
 			StatusEffectsHandler = GetComponent<StatusEffectsHandler>();
-			imageHighlight = GetComponent<Image>();
-			imageHighlight.color = _ColourDarkRed;
 			audioHandler = GetComponent<AudioHandler>();
 		}
 		protected virtual void Start()
@@ -63,17 +57,17 @@ namespace Woopsious
 			if (EntityData == null)
 				Debug.LogError("Entity data null");
             else
-				InitilizeEntity(EntityData);
+				InitializeEntity(EntityData);
 		}
 
-		void OnEnable()
+		protected virtual void OnEnable()
 		{
-			TurnOrderManager.OnNewTurnEvent += StartTurn;
+			TurnOrderManager.OnStartTurn += StartTurn;
 			CardHandler.OnPlayerPickedUpCard += OnCardPicked;
 		}
-		void OnDisable()
+		protected virtual void OnDisable()
 		{
-			TurnOrderManager.OnNewTurnEvent -= StartTurn;
+			TurnOrderManager.OnStartTurn -= StartTurn;
 			CardHandler.OnPlayerPickedUpCard -= OnCardPicked;
 		}
 
@@ -88,40 +82,26 @@ namespace Woopsious
 				CardExit(other.GetComponent<CardHandler>());
 		}
 
-		public void InitilizeEntity(EntityData entityData)
+		public void InitializeEntity(EntityData entityData)
 		{
 			if (entityData == null)
 			return;
 			else
 				EntityData = entityData;
 
-			string entityName; //specialize name
+			InitializeStats();
 
-			if (entityData.playerClass == EntityData.PlayerClass.Mage)
-				entityName = "Player (Mage)";
-			else if (entityData.playerClass == EntityData.PlayerClass.Ranger)
-				entityName = "Player (Ranger)";
-			else if(entityData.playerClass == EntityData.PlayerClass.Rogue)
-				entityName = "Player (Rogue)";
-			else if(entityData.playerClass == EntityData.PlayerClass.Warrior)
-				entityName = "Player (Warrior)";
-			else
-				entityName = entityData.entityName;
-
-			gameObject.name = entityName;
-			entityNameText.text = entityName;
-
-			InitilizeStats();
-			UpdateUi();
-			turnIndicator.SetActive(false);
+			OnEntityInitialize?.Invoke(EntityData.CreateEntityName(EntityData));
+			OnHealthChange?.Invoke(health, entityData.maxHealth);
+			OnBlockChange?.Invoke(block);
+			ImageHighlightChangeEvent(_ColourDarkRed);
 
 			if (entityData.isPlayer) return;
 
-			imageHighlight.color = _ColourDarkRed;
 			entityMoves.InitilizeMoveSet(this);
 			StatusEffectsHandler.ClearStatusEffects();
 		}
-		protected virtual void InitilizeStats()
+		protected virtual void InitializeStats()
 		{
 			health = EntityData.maxHealth;
 			block = EntityData.baseBlock;
@@ -144,42 +124,37 @@ namespace Woopsious
 
 			if (EntityData.isPlayer) return; //if is player shouldnt need to do anything else as other scripts handle it
 
-			turnIndicator.SetActive(true);
 			entityMoves.PickNextMove();
-		}
-		public virtual void EndTurn()
-		{
-			turnIndicator.SetActive(false);
-			OnTurnEndEvent?.Invoke(this);
 		}
 
 		//entity hits via cards
-		public virtual void RecieveDamage(DamageData damageData)
+		public virtual void ReceiveDamage(DamageData damageData)
 		{
 			if (damageData.EntityDamageSource.EntityData.playerClass == EntityData.PlayerClass.Mage)
 				damageData.DamageValue = GetMageClassSpecialDamageModifier(damageData);
 
-			damageData.DamageValue = GetDamageRecievedModifier(damageData);
+			damageData.DamageValue = GetDamageReceivedModifier(damageData);
 			damageData.DamageValue = GetBlockedDamage(damageData);
 
 			health -= damageData.DamageValue;
 
 			audioHandler.PlayAudio(EntityData.hitSfx, true);
-			UpdateUi();
+			OnBlockChange?.Invoke(block);
+			ImageHighlightChangeEvent(_ColourDarkRed);
 			OnDeath();
 		}
-		public virtual void RecieveBlock(DamageData damageData)
+		public virtual void ReceiveBlock(DamageData damageData)
 		{
 			block += damageData.BlockValue;
-			UpdateUi();
+			OnBlockChange?.Invoke(block);
 		}
-		public virtual void RecieveHealing(DamageData damageData)
+		public virtual void ReceiveHealing(DamageData damageData)
 		{
 			health += damageData.HealValue;
 			if (health > healthMax.value)
 				health = (int)healthMax.value;
 
-			UpdateUi();
+			OnHealthChange?.Invoke(health, EntityData.maxHealth);
 		}
 
 		//helpers
@@ -191,7 +166,7 @@ namespace Woopsious
 			else
 				return damageData.DamageValue;
 		}
-		int GetDamageRecievedModifier(DamageData damageData)
+		int GetDamageReceivedModifier(DamageData damageData)
 		{
 			int damage = (int)(damageData.DamageValue * damageRecievedModifier.value);
 			return damage;
@@ -227,7 +202,7 @@ namespace Woopsious
 		//applying damage from DoT effects
 		public void ApplyDoTFromEffects(float damage)
 		{
-			RecieveDamage(new DamageData(this, false, true, (int)damage));
+			ReceiveDamage(new DamageData(this, false, true, (int)damage));
 		}
 
 		//applying/removing stat modifiers
@@ -258,14 +233,17 @@ namespace Woopsious
 		void UpdateStatsAndUi(bool newTurn, int blockToKeep)
 		{
 			if (newTurn)
-			{
 				block = (int)(EntityData.baseBlock + blockBonus.value);
-			}
 			else
-			{
 				block = (int)(blockToKeep + blockBonus.value);
-			}
-			UpdateUi();
+
+			OnBlockChange?.Invoke(block);
+		}
+
+		//event calls
+		protected void ImageHighlightChangeEvent(Color color)
+		{
+			OnUpdateHighlightColour?.Invoke(color);
 		}
 
 		//debugs
@@ -279,44 +257,38 @@ namespace Woopsious
 		protected virtual void OnCardPicked(CardHandler card)
 		{
 			if (card == null)
-				imageHighlight.color = _ColourDarkRed;
+				ImageHighlightChangeEvent(_ColourDarkRed);
 			else
 			{
 				if (card.Offensive)
-					imageHighlight.color = _ColourIceBlue;
+					ImageHighlightChangeEvent(_ColourIceBlue);
 				else
-					imageHighlight.color = _ColourDarkRed;
+					ImageHighlightChangeEvent(_ColourDarkRed);
 			}
 		}
 		protected virtual void CardEnter(CardHandler card)
 		{
 			if (card == null)
-				imageHighlight.color = _ColourDarkRed;
+				ImageHighlightChangeEvent(_ColourDarkRed);
 			else
 			{
 				if (card.Offensive)
-					imageHighlight.color = _ColourYellow;
+					ImageHighlightChangeEvent(_ColourYellow);
 				else
-					imageHighlight.color = _ColourDarkRed;
+					ImageHighlightChangeEvent(_ColourDarkRed);
 			}
 		}
 		protected virtual void CardExit(CardHandler card)
 		{
 			if (card == null)
-				imageHighlight.color = _ColourDarkRed;
+				ImageHighlightChangeEvent(_ColourDarkRed);
 			else
 			{
 				if (card.Offensive && card.isBeingDragged)
-					imageHighlight.color = _ColourIceBlue;
+					ImageHighlightChangeEvent(_ColourIceBlue);
 				else
-					imageHighlight.color = _ColourDarkRed;
+					ImageHighlightChangeEvent(_ColourDarkRed);
 			}
-		}
-
-		protected void UpdateUi()
-		{
-			entityHealthText.text = "HP:" + health + "/" + healthMax.value;
-			entityblockText.text = "BLOCK: " + block;
 		}
 	}
 }

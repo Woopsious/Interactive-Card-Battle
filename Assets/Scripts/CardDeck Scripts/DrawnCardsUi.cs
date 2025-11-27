@@ -42,12 +42,12 @@ namespace Woopsious
 			imageHighlight = GetComponent<Image>();
 			audioHandler = GetComponent<AudioHandler>();
 
-			TurnOrderManager.OnNewTurnEvent += UpdateDrawnCardsDeck;
+			TurnOrderManager.OnStartTurn += UpdateDrawnCardsDeck;
 			CardHandler.OnPlayerPickedUpCard += OnCardPicked;
 		}
 		void OnDestroy()
 		{
-			TurnOrderManager.OnNewTurnEvent -= UpdateDrawnCardsDeck;
+			TurnOrderManager.OnStartTurn -= UpdateDrawnCardsDeck;
 			CardHandler.OnPlayerPickedUpCard -= OnCardPicked;
 		}
 

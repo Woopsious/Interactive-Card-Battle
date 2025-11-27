@@ -9,8 +9,6 @@ namespace Woopsious
 {
 	public class PlayerEntity : Entity
 	{
-		RectTransform rectTransform;
-
 		Color _ColourDarkGreen = new(0, 0.3921569f, 0, 1);
 
 		[Header("Player Unique Stats")]
@@ -20,32 +18,25 @@ namespace Woopsious
 		[Header("Runtime Debug Inspector")]
 		public List<StatusEffectsData> statusEffectsToDebugAdd;
 
-		public static event Action<int> OnPlayerEnergyChanges;
-		public static event Action OnPlayerStatChanges;
+		public static event Action OnStatChanges;
+		public static event Action<int> OnEnergyChange;
 
-		protected override void Awake()
+		protected override void OnEnable()
 		{
-			base.Awake();
-			rectTransform = GetComponent<RectTransform>();
-			imageHighlight.color = _ColourDarkGreen;
-		}
-
-		void OnEnable()
-		{
-			TurnOrderManager.OnNewTurnEvent += StartTurn;
+			base.OnEnable();
 			CardHandler.OnCardCleanUp += UpdateCardsUsed;
 			OnEntityDeath += RangerHealOnKill;
 		}
-		void OnDisable()
+		protected override void OnDisable()
 		{
-			TurnOrderManager.OnNewTurnEvent -= StartTurn;
+			base.OnDisable();
 			CardHandler.OnCardCleanUp -= UpdateCardsUsed;
-			OnEntityDeath += RangerHealOnKill;
+			OnEntityDeath -= RangerHealOnKill;
 		}
 
-		protected override void InitilizeStats()
+		protected override void InitializeStats()
 		{
-			base.InitilizeStats();
+			base.InitializeStats();
 
 			cardDrawAmount.InitilizeStat(EntityData.initialCardDrawAmount);
 			energy.InitilizeStat(EntityData.baseEnergy);
@@ -53,21 +44,15 @@ namespace Woopsious
 
 		protected override void StartTurn(Entity entity)
 		{
-			imageHighlight.color = _ColourDarkGreen;
-
-			if (entity == this)
-				rectTransform.anchoredPosition = new Vector2(0, -190);
-			else
-				rectTransform.anchoredPosition = new Vector2(0, -325);
-
 			base.StartTurn(entity);
+
+			ImageHighlightChangeEvent(_ColourDarkGreen);
 
 			if (entity != this) return;
 
 			energy.ResetStat();
 			cardDrawAmount.ResetStat();
-
-			UpdateEnergyUi();
+			OnEnergyChange?.Invoke((int)energy.value);
 		}
 		public void UpdateCardsUsed(CardHandler card)
 		{
@@ -75,34 +60,32 @@ namespace Woopsious
 
 			energy.AddModifier(energy.statType, new(false, card.AttackData.energyCost));
 			cardDrawAmount.AddModifier(cardDrawAmount.statType, new(false, card.AttackData.extraCardsToDraw));
-
-			UpdateEnergyUi();
-			OnPlayerEnergyChanges?.Invoke((int)energy.value);
+			OnEnergyChange?.Invoke((int)energy.value);
 
 			if (energy.value <= 0)
 			{
-				EndTurn();
+				TurnOrderManager.EndCurrentTurn(this);
 				return;
 			}
 		}
 
 		//entity hits via cards
-		public override void RecieveDamage(DamageData damageData)
+		public override void ReceiveDamage(DamageData damageData)
 		{
-			base.RecieveDamage(damageData);
-			RogueReflectDamageRecieved(damageData);
+			base.ReceiveDamage(damageData);
+			RogueReflectDamageReceived(damageData);
 		}
 
 		//applying/removing stat modifiers
 		public override void AddStatModifier(StatType statType, StatData statData)
 		{
 			base.AddStatModifier(statType, statData);
-			OnPlayerStatChanges?.Invoke();
+			OnStatChanges?.Invoke();
 		}
 		public override void RemoveStatModifier(StatType statType, StatData statData)
 		{
 			base.RemoveStatModifier(statType, statData);
-			OnPlayerStatChanges?.Invoke();
+			OnStatChanges?.Invoke();
 		}
 
 		//special class effects for player
@@ -112,9 +95,9 @@ namespace Woopsious
 			if (EntityData.playerClass != EntityData.PlayerClass.Ranger) return;
 
 			int healOnKill = (int)(healthMax.value / EntityData.healOnKillPercentage);
-			RecieveHealing(new(ValueTypes.heals, healOnKill));
+			ReceiveHealing(new(ValueTypes.heals, healOnKill));
 		}
-		void RogueReflectDamageRecieved(DamageData damageData)
+		void RogueReflectDamageReceived(DamageData damageData)
 		{
 			if (EntityData.playerClass != EntityData.PlayerClass.Rogue) return;
 			if (!damageData.DamageReflectable) return;
@@ -123,50 +106,45 @@ namespace Woopsious
 			if (damageReflected == 0)
 				damageReflected++;
 
-			damageData.EntityDamageSource.RecieveDamage(new(this, false, true, damageReflected));
+			damageData.EntityDamageSource.ReceiveDamage(new(this, false, true, damageReflected));
 		}
 
 		//update image border highlight
 		protected override void OnCardPicked(CardHandler card)
 		{
 			if (card == null)
-				imageHighlight.color = _ColourDarkGreen;
+				ImageHighlightChangeEvent(_ColourDarkGreen);
 			else
 			{
 				if (!card.Offensive)
-					imageHighlight.color = _ColourIceBlue;
+					ImageHighlightChangeEvent(_ColourIceBlue);
 				else
-					imageHighlight.color = _ColourDarkGreen;
+					ImageHighlightChangeEvent(_ColourDarkGreen);
 			}
 		}
 		protected override void CardEnter(CardHandler card)
 		{
 			if (card == null)
-				imageHighlight.color = _ColourDarkGreen;
+				ImageHighlightChangeEvent(_ColourDarkGreen);
 			else
 			{
 				if (!card.Offensive)
-					imageHighlight.color = _ColourYellow;
+					ImageHighlightChangeEvent(_ColourYellow);
 				else
-					imageHighlight.color = _ColourDarkGreen;
+					ImageHighlightChangeEvent(_ColourDarkGreen);
 			}
 		}
 		protected override void CardExit(CardHandler card)
 		{
 			if (card == null)
-				imageHighlight.color = _ColourDarkGreen;
+				ImageHighlightChangeEvent(_ColourDarkGreen);
 			else
 			{
 				if (!card.Offensive && card.isBeingDragged)
-					imageHighlight.color = _ColourIceBlue;
+					ImageHighlightChangeEvent(_ColourIceBlue);
 				else
-					imageHighlight.color = _ColourDarkGreen;
+					ImageHighlightChangeEvent(_ColourDarkGreen);
 			}
-		}
-
-		protected void UpdateEnergyUi()
-		{
-			energyText.text = $"{energy.value}";
 		}
 
 		//debug

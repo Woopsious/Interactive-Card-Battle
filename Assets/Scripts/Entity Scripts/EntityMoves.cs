@@ -29,12 +29,12 @@ namespace Woopsious
 		void OnEnable()
 		{
 			TurnOrderManager.OnNewRoundStartEvent += NewRoundStart;
-			Entity.OnTurnEndEvent += CancelMove;
+			TurnOrderManager.OnEndTurn += CancelMove;
 		}
 		void OnDisable()
 		{
 			TurnOrderManager.OnNewRoundStartEvent -= NewRoundStart;
-			Entity.OnTurnEndEvent -= CancelMove;
+			TurnOrderManager.OnEndTurn -= CancelMove;
 		}
 
 		public void InitilizeMoveSet(Entity entity)
@@ -91,7 +91,7 @@ namespace Woopsious
 			{
 				//Debug.LogError("end turn");
 
-				entity.EndTurn();
+				TurnOrderManager.EndCurrentTurn(entity);
 				return;
 			}
 		}

@@ -7,8 +7,8 @@ namespace Woopsious
 {
 	public interface IDamagable
 	{
-		void RecieveDamage(DamageData damageData);
-		void RecieveBlock(DamageData damageData);
-		void RecieveHealing(DamageData damageData);
+		void ReceiveDamage(DamageData damageData);
+		void ReceiveBlock(DamageData damageData);
+		void ReceiveHealing(DamageData damageData);
 	}
 }

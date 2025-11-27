@@ -22,7 +22,8 @@ namespace Woopsious
 
 		//events
 		public static event Action<int> OnNewRoundStartEvent;
-		public static event Action<Entity> OnNewTurnEvent;
+		public static event Action<Entity> OnStartTurn;
+		public static event Action<Entity> OnEndTurn;
 
 		private void Awake()
 		{
@@ -36,7 +37,6 @@ namespace Woopsious
 			GameManager.OnDebugStartCardCombatEvent += DebugCreateTurnOrder;
 			SpawnManager.OnPlayerSpawned += AddPlayerOnSpawnComplete;
 			SpawnManager.OnEnemySpawned += AddEnemyOnSpawnComplete;
-			Entity.OnTurnEndEvent += StartNewTurn;
 			Entity.OnEntityDeath += RemoveEntityFromTurnOrder;
 		}
 		void OnDisable()
@@ -46,7 +46,6 @@ namespace Woopsious
 			GameManager.OnDebugStartCardCombatEvent += DebugCreateTurnOrder;
 			SpawnManager.OnPlayerSpawned -= AddPlayerOnSpawnComplete;
 			SpawnManager.OnEnemySpawned -= AddEnemyOnSpawnComplete;
-			Entity.OnTurnEndEvent -= StartNewTurn;
 			Entity.OnEntityDeath -= RemoveEntityFromTurnOrder;
 		}
 
@@ -82,7 +81,7 @@ namespace Woopsious
 			currentRound = 1;
 
 			OnNewRoundStartEvent?.Invoke(currentRound);
-			OnNewTurnEvent?.Invoke(currentEntityTurn);
+			OnStartTurn?.Invoke(entity);
 		}
 		void ResetListsAndEntities()
 		{
@@ -108,6 +107,16 @@ namespace Woopsious
 			turnOrder.Remove(entity);
 		}
 
+		//set refs for turn order creation
+		void AddPlayerOnSpawnComplete(PlayerEntity player)
+		{
+			this.player = player;
+		}
+		void AddEnemyOnSpawnComplete(Entity entity)
+		{
+			enemyEntities.Add(entity);
+		}
+
 		//start new turns/rounds
 		void StartNewTurn(Entity entity)
 		{
@@ -117,7 +126,7 @@ namespace Woopsious
 			currentEntityTurn = turnOrder[0];
 
 			ShouldStartNewRound();
-			OnNewTurnEvent?.Invoke(currentEntityTurn);
+			OnStartTurn?.Invoke(currentEntityTurn);
 		}
 		void ShouldStartNewRound()
 		{
@@ -128,14 +137,11 @@ namespace Woopsious
 			}
 		}
 
-		//set refs for turn order creation
-		void AddPlayerOnSpawnComplete(PlayerEntity player)
+		//start/end turn event
+		public static void EndCurrentTurn(Entity entity)
 		{
-			this.player = player;
-		}
-		void AddEnemyOnSpawnComplete(Entity entity)
-		{
-			enemyEntities.Add(entity);
+			OnEndTurn?.Invoke(entity);
+			Instance.StartNewTurn(entity);
 		}
 
 		//get instanced refs
@@ -155,7 +161,7 @@ namespace Woopsious
 		//end instanced enemies turn
 		public static void SkipCurrentEntitiesTurn()
 		{
-			Instance.currentEntityTurn.EndTurn();
+			EndCurrentTurn(Instance.currentEntityTurn);
 		}
 	}
 }

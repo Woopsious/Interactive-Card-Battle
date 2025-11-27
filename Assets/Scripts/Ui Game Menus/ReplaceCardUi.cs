@@ -16,14 +16,14 @@ namespace Woopsious
 		void Awake()
 		{
 			imageHighlight = GetComponent<Image>();
-			TurnOrderManager.OnNewTurnEvent += OnPlayerTurnStart;
+			TurnOrderManager.OnStartTurn += OnPlayerTurnStart;
 			CardHandler.OnPlayerPickedUpCard += OnCardPicked;
 			CardHandler.OnCardReplace += OnReplaceCard;
 			HideUi();
 		}
 		void OnDestroy()
 		{
-			TurnOrderManager.OnNewTurnEvent -= OnPlayerTurnStart;
+			TurnOrderManager.OnStartTurn -= OnPlayerTurnStart;
 			CardHandler.OnPlayerPickedUpCard -= OnCardPicked;
 			CardHandler.OnCardReplace -= OnReplaceCard;
 		}

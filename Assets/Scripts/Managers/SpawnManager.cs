@@ -47,7 +47,7 @@ namespace Woopsious
 				if (entity == null)
 					entity = Instantiate(instance.EntityPrefab, CardCombatUi.instance.spawnedEntitiesTransform).GetComponent<Entity>();
 
-				entity.InitilizeEntity(entityData);
+				entity.InitializeEntity(entityData);
 				entity.transform.SetParent(CardCombatUi.instance.spawnedEntitiesTransform);
 				entity.gameObject.SetActive(true);
 
@@ -64,7 +64,7 @@ namespace Woopsious
 			PlayerEntity player = Instantiate(instance.PlayerPrefab, CardCombatUi.instance.spawnedEntitiesTransform).GetComponent<PlayerEntity>();
 			EntityData playerClass = GameManager.PlayerClass;
 
-			player.InitilizeEntity(playerClass);
+			player.InitializeEntity(playerClass);
 			player.transform.SetAsFirstSibling();
 			OnPlayerSpawned?.Invoke(player);
 
@@ -85,7 +85,7 @@ namespace Woopsious
 				if (entity == null)
 					entity = Instantiate(instance.EntityPrefab, CardCombatUi.instance.spawnedEntitiesTransform).GetComponent<Entity>();
 
-				entity.InitilizeEntity(instance.GetWeightedEntitySpawn(mapNode));
+				entity.InitializeEntity(instance.GetWeightedEntitySpawn(mapNode));
 				entity.transform.SetParent(CardCombatUi.instance.spawnedEntitiesTransform);
 				entity.gameObject.SetActive(true);
 
