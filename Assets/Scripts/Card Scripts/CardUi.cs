@@ -41,6 +41,14 @@ namespace Woopsious
 		public Button toggleSelectRewardCardButton;
 		TMP_Text rewardCardSelectedText;
 
+		[Header("Draw Card Ui")]
+		public GameObject drawCardUiPanel;
+		public TMP_Text drawCardText;
+
+		[Header("Drop Card Ui")]
+		public GameObject dropCardUiPanel;
+		public TMP_Text dropCardText;
+
 		//runtime card Info
 		public int CardDeckCount { get; private set; }
 		public int CardDiscardCount { get; private set; }
@@ -50,7 +58,7 @@ namespace Woopsious
 		[HideInInspector] public CardHandler cardHandler;
 		public RectTransform RectTransform { get; private set; }
 
-		void Awake()
+		private void Awake()
 		{
 			RectTransform = GetComponent<RectTransform>();
 			cardHandler = GetComponent<CardHandler>();
@@ -86,6 +94,8 @@ namespace Woopsious
 			UpdateCardEnergyUi(false);
 			UpdateCardCountUi(true, true, cardDeckCount);
 			ToggleRewardCardUi(false);
+			ToggleDropChanceUi(true);
+			ToggleDrawChanceUi(true);
 			UpdateCardDescriptionUi(cardInitType);
 		}
 		private void InitilizeCardUi(CardInitType cardInitType, bool playerCard, int cardDeckCount)
@@ -96,6 +106,8 @@ namespace Woopsious
 			UpdateCardEnergyUi(playerCard);
 			UpdateCardCountUi(false, false, cardDeckCount);
 			ToggleRewardCardUi(false);
+			ToggleDropChanceUi(false);
+			ToggleDrawChanceUi(false);
 			UpdateCardDescriptionUi(cardInitType);
 		}
 		private void InitilizeDummyCardUi(CardInitType cardInitType, StatusEffectsData statusEffectsData)
@@ -106,6 +118,8 @@ namespace Woopsious
 			UpdateCardEnergyUi(false);
 			UpdateCardCountUi(false, false, 0);
 			ToggleRewardCardUi(false);
+			ToggleDropChanceUi(false);
+			ToggleDrawChanceUi(false);
 			UpdateCardDescriptionUi(cardInitType);
 		}
 		private void InitilizeRewardCardUi(CardInitType cardInitType, int cardDeckCount)
@@ -116,6 +130,8 @@ namespace Woopsious
 			UpdateCardEnergyUi(false);
 			UpdateCardCountUi(true, false, cardDeckCount);
 			ToggleRewardCardUi(true);
+			ToggleDropChanceUi(true);
+			ToggleDrawChanceUi(true);
 			UpdateCardDescriptionUi(cardInitType);
 		}
 
@@ -125,7 +141,7 @@ namespace Woopsious
 			gameObject.name = cardName;
 			cardNametext.text = cardName;
 		}
-		public void UpdateCardDescriptionUi(CardInitType cardInitType)
+		private void UpdateCardDescriptionUi(CardInitType cardInitType)
 		{
 			if (cardInitType == CardInitType.Dummy)
 				cardDescriptiontext.text = "Unplayable card\nDissapears next turn";
@@ -160,7 +176,7 @@ namespace Woopsious
 		}
 
 		//description creation
-		public string CreateDescription()
+		private string CreateDescription()
 		{
 			AttackData attackData = cardHandler.AttackData;
 			DamageData damageData = cardHandler.DamageData;
@@ -292,7 +308,7 @@ namespace Woopsious
 		}
 
 		//reward card funcs
-		public void ToggleRewardCardUi(bool show)
+		private void ToggleRewardCardUi(bool show)
 		{
 			rewardCardUiPanel.SetActive(show);
 			rewardCardSelectedText.text = $"Unselected";
@@ -313,6 +329,30 @@ namespace Woopsious
 				rewardCardSelectedText.text = $"Select";
 				rewardCardSelectedText.color = new(0f, 0.5882353f, 0f);
 			}
+		}
+
+		//drop/draw chance funcs
+		private void ToggleDropChanceUi(bool show)
+		{
+			if (!cardHandler.AttackData.isPlayerAttack || cardHandler.DummyCard)
+			{
+				drawCardUiPanel.SetActive(false);
+				return;
+			}
+
+			dropCardUiPanel.SetActive(show);
+			dropCardText.text = $"Drop Chance: {cardHandler.AttackData.CardDropChance() * 100}%";
+		}
+		private void ToggleDrawChanceUi(bool show)
+		{
+			if (!cardHandler.AttackData.isPlayerAttack || cardHandler.DummyCard)
+			{
+				drawCardUiPanel.SetActive(false);
+				return;
+			}
+
+			drawCardUiPanel.SetActive(show);
+			drawCardText.text = $"Draw Chance: {cardHandler.AttackData.CardDrawChance() * 100}%";
 		}
 	}
 }

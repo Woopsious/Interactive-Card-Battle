@@ -350,17 +350,17 @@ namespace Woopsious
 			if (index < 3)
 			{
 				posX = (200 * index) + 300;
-				posY = (-250 * 0) + -125;
+				posY = (-300 * 0) + -100;
 			}
 			else if (index >= 3 && index < 6)
 			{
 				posX = (200 * (index - 3)) + 300;
-				posY = (-250 * 1) + -125;
+				posY = (-300 * 1) + -100;
 			}
 			else
 			{
 				posX = (200 * (index - 6)) + 300;
-				posY = (-250 * 2) + -125;
+				posY = (-300 * 2) + -100;
 			}
 
 			rectTransform.anchorMin = new Vector2(0.5f, 1);
@@ -376,17 +376,17 @@ namespace Woopsious
 			if (index < 6)
 			{
 				posX = (220 * index) - 560;
-				posY = (-250 * 0) + -50;
+				posY = (-300 * 0) + -50;
 			}
 			else if (index >= 6 && index < 12)
 			{
 				posX = (220 * (index - 3)) - 560;
-				posY = (-250 * 1) + -50;
+				posY = (-300 * 1) + -50;
 			}
 			else
 			{
 				posX = (220 * (index - 6)) - 560;
-				posY = (-250 * 2) + -50;
+				posY = (-300 * 2) + -50;
 			}
 
 			rectTransform.anchorMin = new Vector2(0.5f, 1);
