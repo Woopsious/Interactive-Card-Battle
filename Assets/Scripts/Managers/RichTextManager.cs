@@ -1,59 +1,79 @@
+using System.Collections.Generic;
 using UnityEngine;
-using static Woopsious.MapNodeData;
+using static Woopsious.DamageData;
 using static Woopsious.EntityData;
+using static Woopsious.MapNodeData;
 
 namespace Woopsious
 {
 	public static class RichTextManager
-	{
-		//shared colours
-		public static string cyan = "#00FFFF";   // land modifiers, Free Card Upgrade
-		public static string eldritchPurple = "#800080";  // Elite Fight, Elite Boss Fight, Abberrations
-
+	{   
 		//encounter type colours
-		public static string red = "#C81919";             // Boss Fight
+		private static readonly Dictionary<NodeEncounterType, string> encounterTypeColours = new()
+		{
+			{ NodeEncounterType.basicFight, "#006400" },		//defaultColor
+			{ NodeEncounterType.eliteFight, "#CDE2EA" },		//eldritchPurple
+			{ NodeEncounterType.bossFight, "#C81919" },			//red
+			{ NodeEncounterType.eliteBossFight, "#CDE2EA" },	//eldritchPurple
+			{ NodeEncounterType.freeCardUpgrade, "#00FFFF" }	//cyan
+		};
 
 		//land type colours
-		public static string green = "green";         // Grasslands
-		public static string mutedGreen = "#7C9A61";  // Hills
-		public static string darkGreen = "#006400";   // Forest
-		public static string softGrey = "#B0B5B3";    // Mountains
-		public static string goldenSand = "#DCC38C";  // Desert
-		public static string icyBlue = "#CDE2EA";     // Tundra
+		private static readonly Dictionary<LandTypes, string> landTypeColours = new()
+		{
+			{ LandTypes.grassland, "#00FF00" }, //green
+			{ LandTypes.hills, "#7C9A61" },		//mutedGreen
+			{ LandTypes.forest, "#006400" },	//darkGreen
+			{ LandTypes.mountains, "#B0B5B3" },	//softGrey
+			{ LandTypes.desert, "#DCC38C" },	//goldenSand
+			{ LandTypes.tundra, "#CDE2EA" }		//icyBlue
+		};
 
-		//land modifier colours
+		//land modifier colours (only 1 colour used)
+		private const string cyan = "#00FFFF";
 
 		//enemy type colours
-		public static string lightGreen = "#90EE90";   // Slimes
-		public static string earthyBrown = "#8B4513";  // Beasts
-		public static string defaultColor = "#FFFFFF"; // Humanoids (default, no color applied)
-		public static string gunMetalGray = "#2a3439";     // Constructs
-		public static string bloodlessGray = "#2F4F4F"; // Undead
+		private static readonly Dictionary<EnemyTypes, string> enemyTypeColours = new()
+		{
+			{ EnemyTypes.slime, "#00FF00" },		//lightGreen
+			{ EnemyTypes.beast, "#7C9A61" },		//earthyBrown
+			{ EnemyTypes.humanoid, "#006400" },		//defaultColor
+			{ EnemyTypes.construct, "#B0B5B3" },	//gunMetalGray
+			{ EnemyTypes.undead, "#DCC38C" },		//bloodlessGray
+			{ EnemyTypes.Abberration, "#CDE2EA" }	//eldritchPurple
+		};
 
-		//other colours
-		public static string crimsonRed = "#8B0000";
-		public static string steelBlue = "#4682B4";
+		//value type colours
+		private static readonly Dictionary<ValueTypes, string> valueTypeColours = new()
+		{
+			{ ValueTypes.damages, "#8B0000" },		//crimsonRed
+			{ ValueTypes.blocks, "#4682B4" },		//steelBlue
+			{ ValueTypes.heals, "#006400" }		//darkGreen
+		};
 
+		//global colours
+		public enum GlobalColours
+		{
+			skyBlue
+		}
+		private static readonly Dictionary<GlobalColours, string> globalColours = new()
+		{
+			{ GlobalColours.skyBlue, "#0096FF" }
+		};
+
+		//applying colours to text
 		public static string GetEncounterTypeTextColour(NodeEncounterType encounterType)
 		{
 			string text = "";
-			switch (encounterType)
+
+			foreach (var kvp in encounterTypeColours)
 			{
-				case NodeEncounterType.basicFight:
-				text = "Basic Fight";
-				break;
-				case NodeEncounterType.eliteFight:
-				text = $"<color={eldritchPurple}>Elite Fight</color>";
-				break;
-				case NodeEncounterType.bossFight:
-				text = $"<color={red}>Boss Fight</color>";
-				break;
-				case NodeEncounterType.eliteBossFight:
-				text = $"<color={eldritchPurple}>Elite Boss Fight</color>";
-				break;
-				case NodeEncounterType.freeCardUpgrade:
-				text = $"<color={cyan}>Free Card Upgrade</color>";
-				break;
+				if (encounterType.HasFlag(kvp.Key))
+				{
+					// Capitalize first letter of land type for display
+					string displayName = char.ToUpper(kvp.Key.ToString()[0]) + kvp.Key.ToString()[1..];
+					text += $"<color={kvp.Value}>{displayName}</color>, ";
+				}
 			}
 
 			return text;
@@ -63,18 +83,15 @@ namespace Woopsious
 		{
 			string text = "";
 
-			if (landTypes.HasFlag(LandTypes.grassland))
-				text += $"<color={green}>Grasslands</color>, ";
-			if (landTypes.HasFlag(LandTypes.hills))
-				text += $"<color={mutedGreen}>Hills</color>, ";
-			if (landTypes.HasFlag(LandTypes.forest))
-				text += $"<color={darkGreen}>Forest</color>, ";
-			if (landTypes.HasFlag(LandTypes.mountains))
-				text += $"<color={softGrey}>Mountains</color>, ";
-			if (landTypes.HasFlag(LandTypes.desert))
-				text += $"<color={goldenSand}>Desert</color>, ";
-			if (landTypes.HasFlag(LandTypes.tundra))
-				text += $"<color={icyBlue}>Tundra</color>, ";
+			foreach (var kvp in landTypeColours)
+			{
+				if (landTypes.HasFlag(kvp.Key))
+				{
+					// Capitalize first letter of land type for display
+					string displayName = char.ToUpper(kvp.Key.ToString()[0]) + kvp.Key.ToString()[1..];
+					text += $"<color={kvp.Value}>{displayName}</color>, ";
+				}
+			}
 
 			return RemoveLastComma(text);
 		}
@@ -101,27 +118,37 @@ namespace Woopsious
 		{
 			string text = "";
 
-			if (enemyTypes.HasFlag(EnemyTypes.slime))
-				text += $"<color={lightGreen}>Slimes</color>, ";
-			if (enemyTypes.HasFlag(EnemyTypes.beast))
-				text += $"<color={earthyBrown}>Beasts</color>, ";
-			if (enemyTypes.HasFlag(EnemyTypes.humanoid))
-				text += $"Humanoids, ";
-			if (enemyTypes.HasFlag(EnemyTypes.construct))
-				text += $"<color={gunMetalGray}>Constructs</color>, ";
-			if (enemyTypes.HasFlag(EnemyTypes.undead))
-				text += $"<color={bloodlessGray}>Undead</color>, ";
-			if (enemyTypes.HasFlag(EnemyTypes.Abberration))
-				text += $"<color={eldritchPurple}>Abberrations</color>, ";
+			foreach (var kvp in enemyTypeColours)
+			{
+				if (enemyTypes.HasFlag(kvp.Key))
+				{
+					// Capitalize first letter of land type for display
+					string displayName = char.ToUpper(kvp.Key.ToString()[0]) + kvp.Key.ToString()[1..];
+					text += $"<color={kvp.Value}>{displayName}</color>, ";
+				}
+			}
 
 			return RemoveLastComma(text);
 		}
 
-		public static string AddColour(string text, string hexColour)
+		public static string AddValueTypeColour(string text, ValueTypes valueType)
 		{
-			return $"<color={hexColour}>{text}</color>";
+			foreach (var kvp in valueTypeColours)
+			{
+				if (valueType.HasFlag(kvp.Key))
+					text = $"<color={kvp.Value}>{text}</color>, ";
+			}
+			return RemoveLastComma(text);
 		}
 
+		public static string AddColour(string text, GlobalColours colour)
+		{
+			if (globalColours.TryGetValue(colour, out var hex))
+				return $"<color={hex}>{text}</color>";
+			return text;
+		}
+
+		//removing commas + trimming text
 		public static string RemoveLastComma(string input)
 		{
 			int lastCommaIndex = input.LastIndexOf(',');
@@ -129,7 +156,7 @@ namespace Woopsious
 			if (lastCommaIndex >= 0)
 				return input.Remove(lastCommaIndex, 1);
 
-			return input;
+			return input.Trim();
 		}
 	}
 }

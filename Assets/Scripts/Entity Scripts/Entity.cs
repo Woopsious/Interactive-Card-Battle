@@ -30,6 +30,10 @@ namespace Woopsious
 		public Stat blockBonus;
 
 		//hihglight colurs
+		public enum HighlightState
+		{
+			Neutral, Unhighlighted, Highlighted
+		}
 		protected Color _ColourDarkRed = new(0.3921569f, 0, 0, 1);
 		protected Color _ColourIceBlue = new(0, 1, 1, 1);
 		protected Color _ColourYellow = new(0.7843137f, 0.6862745f, 0, 1);
@@ -40,7 +44,7 @@ namespace Woopsious
 		public event Action<string> OnEntityInitialize;
 		public event Action<int, int> OnHealthChange;
 		public event Action<int> OnBlockChange;
-		public event Action<Color> OnUpdateHighlightColour;
+		public event Action<HighlightState> OnUpdateHighlightColour;
 
 		private readonly System.Random systemRandom = new();
 
@@ -73,12 +77,12 @@ namespace Woopsious
 
 		void OnTriggerEnter2D(Collider2D other)
 		{
-			if (other.GetComponent<CardUi>() != null)
+			if (other.GetComponent<CardHandler>() != null)
 				CardEnter(other.GetComponent<CardHandler>());
 		}
 		void OnTriggerExit2D(Collider2D other)
 		{
-			if (other.GetComponent<CardUi>() != null)
+			if (other.GetComponent<CardHandler>() != null)
 				CardExit(other.GetComponent<CardHandler>());
 		}
 
@@ -94,7 +98,7 @@ namespace Woopsious
 			OnEntityInitialize?.Invoke(EntityData.CreateEntityName(EntityData));
 			OnHealthChange?.Invoke(health, entityData.maxHealth);
 			OnBlockChange?.Invoke(block);
-			ImageHighlightChangeEvent(_ColourDarkRed);
+			ImageHighlightChangeEvent(HighlightState.Neutral);
 
 			if (entityData.isPlayer) return;
 
@@ -140,7 +144,7 @@ namespace Woopsious
 
 			audioHandler.PlayAudio(EntityData.hitSfx, true);
 			OnBlockChange?.Invoke(block);
-			ImageHighlightChangeEvent(_ColourDarkRed);
+			ImageHighlightChangeEvent(HighlightState.Neutral);
 			OnDeath();
 		}
 		public virtual void ReceiveBlock(DamageData damageData)
@@ -241,9 +245,9 @@ namespace Woopsious
 		}
 
 		//event calls
-		protected void ImageHighlightChangeEvent(Color color)
+		protected void ImageHighlightChangeEvent(HighlightState highlightState)
 		{
-			OnUpdateHighlightColour?.Invoke(color);
+			OnUpdateHighlightColour?.Invoke(highlightState);
 		}
 
 		//debugs
@@ -257,37 +261,37 @@ namespace Woopsious
 		protected virtual void OnCardPicked(CardHandler card)
 		{
 			if (card == null)
-				ImageHighlightChangeEvent(_ColourDarkRed);
+				ImageHighlightChangeEvent(HighlightState.Neutral);
 			else
 			{
 				if (card.Offensive)
-					ImageHighlightChangeEvent(_ColourIceBlue);
+					ImageHighlightChangeEvent(HighlightState.Unhighlighted);
 				else
-					ImageHighlightChangeEvent(_ColourDarkRed);
+					ImageHighlightChangeEvent(HighlightState.Neutral);
 			}
 		}
 		protected virtual void CardEnter(CardHandler card)
 		{
 			if (card == null)
-				ImageHighlightChangeEvent(_ColourDarkRed);
+				ImageHighlightChangeEvent(HighlightState.Neutral);
 			else
 			{
 				if (card.Offensive)
-					ImageHighlightChangeEvent(_ColourYellow);
+					ImageHighlightChangeEvent(HighlightState.Highlighted);
 				else
-					ImageHighlightChangeEvent(_ColourDarkRed);
+					ImageHighlightChangeEvent(HighlightState.Neutral);
 			}
 		}
 		protected virtual void CardExit(CardHandler card)
 		{
 			if (card == null)
-				ImageHighlightChangeEvent(_ColourDarkRed);
+				ImageHighlightChangeEvent(HighlightState.Neutral);
 			else
 			{
 				if (card.Offensive && card.isBeingDragged)
-					ImageHighlightChangeEvent(_ColourIceBlue);
+					ImageHighlightChangeEvent(HighlightState.Unhighlighted);
 				else
-					ImageHighlightChangeEvent(_ColourDarkRed);
+					ImageHighlightChangeEvent(HighlightState.Neutral);
 			}
 		}
 	}

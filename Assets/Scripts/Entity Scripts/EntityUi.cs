@@ -1,7 +1,6 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.EventSystems.EventTrigger;
 
 namespace Woopsious
 {
@@ -18,7 +17,14 @@ namespace Woopsious
 		public GameObject turnIndicator;
 
 		private RectTransform rectTransform;
+
+		//highlight + colours
 		protected Image imageHighlight;
+
+		private Color _ColourDarkGreen = new(0, 0.3921569f, 0, 1);	//player entity
+		private Color _ColourDarkRed = new(0.3921569f, 0, 0, 1);	//entity
+		private Color _ColourIceBlue = new(0, 1, 1, 1);		//shared
+		private Color _ColourYellow = new(0.7843137f, 0.6862745f, 0, 1);
 
 		private void Awake()
 		{
@@ -77,9 +83,23 @@ namespace Woopsious
 			entityBlockText.text = "BLOCK: " + block;
 		}
 
-		private void UpdateHighlightUi(Color color)
+		private void UpdateHighlightUi(Entity.HighlightState highlightState)
 		{
-			imageHighlight.color = color;
+			switch (highlightState)
+			{
+				case Entity.HighlightState.Neutral:
+				if (entity is PlayerEntity)
+					imageHighlight.color = _ColourDarkGreen;
+				else
+					imageHighlight.color = _ColourDarkRed;
+				break;
+				case Entity.HighlightState.Unhighlighted:
+				imageHighlight.color = _ColourYellow;
+				break;
+				case Entity.HighlightState.Highlighted:
+				imageHighlight.color = _ColourIceBlue;
+				break;
+			}
 		}
 
 		private void UpdateTurnIndicator(Entity entity)

@@ -9,8 +9,6 @@ namespace Woopsious
 {
 	public class PlayerEntity : Entity
 	{
-		Color _ColourDarkGreen = new(0, 0.3921569f, 0, 1);
-
 		[Header("Player Unique Stats")]
 		public Stat cardDrawAmount;
 		public Stat energy;
@@ -46,7 +44,7 @@ namespace Woopsious
 		{
 			base.StartTurn(entity);
 
-			ImageHighlightChangeEvent(_ColourDarkGreen);
+			ImageHighlightChangeEvent(HighlightState.Neutral);
 
 			if (entity != this) return;
 
@@ -113,37 +111,37 @@ namespace Woopsious
 		protected override void OnCardPicked(CardHandler card)
 		{
 			if (card == null)
-				ImageHighlightChangeEvent(_ColourDarkGreen);
+				ImageHighlightChangeEvent(HighlightState.Neutral);
 			else
 			{
 				if (!card.Offensive)
-					ImageHighlightChangeEvent(_ColourIceBlue);
+					ImageHighlightChangeEvent(HighlightState.Unhighlighted);
 				else
-					ImageHighlightChangeEvent(_ColourDarkGreen);
+					ImageHighlightChangeEvent(HighlightState.Neutral);
 			}
 		}
 		protected override void CardEnter(CardHandler card)
 		{
 			if (card == null)
-				ImageHighlightChangeEvent(_ColourDarkGreen);
+				ImageHighlightChangeEvent(HighlightState.Neutral);
 			else
 			{
 				if (!card.Offensive)
-					ImageHighlightChangeEvent(_ColourYellow);
+					ImageHighlightChangeEvent(HighlightState.Highlighted);
 				else
-					ImageHighlightChangeEvent(_ColourDarkGreen);
+					ImageHighlightChangeEvent(HighlightState.Neutral);
 			}
 		}
 		protected override void CardExit(CardHandler card)
 		{
 			if (card == null)
-				ImageHighlightChangeEvent(_ColourDarkGreen);
+				ImageHighlightChangeEvent(HighlightState.Neutral);
 			else
 			{
 				if (!card.Offensive && card.isBeingDragged)
-					ImageHighlightChangeEvent(_ColourIceBlue);
+					ImageHighlightChangeEvent(HighlightState.Unhighlighted);
 				else
-					ImageHighlightChangeEvent(_ColourDarkGreen);
+					ImageHighlightChangeEvent(HighlightState.Neutral);
 			}
 		}
 

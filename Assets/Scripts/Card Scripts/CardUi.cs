@@ -198,10 +198,10 @@ namespace Woopsious
 			description = CreateStatusEffectDescriptions(description, damageData.statusEffectsForTarget, true);
 
 			if (damageData.valueTypes.HasFlag(ValueTypes.blocks))
-				description += $"\nGain {RichTextManager.AddColour($"{damageData.BlockValue} block", RichTextManager.steelBlue)}";
+				description += $"\nGain {RichTextManager.AddValueTypeColour($"{damageData.BlockValue} block", ValueTypes.blocks)}";
 
 			if (damageData.valueTypes.HasFlag(ValueTypes.heals))
-				description += $"\nRestore {RichTextManager.AddColour($"{damageData.HealValue} health", RichTextManager.darkGreen)}";
+				description += $"\nRestore {RichTextManager.AddValueTypeColour($"{damageData.HealValue} health", ValueTypes.heals)}";
 
 			description = CreateStatusEffectDescriptions(description, damageData.statusEffectsForSelf, false);
 
@@ -216,14 +216,14 @@ namespace Woopsious
 
 				if (damageData.HitsDifferentTargets)
 				{
-					description += $"\nDeals {RichTextManager.AddColour(damageString, RichTextManager.crimsonRed)} " +
+					description += $"\nDeals {RichTextManager.AddValueTypeColour(damageString, ValueTypes.damages)}" +
 						$"to {damageData.multiHitCount} different enemies";
 				}
 				else
-					description += $"\nDeals {RichTextManager.AddColour(damageString, RichTextManager.crimsonRed)} {damageData.multiHitCount}x times";
+					description += $"\nDeals {RichTextManager.AddValueTypeColour(damageString, ValueTypes.damages)} {damageData.multiHitCount}x times";
 			}
 			else
-				description += $"\nDeals {RichTextManager.AddColour($"{damageData.DamageValue} damage", RichTextManager.crimsonRed)}";
+				description += $"\nDeals {RichTextManager.AddValueTypeColour($"{damageData.DamageValue} damage", ValueTypes.damages)}";
 
 			return description;
 		}

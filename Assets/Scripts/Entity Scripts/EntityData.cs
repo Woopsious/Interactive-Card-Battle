@@ -87,7 +87,8 @@ namespace Woopsious
 
 			entityInfo += entityName + "\n\n";
 
-			entityInfo += $"Health: {maxHealth}\nBase Block: {baseBlock}\n\n";
+			entityInfo += $"Health: {RichTextManager.AddValueTypeColour(maxHealth.ToString(), DamageData.ValueTypes.heals)}\n";
+			entityInfo += $"Base Block: {RichTextManager.AddValueTypeColour(baseBlock.ToString(), DamageData.ValueTypes.blocks)}\n\n";
 
 			entityInfo += CreateFoundLandTypesAndModifiersInfo();
 
@@ -114,9 +115,9 @@ namespace Woopsious
 
 			classInfo += entityName + "\n\n";
 
-			classInfo += $"Health: {maxHealth}\n";
-			classInfo += $"Block: {baseBlock}\n";
-			classInfo += $"Energy: {baseEnergy}\n\n";
+			classInfo += $"Health: {RichTextManager.AddValueTypeColour(maxHealth.ToString(), DamageData.ValueTypes.heals)}\n";
+			classInfo += $"Block: {RichTextManager.AddValueTypeColour(baseBlock.ToString(), DamageData.ValueTypes.blocks)}\n";
+			classInfo += $"Energy: {RichTextManager.AddColour(baseEnergy.ToString(), RichTextManager.GlobalColours.skyBlue)}\n\n";
 
 			classInfo += "STARTING CARDS\n";
 			classInfo += SetPlayerClassCardsInfo() + "\n\n";
