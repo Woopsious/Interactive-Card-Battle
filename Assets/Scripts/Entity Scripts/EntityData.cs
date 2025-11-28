@@ -148,7 +148,8 @@ namespace Woopsious
 			}
 
 			string cardsInfo = "";
-			cardsInfo += $"Multi Cards: {multiCardsCount}\nAttack Cards: {attackCardsCount}\nBlock Cards: {blockCardsCount}\nHeal Cards: {healCardsCount}";
+			cardsInfo += $"Multi Cards: {multiCardsCount}\nAttack Cards: {attackCardsCount}" +
+				$"\nBlock Cards: {blockCardsCount}\nHeal Cards: {healCardsCount}";
 			return cardsInfo;
 			//at some point also add the dispalying of each type of starting cards details
 		}
@@ -158,19 +159,29 @@ namespace Woopsious
 
 			if (playerClass == PlayerClass.Mage)
 			{
-				classGimmickInfo += $"\"Potent Magic\"\n Has a {chanceOfDoubleDamage}% to deal double the damage of a card";
+				string doubleDamageChance = $"{chanceOfDoubleDamage}% for 2x damage";
+
+				classGimmickInfo += $"\"Potent Magic\"\n Has a " +
+					$"{RichTextManager.AddValueTypeColour(doubleDamageChance, DamageData.ValueTypes.damages)} of a card";
 			}
 			else if (playerClass == PlayerClass.Ranger)
 			{
-				classGimmickInfo += $"\"Resourceful\"\n Heals for {healOnKillPercentage}% of health on killing an enemy";
+				string healOnKill = $"{healOnKillPercentage}% of health";
+
+				classGimmickInfo += $"\"Resourceful\"\n Heals for " +
+					$"{RichTextManager.AddValueTypeColour(healOnKill, DamageData.ValueTypes.heals)} on killing an enemy";
 			}
 			else if (playerClass == PlayerClass.Rogue)
 			{
-				classGimmickInfo += $"\"Trickster\"\n Reflects {damageReflectedPercentage}% of damage recieved onto attacker";
+				string damageReflected = $"{damageReflectedPercentage}% of damage";
+
+				classGimmickInfo += $"\"Trickster\"\n Reflects " +
+					$"{RichTextManager.AddValueTypeColour(damageReflected, DamageData.ValueTypes.damages)} recieved onto attacker";
 			}
 			else if (playerClass == PlayerClass.Warrior)
 			{
-				classGimmickInfo += $"\"Stalwart\"\n Has a permanent {baseBlock} block";
+				classGimmickInfo += $"\"Stalwart\"\n Has a permanent " +
+					$"{RichTextManager.AddValueTypeColour(baseBlock.ToString(), DamageData.ValueTypes.blocks)} block";
 			}
 
 			return classGimmickInfo;

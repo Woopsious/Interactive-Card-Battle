@@ -127,17 +127,18 @@ namespace Woopsious
 			if (index < 3)
 			{
 				posX = (250 * index) + 250;
-				posY = (-250 * 0) + -25;
+				posY = (-300 * 0) + -100;
 			}
 			else if (index >= 3 && index < 6)
 			{
 				posX = (250 * (index - 3)) + 250;
-				posY = (-250 * 1) + -25;
+				posY = (-300 * 1) + -100;
 			}
 			else
 			{
-				posX = (250 * (index - 6)) + 250;
-				posY = (-250 * 2) + -25;
+				Debug.LogError("no more space to display starting cards, redesign ui");
+				posX = Screen.width * 2;
+				posY = Screen.height * 2;
 			}
 
 			rectTransform.anchorMin = new Vector2(0.5f, 1);

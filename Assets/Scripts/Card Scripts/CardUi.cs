@@ -217,7 +217,7 @@ namespace Woopsious
 				if (damageData.HitsDifferentTargets)
 				{
 					description += $"\nDeals {RichTextManager.AddValueTypeColour(damageString, ValueTypes.damages)}" +
-						$"to {damageData.multiHitCount} different enemies";
+						$" to {damageData.multiHitCount} different enemies";
 				}
 				else
 					description += $"\nDeals {RichTextManager.AddValueTypeColour(damageString, ValueTypes.damages)} {damageData.multiHitCount}x times";
@@ -245,9 +245,11 @@ namespace Woopsious
 				foreach (var entry in statusEffectsCount)
 				{
 					if (entry.Value == 1)
-						description += "<link=Test><color=blue>" + entry.Key.effectName + "</color></link>, ";
+						description += RichTextManager.AddTextLink($"{entry.Key.effectName}", RichTextManager.GlobalColours.blue);
 					else
-						description += "<link=Test><color=blue>" + entry.Value + "x " + entry.Key.effectName + "</color></link>, ";
+						description += RichTextManager.AddTextLink($"{entry.Value}x {entry.Key.effectName}", RichTextManager.GlobalColours.blue);
+
+					description += ", ";
 				}
 
 				description = RichTextManager.RemoveLastComma(description);
