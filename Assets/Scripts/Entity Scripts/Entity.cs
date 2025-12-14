@@ -110,12 +110,12 @@ namespace Woopsious
 			health = EntityData.maxHealth;
 			block = EntityData.baseBlock;
 
-			damageDealtModifier.InitilizeStat(1);
-			damageRecievedModifier.InitilizeStat(1);
+			damageDealtModifier.InitializeStat(1);
+			damageRecievedModifier.InitializeStat(1);
 
-			healthMax.InitilizeStat(EntityData.maxHealth);
-			damageBonus.InitilizeStat(0);
-			blockBonus.InitilizeStat(0);
+			healthMax.InitializeStat(EntityData.maxHealth);
+			damageBonus.InitializeStat(0);
+			blockBonus.InitializeStat(0);
 		}
 
 		//start/end turn events
@@ -143,7 +143,7 @@ namespace Woopsious
 			health -= damageData.DamageValue;
 
 			audioHandler.PlayAudio(EntityData.hitSfx, true);
-			OnBlockChange?.Invoke(block);
+			OnHealthChange?.Invoke(health, EntityData.maxHealth);
 			ImageHighlightChangeEvent(HighlightState.Neutral);
 			OnDeath();
 		}
@@ -210,27 +210,27 @@ namespace Woopsious
 		}
 
 		//applying/removing stat modifiers
-		public virtual void AddStatModifier(StatType statType, StatData statData)
+		public virtual void AddStatModifier(StatType statType, StatModifier modifier)
 		{
 			int blockToKeep = (int)(block - blockBonus.value);
 
-			damageDealtModifier.AddModifier(statType, statData);
-			damageRecievedModifier.AddModifier(statType, statData);
+			damageDealtModifier.AddMatchingModifier(statType, modifier);
+			damageRecievedModifier.AddMatchingModifier(statType, modifier);
 
-			damageBonus.AddModifier(statType, statData);
-			blockBonus.AddModifier(statType, statData);
+			damageBonus.AddMatchingModifier(statType, modifier);
+			blockBonus.AddMatchingModifier(statType, modifier);
 
 			UpdateStatsAndUi(false, blockToKeep);
 		}
-		public virtual void RemoveStatModifier(StatType statType, StatData statData)
+		public virtual void RemoveStatModifier(StatType statType, UnityEngine.Object modifierSource)
 		{
 			int blockToKeep = (int)(block - blockBonus.value);
 
-			damageDealtModifier.RemoveModifier(statType, statData);
-			damageRecievedModifier.RemoveModifier(statType, statData);
+			damageDealtModifier.RemoveMatchingModifier(statType, modifierSource);
+			damageRecievedModifier.RemoveMatchingModifier(statType, modifierSource);
 
-			damageBonus.RemoveModifier(statType, statData);
-			blockBonus.RemoveModifier(statType, statData);
+			damageBonus.RemoveMatchingModifier(statType, modifierSource);
+			blockBonus.RemoveMatchingModifier(statType, modifierSource);
 
 			UpdateStatsAndUi(false, blockToKeep);
 		}

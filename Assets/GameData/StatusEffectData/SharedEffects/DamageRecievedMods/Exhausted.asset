@@ -22,6 +22,7 @@ MonoBehaviour:
   effectLifetime: 1
   isDoT: 0
   timeBetweenDamageTicks: 0
-  effectData:
+  effectModifier:
+    source: {fileID: 0}
     isPercentage: 1
     value: 0.25

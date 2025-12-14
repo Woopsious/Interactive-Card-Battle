@@ -36,8 +36,8 @@ namespace Woopsious
 		{
 			base.InitializeStats();
 
-			cardDrawAmount.InitilizeStat(EntityData.initialCardDrawAmount);
-			energy.InitilizeStat(EntityData.baseEnergy);
+			cardDrawAmount.InitializeStat(EntityData.initialCardDrawAmount);
+			energy.InitializeStat(EntityData.baseEnergy);
 		}
 
 		protected override void StartTurn(Entity entity)
@@ -56,8 +56,8 @@ namespace Woopsious
 		{
 			if (!card.PlayerCard) return;
 
-			energy.AddModifier(energy.statType, new(false, card.AttackData.energyCost));
-			cardDrawAmount.AddModifier(cardDrawAmount.statType, new(false, card.AttackData.extraCardsToDraw));
+			energy.AddMatchingModifier(energy.statType, new(this, false, card.AttackData.energyCost));
+			cardDrawAmount.AddMatchingModifier(cardDrawAmount.statType, new(this, false, card.AttackData.extraCardsToDraw));
 			OnEnergyChange?.Invoke((int)energy.value);
 
 			if (energy.value <= 0)
@@ -75,14 +75,14 @@ namespace Woopsious
 		}
 
 		//applying/removing stat modifiers
-		public override void AddStatModifier(StatType statType, StatData statData)
+		public override void AddStatModifier(StatType statType, StatModifier modifier)
 		{
-			base.AddStatModifier(statType, statData);
+			base.AddStatModifier(statType, modifier);
 			OnStatChanges?.Invoke();
 		}
-		public override void RemoveStatModifier(StatType statType, StatData statData)
+		public override void RemoveStatModifier(StatType statType, UnityEngine.Object modifierSource)
 		{
-			base.RemoveStatModifier(statType, statData);
+			base.RemoveStatModifier(statType, modifierSource);
 			OnStatChanges?.Invoke();
 		}
 

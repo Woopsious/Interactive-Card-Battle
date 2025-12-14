@@ -1,8 +1,4 @@
 using System.Collections.Generic;
-using System.Drawing;
-using Unity.VisualScripting;
-using UnityEngine;
-using static UnityEngine.EventSystems.EventTrigger;
 using static Woopsious.DamageData;
 using static Woopsious.EntityData;
 using static Woopsious.MapNodeData;
@@ -14,10 +10,10 @@ namespace Woopsious
 		//encounter type colours
 		private static readonly Dictionary<NodeEncounterType, string> encounterTypeColours = new()
 		{
-			{ NodeEncounterType.basicFight, "#006400" },		//defaultColor
-			{ NodeEncounterType.eliteFight, "#CDE2EA" },		//eldritchPurple
+			{ NodeEncounterType.basicFight, "#000000" },		//defaultColor
+			{ NodeEncounterType.eliteFight, "#53277E" },		//eldritchPurple
 			{ NodeEncounterType.bossFight, "#C81919" },			//red
-			{ NodeEncounterType.eliteBossFight, "#CDE2EA" },	//eldritchPurple
+			{ NodeEncounterType.eliteBossFight, "#53277E" },	//eldritchPurple
 			{ NodeEncounterType.freeCardUpgrade, "#00FFFF" }	//cyan
 		};
 
@@ -25,10 +21,10 @@ namespace Woopsious
 		private static readonly Dictionary<LandTypes, string> landTypeColours = new()
 		{
 			{ LandTypes.grassland, "#00FF00" }, //green
-			{ LandTypes.hills, "#7C9A61" },		//mutedGreen
+			{ LandTypes.hills, "#00FF00" },		//green
 			{ LandTypes.forest, "#006400" },	//darkGreen
 			{ LandTypes.mountains, "#B0B5B3" },	//softGrey
-			{ LandTypes.desert, "#DCC38C" },	//goldenSand
+			{ LandTypes.desert, "#D9B86F" },	//goldenSand
 			{ LandTypes.tundra, "#CDE2EA" }		//icyBlue
 		};
 
@@ -39,11 +35,11 @@ namespace Woopsious
 		private static readonly Dictionary<EnemyTypes, string> enemyTypeColours = new()
 		{
 			{ EnemyTypes.slime, "#00FF00" },		//lightGreen
-			{ EnemyTypes.beast, "#7C9A61" },		//earthyBrown
-			{ EnemyTypes.humanoid, "#006400" },		//defaultColor
+			{ EnemyTypes.beast, "#8B5A2B" },		//earthyBrown
+			{ EnemyTypes.humanoid, "#000000" },		//defaultColor
 			{ EnemyTypes.construct, "#B0B5B3" },	//gunMetalGray
-			{ EnemyTypes.undead, "#DCC38C" },		//bloodlessGray
-			{ EnemyTypes.Abberration, "#CDE2EA" }	//eldritchPurple
+			{ EnemyTypes.undead, "#7B1A1A" },		//darkRed
+			{ EnemyTypes.Abberration, "#53277E" }	//eldritchPurple
 		};
 
 		//value type colours
@@ -70,19 +66,10 @@ namespace Woopsious
 		//applying colours to text
 		public static string GetEncounterTypeTextColour(NodeEncounterType encounterType)
 		{
-			string text = "";
+			if (!encounterTypeColours.TryGetValue(encounterType, out var colour))
+				return "";
 
-			foreach (var kvp in encounterTypeColours)
-			{
-				if (encounterType.HasFlag(kvp.Key))
-				{
-					// Capitalize first letter of land type for display
-					string displayName = char.ToUpper(kvp.Key.ToString()[0]) + kvp.Key.ToString()[1..];
-					text += $"<color={kvp.Value}>{displayName}</color>,";
-				}
-			}
-
-			return text;
+			return $"<color={colour}>{char.ToUpper(encounterType.ToString()[0]) + encounterType.ToString()[1..]}</color>";
 		}
 
 		public static string GetLandTypesTextColour(LandTypes landTypes)

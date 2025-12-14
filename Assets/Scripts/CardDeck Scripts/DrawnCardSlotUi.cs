@@ -184,8 +184,10 @@ namespace Woopsious
 				MoveCardDown();
 			else
 			{
-				if (CardInSlot.AttackData.energyCost > energy)
+				if (energy + CardInSlot.AttackData.energyCost < 0)
 					HideCardInSlot();
+				else
+					ShowCardInSlot();
 			}
 		}
 
