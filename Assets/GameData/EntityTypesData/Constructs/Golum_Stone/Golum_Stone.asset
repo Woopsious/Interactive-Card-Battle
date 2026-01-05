@@ -16,7 +16,7 @@ MonoBehaviour:
   entityDescription: A Stone Golum
   isPlayer: 0
   enemyType: 8
-  foundInLandTypes: 40
+  foundInLandTypes: 56
   foundWithLandModifiers: 25
   entitySpawnChance: 0.6
   eliteEnemy: 0
@@ -31,6 +31,7 @@ MonoBehaviour:
   maxReplaceableCardsPerTurn: 0
   initialCardDrawAmount: 0
   cards: []
+  collectableCards: []
   moveSetOrder:
   - moveSetMoves:
     - {fileID: 11400000, guid: e24156e1ba6aef14ebf5db60db45e6d9, type: 2}

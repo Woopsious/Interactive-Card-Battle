@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 862c4da70e93762488b165155f5dd2cb, type: 3}
-  m_Name: Golum_Iron
+  m_Name: Lion
   m_EditorClassIdentifier: 
-  entityName: Iron Golum
-  entityDescription: A Iron Golum
+  entityName: Lion
+  entityDescription: An intimidatin Lion
   isPlayer: 0
-  enemyType: 8
-  foundInLandTypes: 56
-  foundWithLandModifiers: 25
-  entitySpawnChance: 0.3
+  enemyType: 2
+  foundInLandTypes: 16
+  foundWithLandModifiers: 0
+  entitySpawnChance: 0.6
   eliteEnemy: 0
-  maxHealth: 100
-  baseBlock: 5
+  maxHealth: 60
+  baseBlock: 0
   minHealPercentage: 0
   playerClass: 0
   chanceOfDoubleDamage: 0
@@ -34,15 +34,11 @@ MonoBehaviour:
   collectableCards: []
   moveSetOrder:
   - moveSetMoves:
-    - {fileID: 11400000, guid: f760c0a8175052a44acaa1d99e14bbc8, type: 2}
+    - {fileID: 11400000, guid: f30d0cec1526eb545956d76bc3beeb40, type: 2}
   - moveSetMoves:
-    - {fileID: 11400000, guid: 07cf4c7add2ef654cb65bf900cfca1c7, type: 2}
+    - {fileID: 11400000, guid: dbbebb49aadea4a4bac33be81c194b1f, type: 2}
   - moveSetMoves:
-    - {fileID: 11400000, guid: e43aa4517ac34664d98875e06c9dbbd3, type: 2}
+    - {fileID: 11400000, guid: 3dc2a30a4ee83f7439447515f0fe7dd1, type: 2}
   - moveSetMoves:
-    - {fileID: 11400000, guid: 4af9060441ce45a488f83f2da246c3f4, type: 2}
-    - {fileID: 11400000, guid: 07cf4c7add2ef654cb65bf900cfca1c7, type: 2}
-  - moveSetMoves:
-    - {fileID: 11400000, guid: 4af9060441ce45a488f83f2da246c3f4, type: 2}
-    - {fileID: 11400000, guid: 07cf4c7add2ef654cb65bf900cfca1c7, type: 2}
+    - {fileID: 11400000, guid: f30d0cec1526eb545956d76bc3beeb40, type: 2}
   hitSfx: {fileID: 8300000, guid: f84e2c4d9f703b247890aec43610627e, type: 3}

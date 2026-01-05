@@ -16,7 +16,7 @@ MonoBehaviour:
   entityDescription: A spider double the size of a human
   isPlayer: 0
   enemyType: 2
-  foundInLandTypes: 12
+  foundInLandTypes: 30
   foundWithLandModifiers: 16
   entitySpawnChance: 0.6
   eliteEnemy: 0
@@ -31,6 +31,7 @@ MonoBehaviour:
   maxReplaceableCardsPerTurn: 0
   initialCardDrawAmount: 0
   cards: []
+  collectableCards: []
   moveSetOrder:
   - moveSetMoves:
     - {fileID: 11400000, guid: 7cc3537799080034488262b487bc169c, type: 2}

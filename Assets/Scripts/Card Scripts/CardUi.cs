@@ -338,7 +338,7 @@ namespace Woopsious
 		{
 			if (!cardHandler.AttackData.isPlayerAttack || cardHandler.DummyCard)
 			{
-				drawCardUiPanel.SetActive(false);
+				dropCardUiPanel.SetActive(false);
 				return;
 			}
 

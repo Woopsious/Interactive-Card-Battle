@@ -161,27 +161,29 @@ namespace Woopsious
 			{
 				string doubleDamageChance = $"{chanceOfDoubleDamage}% for 2x damage";
 
-				classGimmickInfo += $"\"Potent Magic\"\n Has a " +
+				classGimmickInfo += $"{RichTextManager.AddColour("\"Potent Magic\"", RichTextManager.GlobalColours.gold)}\nHas a " +
 					$"{RichTextManager.AddValueTypeColour(doubleDamageChance, DamageData.ValueTypes.damages)} of a card";
 			}
 			else if (playerClass == PlayerClass.Ranger)
 			{
 				string healOnKill = $"{healOnKillPercentage}% of health";
 
-				classGimmickInfo += $"\"Resourceful\"\n Heals for " +
+				classGimmickInfo += $"{RichTextManager.AddColour("\"Resourceful\"", RichTextManager.GlobalColours.gold)}\nHeals for " +
 					$"{RichTextManager.AddValueTypeColour(healOnKill, DamageData.ValueTypes.heals)} on killing an enemy";
 			}
 			else if (playerClass == PlayerClass.Rogue)
 			{
 				string damageReflected = $"{damageReflectedPercentage}% of damage";
 
-				classGimmickInfo += $"\"Trickster\"\n Reflects " +
+				classGimmickInfo += $"{RichTextManager.AddColour("\"Trickster\"", RichTextManager.GlobalColours.gold)}\nReflects " +
 					$"{RichTextManager.AddValueTypeColour(damageReflected, DamageData.ValueTypes.damages)} recieved onto attacker";
 			}
 			else if (playerClass == PlayerClass.Warrior)
 			{
-				classGimmickInfo += $"\"Stalwart\"\n Has a permanent " +
-					$"{RichTextManager.AddValueTypeColour(baseBlock.ToString(), DamageData.ValueTypes.blocks)} block";
+				string permanentBlock = $"{baseBlock} block";
+
+				classGimmickInfo += $"{RichTextManager.AddColour("\"Stalwart\"", RichTextManager.GlobalColours.gold)}\nHas a permanent " +
+					$"{RichTextManager.AddValueTypeColour(permanentBlock, DamageData.ValueTypes.blocks)}";
 			}
 
 			return classGimmickInfo;

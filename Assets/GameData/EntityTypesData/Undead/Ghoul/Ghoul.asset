@@ -18,7 +18,7 @@ MonoBehaviour:
   enemyType: 16
   foundInLandTypes: 0
   foundWithLandModifiers: 5
-  entitySpawnChance: 40
+  entitySpawnChance: 0.4
   eliteEnemy: 0
   maxHealth: 40
   baseBlock: 0
@@ -31,6 +31,7 @@ MonoBehaviour:
   maxReplaceableCardsPerTurn: 0
   initialCardDrawAmount: 0
   cards: []
+  collectableCards: []
   moveSetOrder:
   - moveSetMoves:
     - {fileID: 11400000, guid: d1159cdfe6c71934882811297c7aef29, type: 2}

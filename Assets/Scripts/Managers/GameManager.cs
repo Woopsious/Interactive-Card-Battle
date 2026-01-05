@@ -14,6 +14,33 @@ namespace Woopsious
 		/// <summary>
 		/// TODO:
 		/// 
+		/// WORLD DIFFICULTY AND MAKING IT ENDLESS:
+		/// start world difficulty at 1, then add +1 to it once player defeats the boss at the end then generate new map.
+		/// allow player to chose starting world difficulty (only if said world difficulty was previously beaten)
+		/// 
+		///		WORLD DIFFICULTY MODIFIERS:
+		///		consider world modifiers that will last just for said map that influences both map nodes and card combat
+		///		Map Modifier example: increase chances for desert land types to spawn etc.. or the ruins modifier to be more common etc...
+		///		Card combat modifier example: enemy types do 1.5x more damage, gain perma 10 block, have 2x health etc... healing/damage 2x or /2
+		///		
+		/// 
+		/// POSSIBLE ENEMY SPAWNING OVERHAUL:
+		/// have a % spawn chance for every land type and land modifier in inspector
+		/// each modifier will + - from its total spawn chance for that area negative number = can never spawn despite modifiers EG:
+		///		grasslands = 0.25
+		///		hills = 0.1
+		///		tundra = 0, 0 will allow them to spawn with modifiers
+		///		desert = -0.1, negatives will force them to never spawn here
+		///		
+		///		ruins = 0.2
+		///		town = -0.1
+		///		
+		///		True spawn Rates
+		///		grasslands + ruins and town = 0.35
+		///		hills + ruins and town = 0.2
+		///		tundra + ruins and town = 0.1 so cant spawn
+		///		desert + ruins and town = -0.1 will never spawn spawn
+		/// 
 		/// DRAW/DISCARD/DESTROYED CARD PILES:
 		/// add lists for each type of pile + a collected cards pile not used in combat (all player cards at runtime are here)
 		/// overhaul replace card system to use new piles
@@ -21,17 +48,17 @@ namespace Woopsious
 		/// 
 		///		DRAW PILE:
 		///		new card gets drawn from this draw pile. on new turn + when replacing card
-		///		when draw pile doesnt have enough cards, recall all cards in discard pile back into draw pile (excluding destroy pile)
+		///		when draw pile doesnt have enough cards, recall all cards in used pile back into draw pile (excluding destroy pile)
 		///		
-		///		DISCARD PILE:
-		///		when replacing card, card gets added to discard pile,
+		///		USED PILE:
+		///		when using a card in hand, add it to this pile
+		///		when replacing a card, add it to this pile
 		///		
 		///		DESTROYED PILE:
 		///		for cards that are destroyed for what ever reason
 		///		
 		/// 
 		/// PLAYER CARD SYSTEM:
-		/// add rarities to cards, higher rarity = generally bettor or more unique 
 		/// EG: one time use cards per battle, 'ultimate' moves based on player class etc... 
 		/// card upgrade system, increasing effects of cards in some way, 1 card 
 		/// EG: (base, base+, base++) (dmg:10, dmg:12, dmg:15) (strength stacks: 2,2,3)

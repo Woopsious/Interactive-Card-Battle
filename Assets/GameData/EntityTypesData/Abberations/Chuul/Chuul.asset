@@ -16,7 +16,7 @@ MonoBehaviour:
   entityDescription: 
   isPlayer: 0
   enemyType: 32
-  foundInLandTypes: 32
+  foundInLandTypes: 0
   foundWithLandModifiers: 5
   entitySpawnChance: 0.8
   eliteEnemy: 0
@@ -31,6 +31,7 @@ MonoBehaviour:
   maxReplaceableCardsPerTurn: 0
   initialCardDrawAmount: 0
   cards: []
+  collectableCards: []
   moveSetOrder:
   - moveSetMoves:
     - {fileID: 11400000, guid: 7288a16f3a0d20342b4ba5f858f39edd, type: 2}

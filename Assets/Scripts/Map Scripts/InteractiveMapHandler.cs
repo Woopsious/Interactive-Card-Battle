@@ -26,17 +26,17 @@ namespace Woopsious
 		private int totalMapNodeSpawnChance;
 
 		//map size
-		readonly Vector2 interactiveMapSize = new(1920 * 4, 1080 * 4); //map size consistant between screen sizes
+		private Vector2 interactiveMapSize = new(Screen.width * 3, Screen.height * 3);
 
 		//camera zoom size
 		readonly float cameraBaseOrthoSize = 540;
-		readonly float maxCameraOrthoSize = 540 * 4;
-		readonly float minCameraOrthoSize = 540 / 4;
+		readonly float maxCameraOrthoSize = 540 * 2.5f;
+		readonly float minCameraOrthoSize = 540 / 2.5f;
 		readonly float zoomSpeed = 500;
 
 		//camera move limits
-		readonly Vector2 maxCameraPosition = new(Screen.width * 2.5f, Screen.height * 2.5f);
-		readonly Vector2 minCameraPosition = new(-Screen.width * 2.5f, -Screen.height * 2.5f);
+		private Vector2 maxCameraPosition = new(Screen.width, Screen.height);
+		private Vector2 minCameraPosition = new(-Screen.width, -Screen.height);
 
 		//runtime node table
 		private readonly System.Random systemRandom = new();
@@ -54,6 +54,7 @@ namespace Woopsious
 
 		void Start()
 		{
+			SetMapSizeAndViewConstraints();
 			GenerateMapNodes();
 			DebugLogSpawnedNodesLandTypesCount();
 		}
@@ -70,6 +71,19 @@ namespace Woopsious
 		private void Update()
 		{
 			MapZoom();
+		}
+
+		void SetMapSizeAndViewConstraints()
+		{
+			int viewWidth = (int)(Screen.width * 1.25f);
+			int viewHeight = (int)(Screen.width * 1.25f);
+
+			int widthOffset = Screen.width / 2;
+			int heightOffset = Screen.height / 2;
+
+			interactiveMapSize = new(Screen.width * 3, Screen.height * 3);
+			maxCameraPosition = new(viewWidth + widthOffset, viewHeight + heightOffset);
+			minCameraPosition = new(-viewWidth + widthOffset, -viewHeight + heightOffset);
 		}
 
 		//set up and generate map

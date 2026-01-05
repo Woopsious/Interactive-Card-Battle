@@ -23,7 +23,7 @@ namespace Woopsious
 			{ LandTypes.grassland, "#00FF00" }, //green
 			{ LandTypes.hills, "#00FF00" },		//green
 			{ LandTypes.forest, "#006400" },	//darkGreen
-			{ LandTypes.mountains, "#B0B5B3" },	//softGrey
+			{ LandTypes.mountains, "#0096FF" },	//skyBlue
 			{ LandTypes.desert, "#D9B86F" },	//goldenSand
 			{ LandTypes.tundra, "#CDE2EA" }		//icyBlue
 		};
@@ -53,7 +53,7 @@ namespace Woopsious
 		//global colours
 		public enum GlobalColours
 		{
-			white, black, blue, skyBlue
+			white, black, blue, skyBlue, gold
 		}
 		private static readonly Dictionary<GlobalColours, string> globalColours = new()
 		{
@@ -61,6 +61,7 @@ namespace Woopsious
 			{ GlobalColours.black, "#000000" },
 			{ GlobalColours.blue, "#0000ff" },
 			{ GlobalColours.skyBlue, "#0096FF" },
+			{ GlobalColours.gold, "#D4AF37" },
 		};
 
 		//applying colours to text
@@ -82,7 +83,7 @@ namespace Woopsious
 				{
 					// Capitalize first letter of land type for display
 					string displayName = char.ToUpper(kvp.Key.ToString()[0]) + kvp.Key.ToString()[1..];
-					text += $"<color={kvp.Value}>{displayName}</color>,";
+					text += $"<color={kvp.Value}>{displayName}</color>, ";
 				}
 			}
 
@@ -93,16 +94,19 @@ namespace Woopsious
 		{
 			string text = "";
 
+			if (landModifiers.HasFlag(LandModifiers.none))
+				return text += $"<color={cyan}>None</color>";
+
 			if (landModifiers.HasFlag(LandModifiers.ruins))
-				text += $"<color={cyan}>Ruins</color>,";
+				text += $"<color={cyan}>Ruins</color>, ";
 			if (landModifiers.HasFlag(LandModifiers.town))
-				text += $"<color={cyan}>Town</color>,";
+				text += $"<color={cyan}>Town</color>, ";
 			if (landModifiers.HasFlag(LandModifiers.cursed))
-				text += $"<color={cyan}>Cursed</color>,";
+				text += $"<color={cyan}>Cursed</color>, ";
 			if (landModifiers.HasFlag(LandModifiers.volcanic))
-				text += $"<color={cyan}>Volcanic</color>,";
+				text += $"<color={cyan}>Volcanic</color>, ";
 			if (landModifiers.HasFlag(LandModifiers.caves))
-				text += $"<color={cyan}>Caves</color>,";
+				text += $"<color={cyan}>Caves</color>, ";
 
 			return RemoveLastComma(text);
 		}
@@ -117,7 +121,7 @@ namespace Woopsious
 				{
 					// Capitalize first letter of land type for display
 					string displayName = char.ToUpper(kvp.Key.ToString()[0]) + kvp.Key.ToString()[1..];
-					text += $"<color={kvp.Value}>{displayName}</color>,";
+					text += $"<color={kvp.Value}>{displayName}</color>, ";
 				}
 			}
 
@@ -129,7 +133,7 @@ namespace Woopsious
 			foreach (var kvp in valueTypeColours)
 			{
 				if (valueType.HasFlag(kvp.Key))
-					text = $"<color={kvp.Value}>{text}</color>,";
+					text = $"<color={kvp.Value}>{text}</color>, ";
 			}
 			return RemoveLastComma(text);
 		}
