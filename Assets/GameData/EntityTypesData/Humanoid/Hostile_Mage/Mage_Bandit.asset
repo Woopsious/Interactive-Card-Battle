@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 862c4da70e93762488b165155f5dd2cb, type: 3}
-  m_Name: Sphinx
+  m_Name: Mage_Bandit
   m_EditorClassIdentifier: 
-  entityName: Sphinx
-  entityDescription: 
+  entityName: Bandit Mage
+  entityDescription: A rough looking bandit mage
   isPlayer: 0
-  enemyType: 32
-  foundInLandTypes: 16
-  foundWithLandModifiers: 1
-  entitySpawnChance: 0.25
+  enemyType: 4
+  foundInLandTypes: -1
+  foundWithLandModifiers: 2
+  entitySpawnChance: 0.5
   eliteEnemy: 0
-  maxHealth: 80
+  maxHealth: 25
   baseBlock: 0
-  minHealPercentage: 0
+  minHealPercentage: 0.5
   playerClass: 0
   chanceOfDoubleDamage: 0
   healOnKillPercentage: 0
@@ -34,16 +34,13 @@ MonoBehaviour:
   collectableCards: []
   moveSetOrder:
   - moveSetMoves:
-    - {fileID: 11400000, guid: 8173754231b382d40a0fe7dc5b785bf8, type: 2}
-    - {fileID: 11400000, guid: 54139d10b9a2c4649b3e94469967b0ec, type: 2}
+    - {fileID: 11400000, guid: 7d42c5d4f4d531448b762587388eebf1, type: 2}
   - moveSetMoves:
-    - {fileID: 11400000, guid: 9b6d62420602033459e73ba1a2b621aa, type: 2}
+    - {fileID: 11400000, guid: 7d42c5d4f4d531448b762587388eebf1, type: 2}
   - moveSetMoves:
-    - {fileID: 11400000, guid: da64facaa8b1a9e4e9fba6e8ab1fed45, type: 2}
+    - {fileID: 11400000, guid: 34dcc864a0e9eec41bc60f857140ae01, type: 2}
   - moveSetMoves:
-    - {fileID: 11400000, guid: 54139d10b9a2c4649b3e94469967b0ec, type: 2}
+    - {fileID: 11400000, guid: 7d42c5d4f4d531448b762587388eebf1, type: 2}
   - moveSetMoves:
-    - {fileID: 11400000, guid: 8173754231b382d40a0fe7dc5b785bf8, type: 2}
-  - moveSetMoves:
-    - {fileID: 11400000, guid: 8173754231b382d40a0fe7dc5b785bf8, type: 2}
+    - {fileID: 11400000, guid: 7d42c5d4f4d531448b762587388eebf1, type: 2}
   hitSfx: {fileID: 8300000, guid: f84e2c4d9f703b247890aec43610627e, type: 3}

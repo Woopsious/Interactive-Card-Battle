@@ -14,6 +14,15 @@ namespace Woopsious
 		/// <summary>
 		/// TODO:
 		/// 
+		/// SPECIAL RULE SETS:
+		/// rule sets that make card combat more interesting examples:
+		///		if enemy x attacks enemy y with z buff deal +5 damage,
+		///		if enemy x and enemy y exist at the same time enemy x & y + 10 health etc...
+		///		
+		///		ARCHITECTURE:
+		///			rules as scriptable objects, RuleSetManager that listenes to events for event based rules (turn start etc...) and can be called 
+		///			for reactive rules like dealing extra damage if enemy x has y buff
+		/// 
 		/// WORLD DIFFICULTY AND MAKING IT ENDLESS:
 		/// start world difficulty at 1, then add +1 to it once player defeats the boss at the end then generate new map.
 		/// allow player to chose starting world difficulty (only if said world difficulty was previously beaten)

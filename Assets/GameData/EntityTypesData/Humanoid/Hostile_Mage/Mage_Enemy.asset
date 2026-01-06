@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 862c4da70e93762488b165155f5dd2cb, type: 3}
-  m_Name: Sphinx
+  m_Name: Mage_Enemy
   m_EditorClassIdentifier: 
-  entityName: Sphinx
-  entityDescription: 
+  entityName: Enemy Mage
+  entityDescription: A professional looking mage
   isPlayer: 0
-  enemyType: 32
-  foundInLandTypes: 16
-  foundWithLandModifiers: 1
-  entitySpawnChance: 0.25
+  enemyType: 4
+  foundInLandTypes: -1
+  foundWithLandModifiers: 2
+  entitySpawnChance: 0.3
   eliteEnemy: 0
-  maxHealth: 80
+  maxHealth: 45
   baseBlock: 0
-  minHealPercentage: 0
+  minHealPercentage: 0.5
   playerClass: 0
   chanceOfDoubleDamage: 0
   healOnKillPercentage: 0
@@ -34,16 +34,12 @@ MonoBehaviour:
   collectableCards: []
   moveSetOrder:
   - moveSetMoves:
-    - {fileID: 11400000, guid: 8173754231b382d40a0fe7dc5b785bf8, type: 2}
-    - {fileID: 11400000, guid: 54139d10b9a2c4649b3e94469967b0ec, type: 2}
+    - {fileID: 11400000, guid: ce9f5cb6967a17447b423215d8d48002, type: 2}
   - moveSetMoves:
-    - {fileID: 11400000, guid: 9b6d62420602033459e73ba1a2b621aa, type: 2}
+    - {fileID: 11400000, guid: 55403ffc6ba338b478696663cee0c588, type: 2}
+    - {fileID: 11400000, guid: 6cf597fcd26da4e498ad9b5ec043d8d0, type: 2}
   - moveSetMoves:
-    - {fileID: 11400000, guid: da64facaa8b1a9e4e9fba6e8ab1fed45, type: 2}
+    - {fileID: 11400000, guid: 94d130921ee104d4dbd1d7b9c3dbc9d0, type: 2}
   - moveSetMoves:
-    - {fileID: 11400000, guid: 54139d10b9a2c4649b3e94469967b0ec, type: 2}
-  - moveSetMoves:
-    - {fileID: 11400000, guid: 8173754231b382d40a0fe7dc5b785bf8, type: 2}
-  - moveSetMoves:
-    - {fileID: 11400000, guid: 8173754231b382d40a0fe7dc5b785bf8, type: 2}
+    - {fileID: 11400000, guid: ce9f5cb6967a17447b423215d8d48002, type: 2}
   hitSfx: {fileID: 8300000, guid: f84e2c4d9f703b247890aec43610627e, type: 3}
