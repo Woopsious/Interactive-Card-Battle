@@ -224,7 +224,7 @@ GameObject:
   - component: {fileID: 3799061661245366328}
   - component: {fileID: 7425787299153308397}
   m_Layer: 5
-  m_Name: DiscardText
+  m_Name: RemoveCardText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -277,7 +277,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Discard
+  m_text: Remove
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -361,7 +361,7 @@ GameObject:
   - component: {fileID: 6043037997884743948}
   - component: {fileID: 605374203914694443}
   m_Layer: 5
-  m_Name: MinusDiscard
+  m_Name: RemoveFromList
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -603,7 +603,7 @@ GameObject:
   - component: {fileID: 8145597402005758630}
   - component: {fileID: 1211937234921456598}
   m_Layer: 5
-  m_Name: AddDiscard
+  m_Name: AddToList
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1715,7 +1715,7 @@ GameObject:
   - component: {fileID: 5896572153246728577}
   - component: {fileID: 4338865954540444547}
   m_Layer: 5
-  m_Name: DiscardCountText
+  m_Name: RemoveCountText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1987,7 +1987,7 @@ GameObject:
   - component: {fileID: 6815805886380109551}
   - component: {fileID: 7473408430923345449}
   m_Layer: 5
-  m_Name: DiscardCardUi
+  m_Name: RemoveCardUi
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2334,10 +2334,10 @@ MonoBehaviour:
   cardDescriptiontext: {fileID: 2297873378167699421}
   cardCountForCardDeckUi: {fileID: 4472607584532337097}
   uiType: 0
-  discardCardUiPanel: {fileID: 6978525613229588084}
-  discardCardCountText: {fileID: 4338865954540444547}
-  addCardToDiscardList: {fileID: 1211937234921456598}
-  removeCardFromDiscardList: {fileID: 605374203914694443}
+  removeCardUiPanel: {fileID: 6978525613229588084}
+  removeCardCountText: {fileID: 4338865954540444547}
+  addCardToRemoveList: {fileID: 1211937234921456598}
+  removeCardFromRemoveList: {fileID: 605374203914694443}
   rewardCardUiPanel: {fileID: 5572809595771263355}
   toggleSelectRewardCardButton: {fileID: 4908742130434082497}
   drawCardUiPanel: {fileID: 4159210988551633401}

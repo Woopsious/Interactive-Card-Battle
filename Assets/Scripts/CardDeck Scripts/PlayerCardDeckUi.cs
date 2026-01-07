@@ -31,10 +31,11 @@ namespace Woopsious
 
 		[Header("Card Discard Ui Elements")]
 		public Button startDiscardCardsButton;
-		public Button CompleteDiscardCardsButton;
-		public Button CancelDiscardCardsButton;
+		public Button completeDiscardCardsButton;
+		public Button cancelDiscardCardsButton;
 
-		[Header("Cards To Display deck data")]
+		[Header("Player Cards Ui Info")]
+		public TMP_Text uiTitleText;
 		public List<CardHandler> cardsForDisplay = new();
 		private List<CardUi> cardUis = new();
 
@@ -55,27 +56,42 @@ namespace Woopsious
 			confirmAcceptCardRewardsButton.onClick.AddListener(() => ConfirmAcceptRewards());
 
 			cardDeckToggleButtonText = cardDeckToggleButton.GetComponentInChildren<TMP_Text>();
-			cardDeckToggleButton.onClick.AddListener(() => ShowHideCardDeckUi());
+			cardDeckToggleButton.onClick.AddListener(() => ToggleCardDeckInfoUi());
 			cardDeckToggleButtonText.text = "Show Card Deck";
 
 			startDiscardCardsButton.onClick.AddListener(() => StartCardDiscard());
-			CompleteDiscardCardsButton.onClick.AddListener(() => CompleteCardDiscard());
-			CancelDiscardCardsButton.onClick.AddListener(() => CancelCardDiscard());
+			completeDiscardCardsButton.onClick.AddListener(() => CompleteCardDiscard());
+			cancelDiscardCardsButton.onClick.AddListener(() => CancelCardDiscard());
 		}
 
 		private void OnEnable()
 		{
+			GameManager.OnStartCardCombatUiEvent += SwitchToDrawPileUi;
+			GameManager.OnEndCardCombatUiEvent -= SwitchToCardDeckUi;
 			GameManager.OnEndCardCombatEvent += ShowCardRewardsUi;
 			PlayerCardDeckHandler.OnRewardSelectionChanged += UpdateCardsSelectedForRewardsCount;
 		}
 		private void OnDisable()
 		{
+			GameManager.OnStartCardCombatUiEvent -= SwitchToDrawPileUi;
+			GameManager.OnEndCardCombatUiEvent -= SwitchToCardDeckUi;
 			GameManager.OnEndCardCombatEvent -= ShowCardRewardsUi;
 			PlayerCardDeckHandler.OnRewardSelectionChanged -= UpdateCardsSelectedForRewardsCount;
 		}
 
+		//multiuse card deck ui info
+		private void ToggleCardDeckInfoUi()
+		{
+			if (GameManager.instance.InCardCombat)
+				ShowHideCardDrawPile();
+			else
+				ShowHideCardDeckUi();
+		}
 		private void ShowHideCardDeckUi()
 		{
+			ToggleEnableDiscardCardButtons(true);
+			ToggleDiscardCardButtons(false);
+
 			if (cardDeckUiPanel.activeInHierarchy)
 			{
 				cardDeckToggleButtonText.text = "Show Card Deck";
@@ -85,54 +101,74 @@ namespace Woopsious
 			{
 				cardDeckToggleButtonText.text = "Hide Card Deck";
 				cardDeckUiPanel.SetActive(true);
-				UpdateCardUisInDisplay();
+				ShowCardsInPlayerDeck();
+			}
+		}
+		private void ShowHideCardDrawPile()
+		{
+			ToggleEnableDiscardCardButtons(false);
+
+			if (cardDeckUiPanel.activeInHierarchy)
+			{
+				cardDeckToggleButtonText.text = "Show Card Pile";
+				cardDeckUiPanel.SetActive(false);
+			}
+			else
+			{
+				cardDeckToggleButtonText.text = "Hide Card Pile";
+				cardDeckUiPanel.SetActive(true);
+				ShowCardsInPlayerDrawPile();
 			}
 		}
 
-		//update ui when showing cards
-		private void UpdateCardUisInDisplay()
+		private void SwitchToCardDeckUi()
 		{
-			//create new starting deck info
-			Dictionary<AttackData, int> cardDeckCount = new();
+			uiTitleText.text = "Card Deck";
+			cardDeckToggleButtonText.text = "Show Card Deck";
+		}
+		private void SwitchToDrawPileUi()
+		{
+			uiTitleText.text = "Card Draw Pile";
+			cardDeckToggleButtonText.text = "Show Card Pile";
+		}
 
-			foreach (AttackData cardAttackData in PlayerCardDeckHandler.GetCardDeck())
+		//update ui when showing cards info
+		private void ShowCardsInPlayerDeck()
+		{
+			UpdateCardUisInDisplay(PlayerCardDeckHandler.GetPlayerCardDeck());
+		}
+		private void ShowCardsInPlayerDrawPile()
+		{
+			UpdateCardUisInDisplay(PlayerCardDeckHandler.GetPlayerDrawPile());
+		}
+
+		private void UpdateCardUisInDisplay(IReadOnlyList<AttackData> cards)
+		{
+			Dictionary<AttackData, int> cardDeckInfo = new();
+
+			foreach (AttackData cardAttackData in cards)
 			{
-				if (cardDeckCount.ContainsKey(cardAttackData))
-					cardDeckCount[cardAttackData]++;
-				else
-					cardDeckCount.Add(cardAttackData, 1);
+				if (!cardDeckInfo.TryAdd(cardAttackData, 1))
+					cardDeckInfo[cardAttackData]++;
 			}
 
 			int index = 0;
-			for (int i = 0; i < cardsForDisplay.Count; i++)
+			foreach (KeyValuePair<AttackData, int> entry in cardDeckInfo)
 			{
-				CardHandler card = cardsForDisplay[i];
-
-				if (i < cardDeckCount.Count)
+				if (index >= cardsForDisplay.Count)
 				{
-					card.gameObject.SetActive(true);
-				}
-				else
-				{
-					card.gameObject.SetActive(false);
-				}
-			}
-
-			foreach (KeyValuePair<AttackData, int> entry in cardDeckCount)
-			{
-				if (index > cardsForDisplay.Count)
 					Debug.LogError("cards to set up greater than ui slots avalable to display info");
+					break;
+				}
 
 				cardsForDisplay[index].SetupCard(CardInitType.Informational, null, entry.Key, false, entry.Value);
 				cardsForDisplay[index].gameObject.SetActive(true);
 				index++;
 			}
 
-			// Hide the rest of the UIs if there are more than cardDeckCount
+			// Hide the rest of the card UIs 
 			for (int i = index; i < cardsForDisplay.Count; i++)
-			{
 				cardsForDisplay[i].gameObject.SetActive(false);
-			}
 		}
 
 		//card rewards ui
@@ -226,19 +262,25 @@ namespace Woopsious
 		}
 
 		//discard card ui updates
+		private void ToggleEnableDiscardCardButtons(bool enable)
+		{
+			startDiscardCardsButton.gameObject.SetActive(enable);
+			completeDiscardCardsButton.gameObject.SetActive(enable);
+			cancelDiscardCardsButton.gameObject.SetActive(enable);
+		}
 		private void ToggleDiscardCardButtons(bool showCompleteAndCancelButtons)
 		{
 			if (showCompleteAndCancelButtons)
 			{
 				startDiscardCardsButton.gameObject.SetActive(false);
-				CancelDiscardCardsButton.gameObject.SetActive(true);
-				CompleteDiscardCardsButton.gameObject.SetActive(true);
+				cancelDiscardCardsButton.gameObject.SetActive(true);
+				completeDiscardCardsButton.gameObject.SetActive(true);
 			}
 			else
 			{
 				startDiscardCardsButton.gameObject.SetActive(true);
-				CancelDiscardCardsButton.gameObject.SetActive(false);
-				CompleteDiscardCardsButton.gameObject.SetActive(false);
+				cancelDiscardCardsButton.gameObject.SetActive(false);
+				completeDiscardCardsButton.gameObject.SetActive(false);
 			}
 		}
 		private void StartCardDiscard()
@@ -252,7 +294,7 @@ namespace Woopsious
 			PlayerCardDeckHandler.DiscardCardsFromDeck(true);
 
 			ToggleDiscardCardButtons(false);
-			UpdateCardUisInDisplay();
+			ShowCardsInPlayerDeck();
 		}
 		private void CancelCardDiscard()
 		{
@@ -263,7 +305,7 @@ namespace Woopsious
 		private void ToggleAllDiscardCardsUi(bool active)
 		{
 			foreach (CardUi card in cardUis)
-				card.ToggleDiscardCardUi(active);
+				card.ToggleRemoveCardUi(active);
 		}
 	}
 }

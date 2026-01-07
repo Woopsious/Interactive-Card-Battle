@@ -51,7 +51,7 @@ namespace Woopsious
 
 		[Header("Player Only Stats")]
 		public int baseEnergy;
-		public int maxReplaceableCardsPerTurn;
+		public int maxDiscardableCardsPerTurn;
 		public int initialCardDrawAmount;
 
 		[Header("Player Deck Info")]

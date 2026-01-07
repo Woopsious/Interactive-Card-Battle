@@ -48,7 +48,7 @@ namespace Woopsious
 					EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.damageReflectedPercentage)));
 
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.baseEnergy)));
-				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.maxReplaceableCardsPerTurn)));
+				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.maxDiscardableCardsPerTurn)));
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.initialCardDrawAmount)));
 
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.cards)), true);

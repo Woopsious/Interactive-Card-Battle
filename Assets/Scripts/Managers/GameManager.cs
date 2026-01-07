@@ -121,6 +121,7 @@ namespace Woopsious
 		public static event Action<List<EntityData>> OnDebugStartCardCombatEvent;
 		public static event Action OnStartCardCombatUiEvent;
 		public static event Action<bool> OnEndCardCombatEvent;
+		public static event Action OnEndCardCombatUiEvent;
 		public static event Action OnShowMapEvent;
 
 		private void Awake()
@@ -188,6 +189,7 @@ namespace Woopsious
 		public static void DebugEndCardCombat()
 		{
 			OnEndCardCombatEvent?.Invoke(true); //debug end as win
+			OnEndCardCombatUiEvent?.Invoke();
 			instance.InCardCombat = false;
 		}
 		void EndCardCombat(Entity entity)
@@ -210,6 +212,7 @@ namespace Woopsious
 
 			if (enemiesDead < TurnOrderManager.EnemyEntities().Count) return; //end on win if no enemies left
 			OnEndCardCombatEvent?.Invoke(true); //win
+			OnEndCardCombatUiEvent?.Invoke();
 			instance.InCardCombat = false;
 		}
 		public static void ShowMap()

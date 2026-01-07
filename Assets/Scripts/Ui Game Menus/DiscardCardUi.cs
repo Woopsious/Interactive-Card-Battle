@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace Woopsious
 {
-	public class ReplaceCardUi : MonoBehaviour
+	public class DiscardCardUi : MonoBehaviour
 	{
 		Image imageHighlight;
 		Color _ColourGrey = new(0.7843137f, 0.7843137f, 0.7843137f, 1);
@@ -11,21 +11,21 @@ namespace Woopsious
 		Color _ColourYellow = new(0.7843137f, 0.6862745f, 0, 1);
 
 		bool playerPickedUpCard;
-		int cardsReplacedThisTurn;
+		int cardsDiscardedThisTurn;
 
 		void Awake()
 		{
 			imageHighlight = GetComponent<Image>();
 			TurnOrderManager.OnStartTurn += OnPlayerTurnStart;
 			CardHandler.OnPlayerPickedUpCard += OnCardPicked;
-			CardHandler.OnCardReplace += OnReplaceCard;
+			CardHandler.OnCardDiscarded += OnCardDiscarded;
 			HideUi();
 		}
 		void OnDestroy()
 		{
 			TurnOrderManager.OnStartTurn -= OnPlayerTurnStart;
 			CardHandler.OnPlayerPickedUpCard -= OnCardPicked;
-			CardHandler.OnCardReplace -= OnReplaceCard;
+			CardHandler.OnCardDiscarded -= OnCardDiscarded;
 		}
 
 		void OnTriggerEnter2D(Collider2D other)
@@ -53,7 +53,7 @@ namespace Woopsious
 		void OnPlayerTurnStart(Entity player)
 		{
 			if (!player.EntityData.isPlayer) return;
-			cardsReplacedThisTurn = 0;
+			cardsDiscardedThisTurn = 0;
 		}
 
 		void OnCardPicked(CardHandler card)
@@ -73,14 +73,14 @@ namespace Woopsious
 		}
 		bool CanReplaceCardThisTurn()
 		{
-			if (TurnOrderManager.Player().EntityData.maxReplaceableCardsPerTurn >= cardsReplacedThisTurn)
+			if (TurnOrderManager.Player().EntityData.maxDiscardableCardsPerTurn >= cardsDiscardedThisTurn)
 				return true;
 			else return false;
 		}
 
-		void OnReplaceCard(CardHandler card)
+		void OnCardDiscarded(CardHandler card)
 		{
-			cardsReplacedThisTurn++;
+			cardsDiscardedThisTurn++;
 		}
 
 		void ShowUi()

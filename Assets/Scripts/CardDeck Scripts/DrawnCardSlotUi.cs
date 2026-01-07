@@ -34,7 +34,7 @@ namespace Woopsious
 			PlayerEntity.OnEnergyChange += OnPlayerEnergyChanges;
 			PlayerEntity.OnStatChanges += UpdateCardsOnPlayerStatChanges;
 			CardHandler.OnPlayerCardUsed += OnPlayerCardUsed;
-			CardHandler.OnCardReplace += ReplaceCard;
+			CardHandler.OnCardDiscarded += DiscardAndReplaceCard;
 
 			SetSlotRectTransforms();
 		}
@@ -44,7 +44,7 @@ namespace Woopsious
 			PlayerEntity.OnEnergyChange -= OnPlayerEnergyChanges;
 			PlayerEntity.OnStatChanges -= UpdateCardsOnPlayerStatChanges;
 			CardHandler.OnPlayerCardUsed -= OnPlayerCardUsed;
-			CardHandler.OnCardReplace -= ReplaceCard;
+			CardHandler.OnCardDiscarded -= DiscardAndReplaceCard;
 		}
 
 		void SetSlotRectTransforms()
@@ -74,9 +74,11 @@ namespace Woopsious
 		{
 			if (CardInSlot == null)
 				CardInSlot = SpawnManager.SpawnCard();
+			else if (!CardInSlot.DummyCard)
+				PlayerCardDeckHandler.ReturnUnusedCard(CardInSlot.AttackData);
 
-			CardInSlot.SetupCard(CardInitType.InGame, TurnOrderManager.Player(), PlayerCardDeckHandler.GenerateCardData(), true, 0);
-			ReplaceCard(CardInSlot);
+			CardInSlot.SetupCard(CardInitType.InGame, TurnOrderManager.Player(), PlayerCardDeckHandler.DrawCardFromPile(), true, 0);
+			AddCardToSlot(CardInSlot);
 		}
 		public void DrawDummyCard(StatusEffectsData effectData)
 		{
@@ -84,11 +86,13 @@ namespace Woopsious
 				CardInSlot = SpawnManager.SpawnCard();
 
 			CardInSlot.SetupDummyCard(CardInitType.Dummy, effectData);
-			ReplaceCard(CardInSlot);
+			AddCardToSlot(CardInSlot);
 		}
-		void ReplaceCard(CardHandler cardToReplace)
+		void DiscardAndReplaceCard(CardHandler cardToReplace)
 		{
 			if (CardInSlot != cardToReplace) return;
+
+			CardInSlot.SetupCard(CardInitType.InGame, TurnOrderManager.Player(), PlayerCardDeckHandler.DrawCardFromPile(), true, 0);
 			AddCardToSlot(CardInSlot);
 		}
 

@@ -31,10 +31,10 @@ namespace Woopsious
 		}
 
 		[Header("Discard Card Ui")]
-		public GameObject discardCardUiPanel;
-		public TMP_Text discardCardCountText;
-		public Button addCardToDiscardList;
-		public Button removeCardFromDiscardList;
+		public GameObject removeCardUiPanel;
+		public TMP_Text removeCardCountText;
+		public Button addCardToRemoveList;
+		public Button removeCardFromRemoveList;
 
 		[Header("Reward Card Ui")]
 		public GameObject rewardCardUiPanel;
@@ -51,7 +51,7 @@ namespace Woopsious
 
 		//runtime card Info
 		public int CardDeckCount { get; private set; }
-		public int CardDiscardCount { get; private set; }
+		public int CardRemoveCount { get; private set; }
 		public bool CardSelectedAsReward { get; private set; }
 
 		//runtime
@@ -63,11 +63,11 @@ namespace Woopsious
 			RectTransform = GetComponent<RectTransform>();
 			cardHandler = GetComponent<CardHandler>();
 			cardBorderImage = GetComponent<Image>();
-			addCardToDiscardList.onClick.AddListener(() => AddCardToDiscardList());
-			removeCardFromDiscardList.onClick.AddListener(() => RemoveCardFromDiscardList());
+			addCardToRemoveList.onClick.AddListener(() => AddCardToRemoveList());
+			removeCardFromRemoveList.onClick.AddListener(() => RemoveCardFromRemoveList());
 			toggleSelectRewardCardButton.onClick.AddListener(() => ToggleSelectCardAsReward());
 			rewardCardSelectedText = toggleSelectRewardCardButton.GetComponentInChildren<TMP_Text>();
-			ToggleDiscardCardUi(false);
+			ToggleRemoveCardUi(false);
 			ToggleRewardCardUi(false);
 
 			cardHandler.InitilzeInformationalCardUi += InitilizeInformationalCard;
@@ -272,48 +272,50 @@ namespace Woopsious
 				cardBorderImage.color = _Gray;
 		}
 
-		//discard card funcs
-		public void ToggleDiscardCardUi(bool show)
+		//remove card funcs
+		public void ToggleRemoveCardUi(bool show)
 		{
-			discardCardUiPanel.SetActive(show);
-			discardCardCountText.text = "0";
+			removeCardUiPanel.SetActive(show);
+			removeCardCountText.text = "0";
 		}
-		private void AddCardToDiscardList()
+		private void AddCardToRemoveList()
 		{
-			if (CardDiscardCount >= CardDeckCount)
+			if (CardRemoveCount >= CardDeckCount)
 			{
-				CardDiscardCount = CardDeckCount;
-				Debug.LogError($"card discard count already at {CardDeckCount}");
+				CardRemoveCount = CardDeckCount;
+				Debug.LogError($"card remove count already at {CardDeckCount}");
 			}
 			else
 			{
-				CardDiscardCount++;
-				PlayerCardDeckHandler.QueueCardToBeDiscarded(cardHandler.AttackData);
+				CardRemoveCount++;
+				PlayerCardDeckHandler.QueueCardToBeRemoved(cardHandler.AttackData);
 			}
 
-			discardCardCountText.text = $"{CardDiscardCount}";
+			removeCardCountText.text = $"{CardRemoveCount}";
 		}
-		private void RemoveCardFromDiscardList()
+		private void RemoveCardFromRemoveList()
 		{
-			if (CardDiscardCount <= 0)
+			if (CardRemoveCount <= 0)
 			{
-				CardDiscardCount = 0;
-				Debug.LogError("card discard count already at 0");
+				CardRemoveCount = 0;
+				Debug.LogError("card remove count already at 0");
 			}
 			else
 			{
-				CardDiscardCount--;
-				PlayerCardDeckHandler.UnqueueCardFromBeingDiscarded(cardHandler.AttackData);
+				CardRemoveCount--;
+				PlayerCardDeckHandler.UnqueueCardFromBeingRemoved(cardHandler.AttackData);
 			}
 
-			discardCardCountText.text = $"{CardDiscardCount}";
+			removeCardCountText.text = $"{CardRemoveCount}";
 		}
 
 		//reward card funcs
 		private void ToggleRewardCardUi(bool show)
 		{
 			rewardCardUiPanel.SetActive(show);
-			rewardCardSelectedText.text = $"Unselected";
+			CardSelectedAsReward = false;
+			rewardCardSelectedText.text = $"Select";
+			rewardCardSelectedText.color = new(0f, 0.5882353f, 0f);
 		}
 		private void ToggleSelectCardAsReward()
 		{

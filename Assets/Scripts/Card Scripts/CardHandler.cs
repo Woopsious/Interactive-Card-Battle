@@ -34,7 +34,7 @@ namespace Woopsious
 		public static event Action<CardHandler, bool> OnPlayerCardUsed;
 		public static event Action<CardHandler> OnPlayerPickedUpCard;
 		public static event Action<CardHandler> OnCardCleanUp;
-		public static event Action<CardHandler> OnCardReplace;
+		public static event Action<CardHandler> OnCardDiscarded;
 
 		public event Action<CardInitType, int> InitilzeInformationalCardUi;
 		public event Action<CardInitType, bool, int> InitilzeCardUi;
@@ -61,7 +61,7 @@ namespace Woopsious
 				EntityTriggerEnter(other.GetComponent<Entity>());
 			else if (other.GetComponent<DrawnCardsUi>() != null)
 				DrawnCardsDeckTriggerEnter();
-			else if (other.GetComponent<ReplaceCardUi>() != null)
+			else if (other.GetComponent<DiscardCardUi>() != null)
 				ReplaceCardTriggerEnter();
 		}
 		void OnTriggerExit2D(Collider2D other)
@@ -70,7 +70,7 @@ namespace Woopsious
 				EntityTriggerExit(other.GetComponent<Entity>());
 			else if (other.GetComponent<DrawnCardsUi>() != null)
 				DrawnCardsDeckTriggerExit();
-			else if (other.GetComponent<ReplaceCardUi>() != null)
+			else if (other.GetComponent<DiscardCardUi>() != null)
 				ReplaceCardTriggerExit();
 		}
 
@@ -220,7 +220,7 @@ namespace Woopsious
 		void PlayerDeselectCard()
 		{
 			if (isBeingDiscarded)
-				OnCardReplace?.Invoke(this);
+				OnCardDiscarded?.Invoke(this);
 			else if (touchingPlayerRef != null && !Offensive)
 				UseCardOnTarget(cardOwner);
 			else if (touchingEnemyRef != null && Offensive)

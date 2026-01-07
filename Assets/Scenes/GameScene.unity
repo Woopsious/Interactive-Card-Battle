@@ -969,6 +969,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardTemplate (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1253,6 +1257,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardTemplate (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1365,6 +1373,10 @@ PrefabInstance:
     - target: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
       propertyPath: m_Name
       value: CardTemplate (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1841,6 +1853,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardTemplate
       objectReference: {fileID: 0}
+    - target: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2035,7 +2051,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -25}
-  m_SizeDelta: {x: 250, y: 50}
+  m_SizeDelta: {x: 600, y: 50}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &476582380
 MonoBehaviour:
@@ -2753,6 +2769,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardTemplate (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2789,7 +2809,7 @@ GameObject:
   - component: {fileID: 655835420}
   - component: {fileID: 655835419}
   m_Layer: 5
-  m_Name: CardDeckUi
+  m_Name: CardDeckUiPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3391,6 +3411,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardTemplate (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3503,6 +3527,10 @@ PrefabInstance:
     - target: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
       propertyPath: m_Name
       value: CardTemplate (13)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4046,6 +4074,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardTemplate (14)
       objectReference: {fileID: 0}
+    - target: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4294,6 +4326,10 @@ PrefabInstance:
     - target: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
       propertyPath: m_Name
       value: CardTemplate (16)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4767,6 +4803,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardTemplate (12)
       objectReference: {fileID: 0}
+    - target: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4879,6 +4919,10 @@ PrefabInstance:
     - target: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
       propertyPath: m_Name
       value: CardTemplate (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6322,6 +6366,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardTemplate (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6434,6 +6482,10 @@ PrefabInstance:
     - target: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
       propertyPath: m_Name
       value: CardTemplate (11)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6860,6 +6912,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardTemplate (15)
       objectReference: {fileID: 0}
+    - target: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6911,8 +6967,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerCardDeck: []
+  PlayerDrawPile: []
   CardsToAddToDeck: []
-  CardsToDiscardFromDeck: []
+  CardsToRemoveFromDeck: []
   DummyCardsToForceAdd: []
   cardChoicesCount: 0
   cardSelectionCount: 0
@@ -7236,6 +7293,10 @@ PrefabInstance:
     - target: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
       propertyPath: m_Name
       value: CardTemplate (9)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7728,6 +7789,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardTemplate (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7952,8 +8017,9 @@ MonoBehaviour:
   confirmAcceptCardRewardsButton: {fileID: 497804644}
   cardRewardsSelection: []
   startDiscardCardsButton: {fileID: 1008371990}
-  CompleteDiscardCardsButton: {fileID: 1499672051}
-  CancelDiscardCardsButton: {fileID: 16180177}
+  completeDiscardCardsButton: {fileID: 1499672051}
+  cancelDiscardCardsButton: {fileID: 16180177}
+  uiTitleText: {fileID: 476582380}
   cardsForDisplay:
   - {fileID: 360492485}
   - {fileID: 1317680184}
@@ -8064,6 +8130,10 @@ PrefabInstance:
     - target: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
       propertyPath: m_Name
       value: CardTemplate (10)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8358,6 +8428,10 @@ PrefabInstance:
     - target: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
       propertyPath: m_Name
       value: CardTemplate (17)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8655149506762040854, guid: b9fea54957e86654ebec06b13194bfa7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

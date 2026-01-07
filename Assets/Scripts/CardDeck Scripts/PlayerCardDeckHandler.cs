@@ -13,11 +13,16 @@ namespace Woopsious
 		//player card deck data
 		[SerializeField] private List<AttackData> PlayerCardDeck = new();
 
+
+		[SerializeField] private List<AttackData> PlayerDrawPile = new();
+
+		//[SerializeField] private List<AttackData> PlayerDrawPile = new();
+
 		//queued cards to be added
 		[SerializeField] private List<AttackData> CardsToAddToDeck = new();
 
 		//queued cards to be discarded
-		[SerializeField] private List<AttackData> CardsToDiscardFromDeck = new();
+		[SerializeField] private List<AttackData> CardsToRemoveFromDeck = new();
 
 		//dummy cards list
 		[SerializeField] private List<StatusEffectsData> DummyCardsToForceAdd = new();
@@ -42,6 +47,15 @@ namespace Woopsious
 			InitilizeStartingCardDeck();
 		}
 
+		public static IReadOnlyList<AttackData> GetPlayerCardDeck()
+		{
+			return Instance.PlayerCardDeck;
+		}
+		public static IReadOnlyList<AttackData> GetPlayerDrawPile()
+		{
+			return Instance.PlayerDrawPile;
+		}
+
 		//card deck initial creation
 		private void InitilizeStartingCardDeck()
 		{
@@ -49,22 +63,50 @@ namespace Woopsious
 				PlayerCardDeck.Add(attackData);
 
 			UpdateCollectableCardDropChances();
-			UpdateCollectableCardDrawChances();
 		}
 		private void UpdateCollectableCardDropChances()
 		{
 			foreach (AttackData card in GameManager.PlayerClass.collectableCards)
 				TotalCardDropChance += card.CardDropChance();
 		}
-		private void UpdateCollectableCardDrawChances()
+
+		//card draw pile
+		public static void UpdatePlayerCardDrawPile(bool reset)
 		{
-			foreach (AttackData card in PlayerCardDeck)
-				TotalCardDrawChance += card.CardDrawChance();
+			if (reset)
+				Instance.PlayerDrawPile.Clear();
+
+			if (Instance.PlayerDrawPile.Count <= 0)
+			{
+				foreach (AttackData cardData in Instance.PlayerCardDeck)
+					Instance.PlayerDrawPile.Add(cardData);
+			}
+		}
+		public static AttackData DrawCardFromPile()
+		{
+			UpdatePlayerCardDrawPile(false);
+			AttackData drawnCardData = SpawnManager.GetWeightedPlayerCardDraw(Instance.PlayerDrawPile, Instance.TotalCardDrawChance);
+			Instance.PlayerDrawPile.Remove(drawnCardData);
+			UpdateCardDrawPileChances();
+			return drawnCardData;
+		}
+		public static void ReturnUnusedCard(AttackData cardData)
+		{
+			Instance.PlayerDrawPile.Add(cardData);
+			UpdateCardDrawPileChances();
+		}
+		private static void UpdateCardDrawPileChances()
+		{
+			Instance.TotalCardDrawChance = 0;
+
+			foreach (AttackData card in Instance.PlayerDrawPile)
+				Instance.TotalCardDrawChance += card.CardDrawChance();
 		}
 
-		public static IReadOnlyList<AttackData> GetCardDeck()
+		//card reward drawing
+		public static AttackData GenerateCardRewardData()
 		{
-			return Instance.PlayerCardDeck;
+			return SpawnManager.GetWeightedPlayerCardReward(Instance.TotalCardDropChance);
 		}
 
 		//ADDING CARDS TO DECK
@@ -101,9 +143,9 @@ namespace Woopsious
 		{
 			if (completeDiscard) //add before clearing 
 			{
-				for (int i = Instance.CardsToDiscardFromDeck.Count - 1; i >= 0; i--)
+				for (int i = Instance.CardsToRemoveFromDeck.Count - 1; i >= 0; i--)
 				{
-					AttackData cardData = Instance.CardsToDiscardFromDeck[i];
+					AttackData cardData = Instance.CardsToRemoveFromDeck[i];
 
 					if (Instance.PlayerCardDeck.Contains(cardData))
 						Instance.PlayerCardDeck.Remove(cardData);
@@ -112,18 +154,18 @@ namespace Woopsious
 				}
 			}
 
-			Instance.CardsToDiscardFromDeck.Clear();
+			Instance.CardsToRemoveFromDeck.Clear();
 		}
-		public static void QueueCardToBeDiscarded(AttackData cardData)
+		public static void QueueCardToBeRemoved(AttackData cardData)
 		{
-			Instance.CardsToDiscardFromDeck.Add(cardData);
+			Instance.CardsToRemoveFromDeck.Add(cardData);
 		}
-		public static void UnqueueCardFromBeingDiscarded(AttackData cardData)
+		public static void UnqueueCardFromBeingRemoved(AttackData cardData)
 		{
-			if (Instance.CardsToDiscardFromDeck.Contains(cardData))
-				Instance.CardsToDiscardFromDeck.Remove(cardData);
+			if (Instance.CardsToRemoveFromDeck.Contains(cardData))
+				Instance.CardsToRemoveFromDeck.Remove(cardData);
 			else
-				Debug.LogError("Tried removing card that doesnt exist from queue of cards to be discarded");
+				Debug.LogError("Tried removing card that doesnt exist from queue of cards to be removed from player deck");
 		}
 
 		//DUMMY CARDS INJECTION
@@ -143,16 +185,6 @@ namespace Woopsious
 		public static int DummyCardCount()
 		{
 			return Instance.DummyCardsToForceAdd.Count;
-		}
-
-		//CARD GENERATION
-		public static AttackData GenerateCardData()
-		{
-			return SpawnManager.GetWeightedPlayerCardDraw(Instance.PlayerCardDeck, Instance.TotalCardDrawChance);
-		}
-		public static AttackData GenerateCardRewardData()
-		{
-			return SpawnManager.GetWeightedPlayerCardReward(Instance.TotalCardDropChance);
 		}
 
 		//CHECKS

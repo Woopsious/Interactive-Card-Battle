@@ -76,6 +76,7 @@ namespace Woopsious
 		}
 		void StartInitialTurn(Entity entity)
 		{
+			PlayerCardDeckHandler.UpdatePlayerCardDrawPile(true);
 			currentEntityTurn = entity;
 			entityToStartNewRoundOn = entity;
 			currentRound = 1;
