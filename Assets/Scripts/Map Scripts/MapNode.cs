@@ -226,7 +226,7 @@ namespace Woopsious
 		//start encounter
 		public void BeginEncounter()
 		{
-			GameManager.BeginCardCombat(this);
+			GameManager.EnterCardCombat(this);
 			UpdateNodeState(NodeState.currentlyAt);
 
 			foreach (MapNode previousNode in previousLinkedNodes) //lock prev nodes

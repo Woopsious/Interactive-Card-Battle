@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Woopsious
@@ -30,27 +29,37 @@ namespace Woopsious
 			Instance = this;
 		}
 
-		void OnEnable()
+		private void OnEnable()
 		{
-			GameManager.OnShowMapEvent += ResetListsAndEntities;
-			GameManager.OnStartCardCombatEvent += CreateTurnOrder;
-			GameManager.OnDebugStartCardCombatEvent += DebugCreateTurnOrder;
+			GameManager.OnGameStateChange += OnGameStateChanges;
+			GameManager.OnDebugTestCardCombatEvent += DebugCreateTurnOrder;
 			SpawnManager.OnPlayerSpawned += AddPlayerOnSpawnComplete;
 			SpawnManager.OnEnemySpawned += AddEnemyOnSpawnComplete;
-			Entity.OnEntityDeath += RemoveEntityFromTurnOrder;
+			Entity.OnEntityDeath += HandleEntityDeaths;
 		}
-		void OnDisable()
+		private void OnDisable()
 		{
-			GameManager.OnShowMapEvent -= ResetListsAndEntities;
-			GameManager.OnStartCardCombatEvent -= CreateTurnOrder;
-			GameManager.OnDebugStartCardCombatEvent += DebugCreateTurnOrder;
+			GameManager.OnGameStateChange -= OnGameStateChanges;
+			GameManager.OnDebugTestCardCombatEvent += DebugCreateTurnOrder;
 			SpawnManager.OnPlayerSpawned -= AddPlayerOnSpawnComplete;
 			SpawnManager.OnEnemySpawned -= AddEnemyOnSpawnComplete;
-			Entity.OnEntityDeath -= RemoveEntityFromTurnOrder;
+			Entity.OnEntityDeath -= HandleEntityDeaths;
+		}
+
+		private void OnGameStateChanges(GameManager.GameState gameState)
+		{
+			if (GameManager.GameState.MapView == gameState)
+			{
+				ResetListsAndEntities();
+			}
+			else if (GameManager.GameState.CardCombat == gameState)
+			{
+				CreateTurnOrder(GameManager.CurrentlyVisitedMapNode);
+			}
 		}
 
 		//create and start initial turn order
-		async void CreateTurnOrder(MapNode mapNode)
+		private async void CreateTurnOrder(MapNode mapNode)
 		{
 			await SpawnManager.SpawnEntitiesForCardBattle(mapNode);
 
@@ -62,7 +71,7 @@ namespace Woopsious
 
 			StartInitialTurn(turnOrder[0]);
 		}
-		async void DebugCreateTurnOrder(List<EntityData> entitiesToSpawn)
+		private async void DebugCreateTurnOrder(List<EntityData> entitiesToSpawn)
 		{
 			await SpawnManager.DebugSpawnEntities(entitiesToSpawn);
 
@@ -74,7 +83,7 @@ namespace Woopsious
 
 			StartInitialTurn(turnOrder[0]);
 		}
-		void StartInitialTurn(Entity entity)
+		private void StartInitialTurn(Entity entity)
 		{
 			PlayerCardDeckHandler.UpdatePlayerCardDrawPile(true);
 			currentEntityTurn = entity;
@@ -84,7 +93,7 @@ namespace Woopsious
 			OnNewRoundStartEvent?.Invoke(currentRound);
 			OnStartTurn?.Invoke(entity);
 		}
-		void ResetListsAndEntities()
+		private void ResetListsAndEntities()
 		{
 			if (player != null)
 				Destroy(player.gameObject);
@@ -109,17 +118,17 @@ namespace Woopsious
 		}
 
 		//set refs for turn order creation
-		void AddPlayerOnSpawnComplete(PlayerEntity player)
+		private void AddPlayerOnSpawnComplete(PlayerEntity player)
 		{
 			this.player = player;
 		}
-		void AddEnemyOnSpawnComplete(Entity entity)
+		private void AddEnemyOnSpawnComplete(Entity entity)
 		{
 			enemyEntities.Add(entity);
 		}
 
 		//start new turns/rounds
-		void StartNewTurn(Entity entity)
+		private void StartNewTurn(Entity entity)
 		{
 			RemoveEntityFromTurnOrder(entity); //remove from front of queue then add at back
 			AddEntityToTurnOrder(entity);
@@ -129,7 +138,7 @@ namespace Woopsious
 			ShouldStartNewRound();
 			OnStartTurn?.Invoke(currentEntityTurn);
 		}
-		void ShouldStartNewRound()
+		private void ShouldStartNewRound()
 		{
 			if (currentEntityTurn == entityToStartNewRoundOn)
 			{
@@ -143,6 +152,31 @@ namespace Woopsious
 		{
 			OnEndTurn?.Invoke(entity);
 			Instance.StartNewTurn(entity);
+		}
+
+		//track entities alive
+		private void HandleEntityDeaths(Entity entity)
+		{
+			if (GameManager.CurrentGameState != GameManager.GameState.CardCombat) return;
+
+			RemoveEntityFromTurnOrder(entity);
+
+			if (Player() == entity) //return early on player death
+			{
+				GameManager.EnterCardCombatLoss();
+				return;
+			}
+
+			int enemiesDead = 0;
+
+			foreach (Entity enemy in EnemyEntities())
+			{
+				if (enemy.health <= 0)
+					enemiesDead++;
+			}
+
+			if (enemiesDead < EnemyEntities().Count) return; //win with all enemies dead
+			GameManager.EnterCardCombatWin();
 		}
 
 		//get instanced refs

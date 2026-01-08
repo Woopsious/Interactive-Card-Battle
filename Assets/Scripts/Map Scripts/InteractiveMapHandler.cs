@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -19,7 +20,7 @@ namespace Woopsious
 
 		[Header("Map Node Prefabs")]
 		public GameObject MapNodePrefab;
-		public GameObject MapNodeLinks;
+		public GameObject MapNodeLinkPrefab;
 		private float heightOfNodes;
 		private float widthOfNodes;
 
@@ -38,9 +39,11 @@ namespace Woopsious
 		private Vector2 maxCameraPosition = new(Screen.width, Screen.height);
 		private Vector2 minCameraPosition = new(-Screen.width, -Screen.height);
 
-		//runtime node table
+		[Header("Runtime Data")]
 		private readonly System.Random systemRandom = new();
 		public Dictionary<int, Dictionary<int, MapNode>> MapNodeTable { get; private set; } = new();
+		public List<GameObject> MapNodes = new();
+		public List<GameObject> MapNodeLinks = new();
 
 		void Awake()
 		{
@@ -52,19 +55,14 @@ namespace Woopsious
 				totalMapNodeSpawnChance += (int)node.nodeSpawnChance;
 		}
 
-		void Start()
-		{
-			SetMapSizeAndViewConstraints();
-			GenerateMapNodes();
-			DebugLogSpawnedNodesLandTypesCount();
-		}
-
 		void OnEnable()
 		{
+			GameManager.OnGenerateNewMap += GenerateNewMap;
 			mapCamera.gameObject.SetActive(true);
 		}
 		void OnDisable()
 		{
+			GameManager.OnGenerateNewMap -= GenerateNewMap;
 			mapCamera.gameObject.SetActive(false);
 		}
 
@@ -73,7 +71,48 @@ namespace Woopsious
 			MapZoom();
 		}
 
-		void SetMapSizeAndViewConstraints()
+		private void GenerateNewMap()
+		{
+			CleanUpOldMap();
+			SetMapSizeAndViewConstraints();
+
+			/*
+			List<int> mapNodesToSpawnPerColumn = new()
+			{
+				1, 2, 2, 3, 6, 6, 5, 3, 3, 2
+			};
+			*/
+
+			List<int> mapNodesToSpawnPerColumn = new();
+
+			bool start = true;
+			int number = 0;
+			for (int i = 0; i < 10; i++)
+			{
+				if (start)
+				{
+					number = RandomizeRowsInEachColumn(i, 1);
+					start = false;
+				}
+				else
+					number = RandomizeRowsInEachColumn(i, number);
+
+				mapNodesToSpawnPerColumn.Add(number);
+			}
+
+			GenerateMapNodes(mapNodesToSpawnPerColumn);
+		}
+		private void CleanUpOldMap()
+		{
+			MapNodeTable.Clear();
+
+			for (int i = MapNodes.Count - 1; i > 0; i--)
+				Destroy(MapNodes[i]);
+
+			for (int i = MapNodeLinks.Count - 1; i > 0; i--)
+				Destroy(MapNodeLinks[i]);
+		}
+		private void SetMapSizeAndViewConstraints()
 		{
 			int viewWidth = (int)(Screen.width * 1.25f);
 			int viewHeight = (int)(Screen.width * 1.25f);
@@ -86,14 +125,47 @@ namespace Woopsious
 			minCameraPosition = new(-viewWidth + widthOffset, -viewHeight + heightOffset);
 		}
 
-		//set up and generate map
-		void GenerateMapNodes()
+		//randomize map layout
+		private int RandomizeRowsInEachColumn(int column, int previousColumnRowCount)
 		{
-			List<int> mapNodesToSpawnPerColumn = new()
-			{
-				1, 2, 2, 3, 6, 6, 5, 3, 3, 2
-			};
+			int minRowCount = previousColumnRowCount / 2;
+			if (minRowCount % 2 != 0 && minRowCount != 1)
+				minRowCount++;
 
+			int maxRowCount = previousColumnRowCount * 2;
+			if (maxRowCount > 10)
+				maxRowCount = 10;
+
+			List<RowCountPossibilities> rowCountChances = MapNodeTableChances.RowCountPossibilities[column];
+			List<RowCountPossibilities> validRowCounts = new();
+			float totalChance = 0;
+
+			foreach (RowCountPossibilities rowCountPossibilities in rowCountChances)
+			{
+				if (rowCountPossibilities.RowCount > minRowCount && rowCountPossibilities.RowCount <= maxRowCount)
+				{
+					validRowCounts.Add(rowCountPossibilities);
+					totalChance += rowCountPossibilities.Chance;
+				}
+			}
+
+			float roll = (float)systemRandom.NextDouble() * totalChance;
+			float cumulativeChance = 0;
+
+			for (int i = 0; i < validRowCounts.Count; i++)
+			{
+				cumulativeChance += validRowCounts[i].Chance;
+
+				if (roll <= cumulativeChance)
+					return validRowCounts[i].RowCount;
+			}
+
+			return validRowCounts[^1].RowCount;
+		}
+
+		//create map nodes
+		private void GenerateMapNodes(List<int> mapNodesToSpawnPerColumn)
+		{
 			mapCamera.gameObject.SetActive(true);
 			mapCamera.orthographicSize = cameraBaseOrthoSize;
 			interactiveMapRectTransform.sizeDelta = interactiveMapSize;
@@ -110,8 +182,10 @@ namespace Woopsious
 				if (columnIndex == 0) continue;
 				LinkPreviousAndCurrentNodes(MapNodeTable[columnIndex - 1], MapNodeTable[columnIndex]);
 			}
+
+			DebugLogSpawnedNodesLandTypesCount();
 		}
-		Dictionary<int, MapNode> GenerateMapColumn(int columnIndex, int nodesToSpawn)
+		private Dictionary<int, MapNode> GenerateMapColumn(int columnIndex, int nodesToSpawn)
 		{
 			Dictionary<int, MapNode> mapColumnNodes = new();
 
@@ -120,7 +194,7 @@ namespace Woopsious
 
 			return mapColumnNodes;
 		}
-		MapNode GenerateMapNode(int columnIndex)
+		private MapNode GenerateMapNode(int columnIndex)
 		{
 			MapNode mapNode = Instantiate(MapNodePrefab, gameObject.transform).GetComponent<MapNode>();
 
@@ -131,9 +205,10 @@ namespace Woopsious
 			else //standard nodes
 				mapNode.Initilize(columnIndex, GetWeightedMapNode(), false, false);
 
+			MapNodes.Add(mapNode.gameObject);
 			return mapNode;
 		}
-		MapNodeData GetWeightedMapNode()
+		private MapNodeData GetWeightedMapNode()
 		{
 			float roll = (float)(systemRandom.NextDouble() * totalMapNodeSpawnChance);
 			float cumulativeChance = 0;
@@ -151,7 +226,7 @@ namespace Woopsious
 		}
 
 		//debug
-		void DebugLogSpawnedNodesLandTypesCount()
+		private void DebugLogSpawnedNodesLandTypesCount()
 		{
 			if (!logLandTypeSpawns) return;
 			Dictionary<MapNodeData.LandTypes, int> landTypeCount = new();
@@ -176,8 +251,8 @@ namespace Woopsious
 				Debug.LogError($"Land Type: {kvp.Key}, Count: {kvp.Value}");
 		}
 
-		//link nodes + handle row changes
-		void LinkPreviousAndCurrentNodes(Dictionary<int, MapNode> previousColumn, Dictionary<int, MapNode> currentColumn)
+		//create map node links
+		private void LinkPreviousAndCurrentNodes(Dictionary<int, MapNode> previousColumn, Dictionary<int, MapNode> currentColumn)
 		{
 			int rowDifference = previousColumn.Count - currentColumn.Count;
 
@@ -188,7 +263,7 @@ namespace Woopsious
 			else
 				HandleSameRows(previousColumn, currentColumn);
 		}
-		void HandleExtraRows(Dictionary<int, MapNode> previousColumn, Dictionary<int, MapNode> currentColumn)
+		private void HandleExtraRows(Dictionary<int, MapNode> previousColumn, Dictionary<int, MapNode> currentColumn)
 		{
 			int nodeOffset = 0;
 			int extraNodesToLink = currentColumn.Count - previousColumn.Count;
@@ -219,7 +294,7 @@ namespace Woopsious
 				nodeOffset++;
 			}
 		}
-		void HandleLessRows(Dictionary<int, MapNode> previousColumn, Dictionary<int, MapNode> currentColumn)
+		private void HandleLessRows(Dictionary<int, MapNode> previousColumn, Dictionary<int, MapNode> currentColumn)
 		{
 			int nodeOffset = 0;
 			int nodesToDoubleLink = previousColumn.Count - currentColumn.Count;
@@ -250,7 +325,7 @@ namespace Woopsious
 				nodeOffset++;
 			}
 		}
-		void HandleSameRows(Dictionary<int, MapNode> previousColumn, Dictionary<int, MapNode> currentColumn)
+		private void HandleSameRows(Dictionary<int, MapNode> previousColumn, Dictionary<int, MapNode> currentColumn)
 		{
 			for (int columnRow = 0; columnRow < currentColumn.Count; columnRow++)
 			{
@@ -258,9 +333,7 @@ namespace Woopsious
 				SpawnNodeLinkObject(previousColumn[columnRow], currentColumn[columnRow]);
 			}
 		}
-
-		//spawn visual links in
-		void SpawnNodeLinkObject(MapNode prevMapNode, MapNode mapNode)
+		private void SpawnNodeLinkObject(MapNode prevMapNode, MapNode mapNode)
 		{
 			Vector2 posA = prevMapNode.GetComponent<RectTransform>().anchoredPosition;
 			Vector2 posB = mapNode.GetComponent<RectTransform>().anchoredPosition;
@@ -269,7 +342,8 @@ namespace Woopsious
 			float distance = direction.magnitude;
 			float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-			GameObject go = Instantiate(MapNodeLinks, nodeLinksRectTransform);
+			GameObject go = Instantiate(MapNodeLinkPrefab, nodeLinksRectTransform);
+			MapNodeLinks.Add(go);
 			RectTransform linkRect = go.GetComponent<RectTransform>();
 
 			linkRect.sizeDelta = new Vector2(distance, linkRect.sizeDelta.y);
@@ -278,7 +352,7 @@ namespace Woopsious
 		}
 
 		//adjust map node positions
-		void SetNodeColumnPositions(Dictionary<int, MapNode> nodesInColumn, int columnsCount, int columnIndex)
+		private void SetNodeColumnPositions(Dictionary<int, MapNode> nodesInColumn, int columnsCount, int columnIndex)
 		{
 			float spacingX = (interactiveMapSize.x - columnsCount * widthOfNodes) / (columnsCount + 1);
 			float spacingY = (interactiveMapSize.y - nodesInColumn.Count * heightOfNodes) / (nodesInColumn.Count + 1);
@@ -286,7 +360,7 @@ namespace Woopsious
 			for (int rowIndex = 0; rowIndex < nodesInColumn.Count; rowIndex++)
 				SetMapNodePosition(nodesInColumn[rowIndex].GetComponent<RectTransform>(), spacingX, spacingY, columnIndex + 1, rowIndex + 1);
 		}
-		void SetMapNodePosition(RectTransform rectTransform, float spacingX, float spacingY, int columnIndex, int rowIndex)
+		private void SetMapNodePosition(RectTransform rectTransform, float spacingX, float spacingY, int columnIndex, int rowIndex)
 		{
 			float offsetX = widthOfNodes * (columnIndex - 1) - interactiveMapSize.x / 2;
 			float offsetY = heightOfNodes * (rowIndex - 1) - interactiveMapSize.y / 2;
@@ -294,7 +368,7 @@ namespace Woopsious
 		}
 
 		//map drag and zoom
-		void MapZoom()
+		private void MapZoom()
 		{
 			mapCamera.orthographicSize -= Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
 			mapCamera.orthographicSize = Mathf.Clamp(mapCamera.orthographicSize, minCameraOrthoSize, maxCameraOrthoSize);
@@ -303,7 +377,7 @@ namespace Woopsious
 		{
 			MapDrag(eventData);
 		}
-		void MapDrag(PointerEventData eventData)
+		private void MapDrag(PointerEventData eventData)
 		{
 			Vector3 movement = new Vector3(eventData.delta.x, eventData.delta.y, 0) * 2;
 			Vector3 cameraMovePos = mapCamera.transform.position - movement;

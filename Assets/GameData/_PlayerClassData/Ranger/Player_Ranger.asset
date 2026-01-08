@@ -28,7 +28,7 @@ MonoBehaviour:
   healOnKillPercentage: 15
   damageReflectedPercentage: 0
   baseEnergy: 5
-  maxReplaceableCardsPerTurn: 2
+  maxDiscardableCardsPerTurn: 2
   initialCardDrawAmount: 5
   cards:
   - {fileID: 11400000, guid: fb9f5b6114183d143a2089d588318532, type: 2}

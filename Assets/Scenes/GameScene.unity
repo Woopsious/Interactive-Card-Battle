@@ -5634,7 +5634,12 @@ MonoBehaviour:
   nodeLinksRectTransform: {fileID: 217868029}
   logLandTypeSpawns: 0
   MapNodePrefab: {fileID: 6702147471770271347, guid: 2d74d413fc0140b4aa70249b5a68c327, type: 3}
-  MapNodeLinks: {fileID: 53403288536955660, guid: e106b66eba149354ab5e9128f6e72097, type: 3}
+  MapNodeLinkPrefab: {fileID: 53403288536955660, guid: e106b66eba149354ab5e9128f6e72097, type: 3}
+  MapNodes: []
+  MapNodeLinks:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!224 &1165077261
 RectTransform:
   m_ObjectHideFlags: 0

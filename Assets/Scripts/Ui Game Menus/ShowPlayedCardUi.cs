@@ -12,34 +12,42 @@ namespace Woopsious
 		public GameObject PlayedCardUi;
 		public CardHandler card;
 
-		void Awake()
+		private void Awake()
 		{
 			instance = this;
 			PlayedCardUi.SetActive(false);
 		}
 
-		void OnEnable()
+		private void OnEnable()
 		{
-			GameManager.OnStartCardCombatUiEvent += HidePlayedCard;
+			GameManager.OnGameStateChange += OnGameStateChange;
 			EntityMoves.OnEnemyMoveFound += ShowPlayedCard;
 			EntityMoves.OnEnemyAttack += HidePlayedCard;
 			EntityMoves.OnEnemyAttackCancel += HidePlayedCard;
 		}
 
-		void OnDestroy()
+		private void OnDestroy()
 		{
-			GameManager.OnStartCardCombatUiEvent -= HidePlayedCard;
+			GameManager.OnGameStateChange -= OnGameStateChange;
 			EntityMoves.OnEnemyMoveFound -= ShowPlayedCard;
 			EntityMoves.OnEnemyAttack -= HidePlayedCard;
 			EntityMoves.OnEnemyAttackCancel -= HidePlayedCard;
 		}
 
-		void ShowPlayedCard(Entity entity, AttackData data)
+		private void OnGameStateChange(GameManager.GameState gameState)
+		{
+			if (GameManager.GameState.CardCombat == gameState)
+			{
+				HidePlayedCard();
+			}
+		}
+
+		private void ShowPlayedCard(Entity entity, AttackData data)
 		{
 			card.SetupCard(CardInitType.Informational, entity, data, false, 0);
 			PlayedCardUi.SetActive(true);
 		}
-		void HidePlayedCard()
+		private void HidePlayedCard()
 		{
 			PlayedCardUi.SetActive(false);
 		}

@@ -28,9 +28,6 @@ namespace Woopsious
 			{ LandTypes.tundra, "#CDE2EA" }		//icyBlue
 		};
 
-		//land modifier colours (only 1 colour used)
-		private const string cyan = "#00FFFF";
-
 		//enemy type colours
 		private static readonly Dictionary<EnemyTypes, string> enemyTypeColours = new()
 		{
@@ -53,7 +50,7 @@ namespace Woopsious
 		//global colours
 		public enum GlobalColours
 		{
-			white, black, blue, skyBlue, gold
+			white, black, blue, skyBlue, gold, cyan
 		}
 		private static readonly Dictionary<GlobalColours, string> globalColours = new()
 		{
@@ -62,6 +59,7 @@ namespace Woopsious
 			{ GlobalColours.blue, "#0000ff" },
 			{ GlobalColours.skyBlue, "#0096FF" },
 			{ GlobalColours.gold, "#D4AF37" },
+			{ GlobalColours.cyan, "#00FFFF"},
 		};
 
 		//applying colours to text
@@ -94,19 +92,19 @@ namespace Woopsious
 		{
 			string text = "";
 
-			if (landModifiers.HasFlag(LandModifiers.none))
-				return text += $"<color={cyan}>None</color>";
+			if (landModifiers == LandModifiers.none)
+				return text += $"<color={GlobalColours.black}>None</color>";
 
 			if (landModifiers.HasFlag(LandModifiers.ruins))
-				text += $"<color={cyan}>Ruins</color>, ";
+				text += $"<color={GlobalColours.cyan}>Ruins</color>, ";
 			if (landModifiers.HasFlag(LandModifiers.town))
-				text += $"<color={cyan}>Town</color>, ";
+				text += $"<color={GlobalColours.cyan}>Town</color>, ";
 			if (landModifiers.HasFlag(LandModifiers.cursed))
-				text += $"<color={cyan}>Cursed</color>, ";
+				text += $"<color={GlobalColours.cyan}>Cursed</color>, ";
 			if (landModifiers.HasFlag(LandModifiers.volcanic))
-				text += $"<color={cyan}>Volcanic</color>, ";
+				text += $"<color={GlobalColours.cyan}>Volcanic</color>, ";
 			if (landModifiers.HasFlag(LandModifiers.caves))
-				text += $"<color={cyan}>Caves</color>, ";
+				text += $"<color={GlobalColours.cyan}>Caves</color>, ";
 
 			return RemoveLastComma(text);
 		}

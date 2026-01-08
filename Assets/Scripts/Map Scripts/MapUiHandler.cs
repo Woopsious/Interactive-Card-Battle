@@ -6,24 +6,20 @@ public class MapUiHandler : MonoBehaviour
 	[Header("Interactive Map Ui Panel")]
 	public GameObject mapUi;
 
-	void OnEnable()
+	private void OnEnable()
 	{
-		GameManager.OnShowMapEvent += ShowMap;
-		GameManager.OnStartCardCombatUiEvent += HideMap;
+		GameManager.OnGameStateChange += ShowHideMapUi;
 	}
-	void OnDisable()
+	private void OnDisable()
 	{
-		GameManager.OnShowMapEvent -= ShowMap;
-		GameManager.OnStartCardCombatUiEvent -= HideMap;
+		GameManager.OnGameStateChange -= ShowHideMapUi;
 	}
 
-	void ShowMap()
+	private void ShowHideMapUi(GameManager.GameState gameState)
 	{
-		mapUi.SetActive(true);
-	}
-
-	void HideMap()
-	{
-		mapUi.SetActive(false);
+		if (GameManager.GameState.MapView == gameState)
+			mapUi.SetActive(true);
+		else
+			mapUi.SetActive(false);
 	}
 }

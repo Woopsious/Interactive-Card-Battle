@@ -114,15 +114,18 @@ namespace Woopsious
 		//current map node
 		public static MapNode CurrentlyVisitedMapNode { get; private set; }
 		//game state
-		public bool InCardCombat { get; private set; }
+		public static GameState CurrentGameState;
+		public enum GameState
+		{
+			MainMenu, MapView, CardCombat, CardCombatWin, CardCombatLoss
+		}
 
-		//game events
-		public static event Action<MapNode> OnStartCardCombatEvent;
-		public static event Action<List<EntityData>> OnDebugStartCardCombatEvent;
-		public static event Action OnStartCardCombatUiEvent;
-		public static event Action<bool> OnEndCardCombatEvent;
-		public static event Action OnEndCardCombatUiEvent;
-		public static event Action OnShowMapEvent;
+		//GAME EVENTS
+		public static event Action<GameState> OnGameStateChange;
+		public static event Action OnGenerateNewMap;
+
+		//DEBUG GAME EVENTS
+		public static event Action<List<EntityData>> OnDebugTestCardCombatEvent;
 
 		private void Awake()
 		{
@@ -130,22 +133,16 @@ namespace Woopsious
 			loadedMainScene = SceneManager.GetActiveScene();
 			SplitEnemyDataIntoTypes();
 		}
-		private void Start()
-		{
-			ShowMap();
-		}
 
 		void OnEnable()
 		{
 			SceneManager.sceneLoaded += OnLoadSceneFinish;
 			SceneManager.sceneUnloaded += OnUnloadSceneFinish;
-			Entity.OnEntityDeath += EndCardCombat;
 		}
 		void OnDisable()
 		{
 			SceneManager.sceneLoaded -= OnLoadSceneFinish;
 			SceneManager.sceneUnloaded -= OnUnloadSceneFinish;
-			Entity.OnEntityDeath -= EndCardCombat;
 		}
 
 		void SplitEnemyDataIntoTypes()
@@ -169,55 +166,41 @@ namespace Woopsious
 			}
 		}
 
-		//start/end card combat
-		public static void BeginCardCombat(MapNode mapNode)
+		//game state changes
+		public static void EnterCardCombat(MapNode mapNode)
 		{
 			PauseGame(false);
-			instance.InCardCombat = true;
-			OnStartCardCombatEvent?.Invoke(mapNode);
 			CurrentlyVisitedMapNode = mapNode;
-			OnStartCardCombatUiEvent?.Invoke();
+			CurrentGameState = GameState.CardCombat;
+			OnGameStateChange?.Invoke(CurrentGameState);
 		}
-		public static void DebugBeginCardCombat(List<EntityData> entityDatas)
+		public static void EnterMapView()
 		{
 			PauseGame(false);
-			instance.InCardCombat = true;
-			OnDebugStartCardCombatEvent?.Invoke(entityDatas);
+			CurrentGameState = GameState.MapView;
+			OnGameStateChange?.Invoke(CurrentGameState);
+		}
+		public static void EnterCardCombatWin()
+		{
+			PauseGame(true);
+		}
+		public static void EnterCardCombatLoss()
+		{
+			PauseGame(true);
+		}
+		public static void GenerateNewMap()
+		{
+			OnGenerateNewMap?.Invoke();
+		}
+
+		//debug start/end card combat
+		public static void DebugStartCardCombatGameState(List<EntityData> entityDatas)
+		{
+			PauseGame(false);
+			OnDebugTestCardCombatEvent?.Invoke(entityDatas);
 			CurrentlyVisitedMapNode = InteractiveMapHandler.Instance.MapNodeTable[0][0]; //grab first map node in first column
-			OnStartCardCombatUiEvent?.Invoke();
-		}
-		public static void DebugEndCardCombat()
-		{
-			OnEndCardCombatEvent?.Invoke(true); //debug end as win
-			OnEndCardCombatUiEvent?.Invoke();
-			instance.InCardCombat = false;
-		}
-		void EndCardCombat(Entity entity)
-		{
-			if (!instance.InCardCombat) return;
-
-			if (TurnOrderManager.Player() == entity) //end on loss if player dies
-			{
-				PauseGame(true);
-				OnEndCardCombatEvent?.Invoke(false); //loss
-			}
-
-			int enemiesDead = 0;
-
-			foreach (Entity enemy in TurnOrderManager.EnemyEntities())
-			{
-				if (enemy.health <= 0)
-					enemiesDead++;
-			}
-
-			if (enemiesDead < TurnOrderManager.EnemyEntities().Count) return; //end on win if no enemies left
-			OnEndCardCombatEvent?.Invoke(true); //win
-			OnEndCardCombatUiEvent?.Invoke();
-			instance.InCardCombat = false;
-		}
-		public static void ShowMap()
-		{
-			OnShowMapEvent?.Invoke();
+			CurrentGameState = GameState.CardCombat;
+			OnGameStateChange?.Invoke(CurrentGameState);
 		}
 
 		public static void PauseGame(bool pause)
@@ -266,7 +249,10 @@ namespace Woopsious
 			if (loadedScene.name == mainScene)
 				SaveManager.LoadPlayerData();
 			if (loadedScene.name == gameScene)
-				OnShowMapEvent?.Invoke();
+			{
+				GenerateNewMap();
+				EnterMapView();
+			}
 
 			UpdateActiveSceneToMainScene(loadedScene);
 			UpdateCurrentlyLoadedScene(loadedScene);

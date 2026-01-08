@@ -66,23 +66,35 @@ namespace Woopsious
 
 		private void OnEnable()
 		{
-			GameManager.OnStartCardCombatUiEvent += SwitchToDrawPileUi;
-			GameManager.OnEndCardCombatUiEvent -= SwitchToCardDeckUi;
-			GameManager.OnEndCardCombatEvent += ShowCardRewardsUi;
+			GameManager.OnGameStateChange += OnGameStateChange;
 			PlayerCardDeckHandler.OnRewardSelectionChanged += UpdateCardsSelectedForRewardsCount;
 		}
 		private void OnDisable()
 		{
-			GameManager.OnStartCardCombatUiEvent -= SwitchToDrawPileUi;
-			GameManager.OnEndCardCombatUiEvent -= SwitchToCardDeckUi;
-			GameManager.OnEndCardCombatEvent -= ShowCardRewardsUi;
+			GameManager.OnGameStateChange -= OnGameStateChange;
 			PlayerCardDeckHandler.OnRewardSelectionChanged -= UpdateCardsSelectedForRewardsCount;
+		}
+
+		private void OnGameStateChange(GameManager.GameState gameState)
+		{
+			if (GameManager.GameState.MapView == gameState)
+			{
+				SwitchToCardDeckUi();
+			}
+			else if (GameManager.GameState.CardCombat == gameState)
+			{
+				SwitchToDrawPileUi();
+			}
+			else if (GameManager.GameState.CardCombatWin == gameState)
+			{
+				ShowCardRewardsUi();
+			}
 		}
 
 		//multiuse card deck ui info
 		private void ToggleCardDeckInfoUi()
 		{
-			if (GameManager.instance.InCardCombat)
+			if (GameManager.CurrentGameState == GameManager.GameState.CardCombat)
 				ShowHideCardDrawPile();
 			else
 				ShowHideCardDeckUi();
@@ -172,10 +184,8 @@ namespace Woopsious
 		}
 
 		//card rewards ui
-		private void ShowCardRewardsUi(bool playerWins)
+		private void ShowCardRewardsUi()
 		{
-			if (!playerWins) return; //nothing to do
-
 			SetUpCardRewardsUi();
 			cardRewardsUiPanel.SetActive(true);
 			confirmAcceptCardRewardsButton.gameObject.SetActive(false);
@@ -255,7 +265,7 @@ namespace Woopsious
 		{
 			HideCardRewardsUi();
 			PlayerCardDeckHandler.AddCardsToDeck(true);
-			GameManager.ShowMap();
+			GameManager.EnterMapView();
 
 			for (int i = cardRewardsSelection.Count - 1; i >= 0; i--)
 				Destroy(cardRewardsSelection[i].gameObject);

@@ -32,33 +32,29 @@ namespace Woopsious
 		[Header("DEBUG FIGHT ENEMIES AT RUNTIME")]
 		public List<EntityData> listOfEntitiesToFight = new();
 
-		void Awake()
+		private void Awake()
 		{
 			instance = this;
 		}
-		void OnEnable()
+		private void OnEnable()
 		{
-			GameManager.OnShowMapEvent += HideCardCombatUi;
-			GameManager.OnStartCardCombatUiEvent += ShowCardCombatUi;
-			GameManager.OnEndCardCombatEvent += ShowGameLossUi;
+			GameManager.OnGameStateChange += OnGameStateChange;
 			TurnOrderManager.OnNewRoundStartEvent += OnNewRound;
 			TurnOrderManager.OnStartTurn += OnNewTurn;
 		}
-		void OnDisable()
+		private void OnDisable()
 		{
-			GameManager.OnShowMapEvent -= HideCardCombatUi;
-			GameManager.OnStartCardCombatUiEvent -= ShowCardCombatUi;
-			GameManager.OnEndCardCombatEvent -= ShowGameLossUi;
+			GameManager.OnGameStateChange -= OnGameStateChange;
 			TurnOrderManager.OnNewRoundStartEvent -= OnNewRound;
 			TurnOrderManager.OnStartTurn -= OnNewTurn;
 		}
 
 		//Event Listeners
-		void OnNewRound(int currentRound)
+		private void OnNewRound(int currentRound)
 		{
 			UpdateCurrentRoundText(currentRound);
 		}
-		void OnNewTurn(Entity entity)
+		private void OnNewTurn(Entity entity)
 		{
 			ShowHideEndPlayerTurnButton(entity);
 			UpdateCurrentTurnText(entity);
@@ -66,15 +62,30 @@ namespace Woopsious
 
 
 		//UI UPDATES
-		void UpdateCurrentRoundText(int currentRound)
+		private void OnGameStateChange(GameManager.GameState gameState)
+		{
+			if (GameManager.GameState.MapView == gameState)
+			{
+				HideCardCombatUi();
+			}
+			else if (GameManager.GameState.CardCombat == gameState)
+			{
+				ShowCardCombatUi();
+			}
+			else if (GameManager.GameState.CardCombatLoss == gameState)
+			{
+				ShowGameLossUi();
+			}
+		}
+		private void UpdateCurrentRoundText(int currentRound)
 		{
 			currentRoundInfoText.text = "Round: " + currentRound;
 		}
-		void UpdateCurrentTurnText(Entity entity)
+		private void UpdateCurrentTurnText(Entity entity)
 		{
 			currentTurnInfoText.text = entity.EntityData.entityName + "'s turn";
 		}
-		void ShowHideEndPlayerTurnButton(Entity entity)
+		private void ShowHideEndPlayerTurnButton(Entity entity)
 		{
 			if (TurnOrderManager.Player() == entity)
 				EndPlayerTurnButtonObj.SetActive(true);
@@ -83,7 +94,7 @@ namespace Woopsious
 		}
 
 		//event listeners
-		void HideCardCombatUi()
+		private void HideCardCombatUi()
 		{
 			CardDeckUi.SetActive(false);
 			PlayedCardUi.SetActive(false);
@@ -99,7 +110,7 @@ namespace Woopsious
 			EndPlayerTurnButtonObj.SetActive(false);
 			DebugEndTurnButtonObj.SetActive(false);
 		}
-		void ShowCardCombatUi()
+		private void ShowCardCombatUi()
 		{
 			CardDeckUi.SetActive(true);
 			PlayedCardUi.SetActive(true);
@@ -115,10 +126,8 @@ namespace Woopsious
 			EndPlayerTurnButtonObj.SetActive(true);
 			DebugEndTurnButtonObj.SetActive(true);
 		}
-		void ShowGameLossUi(bool playerWon)
+		private void ShowGameLossUi()
 		{
-			if (playerWon) return;
-
 			GameLostUi.SetActive(true);
 		}
 
@@ -126,7 +135,7 @@ namespace Woopsious
 		public void QuitToMainMenuOnLoss()
 		{
 			//for now just show map again
-			GameManager.ShowMap();
+			GameManager.EnterMapView();
 		}
 		public void SkipPlayerTurn()
 		{
@@ -142,11 +151,11 @@ namespace Woopsious
 				Debug.LogError("add entity data to list of entities to fight in inspector");
 				return;
 			}
-			GameManager.DebugBeginCardCombat(listOfEntitiesToFight);
+			GameManager.DebugStartCardCombatGameState(listOfEntitiesToFight);
 		}
 		public void DebugEndCombat()
 		{
-			GameManager.DebugEndCardCombat();
+			GameManager.EnterCardCombatWin();
 		}
 		public void DebugSkipTurn()
 		{
