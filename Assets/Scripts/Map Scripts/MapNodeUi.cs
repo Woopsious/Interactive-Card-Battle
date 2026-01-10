@@ -29,7 +29,7 @@ namespace Woopsious
 		private Color _ColourGreen = new(0.25f, 0.5f, 0.25f);
 		private Color _ColourGold = new(1f, 0.85f, 0f);
 
-		void Awake()
+		private void Awake()
 		{
 			mapNode = GetComponent<MapNode>();
 			backgroundImage = GetComponent<Image>();
@@ -42,7 +42,7 @@ namespace Woopsious
 			mapNode.NodeStateChange -= UpdateNodeStateUi;
 		}
 
-		void InitilizeUi()
+		private void InitilizeUi()
 		{
 			encounterTitleText.text = UpdateEncounterTitleUi();
 			encounterLandTypeText.text = UpdateEncounterLandTypeUi();
@@ -54,6 +54,8 @@ namespace Woopsious
 				debugDataText.text = DebugDataTextToUi();
 				debugDataText.gameObject.SetActive(true);
 			}
+
+			Debug.LogError("initilize map node ui");
 		}
 
 		//start encounter button press
@@ -87,21 +89,21 @@ namespace Woopsious
 		}
 
 		//update ui
-		string UpdateEncounterTitleUi()
+		private string UpdateEncounterTitleUi()
 		{
 			return RichTextManager.GetEncounterTypeTextColour(mapNode.nodeEncounterType);
 		}
-		string UpdateEncounterLandTypeUi()
+		private string UpdateEncounterLandTypeUi()
 		{
 			return RichTextManager.GetLandTypesTextColour(mapNode.landTypes);
 		}
-		string UpdateEncounterModifiersUi()
+		private string UpdateEncounterModifiersUi()
 		{
 			string encounterModifiers = "Modifiers: \n";
 			encounterModifiers += RichTextManager.GetLandModifiersTextColour(mapNode.landModifiers);
 			return encounterModifiers;
 		}
-		string UpdateEncounterEnemiesUi()
+		private string UpdateEncounterEnemiesUi()
 		{
 			string encounterEnemies = "Possible Enemies: \n";
 
@@ -118,7 +120,7 @@ namespace Woopsious
 
 			return encounterEnemies;
 		}
-		string DisplayEncouterEnemiesIndividualy()
+		private string DisplayEncouterEnemiesIndividualy()
 		{
 			string encounterEnemies = "";
 
@@ -154,11 +156,11 @@ namespace Woopsious
 			encounterEnemies = RichTextManager.RemoveLastComma(encounterEnemies);
 			return encounterEnemies;
 		}
-		string DisplayEncouterEnemyTypes()
+		private string DisplayEncouterEnemyTypes()
 		{
 			return RichTextManager.GetEnemyTypesTextColour(mapNode.enemyTypes);
 		}
-		string DebugDataTextToUi()
+		private string DebugDataTextToUi()
 		{
 			string debugData = "Encounter Difficulty: " + mapNode.encounterDifficulty + "\nEncounterBudget: " + mapNode.entityBudget;
 			return debugData;

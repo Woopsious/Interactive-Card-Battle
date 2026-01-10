@@ -1,8 +1,6 @@
 using UnityEngine;
 using static Woopsious.MapNodeData;
 using static Woopsious.EntityData;
-using TMPro;
-using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
@@ -23,6 +21,7 @@ namespace Woopsious
 		public LandTypes landTypes;
 		public LandModifiers landModifiers;
 		public NodeEncounterType nodeEncounterType;
+		public bool IsMapEndNode { get; private set; }
 
 		[Header("Entity Spawn Table")]
 		public List<EntityData> PossibleEntities = new();
@@ -57,10 +56,11 @@ namespace Woopsious
 			nodeEncounterType = NodeEncounterType.basicFight;
 
 			ApplyRandomizedSettings(bossFightNode);
+			CheckIfMapEndNode(columnIndex, bossFightNode);
 			CheckAndForceDebugSettings();
 			SetEnemyTypes();
 
-			encounterDifficulty = mapNodeData.CalculateEncounterDifficultyFromModifiers(columnIndex, this);
+			encounterDifficulty = mapNodeData.CalculateEncounterDifficultyFromModifiers(GameManager.WorldDifficulty, columnIndex, this);
 			cardRewardChoiceCount = mapNodeData.CalculateCardRewardChoiceCount(this);
 			cardRewardSelectionCount = mapNodeData.CalculateCardRewardsSelectionCount(this);
 			cardRewardRarityBoost = mapNodeData.CalculateCardRewardRarityBoost(this);
@@ -72,6 +72,7 @@ namespace Woopsious
 				UpdateNodeState(NodeState.locked);
 
 			InitilizeUi?.Invoke();
+			Debug.LogError("initilize map node data");
 		}
 
 		//node linking
@@ -95,7 +96,7 @@ namespace Woopsious
 		}
 
 		//UPDATE NODE SETTINGS AT RUNTIME
-		void ApplyRandomizedSettings(bool bossFightNode)
+		private void ApplyRandomizedSettings(bool bossFightNode)
 		{
 			if (GetRandomNumber() < mapNodeData.chanceOfFreeCardUpgrade)
 			{
@@ -120,7 +121,13 @@ namespace Woopsious
 			if (GetRandomNumber() < mapNodeData.chanceOfEliteFight)
 				nodeEncounterType = MakeEncounterElite();
 		}
-		void CheckAndForceDebugSettings()
+		private void CheckIfMapEndNode(int columnIndex, bool bossFightNode)
+		{
+			if (columnIndex == 9 && bossFightNode)
+				IsMapEndNode = true;
+			else IsMapEndNode = false;
+		}
+		private void CheckAndForceDebugSettings()
 		{
 			if (forceEliteFight)
 				nodeEncounterType = MakeEncounterElite();
@@ -148,7 +155,7 @@ namespace Woopsious
 				break;
 			}
 		}
-		void SetEnemyTypes()
+		private void SetEnemyTypes()
 		{
 			cheapistEnemyCost = 100000;
 
@@ -172,15 +179,15 @@ namespace Woopsious
 		}
 
 		//sub funcs
-		NodeEncounterType MakeEncounterFreeCardUpgrade()
+		private NodeEncounterType MakeEncounterFreeCardUpgrade()
 		{
 			return NodeEncounterType.freeCardUpgrade;
 		}
-		NodeEncounterType MakeEncounterBossFight()
+		private NodeEncounterType MakeEncounterBossFight()
 		{
 			return NodeEncounterType.bossFight;
 		}
-		NodeEncounterType MakeEncounterElite()
+		private NodeEncounterType MakeEncounterElite()
 		{
 			if (nodeEncounterType == NodeEncounterType.basicFight)
 				return NodeEncounterType.eliteFight;
@@ -192,32 +199,32 @@ namespace Woopsious
 				return nodeEncounterType;
 			}
 		}
-		LandModifiers AddRuinsLandModifier()
+		private LandModifiers AddRuinsLandModifier()
 		{
 			LandModifiers addedModifier = landModifiers | LandModifiers.ruins;
 			return addedModifier;
 		}
-		LandModifiers AddTownLandModifier()
+		private LandModifiers AddTownLandModifier()
 		{
 			LandModifiers addedModifier = landModifiers | LandModifiers.town;
 			return addedModifier;
 		}
-		LandModifiers AddCursedLandModifier()
+		private LandModifiers AddCursedLandModifier()
 		{
 			LandModifiers addedModifier = landModifiers | LandModifiers.cursed;
 			return addedModifier;
 		}
-		LandModifiers AddVolcanicLandModifier()
+		private LandModifiers AddVolcanicLandModifier()
 		{
 			LandModifiers addedModifier = landModifiers | LandModifiers.volcanic;
 			return addedModifier;
 		}
-		LandModifiers AddCavesLandModifier()
+		private LandModifiers AddCavesLandModifier()
 		{
 			LandModifiers addedModifier = landModifiers | LandModifiers.caves;
 			return addedModifier;
 		}
-		double GetRandomNumber()
+		private double GetRandomNumber()
 		{
 			double roll = systemRandom.NextDouble() * 100;
 			return roll;
@@ -226,22 +233,23 @@ namespace Woopsious
 		//start encounter
 		public void BeginEncounter()
 		{
-			GameManager.EnterCardCombat(this);
 			UpdateNodeState(NodeState.currentlyAt);
 
 			foreach (MapNode previousNode in previousLinkedNodes) //lock prev nodes
 			{
 				if (previousNode.nodeState == NodeState.currentlyAt)
-					UpdateNodeState(NodeState.previouslyVisited);
+					previousNode.UpdateNodeState(NodeState.previouslyVisited);
 				else
-					UpdateNodeState(NodeState.locked);
+					previousNode.UpdateNodeState(NodeState.locked);
 			}
 
 			foreach (MapNode nextNode in nextLinkedNodes) //unlock next nodes
-				UpdateNodeState(NodeState.canTravel);
+				nextNode.UpdateNodeState(NodeState.canTravel);
 
-			foreach (MapNode node in siblingNodes) //lock sibling nodes
-				UpdateNodeState(NodeState.locked);
+			foreach (MapNode siblingNode in siblingNodes) //lock sibling nodes
+				siblingNode.UpdateNodeState(NodeState.locked);
+
+			GameManager.EnterCardCombat(this);
 		}
 		public Task BuyEnemyAndUpdatePossibleEntities(EntityData spawnedEntity)
 		{
@@ -262,22 +270,7 @@ namespace Woopsious
 		//update node state
 		public void UpdateNodeState(NodeState nodeState)
 		{
-			switch (nodeState)
-			{
-				case NodeState.locked:
-				nodeState = NodeState.locked;
-				break;
-				case NodeState.canTravel:
-				nodeState = NodeState.canTravel;
-				break;
-				case NodeState.currentlyAt:
-				nodeState = NodeState.currentlyAt;
-				break;
-				case NodeState.previouslyVisited:
-				nodeState = NodeState.previouslyVisited;
-				break;
-			}
-
+			this.nodeState = nodeState;
 			NodeStateChange?.Invoke(nodeState);
 		}
 	}

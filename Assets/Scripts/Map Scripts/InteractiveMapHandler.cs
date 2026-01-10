@@ -24,7 +24,7 @@ namespace Woopsious
 		private float heightOfNodes;
 		private float widthOfNodes;
 
-		private int totalMapNodeSpawnChance;
+		private float totalMapNodeSpawnChance;
 
 		//map size
 		private Vector2 interactiveMapSize = new(Screen.width * 3, Screen.height * 3);
@@ -52,15 +52,13 @@ namespace Woopsious
 			widthOfNodes = MapNodePrefab.GetComponent<RectTransform>().sizeDelta.x;
 
 			foreach (MapNodeData node in GameManager.instance.mapNodeDataTypes)
-				totalMapNodeSpawnChance += (int)node.nodeSpawnChance;
-		}
+				totalMapNodeSpawnChance += node.nodeSpawnChance;
 
-		void OnEnable()
-		{
 			GameManager.OnGenerateNewMap += GenerateNewMap;
 			mapCamera.gameObject.SetActive(true);
 		}
-		void OnDisable()
+
+		void OnDestroy()
 		{
 			GameManager.OnGenerateNewMap -= GenerateNewMap;
 			mapCamera.gameObject.SetActive(false);
@@ -106,10 +104,10 @@ namespace Woopsious
 		{
 			MapNodeTable.Clear();
 
-			for (int i = MapNodes.Count - 1; i > 0; i--)
+			for (int i = MapNodes.Count - 1; i >= 0; i--)
 				Destroy(MapNodes[i]);
 
-			for (int i = MapNodeLinks.Count - 1; i > 0; i--)
+			for (int i = MapNodeLinks.Count - 1; i >= 0; i--)
 				Destroy(MapNodeLinks[i]);
 		}
 		private void SetMapSizeAndViewConstraints()
@@ -190,13 +188,14 @@ namespace Woopsious
 			Dictionary<int, MapNode> mapColumnNodes = new();
 
 			for (int i = 0; i < nodesToSpawn; i++)
-				mapColumnNodes.Add(i, GenerateMapNode(columnIndex));
+				mapColumnNodes.Add(i, GenerateMapNode(columnIndex, $"C{columnIndex + 1}R{i + 1}"));
 
 			return mapColumnNodes;
 		}
-		private MapNode GenerateMapNode(int columnIndex)
+		private MapNode GenerateMapNode(int columnIndex, string Id)
 		{
 			MapNode mapNode = Instantiate(MapNodePrefab, gameObject.transform).GetComponent<MapNode>();
+			mapNode.name = "MapNode" + Id;
 
 			if (columnIndex == 0) //starting nodes
 				mapNode.Initilize(columnIndex, GetWeightedMapNode(), true, false);

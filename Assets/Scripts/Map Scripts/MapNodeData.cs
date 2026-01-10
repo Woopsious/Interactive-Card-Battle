@@ -33,32 +33,32 @@ namespace Woopsious
 		}
 
 		[Header("Node Settings")]
-		[Range(0f, 100f)]
+		[Range(0f, 1f)]
 		public float nodeSpawnChance;
-		[Range(0.5f, 1.5f)]
+		[Range(0f, 1f)]
 		public float baseEncounterDifficulty;
 		public int baseEntityBudget;
 
 		[Header("Chance Modifiers")]
 		[Tooltip("Base Value: 15%")]
-		[Range(0f, 100f)]
+		[Range(0f, 1f)]
 		public float chanceOfRuins;
 		[Tooltip("Base Value: 15%")]
-		[Range(0f, 100f)]
+		[Range(0f, 1f)]
 		public float chanceOfTown;
 		[Tooltip("Base Value: 15%")]
-		[Range(0f, 100f)]
+		[Range(0f, 1f)]
 		public float chanceOfCursed;
 		[Tooltip("Base Value: 15%")]
-		[Range(0f, 100f)]
+		[Range(0f, 1f)]
 		public float chanceOfVolcanic;
 		[Tooltip("Base Value: 15%")]
-		[Range(0f, 100f)]
+		[Range(0f, 1f)]
 		public float chanceOfCaves;
-		[Range(0f, 100f)]
+		[Range(0f, 1f)]
 		[Tooltip("Base Value: 10%")]
 		public float chanceOfEliteFight;
-		[Range(0f, 100f)]
+		[Range(0f, 1f)]
 		[Tooltip("Base Value: 10%")]
 		public float chanceOfFreeCardUpgrade;
 
@@ -74,9 +74,9 @@ namespace Woopsious
 		private readonly float cavesDifficultyModifier = 0.025f;
 
 
-		public float CalculateEncounterDifficultyFromModifiers(int columnIndex, MapNode mapNode)
+		public float CalculateEncounterDifficultyFromModifiers(int worldDifficulty, int columnIndex, MapNode mapNode)
 		{
-			float difficultyModifier = baseEncounterDifficulty;
+			float difficultyModifier = worldDifficulty + baseEncounterDifficulty;
 
 			int increaseDifficultyEveryXColumns = 3;
 			int timesByLimit = columnIndex / increaseDifficultyEveryXColumns;
@@ -176,20 +176,20 @@ namespace Woopsious
 		{
 			string landTypeInfo = RichTextManager.GetLandTypesTextColour(landTypes);
 
-			landTypeInfo += $"\n\nChance of spawning: {nodeSpawnChance}%";
-			landTypeInfo += $"\nChance of elite fight: {chanceOfEliteFight}%";
-			landTypeInfo += $"\nChance of free card upgrade: {chanceOfFreeCardUpgrade}%\n";
+			landTypeInfo += $"\n\nChance of spawning: {nodeSpawnChance * 100}%";
+			landTypeInfo += $"\nChance of elite fight: {chanceOfEliteFight * 100}%";
+			landTypeInfo += $"\nChance of free card upgrade: {chanceOfFreeCardUpgrade * 100}%\n";
 
 			if (applyableLandModifiers.HasFlag(LandModifiers.ruins))
-				landTypeInfo += $"\nChance of Ruins: {chanceOfRuins}%";
+				landTypeInfo += $"\nChance of Ruins: {chanceOfRuins * 100}%";
 			if (applyableLandModifiers.HasFlag(LandModifiers.town))
-				landTypeInfo += $"\nChance of Town: {chanceOfTown}%";
+				landTypeInfo += $"\nChance of Town: {chanceOfTown * 100}%";
 			if (applyableLandModifiers.HasFlag(LandModifiers.cursed))
-				landTypeInfo += $"\nChance of Cursed: {chanceOfCursed}%";
+				landTypeInfo += $"\nChance of Cursed: {chanceOfCursed * 100}%";
 			if (applyableLandModifiers.HasFlag(LandModifiers.volcanic))
-				landTypeInfo += $"\nChance of Volcanic: {chanceOfVolcanic}%";
+				landTypeInfo += $"\nChance of Volcanic: {chanceOfVolcanic * 100}%";
 			if (applyableLandModifiers.HasFlag(LandModifiers.caves))
-				landTypeInfo += $"\nChance of Caves: {chanceOfCaves}%";
+				landTypeInfo += $"\nChance of Caves: {chanceOfCaves * 100}%";
 
 			return landTypeInfo;
 		}
