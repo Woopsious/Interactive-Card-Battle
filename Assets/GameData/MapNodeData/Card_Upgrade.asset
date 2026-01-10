@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4f033c656ca190f478155417260a6d26, type: 3}
-  m_Name: Grasslands
+  m_Name: Card_Upgrade
   m_EditorClassIdentifier: 
-  nodeName: Grasslands
-  landTypes: 1
+  nodeName: Tundra
+  landTypes: 32
   maxLandModifiers: 2
-  applyableLandModifiers: 7
-  nodeSpawnChance: 0.75
-  baseEncounterDifficulty: 0
+  applyableLandModifiers: 14
+  nodeSpawnChance: 0.25
+  baseEncounterDifficulty: 0.2
   baseEntityBudget: 75
-  chanceOfRuins: 0.08
-  chanceOfTown: 0.5
-  chanceOfCursed: 0.05
+  chanceOfRuins: 0
+  chanceOfTown: 0.1
+  chanceOfCursed: 0.2
   chanceOfVolcanic: 0
   chanceOfCaves: 0
-  chanceOfEliteFight: 0.1
+  chanceOfEliteFight: 0.15
   chanceOfFreeCardUpgrade: 0.1

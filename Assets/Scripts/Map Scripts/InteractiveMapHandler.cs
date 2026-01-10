@@ -188,7 +188,7 @@ namespace Woopsious
 			Dictionary<int, MapNode> mapColumnNodes = new();
 
 			for (int i = 0; i < nodesToSpawn; i++)
-				mapColumnNodes.Add(i, GenerateMapNode(columnIndex, $"C{columnIndex + 1}R{i + 1}"));
+				mapColumnNodes.Add(i, GenerateMapNode(columnIndex, $"C{columnIndex}R{i}"));
 
 			return mapColumnNodes;
 		}

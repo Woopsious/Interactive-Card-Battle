@@ -93,18 +93,18 @@ namespace Woopsious
 			string text = "";
 
 			if (landModifiers == LandModifiers.none)
-				return text += $"<color={GlobalColours.black}>None</color>";
+				return text += $"<color={globalColours[GlobalColours.black]}>None</color>";
 
 			if (landModifiers.HasFlag(LandModifiers.ruins))
-				text += $"<color={GlobalColours.cyan}>Ruins</color>, ";
+				text += $"<color={globalColours[GlobalColours.cyan]}>Ruins</color>, ";
 			if (landModifiers.HasFlag(LandModifiers.town))
-				text += $"<color={GlobalColours.cyan}>Town</color>, ";
+				text += $"<color={globalColours[GlobalColours.cyan]}>Town</color>, ";
 			if (landModifiers.HasFlag(LandModifiers.cursed))
-				text += $"<color={GlobalColours.cyan}>Cursed</color>, ";
+				text += $"<color={globalColours[GlobalColours.cyan]}>Cursed</color>, ";
 			if (landModifiers.HasFlag(LandModifiers.volcanic))
-				text += $"<color={GlobalColours.cyan}>Volcanic</color>, ";
+				text += $"<color={globalColours[GlobalColours.cyan]}>Volcanic</color>, ";
 			if (landModifiers.HasFlag(LandModifiers.caves))
-				text += $"<color={GlobalColours.cyan}>Caves</color>, ";
+				text += $"<color={globalColours[GlobalColours.cyan]}>Caves</color>, ";
 
 			return RemoveLastComma(text);
 		}

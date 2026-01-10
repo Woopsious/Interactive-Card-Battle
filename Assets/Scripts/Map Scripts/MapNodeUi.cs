@@ -54,8 +54,6 @@ namespace Woopsious
 				debugDataText.text = DebugDataTextToUi();
 				debugDataText.gameObject.SetActive(true);
 			}
-
-			Debug.LogError("initilize map node ui");
 		}
 
 		//start encounter button press

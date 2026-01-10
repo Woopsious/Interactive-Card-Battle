@@ -16,13 +16,13 @@ MonoBehaviour:
   landTypes: 8
   maxLandModifiers: 2
   applyableLandModifiers: 24
-  nodeSpawnChance: 20
-  baseEncounterDifficulty: 1.1
+  nodeSpawnChance: 0.25
+  baseEncounterDifficulty: 0.2
   baseEntityBudget: 75
   chanceOfRuins: 0
   chanceOfTown: 0
   chanceOfCursed: 0
-  chanceOfVolcanic: 30
-  chanceOfCaves: 50
-  chanceOfEliteFight: 18
-  chanceOfFreeCardUpgrade: 10
+  chanceOfVolcanic: 0.3
+  chanceOfCaves: 0.5
+  chanceOfEliteFight: 0.18
+  chanceOfFreeCardUpgrade: 0.1

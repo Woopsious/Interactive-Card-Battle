@@ -89,6 +89,9 @@ namespace Woopsious
 		public Scene loadedMainScene;
 		public Scene loadedGameScene;
 
+		[Header("Debug")]
+		public bool debugGenNewMapAtColumnOne;
+
 		[Header("Player Scriptable Objects")]
 		public List<EntityData> playerClassDataTypes = new();
 
@@ -179,11 +182,8 @@ namespace Woopsious
 			CurrentGameState = GameState.MapView;
 			OnGameStateChange?.Invoke(CurrentGameState);
 
-			if (CurrentlyVisitedMapNode != null && CurrentlyVisitedMapNode.IsMapEndNode)
-			{
-				WorldDifficulty++;
-				GenerateNewMap();
-			}
+			if (instance.debugGenNewMapAtColumnOne || CurrentlyVisitedMapNode != null && CurrentlyVisitedMapNode.IsMapEndNode)
+				GenerateNewMap(WorldDifficulty + 1);
 		}
 		public static void EnterCardCombatWin()
 		{
@@ -197,10 +197,10 @@ namespace Woopsious
 			CurrentGameState = GameState.CardCombatLoss;
 			OnGameStateChange?.Invoke(CurrentGameState);
 		}
-		public static void GenerateNewMap()
+		public static void GenerateNewMap(int worldDifficulty)
 		{
+			WorldDifficulty = worldDifficulty;
 			OnGenerateNewMap?.Invoke();
-			Debug.LogError("generating new map");
 		}
 
 		//debug start/end card combat
@@ -260,8 +260,7 @@ namespace Woopsious
 				SaveManager.LoadPlayerData();
 			if (loadedScene.name == gameScene)
 			{
-				WorldDifficulty = 1;
-				GenerateNewMap();
+				GenerateNewMap(1);
 				EnterMapView();
 			}
 

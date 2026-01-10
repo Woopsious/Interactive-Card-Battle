@@ -16,7 +16,7 @@ namespace Woopsious
 		[System.Flags]
 		public enum LandTypes : int
 		{
-			none = 0, grassland = 1, hills = 2, forest = 4, mountains = 8, desert = 16, tundra = 32
+			none = 0, grassland = 1, hills = 2, forest = 4, mountains = 8, desert = 16, tundra = 32, freeCard = 64
 		}
 
 		[Header("Modifiers")]

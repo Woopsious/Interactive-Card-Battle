@@ -72,7 +72,6 @@ namespace Woopsious
 				UpdateNodeState(NodeState.locked);
 
 			InitilizeUi?.Invoke();
-			Debug.LogError("initilize map node data");
 		}
 
 		//node linking
@@ -98,14 +97,16 @@ namespace Woopsious
 		//UPDATE NODE SETTINGS AT RUNTIME
 		private void ApplyRandomizedSettings(bool bossFightNode)
 		{
-			if (GetRandomNumber() < mapNodeData.chanceOfFreeCardUpgrade)
-			{
-				MakeEncounterFreeCardUpgrade();
-				return;
-			}
-
 			if (bossFightNode)
 				nodeEncounterType = MakeEncounterBossFight();
+			else
+			{
+				if (GetRandomNumber() < mapNodeData.chanceOfFreeCardUpgrade)
+				{
+					nodeEncounterType = MakeEncounterFreeCardUpgrade();
+					return;
+				}
+			}
 
 			if (mapNodeData.applyableLandModifiers.HasFlag(LandModifiers.ruins) && GetRandomNumber() < mapNodeData.chanceOfRuins)
 				landModifiers = AddRuinsLandModifier();
@@ -226,7 +227,7 @@ namespace Woopsious
 		}
 		private double GetRandomNumber()
 		{
-			double roll = systemRandom.NextDouble() * 100;
+			double roll = systemRandom.NextDouble();
 			return roll;
 		}
 
@@ -249,7 +250,10 @@ namespace Woopsious
 			foreach (MapNode siblingNode in siblingNodes) //lock sibling nodes
 				siblingNode.UpdateNodeState(NodeState.locked);
 
-			GameManager.EnterCardCombat(this);
+			if (nodeEncounterType == NodeEncounterType.freeCardUpgrade)
+				GameManager.EnterCardCombatWin();
+			else
+				GameManager.EnterCardCombat(this);
 		}
 		public Task BuyEnemyAndUpdatePossibleEntities(EntityData spawnedEntity)
 		{
