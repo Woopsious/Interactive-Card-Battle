@@ -190,7 +190,7 @@ namespace Woopsious
 		//CHECKS
 		public static bool CanSelectCardAsReward()
 		{
-			if (Instance.CardsToAddToDeck.Count >= GameManager.CurrentlyVisitedMapNode.cardRewardSelectionCount)
+			if (Instance.CardsToAddToDeck.Count >= GameManager.CurrentlyVisitedMapNode.instanceData.cardRewardSelectionCount)
 				return false;
 			else
 				return true;

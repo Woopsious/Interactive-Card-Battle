@@ -2,13 +2,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static Woopsious.EntityData;
-using static Woopsious.MapNodeData;
+using static Woopsious.MapNodeDefinition;
 
 namespace Woopsious
 {
 	public class MapNodeUi : MonoBehaviour
 	{
-		private MapNode mapNode;
+		private MapNodeController mapNode;
 
 		[Header("Ui Elements")]
 		public TMP_Text encounterTitleText;
@@ -31,7 +31,7 @@ namespace Woopsious
 
 		private void Awake()
 		{
-			mapNode = GetComponent<MapNode>();
+			mapNode = GetComponent<MapNodeController>();
 			backgroundImage = GetComponent<Image>();
 			mapNode.InitilizeUi += InitilizeUi;
 			mapNode.NodeStateChange += UpdateNodeStateUi;
@@ -89,23 +89,23 @@ namespace Woopsious
 		//update ui
 		private string UpdateEncounterTitleUi()
 		{
-			return RichTextManager.GetEncounterTypeTextColour(mapNode.nodeEncounterType);
+			return RichTextManager.GetEncounterTypeTextColour(mapNode.instanceData.nodeEncounterType);
 		}
 		private string UpdateEncounterLandTypeUi()
 		{
-			return RichTextManager.GetLandTypesTextColour(mapNode.landTypes);
+			return RichTextManager.GetLandTypesTextColour(mapNode.instanceData.landTypes);
 		}
 		private string UpdateEncounterModifiersUi()
 		{
 			string encounterModifiers = "Modifiers: \n";
-			encounterModifiers += RichTextManager.GetLandModifiersTextColour(mapNode.landModifiers);
+			encounterModifiers += RichTextManager.GetLandModifiersTextColour(mapNode.instanceData.landModifiers);
 			return encounterModifiers;
 		}
 		private string UpdateEncounterEnemiesUi()
 		{
 			string encounterEnemies = "Possible Enemies: \n";
 
-			if (mapNode.nodeEncounterType == NodeEncounterType.freeCardUpgrade)
+			if (mapNode.instanceData.nodeEncounterType == NodeEncounterType.freeCardUpgrade)
 			{
 				encounterEnemies += "None";
 				return encounterEnemies;
@@ -125,8 +125,8 @@ namespace Woopsious
 			foreach (EntityData entity in GameManager.instance.enemyDataTypes)
 			{
 				//check if any LandType/LandModifier flags match
-				if ((mapNode.landTypes & entity.foundInLandTypes) != LandTypes.none || 
-					(mapNode.landModifiers & entity.foundWithLandModifiers) != LandModifiers.none)
+				if ((mapNode.instanceData.landTypes & entity.foundInLandTypes) != LandTypes.none || 
+					(mapNode.instanceData.landModifiers & entity.foundWithLandModifiers) != LandModifiers.none)
 				{
 					switch (entity.enemyType)
 					{
@@ -156,11 +156,12 @@ namespace Woopsious
 		}
 		private string DisplayEncouterEnemyTypes()
 		{
-			return RichTextManager.GetEnemyTypesTextColour(mapNode.enemyTypes);
+			return RichTextManager.GetEnemyTypesTextColour(mapNode.instanceData.enemyTypes);
 		}
 		private string DebugDataTextToUi()
 		{
-			string debugData = "Encounter Difficulty: " + mapNode.encounterDifficulty + "\nEncounterBudget: " + mapNode.entityBudget;
+			string debugData = "Encounter Difficulty: " + mapNode.instanceData.encounterDifficulty + 
+				"\nEncounterBudget: " + mapNode.instanceData.entityBudget;
 			return debugData;
 		}
 	}

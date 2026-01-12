@@ -12,17 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f033c656ca190f478155417260a6d26, type: 3}
   m_Name: Card_Upgrade
   m_EditorClassIdentifier: 
-  nodeName: Tundra
-  landTypes: 32
-  maxLandModifiers: 2
-  applyableLandModifiers: 14
-  nodeSpawnChance: 0.25
-  baseEncounterDifficulty: 0.2
-  baseEntityBudget: 75
+  nodeName: Card Upgrade
+  landTypes: 0
+  maxLandModifiers: 0
+  applyableLandModifiers: 0
+  nodeSpawnChance: 0.1
+  baseEncounterDifficulty: 0
+  baseEntityBudget: 0
   chanceOfRuins: 0
-  chanceOfTown: 0.1
-  chanceOfCursed: 0.2
+  chanceOfTown: 0
+  chanceOfCursed: 0
   chanceOfVolcanic: 0
   chanceOfCaves: 0
-  chanceOfEliteFight: 0.15
-  chanceOfFreeCardUpgrade: 0.1
+  chanceOfEliteFight: 0
+  chanceOfFreeCardUpgrade: 0

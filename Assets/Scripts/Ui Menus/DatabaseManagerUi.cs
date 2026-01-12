@@ -326,7 +326,7 @@ namespace Woopsious
 		{
 			for (int i = 0; i < GameManager.instance.mapNodeDataTypes.Count; i++)
 			{
-				MapNodeData mapNodeData = GameManager.instance.mapNodeDataTypes[i];
+				MapNodeDefinition mapNodeData = GameManager.instance.mapNodeDataTypes[i];
 				Button button = outerButtons[i];
 				button.onClick.AddListener(() => ShowMapNodeData(mapNodeData));
 
@@ -336,7 +336,7 @@ namespace Woopsious
 				button.gameObject.SetActive(true);
 			}
 		}
-		void ShowMapNodeData(MapNodeData mapNodeData)
+		void ShowMapNodeData(MapNodeDefinition mapNodeData)
 		{
 			infoToDisplayText.text = mapNodeData.CreateMapNodeLandTypeInfo();
 		}

@@ -201,9 +201,9 @@ namespace Woopsious
 		private void SetUpCardRewardsUi()
 		{
 			cardRewardsSelection.Clear();
-			MapNode mapNode = GameManager.CurrentlyVisitedMapNode; //generate card rewards here
-			int cardChoiceCount = mapNode.cardRewardChoiceCount;
-			int cardRewardSelectionLimit = mapNode.cardRewardSelectionCount;
+			MapNodeController mapNode = GameManager.CurrentlyVisitedMapNode; //generate card rewards here
+			int cardChoiceCount = mapNode.instanceData.cardRewardChoiceCount;
+			int cardRewardSelectionLimit = mapNode.instanceData.cardRewardSelectionCount;
 
 			if (cardRewardSelectionLimit == 1)
 				cardRewardsText.text = $"YOU WON\nSelect {cardRewardSelectionLimit} card to add to your deck";
@@ -249,7 +249,7 @@ namespace Woopsious
 		}
 		private void UpdateCardsSelectedForRewardsCount(int count)
 		{
-			int cardsSelectionLimit = GameManager.CurrentlyVisitedMapNode.cardRewardSelectionCount;
+			int cardsSelectionLimit = GameManager.CurrentlyVisitedMapNode.instanceData.cardRewardSelectionCount;
 			selectedCardRewardsInfo.text = $"Selected Cards {count}/{cardsSelectionLimit}";
 		}
 

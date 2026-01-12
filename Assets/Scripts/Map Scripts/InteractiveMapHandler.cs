@@ -41,7 +41,7 @@ namespace Woopsious
 
 		[Header("Runtime Data")]
 		private readonly System.Random systemRandom = new();
-		public Dictionary<int, Dictionary<int, MapNode>> MapNodeTable { get; private set; } = new();
+		public Dictionary<int, Dictionary<int, MapNodeController>> MapNodeTable { get; private set; } = new();
 		public List<GameObject> MapNodes = new();
 		public List<GameObject> MapNodeLinks = new();
 
@@ -51,7 +51,7 @@ namespace Woopsious
 			heightOfNodes = MapNodePrefab.GetComponent<RectTransform>().sizeDelta.y;
 			widthOfNodes = MapNodePrefab.GetComponent<RectTransform>().sizeDelta.x;
 
-			foreach (MapNodeData node in GameManager.instance.mapNodeDataTypes)
+			foreach (MapNodeDefinition node in GameManager.instance.mapNodeDataTypes)
 				totalMapNodeSpawnChance += node.nodeSpawnChance;
 
 			GameManager.OnGenerateNewMap += GenerateNewMap;
@@ -170,7 +170,7 @@ namespace Woopsious
 
 			for (int columnIndex = 0; columnIndex < mapNodesToSpawnPerColumn.Count; columnIndex++)
 			{
-				Dictionary<int, MapNode> newColumn = GenerateMapColumn(columnIndex, mapNodesToSpawnPerColumn[columnIndex]);
+				Dictionary<int, MapNodeController> newColumn = GenerateMapColumn(columnIndex, mapNodesToSpawnPerColumn[columnIndex]);
 				MapNodeTable.Add(columnIndex, newColumn);
 				SetNodeColumnPositions(newColumn, mapNodesToSpawnPerColumn.Count, columnIndex);
 
@@ -183,18 +183,18 @@ namespace Woopsious
 
 			DebugLogSpawnedNodesLandTypesCount();
 		}
-		private Dictionary<int, MapNode> GenerateMapColumn(int columnIndex, int nodesToSpawn)
+		private Dictionary<int, MapNodeController> GenerateMapColumn(int columnIndex, int nodesToSpawn)
 		{
-			Dictionary<int, MapNode> mapColumnNodes = new();
+			Dictionary<int, MapNodeController> mapColumnNodes = new();
 
 			for (int i = 0; i < nodesToSpawn; i++)
 				mapColumnNodes.Add(i, GenerateMapNode(columnIndex, $"C{columnIndex}R{i}"));
 
 			return mapColumnNodes;
 		}
-		private MapNode GenerateMapNode(int columnIndex, string Id)
+		private MapNodeController GenerateMapNode(int columnIndex, string Id)
 		{
-			MapNode mapNode = Instantiate(MapNodePrefab, gameObject.transform).GetComponent<MapNode>();
+			MapNodeController mapNode = Instantiate(MapNodePrefab, gameObject.transform).GetComponent<MapNodeController>();
 			mapNode.name = "MapNode" + Id;
 
 			if (columnIndex == 0) //starting nodes
@@ -207,12 +207,12 @@ namespace Woopsious
 			MapNodes.Add(mapNode.gameObject);
 			return mapNode;
 		}
-		private MapNodeData GetWeightedMapNode()
+		private MapNodeDefinition GetWeightedMapNode()
 		{
 			float roll = (float)(systemRandom.NextDouble() * totalMapNodeSpawnChance);
 			float cumulativeChance = 0;
 
-			foreach (MapNodeData mapNodeData in GameManager.instance.mapNodeDataTypes)
+			foreach (MapNodeDefinition mapNodeData in GameManager.instance.mapNodeDataTypes)
 			{
 				cumulativeChance += mapNodeData.nodeSpawnChance;
 
@@ -228,16 +228,16 @@ namespace Woopsious
 		private void DebugLogSpawnedNodesLandTypesCount()
 		{
 			if (!logLandTypeSpawns) return;
-			Dictionary<MapNodeData.LandTypes, int> landTypeCount = new();
+			Dictionary<MapNodeDefinition.LandTypes, int> landTypeCount = new();
 
 			foreach (var columnPair in MapNodeTable)
 			{
 				foreach (var nodePair in columnPair.Value)
 				{
-					MapNode node = nodePair.Value;
+					MapNodeController node = nodePair.Value;
 
 					// Replace this with your actual node type field/property
-					MapNodeData.LandTypes type = node.landTypes;
+					MapNodeDefinition.LandTypes type = node.instanceData.landTypes;
 
 					if (!landTypeCount.ContainsKey(type))
 						landTypeCount[type] = 0;
@@ -251,7 +251,7 @@ namespace Woopsious
 		}
 
 		//create map node links
-		private void LinkPreviousAndCurrentNodes(Dictionary<int, MapNode> previousColumn, Dictionary<int, MapNode> currentColumn)
+		private void LinkPreviousAndCurrentNodes(Dictionary<int, MapNodeController> previousColumn, Dictionary<int, MapNodeController> currentColumn)
 		{
 			int rowDifference = previousColumn.Count - currentColumn.Count;
 
@@ -262,7 +262,7 @@ namespace Woopsious
 			else
 				HandleSameRows(previousColumn, currentColumn);
 		}
-		private void HandleExtraRows(Dictionary<int, MapNode> previousColumn, Dictionary<int, MapNode> currentColumn)
+		private void HandleExtraRows(Dictionary<int, MapNodeController> previousColumn, Dictionary<int, MapNodeController> currentColumn)
 		{
 			int nodeOffset = 0;
 			int extraNodesToLink = currentColumn.Count - previousColumn.Count;
@@ -293,7 +293,7 @@ namespace Woopsious
 				nodeOffset++;
 			}
 		}
-		private void HandleLessRows(Dictionary<int, MapNode> previousColumn, Dictionary<int, MapNode> currentColumn)
+		private void HandleLessRows(Dictionary<int, MapNodeController> previousColumn, Dictionary<int, MapNodeController> currentColumn)
 		{
 			int nodeOffset = 0;
 			int nodesToDoubleLink = previousColumn.Count - currentColumn.Count;
@@ -324,7 +324,7 @@ namespace Woopsious
 				nodeOffset++;
 			}
 		}
-		private void HandleSameRows(Dictionary<int, MapNode> previousColumn, Dictionary<int, MapNode> currentColumn)
+		private void HandleSameRows(Dictionary<int, MapNodeController> previousColumn, Dictionary<int, MapNodeController> currentColumn)
 		{
 			for (int columnRow = 0; columnRow < currentColumn.Count; columnRow++)
 			{
@@ -332,7 +332,7 @@ namespace Woopsious
 				SpawnNodeLinkObject(previousColumn[columnRow], currentColumn[columnRow]);
 			}
 		}
-		private void SpawnNodeLinkObject(MapNode prevMapNode, MapNode mapNode)
+		private void SpawnNodeLinkObject(MapNodeController prevMapNode, MapNodeController mapNode)
 		{
 			Vector2 posA = prevMapNode.GetComponent<RectTransform>().anchoredPosition;
 			Vector2 posB = mapNode.GetComponent<RectTransform>().anchoredPosition;
@@ -351,7 +351,7 @@ namespace Woopsious
 		}
 
 		//adjust map node positions
-		private void SetNodeColumnPositions(Dictionary<int, MapNode> nodesInColumn, int columnsCount, int columnIndex)
+		private void SetNodeColumnPositions(Dictionary<int, MapNodeController> nodesInColumn, int columnsCount, int columnIndex)
 		{
 			float spacingX = (interactiveMapSize.x - columnsCount * widthOfNodes) / (columnsCount + 1);
 			float spacingY = (interactiveMapSize.y - nodesInColumn.Count * heightOfNodes) / (nodesInColumn.Count + 1);

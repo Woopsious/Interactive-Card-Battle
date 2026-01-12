@@ -29,7 +29,7 @@ namespace Woopsious
 		}
 
 		//card battle setup
-		public static async Task SpawnEntitiesForCardBattle(MapNode mapNode)
+		public static async Task SpawnEntitiesForCardBattle(MapNodeController mapNode)
 		{
 			await SpawnPlayer();
 			await SpawnEnemies(mapNode);
@@ -70,14 +70,14 @@ namespace Woopsious
 
 			return Task.CompletedTask;
 		}
-		public static async Task SpawnEnemies(MapNode mapNode)
+		public static async Task SpawnEnemies(MapNodeController mapNode)
 		{
 			List<Entity> spawnedEntites = new();
 
 			bool spawnEnemies = true;
 			while (spawnEnemies)
 			{
-				if (spawnedEntites.Count >= 5 || mapNode.entityBudget < mapNode.cheapistEnemyCost)
+				if (spawnedEntites.Count >= 5 || mapNode.instanceData.entityBudget < mapNode.instanceData.cheapestEnemyCost)
 					break;
 
 				Entity entity = ObjectPoolingManager.RequestEntity();
@@ -89,19 +89,19 @@ namespace Woopsious
 				entity.transform.SetParent(CardCombatUi.instance.spawnedEntitiesTransform);
 				entity.gameObject.SetActive(true);
 
-				await mapNode.BuyEnemyAndUpdatePossibleEntities(entity.EntityData);
+				await mapNode.instanceData.BuyEnemyAndUpdatePossibleEntities(entity.EntityData);
 				spawnedEntites.Add(entity);
 				OnEnemySpawned?.Invoke(entity);
 			}
 
 			instance.SetEnemyPositions(spawnedEntites);
 		}
-		EntityData GetWeightedEntitySpawn(MapNode mapNode)
+		EntityData GetWeightedEntitySpawn(MapNodeController mapNode)
 		{
-			float roll = (float)(systemRandom.NextDouble() * mapNode.totalPossibleEntitiesSpawnChance);
+			float roll = (float)(systemRandom.NextDouble() * mapNode.instanceData.totalPossibleEntitiesSpawnChance);
 			float cumulativeChance = 0;
 
-			foreach (EntityData entity in mapNode.PossibleEntities)
+			foreach (EntityData entity in mapNode.instanceData.PossibleEntities)
 			{
 				cumulativeChance += entity.entitySpawnChance;
 

@@ -109,12 +109,12 @@ namespace Woopsious
 		public List<StatusEffectsData> statusEffectsDataTypes = new();
 
 		[Header("Map Node Scriptable Objects")]
-		public List<MapNodeData> mapNodeDataTypes = new();
+		public List<MapNodeDefinition> mapNodeDataTypes = new();
 
 		[Header("Runtime Data")]
 		public static int WorldDifficulty { get; private set; }
 		public static EntityData PlayerClass { get; private set; }
-		public static MapNode CurrentlyVisitedMapNode { get; private set; }
+		public static MapNodeController CurrentlyVisitedMapNode { get; private set; }
 		public static GameState CurrentGameState { get; private set; }
 		public enum GameState
 		{
@@ -168,7 +168,7 @@ namespace Woopsious
 		}
 
 		//game state changes
-		public static void EnterCardCombat(MapNode mapNode)
+		public static void EnterCardCombat(MapNodeController mapNode)
 		{
 			PauseGame(false);
 			CurrentlyVisitedMapNode = mapNode;
@@ -182,7 +182,7 @@ namespace Woopsious
 			CurrentGameState = GameState.MapView;
 			OnGameStateChange?.Invoke(CurrentGameState);
 
-			if (instance.debugGenNewMapAtColumnOne || CurrentlyVisitedMapNode != null && CurrentlyVisitedMapNode.IsMapEndNode)
+			if (instance.debugGenNewMapAtColumnOne || CurrentlyVisitedMapNode != null && CurrentlyVisitedMapNode.instanceData.IsMapEndNode)
 				GenerateNewMap(WorldDifficulty + 1);
 		}
 		public static void EnterCardCombatWin()

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using static Woopsious.EntityData;
-using static Woopsious.MapNodeData;
+using static Woopsious.MapNodeDefinition;
 
 namespace Woopsious
 {

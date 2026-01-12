@@ -59,7 +59,7 @@ namespace Woopsious
 		}
 
 		//create and start initial turn order
-		private async void CreateTurnOrder(MapNode mapNode)
+		private async void CreateTurnOrder(MapNodeController mapNode)
 		{
 			await SpawnManager.SpawnEntitiesForCardBattle(mapNode);
 
