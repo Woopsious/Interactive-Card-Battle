@@ -10,7 +10,6 @@ namespace Woopsious
 	public class MapNodeController : MonoBehaviour
 	{
 		[Header("Runtime data")]
-		public MapNodeDefinition mapNodeData;
 		public MapNodeInstanceData instanceData;
 
 		[Header("Linked Nodes")]
@@ -31,22 +30,11 @@ namespace Woopsious
 		public event Action InitilizeUi;
 		public event Action<NodeState> NodeStateChange;
 
-		public void Initilize(int columnIndex, MapNodeDefinition mapNodeData, bool startingNode, bool bossFightNode)
+		public void Initilize(MapNodeInstanceData instanceData)
 		{
-			this.mapNodeData = mapNodeData;
+			this.instanceData = instanceData;
 
-			instanceData = new(mapNodeData);
-			instanceData.RandomizeEncounterType(bossFightNode);
-			instanceData.RandomizedLandModifiers();
-			instanceData.CheckIfMapEndNode(columnIndex, bossFightNode);
-
-			instanceData.CalculateEncounterDifficulty(columnIndex);
-			instanceData.CalculateCardRewardValues();
-
-			instanceData.CalculateEntityBudget();
-			instanceData.CalculatePossibleEnemies();
-
-			if (startingNode)
+			if (instanceData.IsMapStartNode)
 				UpdateNodeState(NodeState.canTravel);
 			else
 				UpdateNodeState(NodeState.locked);

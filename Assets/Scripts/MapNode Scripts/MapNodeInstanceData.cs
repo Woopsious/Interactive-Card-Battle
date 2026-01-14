@@ -10,7 +10,7 @@ namespace Woopsious
 {
 	public class MapNodeInstanceData
 	{
-		private MapNodeDefinition mapNodeData;
+		public readonly MapNodeDefinition mapNodeDefinition;
 
 		[Header("Data")]
 		public float encounterDifficulty;
@@ -23,12 +23,17 @@ namespace Woopsious
 		public LandTypes landTypes;
 		public LandModifiers landModifiers;
 		public NodeEncounterType nodeEncounterType;
+		public bool IsMapStartNode { get; private set; }
 		public bool IsMapEndNode { get; private set; }
 
 		[Header("Entity Spawn Table")]
 		public List<EntityData> PossibleEntities = new();
 		public int totalPossibleEntitiesSpawnChance;
 		public int cheapestEnemyCost;
+
+		public List<MapNodeInstanceData> previousLinkedNodes = new();
+		public List<MapNodeInstanceData> nextLinkedNodes = new();
+		public List<MapNodeInstanceData> siblingNodes = new();
 
 		//encounter Difficulty modifiers (CHANGE THEM HERE)
 		private readonly float eliteFightDifficultyModifier = 0.025f;
@@ -43,16 +48,46 @@ namespace Woopsious
 
 		private readonly System.Random systemRandom = new();
 
-		public MapNodeInstanceData(MapNodeDefinition mapNodeData)
+		public MapNodeInstanceData(int columnIndex)
 		{
-			this.mapNodeData = mapNodeData;
+			mapNodeDefinition = GetWeightedMapNode();
 			nodeState = NodeState.locked;
-			landTypes = mapNodeData.landTypes;
+			landTypes = mapNodeDefinition.landTypes;
 			landModifiers = LandModifiers.none;
 			nodeEncounterType = NodeEncounterType.basicFight;
+
+			CheckIfMapStartNode(columnIndex);
+			CheckIfMapEndNode(columnIndex);
+
+			RandomizeEncounterType();
+			RandomizedLandModifiers();
+
+			CalculateEncounterDifficulty(columnIndex);
+			CalculateCardRewardValues();
+
+			CalculateEntityBudget();
+			CalculatePossibleEnemies();
 		}
 
-		public void DebugForceSettings(bool forceSettings, bool forceEliteFight, ForceEncounterType forceEncounterType, LandModifiers forceLandModifiers)
+		private MapNodeDefinition GetWeightedMapNode()
+		{
+			float roll = (float)(systemRandom.NextDouble() * MapController.Instance.TotalNodeSpawnChance);
+			float cumulativeChance = 0;
+
+			foreach (MapNodeDefinition mapNodeData in GameManager.instance.mapNodeDataTypes)
+			{
+				cumulativeChance += mapNodeData.nodeSpawnChance;
+
+				if (roll <= cumulativeChance)
+					return mapNodeData;
+			}
+
+			Debug.LogError("Failed to get weighted map node to spawn, spawning default");
+			return GameManager.instance.mapNodeDataTypes[0];
+		}
+
+		public void DebugForceSettings(
+			bool forceSettings, bool forceEliteFight, ForceEncounterType forceEncounterType, LandModifiers forceLandModifiers)
 		{
 			if (!forceSettings) return;
 
@@ -84,38 +119,44 @@ namespace Woopsious
 		}
 
 		//Randomize Node Data
-		public void RandomizeEncounterType(bool bossFightNode)
+		public void RandomizeEncounterType()
 		{
-			if (bossFightNode)
+			if (IsMapEndNode)
 				nodeEncounterType = MakeEncounterBossFight();
 			else
 			{
-				if (GetRandomNumber() < mapNodeData.chanceOfFreeCardUpgrade)
+				if (GetRandomNumber() < mapNodeDefinition.chanceOfFreeCardUpgrade)
 				{
 					nodeEncounterType = MakeEncounterFreeCardUpgrade();
 					return;
 				}
 			}
 
-			if (GetRandomNumber() < mapNodeData.chanceOfEliteFight)
+			if (GetRandomNumber() < mapNodeDefinition.chanceOfEliteFight)
 				nodeEncounterType = MakeEncounterElite();
 		}
 		public void RandomizedLandModifiers()
 		{
-			if (mapNodeData.applyableLandModifiers.HasFlag(LandModifiers.ruins) && GetRandomNumber() < mapNodeData.chanceOfRuins)
+			if (mapNodeDefinition.applyableLandModifiers.HasFlag(LandModifiers.ruins) && GetRandomNumber() < mapNodeDefinition.chanceOfRuins)
 				landModifiers = AddRuinsLandModifier();
-			if (mapNodeData.applyableLandModifiers.HasFlag(LandModifiers.town) && GetRandomNumber() < mapNodeData.chanceOfTown)
+			if (mapNodeDefinition.applyableLandModifiers.HasFlag(LandModifiers.town) && GetRandomNumber() < mapNodeDefinition.chanceOfTown)
 				landModifiers = AddTownLandModifier();
-			if (mapNodeData.applyableLandModifiers.HasFlag(LandModifiers.cursed) && GetRandomNumber() < mapNodeData.chanceOfCursed)
+			if (mapNodeDefinition.applyableLandModifiers.HasFlag(LandModifiers.cursed) && GetRandomNumber() < mapNodeDefinition.chanceOfCursed)
 				landModifiers = AddCursedLandModifier();
-			if (mapNodeData.applyableLandModifiers.HasFlag(LandModifiers.volcanic) && GetRandomNumber() < mapNodeData.chanceOfVolcanic)
+			if (mapNodeDefinition.applyableLandModifiers.HasFlag(LandModifiers.volcanic) && GetRandomNumber() < mapNodeDefinition.chanceOfVolcanic)
 				landModifiers = AddVolcanicLandModifier();
-			if (mapNodeData.applyableLandModifiers.HasFlag(LandModifiers.caves) && GetRandomNumber() < mapNodeData.chanceOfCaves)
+			if (mapNodeDefinition.applyableLandModifiers.HasFlag(LandModifiers.caves) && GetRandomNumber() < mapNodeDefinition.chanceOfCaves)
 				landModifiers = AddCavesLandModifier();
 		}
-		public void CheckIfMapEndNode(int columnIndex, bool bossFightNode)
+		public void CheckIfMapStartNode(int columnIndex)
 		{
-			if (columnIndex == 9 && bossFightNode)
+			if (columnIndex == 0)
+				IsMapStartNode = true;
+			else IsMapStartNode = false;
+		}
+		public void CheckIfMapEndNode(int columnIndex)
+		{
+			if (columnIndex == 9)
 				IsMapEndNode = true;
 			else IsMapEndNode = false;
 		}
@@ -174,7 +215,7 @@ namespace Woopsious
 
 		public void CalculateEncounterDifficulty(int columnIndex)
 		{
-			float difficultyModifier = GameManager.WorldDifficulty + mapNodeData.baseEncounterDifficulty;
+			float difficultyModifier = GameManager.WorldDifficulty + mapNodeDefinition.baseEncounterDifficulty;
 
 			int increaseDifficultyEveryXColumns = 3;
 			int timesByLimit = columnIndex / increaseDifficultyEveryXColumns;
@@ -238,7 +279,7 @@ namespace Woopsious
 
 		public void CalculateEntityBudget()
 		{
-			entityBudget = Mathf.RoundToInt(mapNodeData.baseEntityBudget * encounterDifficulty);
+			entityBudget = Mathf.RoundToInt(mapNodeDefinition.baseEntityBudget * encounterDifficulty);
 		}
 		public void CalculatePossibleEnemies()
 		{

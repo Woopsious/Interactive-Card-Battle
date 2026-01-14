@@ -23,14 +23,14 @@ namespace Woopsious
 		private float heightOfNodes;
 		private float widthOfNodes;
 
-		private float totalMapNodeSpawnChance;
+		public float TotalNodeSpawnChance { get; private set; }
 
 		//map size
 		private Vector2 interactiveMapSize = new(Screen.width * 3, Screen.height * 3);
 
 		[Header("Runtime Data")]
-		private readonly System.Random systemRandom = new();
 		public Dictionary<int, Dictionary<int, MapNodeController>> MapNodeTable { get; private set; } = new();
+		public MapInstanceData mapInstanceData;
 		public List<GameObject> MapNodes = new();
 		public List<GameObject> MapNodeLinks = new();
 
@@ -41,7 +41,7 @@ namespace Woopsious
 			widthOfNodes = MapNodePrefab.GetComponent<RectTransform>().sizeDelta.x;
 
 			foreach (MapNodeDefinition node in GameManager.instance.mapNodeDataTypes)
-				totalMapNodeSpawnChance += node.nodeSpawnChance;
+				TotalNodeSpawnChance += node.nodeSpawnChance;
 
 			GameManager.OnGenerateNewMap += GenerateNewMap;
 		}
@@ -57,6 +57,9 @@ namespace Woopsious
 
 			interactiveMapSize = new(Screen.width * 3, Screen.height * 3);
 			interactiveMapRectTransform.sizeDelta = interactiveMapSize;
+
+			mapInstanceData = new MapInstanceData();
+			mapInstanceData.GenerateMapLayout();
 
 			GenerateMapNodes();
 		}
@@ -76,21 +79,31 @@ namespace Woopsious
 		//create map nodes
 		private void GenerateMapNodes()
 		{
-			List<int> rowsPerColumnList = MapInstanceData.GenerateMapLayout();
-
-			for (int columnIndex = 0; columnIndex < rowsPerColumnList.Count; columnIndex++)
+			List<List<MapNodeInstanceData>> table = mapInstanceData.MapTable;
+			for (int column = 0; column < mapInstanceData.MapTable.Count; column++)
 			{
-				Dictionary<int, MapNodeController> newColumn = GenerateMapColumn(columnIndex, rowsPerColumnList[columnIndex]);
-				MapNodeTable.Add(columnIndex, newColumn);
-				SetNodeColumnPositions(newColumn, rowsPerColumnList.Count, columnIndex);
+				Dictionary<int, MapNodeController> columnNodes = new();
 
-				for (int rowIndex = 0; rowIndex < newColumn.Count; rowIndex++)
-					newColumn[rowIndex].AddSiblingNodes(newColumn);
+				for (int row = 0; row < table[column].Count; row++)
+				{
+					MapNodeController mapNode = Instantiate(MapNodePrefab, gameObject.transform).GetComponent<MapNodeController>();
+					mapNode.name = $"MapNode-C{column}R{row}";
+					mapNode.Initilize(table[column][row]);
 
-				if (columnIndex == 0) continue;
+					columnNodes.Add(row, mapNode);
+					MapNodes.Add(mapNode.gameObject);
+				}
+
+				MapNodeTable.Add(column, columnNodes);
+				SetNodeColumnPositions(columnNodes, table.Count, column);
+
+				foreach (MapNodeController node in columnNodes.Values)
+					node.AddSiblingNodes(columnNodes);
+
+				if (column == 0) continue;
 
 				List<NodeLinkData> nodesToLink = MapNodeLinkingLogic.CreateNodeLinkData(
-					MapNodeTable[columnIndex - 1], MapNodeTable[columnIndex]);
+					MapNodeTable[column - 1], MapNodeTable[column]);
 
 				foreach (NodeLinkData node in nodesToLink)
 				{
@@ -100,46 +113,6 @@ namespace Woopsious
 			}
 
 			DebugLogSpawnedNodesLandTypesCount();
-		}
-		private Dictionary<int, MapNodeController> GenerateMapColumn(int columnIndex, int nodesToSpawn)
-		{
-			Dictionary<int, MapNodeController> mapColumnNodes = new();
-
-			for (int i = 0; i < nodesToSpawn; i++)
-				mapColumnNodes.Add(i, GenerateMapNode(columnIndex, $"C{columnIndex}R{i}"));
-
-			return mapColumnNodes;
-		}
-		private MapNodeController GenerateMapNode(int columnIndex, string Id)
-		{
-			MapNodeController mapNode = Instantiate(MapNodePrefab, gameObject.transform).GetComponent<MapNodeController>();
-			mapNode.name = "MapNode" + Id;
-
-			if (columnIndex == 0) //starting nodes
-				mapNode.Initilize(columnIndex, GetWeightedMapNode(), true, false);
-			else if (columnIndex == 9) //boss nodes
-				mapNode.Initilize(columnIndex, GetWeightedMapNode(), false, true);
-			else //standard nodes
-				mapNode.Initilize(columnIndex, GetWeightedMapNode(), false, false);
-
-			MapNodes.Add(mapNode.gameObject);
-			return mapNode;
-		}
-		private MapNodeDefinition GetWeightedMapNode()
-		{
-			float roll = (float)(systemRandom.NextDouble() * totalMapNodeSpawnChance);
-			float cumulativeChance = 0;
-
-			foreach (MapNodeDefinition mapNodeData in GameManager.instance.mapNodeDataTypes)
-			{
-				cumulativeChance += mapNodeData.nodeSpawnChance;
-
-				if (roll <= cumulativeChance)
-					return mapNodeData;
-			}
-
-			Debug.LogError("Failed to get weighted map node to spawn, spawning default");
-			return GameManager.instance.mapNodeDataTypes[0];
 		}
 
 		//debug

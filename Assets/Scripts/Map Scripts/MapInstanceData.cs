@@ -1,13 +1,15 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 namespace Woopsious
 {
-	public static class MapInstanceData
+	[System.Serializable]
+	public class MapInstanceData
 	{
 		private static readonly System.Random systemRandom = new();
-
-		public static List<List<RowCountPossibilities>> RowCountPossibilities = new()
+		private static readonly List<List<RowCountPossibilities>> RowCountPossibilities = new()
 		{
 			//column 1
 			new List<RowCountPossibilities>
@@ -160,26 +162,34 @@ namespace Woopsious
 			},
 		};
 
-		public static List<int> GenerateMapLayout()
+		//public List<MapColumnData> MapTableData = new();
+		public List<List<MapNodeInstanceData>> MapTable = new();
+
+		public void GenerateMapLayout()
 		{
-			List<int> mapRowLayout = new();
+			List<int> columnRowCounts = new();
 
-			bool start = true;
-			int rowCount = 0;
-			for (int i = 0; i < 10; i++)
+			for (int column = 0; column < 10; column++)
 			{
-				if (start)
-				{
-					rowCount = RandomizeRowsInEachColumn(i, 1);
-					start = false;
-				}
+				if (column == 0)
+					columnRowCounts.Add(RandomizeRowsInEachColumn(column, 1));
 				else
-					rowCount = RandomizeRowsInEachColumn(i, rowCount);
-
-				mapRowLayout.Add(rowCount);
+					columnRowCounts.Add(RandomizeRowsInEachColumn(column, columnRowCounts[^1]));
 			}
 
-			return mapRowLayout;
+			GenerateNodeInstances(columnRowCounts);
+		}
+		private void GenerateNodeInstances(List<int> columnRowCounts)
+		{
+			for (int column = 0; column < 10; column++)
+			{
+				List<MapNodeInstanceData> columnNodeInstances = new();
+
+				for (int row = 0; row < columnRowCounts[column]; row++)
+					columnNodeInstances.Add(new(column));
+
+				MapTable.Add(columnNodeInstances);
+			}
 		}
 		private static int RandomizeRowsInEachColumn(int column, int previousColumnRowCount)
 		{
