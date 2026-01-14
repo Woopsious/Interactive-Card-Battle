@@ -208,7 +208,7 @@ namespace Woopsious
 		{
 			PauseGame(false);
 			OnDebugTestCardCombatEvent?.Invoke(entityDatas);
-			CurrentlyVisitedMapNode = InteractiveMapHandler.Instance.MapNodeTable[0][0]; //grab first map node in first column
+			CurrentlyVisitedMapNode = MapController.Instance.MapNodeTable[0][0]; //grab first map node in first column
 			CurrentGameState = GameState.CardCombat;
 			OnGameStateChange?.Invoke(CurrentGameState);
 		}

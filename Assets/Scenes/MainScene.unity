@@ -5989,6 +5989,7 @@ MonoBehaviour:
     m_Handle: 0
   loadedGameScene:
     m_Handle: 0
+  debugGenNewMapAtColumnOne: 0
   playerClassDataTypes:
   - {fileID: 11400000, guid: 1a2156b5472ea264cb5a390a3aeaad42, type: 2}
   - {fileID: 11400000, guid: 62067270c29d0254b8250c407b2e4184, type: 2}

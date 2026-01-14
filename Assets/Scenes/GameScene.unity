@@ -5569,6 +5569,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1165077261}
+  - component: {fileID: 1165077262}
   - component: {fileID: 1165077260}
   - component: {fileID: 1165077259}
   - component: {fileID: 1165077258}
@@ -5629,7 +5630,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7dc42dd3cf797745827fa481f5a1a1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapCamera: {fileID: 904996575}
   interactiveMapRectTransform: {fileID: 1165077261}
   nodeLinksRectTransform: {fileID: 217868029}
   logLandTypeSpawns: 0
@@ -5660,6 +5660,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 7680, y: 4320}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1165077262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1165077257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17ef22d1586e3b746b98ffcc5156fce3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapCamera: {fileID: 904996575}
 --- !u!1001 &1189092167
 PrefabInstance:
   m_ObjectHideFlags: 0
