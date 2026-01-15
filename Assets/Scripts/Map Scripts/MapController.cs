@@ -57,8 +57,6 @@ namespace Woopsious
 
 			interactiveMapSize = new(Screen.width * 3, Screen.height * 3);
 			interactiveMapRectTransform.sizeDelta = interactiveMapSize;
-
-			mapInstanceData = new MapInstanceData();
 			mapInstanceData.GenerateMapLayout();
 
 			GenerateMapNodes();

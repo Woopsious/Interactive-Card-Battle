@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using System.ComponentModel;
+using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
+using Woopsious.ComplexStats;
 
 namespace Woopsious
 {
@@ -162,11 +162,91 @@ namespace Woopsious
 			},
 		};
 
-		//public List<MapColumnData> MapTableData = new();
 		public List<List<MapNodeInstanceData>> MapTable = new();
+
+		[Header("World Modifiers")]
+		public List<WorldModifer> worldModifers = new();
+		public Dictionary<StatType, WorldModifer> worldModifiersDictionary = new();
+
+		private void RandomizeWorldModifiers()
+		{
+			if (worldModifiersDictionary.Count == 0)
+			{
+				foreach (WorldModifer worldModifer in worldModifers)
+					worldModifiersDictionary.Add(worldModifer.statModifier.statType, worldModifer);
+			}
+
+			int number = NumberOfWorldModifiersToActivate();
+
+			Debug.LogError(number);
+			Debug.LogError(worldModifers.Count + " " + worldModifiersDictionary.Count);
+			
+			List<int> chosenModifierIndexes = ChooseWorldModifiersToActivate(number);
+
+			foreach (WorldModifer worldModifer in worldModifers) //reset all modifers
+				worldModifer.UpdateWorldModifier(false, 0);
+
+			for (int i = 0; i < chosenModifierIndexes.Count; i++) //randomize modifers for chosen ones
+			{
+				WorldModifer chosenModifier = worldModifers[chosenModifierIndexes[i]];
+				float modifierBaseValue = GetRandomFloat(chosenModifier.minModiferValue, chosenModifier.maxModiferValue);
+				chosenModifier.UpdateWorldModifier(true, modifierBaseValue);
+			}
+		}
+		private int NumberOfWorldModifiersToActivate()
+		{
+			//1 modifiers = 20% chance etc...
+			List<float> worldModifierChances = new List<float>
+			{
+				0.9f, 0.2f, 0.05f
+			};
+
+			float total = 0;
+			foreach (float chance in worldModifierChances)
+				total += chance;
+
+			float roll = (float)systemRandom.NextDouble() * total;
+			float cumulativeChance = 0;
+
+			for (int modifiersToCreate = 0; modifiersToCreate < worldModifierChances.Count; modifiersToCreate++)
+			{
+				cumulativeChance += worldModifierChances[modifiersToCreate];
+
+				if (roll <= cumulativeChance)
+					return modifiersToCreate;
+			}
+
+			return 0;
+		}
+		private List<int> ChooseWorldModifiersToActivate(int modifiersToCreate)
+		{
+			List<int> chosenModifierIndexes = new();
+
+			if (modifiersToCreate == 0) return chosenModifierIndexes;
+
+			while (chosenModifierIndexes.Count < modifiersToCreate)
+			{
+				int roll = systemRandom.Next(0, worldModifers.Count);
+
+				if (chosenModifierIndexes.Contains(roll)) continue;
+				else
+				{
+					chosenModifierIndexes.Add(roll);
+				}
+			}
+
+			return chosenModifierIndexes;
+		}
+		private float GetRandomFloat(float minValue, float maxValue)
+		{
+			return (float)(systemRandom.NextDouble() * (maxValue - minValue) + minValue);
+		}
 
 		public void GenerateMapLayout()
 		{
+			MapTable.Clear();
+			RandomizeWorldModifiers();
+
 			List<int> columnRowCounts = new();
 
 			for (int column = 0; column < 10; column++)
@@ -226,6 +306,32 @@ namespace Woopsious
 			}
 
 			return validRowCounts[^1].RowCount;
+		}
+	}
+
+	[System.Serializable]
+	public class WorldModifer
+	{
+		public readonly bool modifierActive;
+		public Stat statModifier;
+		public readonly float minModiferValue;
+		public readonly float maxModiferValue;
+
+		public WorldModifer(Stat statModifier, float minModiferValue, float maxModiferValue)
+		{
+			modifierActive = false;
+			this.statModifier = statModifier;
+			this.minModiferValue = minModiferValue;
+			this.maxModiferValue = maxModiferValue;
+			this.statModifier.InitializeStat(0);
+		}
+
+		public void UpdateWorldModifier(bool active, float modiferValue)
+		{
+			if (active)
+				statModifier.InitializeStat(modiferValue);
+			else //set 0
+				statModifier.InitializeStat(0);
 		}
 	}
 
