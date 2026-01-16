@@ -113,7 +113,7 @@ namespace Woopsious
 		{
 			CardHandler card = Instantiate(DatabaseManagerUi.instance.cardUiPrefab).GetComponent<CardHandler>();
 			card.gameObject.transform.SetParent(classInfoPanel.transform);
-			card.SetupCard(CardInitType.Informational, null, entry.Key, false, entry.Value);
+			card.SetupCard(CardInitType.Informational, null, entry.Key, true, entry.Value);
 			cardList.Add(card);
 			SetCardUiPosition(card.GetComponent<RectTransform>(), index);
 		}

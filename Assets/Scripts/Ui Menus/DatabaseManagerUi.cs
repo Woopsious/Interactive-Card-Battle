@@ -200,7 +200,7 @@ namespace Woopsious
 		{
 			CardHandler card = Instantiate(cardUiPrefab).GetComponent<CardHandler>();
 			card.transform.SetParent(databaseInnerPanel.transform);
-			card.SetupCard(CardInitType.Informational, null, entry.Key, false, entry.Value);
+			card.SetupCard(CardInitType.Informational, null, entry.Key, true, entry.Value);
 			cardList.Add(card);
 			SetCardUiPosition(card.GetComponent<RectTransform>(), index);
 		}
@@ -232,7 +232,7 @@ namespace Woopsious
 
 				CardHandler card = Instantiate(cardUiPrefab).GetComponent<CardHandler>();
 				card.transform.SetParent(collectableCardsParent.transform);
-				card.SetupCard(CardInitType.Informational, null, cards[i], false, 0);
+				card.SetupCard(CardInitType.Informational, null, cards[i], true, 0);
 				collectableCardList.Add(card);
 				SetCollectableCardUiPosition(card.GetComponent<RectTransform>(), cardsFound);
 				cardsFound++;

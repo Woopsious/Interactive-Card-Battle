@@ -86,12 +86,12 @@ namespace Woopsious
 		}
 
 		//card Ui initilization
-		private void InitilizeInformationalCard(CardInitType cardInitType, int cardDeckCount)
+		private void InitilizeInformationalCard(CardInitType cardInitType, bool showEnergy, int cardDeckCount)
 		{
 			UpdateCardName(cardHandler.AttackData.attackName);
 			ChangeBorderColour(cardHandler.AttackData.cardRarity);
 
-			UpdateCardEnergyUi(false);
+			UpdateCardEnergyUi(showEnergy);
 			UpdateCardCountUi(true, true, cardDeckCount);
 			ToggleRewardCardUi(false);
 			ToggleDropChanceUi(true);

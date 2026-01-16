@@ -29,8 +29,10 @@ namespace Woopsious
 		private Vector2 interactiveMapSize = new(Screen.width * 3, Screen.height * 3);
 
 		[Header("Runtime Data")]
-		public Dictionary<int, Dictionary<int, MapNodeController>> MapNodeTable { get; private set; } = new();
 		public MapInstanceData mapInstanceData;
+		public MapGlobalModifiers globalModifiers;
+
+		public Dictionary<int, Dictionary<int, MapNodeController>> MapNodeTable { get; private set; } = new();
 		public List<GameObject> MapNodes = new();
 		public List<GameObject> MapNodeLinks = new();
 
@@ -57,6 +59,7 @@ namespace Woopsious
 
 			interactiveMapSize = new(Screen.width * 3, Screen.height * 3);
 			interactiveMapRectTransform.sizeDelta = interactiveMapSize;
+			globalModifiers.RandomizeWorldModifiers();
 			mapInstanceData.GenerateMapLayout();
 
 			GenerateMapNodes();

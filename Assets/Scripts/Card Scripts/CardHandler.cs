@@ -36,7 +36,7 @@ namespace Woopsious
 		public static event Action<CardHandler> OnCardCleanUp;
 		public static event Action<CardHandler> OnCardDiscarded;
 
-		public event Action<CardInitType, int> InitilzeInformationalCardUi;
+		public event Action<CardInitType, bool, int> InitilzeInformationalCardUi;
 		public event Action<CardInitType, bool, int> InitilzeCardUi;
 		public event Action<CardInitType, StatusEffectsData> InitilzeDummyCardUi;
 		public event Action<CardInitType, int> InitilzeRewardCardUi;
@@ -114,7 +114,7 @@ namespace Woopsious
 			switch (cardType)
 			{
 				case CardInitType.Informational:
-				InitilzeInformationalCardUi?.Invoke(cardType, cardDeckCount);
+				InitilzeInformationalCardUi?.Invoke(cardType, playerCard, cardDeckCount);
 				break;
 
 				case CardInitType.InGame:
@@ -126,7 +126,6 @@ namespace Woopsious
 				break;
 			}
 		}
-
 		public void UpdateCard(Entity cardOwner, bool playerCard)
 		{
 			PlayerCard = playerCard;

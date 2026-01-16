@@ -507,7 +507,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugInitilizeEntity: 0
-  health: 0
+  health:
+    statType: {fileID: 11400000, guid: 6c394482485bc2d46a6b900e806824d2, type: 2}
+    baseValue: 0
+    valueModifiers: []
+    valuePercentageModifiers: []
+    value: 0
   block: 0
   damageDealtModifier:
     statType: {fileID: 11400000, guid: ecdaca6f9ab947f4bad45d2dddbb320b, type: 2}

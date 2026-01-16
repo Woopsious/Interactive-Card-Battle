@@ -171,7 +171,7 @@ namespace Woopsious
 
 			foreach (Entity enemy in EnemyEntities())
 			{
-				if (enemy.health <= 0)
+				if (enemy.health.value <= 0)
 					enemiesDead++;
 			}
 

@@ -17,7 +17,8 @@ namespace Woopsious
 		AudioHandler audioHandler;
 
 		[Header("Runtime Stats")]
-		public int health;
+		public Stat healthMax;
+		public Stat health;
 		public int block;
 
 		[Header("Modifiers %")]
@@ -25,7 +26,6 @@ namespace Woopsious
 		public Stat damageRecievedModifier;
 
 		[Header("Modifiers")]
-		public Stat healthMax;
 		public Stat damageBonus;
 		public Stat blockBonus;
 
@@ -96,7 +96,7 @@ namespace Woopsious
 			InitializeStats();
 
 			OnEntityInitialize?.Invoke(EntityData.CreateEntityName(EntityData));
-			OnHealthChange?.Invoke(health, entityData.maxHealth);
+			OnHealthChange?.Invoke((int)health.value, entityData.maxHealth);
 			OnBlockChange?.Invoke(block);
 			ImageHighlightChangeEvent(HighlightState.Neutral);
 
@@ -107,13 +107,20 @@ namespace Woopsious
 		}
 		protected virtual void InitializeStats()
 		{
-			health = EntityData.maxHealth;
+			healthMax.InitializeStat(EntityData.maxHealth);
+			healthMax.AddMatchingModifier(healthMax.statType, MapController.Instance.globalModifiers.GetModifierStat(healthMax.statType));
+			health.InitializeStat(healthMax.value);
+
 			block = EntityData.baseBlock;
 
 			damageDealtModifier.InitializeStat(1);
-			damageRecievedModifier.InitializeStat(1);
+			damageDealtModifier.AddMatchingModifier(
+				damageDealtModifier.statType, MapController.Instance.globalModifiers.GetModifierStat(damageDealtModifier.statType));
 
-			healthMax.InitializeStat(EntityData.maxHealth);
+			damageRecievedModifier.InitializeStat(1);
+			damageRecievedModifier.AddMatchingModifier(
+				damageRecievedModifier.statType, MapController.Instance.globalModifiers.GetModifierStat(damageRecievedModifier.statType));
+
 			damageBonus.InitializeStat(0);
 			blockBonus.InitializeStat(0);
 		}
@@ -140,10 +147,10 @@ namespace Woopsious
 			damageData.DamageValue = GetDamageReceivedModifier(damageData);
 			damageData.DamageValue = GetBlockedDamage(damageData);
 
-			health -= damageData.DamageValue;
+			health.value -= damageData.DamageValue;
 
 			audioHandler.PlayAudio(EntityData.hitSfx, true);
-			OnHealthChange?.Invoke(health, EntityData.maxHealth);
+			OnHealthChange?.Invoke((int)health.value, EntityData.maxHealth);
 			ImageHighlightChangeEvent(HighlightState.Neutral);
 			OnDeath();
 		}
@@ -154,11 +161,11 @@ namespace Woopsious
 		}
 		public virtual void ReceiveHealing(DamageData damageData)
 		{
-			health += damageData.HealValue;
-			if (health > healthMax.value)
-				health = (int)healthMax.value;
+			health.value += damageData.HealValue;
+			if (health.value > healthMax.value)
+				health.value = (int)healthMax.value;
 
-			OnHealthChange?.Invoke(health, EntityData.maxHealth);
+			OnHealthChange?.Invoke((int)health.value, EntityData.maxHealth);
 		}
 
 		//helpers
@@ -196,7 +203,7 @@ namespace Woopsious
 		//entity death
 		void OnDeath()
 		{
-			if (health <= 0)
+			if (health.value <= 0)
 			{
 				OnEntityDeath?.Invoke(this);
 				gameObject.SetActive(false);
@@ -253,7 +260,7 @@ namespace Woopsious
 		//debugs
 		public void DebugKill()
 		{
-			health = 0;
+			ReceiveDamage(new DamageData(this, false, true, (int)health.value));
 			OnDeath();
 		}
 

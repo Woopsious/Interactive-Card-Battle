@@ -5635,26 +5635,23 @@ MonoBehaviour:
   logLandTypeSpawns: 0
   MapNodePrefab: {fileID: 6702147471770271347, guid: 2d74d413fc0140b4aa70249b5a68c327, type: 3}
   MapNodeLinkPrefab: {fileID: 53403288536955660, guid: e106b66eba149354ab5e9128f6e72097, type: 3}
-  mapInstanceData:
+  globalModifiers:
     worldModifers:
-    - statModifier:
-        statType: {fileID: 11400000, guid: 8723a9b7b8ce00948b42c29c64b43e87, type: 2}
-        baseValue: 0
-        valueModifiers: []
-        valuePercentageModifiers: []
-        value: 0
-    - statModifier:
-        statType: {fileID: 11400000, guid: ecdaca6f9ab947f4bad45d2dddbb320b, type: 2}
-        baseValue: 0
-        valueModifiers: []
-        valuePercentageModifiers: []
-        value: 0
-    - statModifier:
-        statType: {fileID: 11400000, guid: 3cab06129ae702840bb6764966e1f755, type: 2}
-        baseValue: 0
-        valueModifiers: []
-        valuePercentageModifiers: []
-        value: 0
+    - statToEffect: {fileID: 11400000, guid: 8723a9b7b8ce00948b42c29c64b43e87, type: 2}
+      isPercentage: 1
+      minModiferValue: -0.25
+      maxModiferValue: 0.25
+      modiferValue: 0
+    - statToEffect: {fileID: 11400000, guid: ecdaca6f9ab947f4bad45d2dddbb320b, type: 2}
+      isPercentage: 1
+      minModiferValue: -0.25
+      maxModiferValue: 0.25
+      modiferValue: 0
+    - statToEffect: {fileID: 11400000, guid: 3cab06129ae702840bb6764966e1f755, type: 2}
+      isPercentage: 1
+      minModiferValue: -0.25
+      maxModiferValue: 0.25
+      modiferValue: 0
   MapNodes: []
   MapNodeLinks:
   - {fileID: 0}
