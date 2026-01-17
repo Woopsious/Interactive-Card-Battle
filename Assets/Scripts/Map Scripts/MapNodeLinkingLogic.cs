@@ -66,7 +66,7 @@ namespace Woopsious
 			//link nodes in current column to nodes in previous column
 			for (int curColumnRow = 0; curColumnRow < currentColumn.Count; curColumnRow++)
 			{
-				nodeLinks.Add(new(currentColumn[curColumnRow], previousColumn[nodeOffset]));
+				nodeLinks.Add(new(previousColumn[nodeOffset], currentColumn[curColumnRow]));
 				nodeOffset++;
 
 				if (nodesToDoubleLink == 0) continue;
@@ -82,7 +82,7 @@ namespace Woopsious
 				if (roll > chanceForNoLink) continue;
 
 				nodesToDoubleLink--;
-				nodeLinks.Add(new(currentColumn[curColumnRow], previousColumn[nodeOffset]));
+				nodeLinks.Add(new(previousColumn[nodeOffset], currentColumn[curColumnRow]));
 				nodeOffset++;
 			}
 

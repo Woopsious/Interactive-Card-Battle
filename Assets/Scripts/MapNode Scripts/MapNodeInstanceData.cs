@@ -215,7 +215,7 @@ namespace Woopsious
 
 		public void CalculateEncounterDifficulty(int columnIndex)
 		{
-			float difficultyModifier = GameManager.WorldDifficulty + mapNodeDefinition.baseEncounterDifficulty;
+			float difficultyModifier = MapController.MapDifficulty + mapNodeDefinition.baseEncounterDifficulty;
 
 			int increaseDifficultyEveryXColumns = 3;
 			int timesByLimit = columnIndex / increaseDifficultyEveryXColumns;

@@ -112,7 +112,6 @@ namespace Woopsious
 		public List<MapNodeDefinition> mapNodeDataTypes = new();
 
 		[Header("Runtime Data")]
-		public static int WorldDifficulty { get; private set; }
 		public static EntityData PlayerClass { get; private set; }
 		public static MapNodeController CurrentlyVisitedMapNode { get; private set; }
 		public static GameState CurrentGameState { get; private set; }
@@ -183,7 +182,7 @@ namespace Woopsious
 			OnGameStateChange?.Invoke(CurrentGameState);
 
 			if (instance.debugGenNewMapAtColumnOne || CurrentlyVisitedMapNode != null && CurrentlyVisitedMapNode.instanceData.IsMapEndNode)
-				GenerateNewMap(WorldDifficulty + 1);
+				GenerateNewMap();
 		}
 		public static void EnterCardCombatWin()
 		{
@@ -197,9 +196,8 @@ namespace Woopsious
 			CurrentGameState = GameState.CardCombatLoss;
 			OnGameStateChange?.Invoke(CurrentGameState);
 		}
-		public static void GenerateNewMap(int worldDifficulty)
+		public static void GenerateNewMap()
 		{
-			WorldDifficulty = worldDifficulty;
 			OnGenerateNewMap?.Invoke();
 		}
 
@@ -260,7 +258,7 @@ namespace Woopsious
 				SaveManager.LoadPlayerData();
 			if (loadedScene.name == gameScene)
 			{
-				GenerateNewMap(1);
+				GenerateNewMap();
 				EnterMapView();
 			}
 

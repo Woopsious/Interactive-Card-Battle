@@ -17,8 +17,6 @@ namespace Woopsious
 			int number = NumberOfWorldModifiersToActivate();
 			List<int> chosenModifierIndexes = ChooseWorldModifiersToActivate(number);
 
-			Debug.LogError("chosen modifiers count:" + chosenModifierIndexes.Count);
-
 			foreach (WorldModifer worldModifer in worldModifers) //reset all modifers
 				worldModifer.UpdateWorldModifier(false, 0);
 
@@ -26,7 +24,6 @@ namespace Woopsious
 			{
 				WorldModifer chosenModifier = worldModifers[chosenModifierIndexes[i]];
 				float modifierBaseValue = (float)systemRandom.Next(-5, 6) / 20; //get values and convert them to -0.25-0.25
-				Debug.LogError(modifierBaseValue);
 				chosenModifier.UpdateWorldModifier(true, modifierBaseValue);
 			}
 		}

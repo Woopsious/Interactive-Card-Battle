@@ -127,7 +127,7 @@ namespace Woopsious
 			UpdateCardName(cardHandler.AttackData.attackName);
 			ChangeBorderColour(cardHandler.AttackData.cardRarity);
 
-			UpdateCardEnergyUi(false);
+			UpdateCardEnergyUi(true);
 			UpdateCardCountUi(true, false, cardDeckCount);
 			ToggleRewardCardUi(true);
 			ToggleDropChanceUi(true);

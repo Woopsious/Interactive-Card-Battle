@@ -1,10 +1,7 @@
-using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
+using static Woopsious.MapGlobalModifiers;
 
 namespace Woopsious
 {
@@ -12,7 +9,7 @@ namespace Woopsious
 	{
 		public static MapController Instance;
 
-		public RectTransform interactiveMapRectTransform;
+		public RectTransform MapNodesRectTransform;
 		public RectTransform nodeLinksRectTransform;
 
 		public bool logLandTypeSpawns;
@@ -29,6 +26,7 @@ namespace Woopsious
 		private Vector2 interactiveMapSize = new(Screen.width * 3, Screen.height * 3);
 
 		[Header("Runtime Data")]
+		public static int MapDifficulty { get; private set; }
 		public MapInstanceData mapInstanceData;
 		public MapGlobalModifiers globalModifiers;
 
@@ -36,12 +34,17 @@ namespace Woopsious
 		public List<GameObject> MapNodes = new();
 		public List<GameObject> MapNodeLinks = new();
 
+		//events
+		public static event Action<int> OnMapDifficultyChange;
+		public static event Action<List<WorldModifer>> OnMapModifiersChange;
+
 		void Awake()
 		{
 			Instance = this;
 			heightOfNodes = MapNodePrefab.GetComponent<RectTransform>().sizeDelta.y;
 			widthOfNodes = MapNodePrefab.GetComponent<RectTransform>().sizeDelta.x;
 
+			MapDifficulty = 0;
 			foreach (MapNodeDefinition node in GameManager.instance.mapNodeDataTypes)
 				TotalNodeSpawnChance += node.nodeSpawnChance;
 
@@ -58,9 +61,14 @@ namespace Woopsious
 			CleanUpOldMap();
 
 			interactiveMapSize = new(Screen.width * 3, Screen.height * 3);
-			interactiveMapRectTransform.sizeDelta = interactiveMapSize;
+			MapNodesRectTransform.sizeDelta = interactiveMapSize;
+
+			MapDifficulty++;
 			globalModifiers.RandomizeWorldModifiers();
 			mapInstanceData.GenerateMapLayout();
+
+			OnMapDifficultyChange?.Invoke(MapDifficulty);
+			OnMapModifiersChange?.Invoke(globalModifiers.worldModifers);
 
 			GenerateMapNodes();
 		}
