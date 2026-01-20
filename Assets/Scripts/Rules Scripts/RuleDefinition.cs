@@ -16,17 +16,24 @@ namespace Woopsious
 	[CreateAssetMenu(fileName = "Rule", menuName = "ScriptableObjects/Rule")]
 	public class RuleDefinition : ScriptableObject
 	{
+		[Header("Rule Trigger")]
+		public RuleTrigger trigger;
+		public enum RuleTrigger
+		{
+			Unset, cardBattleStart, attack
+		}
+
 		[Header("Rule Condition")]
 		public RuleCondition ruleCondition;  // Can reference any RuleCondition type (e.g., EntityCondition, StatusEffectCondition)
 
 		[Header("Rule Outcome")]
 		public RuleOutcome ruleOutcome;      // Can reference any RuleOutcome type (e.g., EntityOutcome, StatusEffectOutcome)
 
-		public bool EvaluateAndApply(Entity entity)
+		public bool EvaluateAndApply(Entity conditionalEntity, Entity outcomeEntity)
 		{
-			if (ruleCondition.Evaluate(entity))
+			if (ruleCondition.Evaluate(conditionalEntity))
 			{
-				ruleOutcome.Apply(entity);
+				ruleOutcome.Apply(outcomeEntity);
 				return true;
 			}
 			return false;

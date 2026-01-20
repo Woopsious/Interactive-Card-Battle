@@ -150,6 +150,7 @@ namespace Woopsious
 			health.value -= damageData.DamageValue;
 
 			audioHandler.PlayAudio(EntityData.hitSfx, true);
+			OnBlockChange?.Invoke(block);
 			OnHealthChange?.Invoke((int)health.value, EntityData.maxHealth);
 			ImageHighlightChangeEvent(HighlightState.Neutral);
 			OnDeath();
@@ -192,7 +193,7 @@ namespace Woopsious
 				block -= damageData.DamageValue;
 				damageData.DamageValue = 0;
 			}
-			else
+			else if (block >= 0)
 			{
 				damageData.DamageValue -= block;
 				block = 0;

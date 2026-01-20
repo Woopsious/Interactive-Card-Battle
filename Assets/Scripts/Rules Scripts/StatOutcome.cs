@@ -4,7 +4,7 @@ using Woopsious.ComplexStats;
 namespace Woopsious
 {
 	// stat outcome
-	[CreateAssetMenu(fileName = "StatusEffectOutcome", menuName = "ScriptableObjects/Rule/StatOutcome")]
+	[CreateAssetMenu(fileName = "StatOutcome", menuName = "ScriptableObjects/Rule/StatOutcome")]
 	public class StatOutcome : RuleOutcome
 	{
 		public StatType statType;
