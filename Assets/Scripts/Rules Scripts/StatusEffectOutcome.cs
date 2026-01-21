@@ -10,9 +10,9 @@ namespace Woopsious
 	{
 		public List<StatusEffectsData> effects = new();
 
-		public override void Apply(Entity entity)
+		public override void Apply(RuleContext ruleContext)
 		{
-			entity.StatusEffectsHandler.AddStatusEffects(effects);
+			ruleContext.OutcomeEntity.StatusEffectsHandler.AddStatusEffects(effects);
 		}
 	}
 }

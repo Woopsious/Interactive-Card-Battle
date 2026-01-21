@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a1769762a15c1642963ba2422936a11, type: 3}
   m_Name: Grapple_Outcome
   m_EditorClassIdentifier: 
-  damageData:
+  applyOutcomeOn: 1
+  damageSettings:
     isMultiHitAttack: 0
     HitsDifferentTargets: 0
     multiHitCount: 0

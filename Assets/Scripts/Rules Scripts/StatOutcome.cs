@@ -10,9 +10,9 @@ namespace Woopsious
 		public StatType statType;
 		public StatModifier statModifier;
 
-		public override void Apply(Entity entity)
+		public override void Apply(RuleContext ruleContext)
 		{
-			entity.AddStatModifier(statType, statModifier);
+			ruleContext.OutcomeEntity.AddStatModifier(statType, statModifier);
 		}
 	}
 }

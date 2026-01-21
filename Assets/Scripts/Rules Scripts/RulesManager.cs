@@ -15,12 +15,12 @@ namespace Woopsious
 			Instance = this;
 		}
 
-		public static void CheckRules(RuleTrigger ruleTrigger, Entity conditionEntity, Entity outcomeEntity)
+		public static void CheckRules(RuleTrigger ruleTrigger, RuleContext ruleContext)
 		{
 			foreach (RuleDefinition rule in Instance.rulesList)
 			{
 				if (rule.trigger == ruleTrigger)
-					rule.EvaluateAndApply(conditionEntity, outcomeEntity);
+					rule.EvaluateAndApply(ruleContext);
 			}
 		}
 	}

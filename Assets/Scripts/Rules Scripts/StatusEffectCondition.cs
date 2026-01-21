@@ -9,9 +9,9 @@ namespace Woopsious
 	{
 		public StatusEffectsData requiredEffect;
 
-		public override bool Evaluate(Entity entity)
+		public override bool Evaluate(RuleContext ruleContext)
 		{
-			foreach (var effect in entity.StatusEffectsHandler.currentStatusEffects)
+			foreach (var effect in ruleContext.ConditionalEntity.StatusEffectsHandler.currentStatusEffects)
 			{
 				if (effect.StatusEffectsData == requiredEffect)
 					return true;

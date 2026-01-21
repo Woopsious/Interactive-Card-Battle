@@ -9,9 +9,9 @@ namespace Woopsious
 	{
 		public EntityData targetEntity;
 
-		public override bool Evaluate(Entity entity)
+		public override bool Evaluate(RuleContext ruleContext)
 		{
-			return entity.EntityData == targetEntity;
+			return ruleContext.ConditionalEntity.EntityData == targetEntity;
 		}
 	}
 }

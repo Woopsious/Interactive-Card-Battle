@@ -15,9 +15,10 @@ namespace Woopsious
 		public List<Entity> enemyEntities = new();
 
 		//round/turn tracking
+		public int currentRound;
+		public int currentTurn;
 		public Entity currentEntityTurn;
 		public Entity entityToStartNewRoundOn;
-		public int currentRound;
 
 		//events
 		public static event Action<int> OnNewRoundStartEvent;
@@ -89,6 +90,7 @@ namespace Woopsious
 			currentEntityTurn = entity;
 			entityToStartNewRoundOn = entity;
 			currentRound = 1;
+			currentTurn = 1;
 
 			OnNewRoundStartEvent?.Invoke(currentRound);
 			OnStartTurn?.Invoke(entity);
@@ -134,6 +136,7 @@ namespace Woopsious
 			AddEntityToTurnOrder(entity);
 
 			currentEntityTurn = turnOrder[0];
+			currentTurn++;
 
 			ShouldStartNewRound();
 			OnStartTurn?.Invoke(currentEntityTurn);
@@ -143,6 +146,7 @@ namespace Woopsious
 			if (currentEntityTurn == entityToStartNewRoundOn)
 			{
 				currentRound++;
+				currentTurn = 1;
 				OnNewRoundStartEvent?.Invoke(currentRound);
 			}
 		}

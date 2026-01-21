@@ -7,18 +7,27 @@ namespace Woopsious
 	[CreateAssetMenu(fileName = "DamageOutcome", menuName = "ScriptableObjects/Rule/DamageOutcome")]
 	public class DamageOutcome : RuleOutcome
 	{
-		public DamageData damageData;
+		public ValueTypes applyOutcomeOn;
+		public DamageData damageSettings;
 
-		public override void Apply(Entity entity)
+		public override void Apply(RuleContext ruleContext)
 		{
-			damageData = new(entity, false, false, damageData.DamageValue); //assign self as damage source
+			if (ruleContext.ConditionalEntity == ruleContext.OutcomeEntity) return; //ignore self
 
-			if (damageData.valueTypes.HasFlag(ValueTypes.damages))
-				entity.ReceiveDamage(damageData);
-			if (damageData.valueTypes.HasFlag(ValueTypes.blocks))
-				entity.ReceiveBlock(damageData);
-			if (damageData.valueTypes.HasFlag(ValueTypes.heals))
-				entity.ReceiveHealing(damageData);
+			DamageData outcomeDamage = new(ruleContext.ConditionalEntity, damageSettings);
+
+			// apply all outcomes when atleast 1 flag matches
+			if ((applyOutcomeOn & ruleContext.DamageDataContext.valueTypes) == ValueTypes.none)
+				return;
+
+			if (outcomeDamage.valueTypes.HasFlag(ValueTypes.damages))
+				ruleContext.OutcomeEntity.ReceiveDamage(outcomeDamage);
+
+			if (outcomeDamage.valueTypes.HasFlag(ValueTypes.blocks))
+				ruleContext.OutcomeEntity.ReceiveBlock(outcomeDamage);
+
+			if (outcomeDamage.valueTypes.HasFlag(ValueTypes.heals))
+				ruleContext.OutcomeEntity.ReceiveHealing(outcomeDamage);
 		}
 	}
 }

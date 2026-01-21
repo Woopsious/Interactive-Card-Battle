@@ -5956,9 +5956,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   turnOrder: []
   enemyEntities: []
+  currentRound: 0
+  currentTurn: 0
   currentEntityTurn: {fileID: 0}
   entityToStartNewRoundOn: {fileID: 0}
-  currentRound: 0
 --- !u!114 &1428229684
 MonoBehaviour:
   m_ObjectHideFlags: 0

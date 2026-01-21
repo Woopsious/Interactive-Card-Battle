@@ -6,6 +6,6 @@ namespace Woopsious
 	// RuleCondition base class
 	public abstract class RuleCondition : ScriptableObject
 	{
-		public abstract bool Evaluate(Entity entity);
+		public abstract bool Evaluate(RuleContext ruleContext);
 	}
 }
