@@ -29,6 +29,12 @@ namespace Woopsious
 				case CombatLogContext.CombatLogEntry.heal:
 				message = LogHealMessage(combatLogContext, message);
 				break;
+				case CombatLogContext.CombatLogEntry.effectDamage:
+				message = LogDamageFromEffectMessage(combatLogContext, message);
+				break;
+				case CombatLogContext.CombatLogEntry.statusEffectGained:
+				message = LogGainedStatusEffectMessage(combatLogContext, message);
+				break;
 				case CombatLogContext.CombatLogEntry.statusEffectLost:
 				message = LogLostStatusEffectsMessage(combatLogContext, message);
 				break;
@@ -44,50 +50,53 @@ namespace Woopsious
 			rectTransform.sizeDelta = new Vector2(300, logText.preferredHeight + 10f);
 		}
 
+		//value types logging
 		private string LogDamageMessage(CombatLogContext combatLogContext, string message)
 		{
-			message += $"{combatLogContext.SourceEntity} dealt {combatLogContext.DamageDataContext.DamageValue} to {combatLogContext.TargetEntity}";
+			message += $"{GetEntityName(combatLogContext, true)} dealt {combatLogContext.DamageDataContext.DamageValue} " +
+				$"damage to {GetEntityName(combatLogContext, false)}";
 			return message;
 		}
 		private string LogBlockMessage(CombatLogContext combatLogContext, string message)
 		{
 			if (combatLogContext.SourceEntity == combatLogContext.TargetEntity)
-				message += $"{combatLogContext.SourceEntity} defends self for {combatLogContext.DamageDataContext.BlockValue}";
+				message += $"{GetEntityName(combatLogContext, true)} defends self for {combatLogContext.DamageDataContext.BlockValue}";
 			else
 			{
-				message += 
-					$"{combatLogContext.SourceEntity} defends {combatLogContext.TargetEntity} for {combatLogContext.DamageDataContext.BlockValue}";
+				message += $"{GetEntityName(combatLogContext, true)} defends {GetEntityName(combatLogContext, false)} " +
+					$"for {combatLogContext.DamageDataContext.BlockValue}";
 			}
 			return message;
 		}
 		private string LogHealMessage(CombatLogContext combatLogContext, string message)
 		{
 			if (combatLogContext.SourceEntity == combatLogContext.TargetEntity)
-				message += $"{combatLogContext.SourceEntity} heals self for {combatLogContext.DamageDataContext.HealValue}";
+				message += $"{GetEntityName(combatLogContext, true)} heals self for {combatLogContext.DamageDataContext.HealValue}";
 			else
 			{
-				message +=
-					$"{combatLogContext.SourceEntity} heals {combatLogContext.TargetEntity} for {combatLogContext.DamageDataContext.HealValue}";
+				message += $"{GetEntityName(combatLogContext, true)} heals {GetEntityName(combatLogContext, false)} " +
+					$"for {combatLogContext.DamageDataContext.HealValue}";
 			}
 			return message;
 		}
 
+		//effect logging
+		private string LogGainedStatusEffectMessage(CombatLogContext combatLogContext, string message)
+		{
+			message += $"{GetEntityName(combatLogContext, true)} gained {GetEffectName(combatLogContext)} effect";
+			return message;
+		}
 		private string LogLostStatusEffectsMessage(CombatLogContext combatLogContext, string message)
 		{
-			message += $"{combatLogContext.SourceEntity} lost ";
+			message += $"{GetEntityName(combatLogContext, true)} lost {GetEffectName(combatLogContext)} effect";
+			return message;
+		}
 
-			int count = 0;
-			foreach (StatusEffectsData statusEffect in combatLogContext.LostStatusEffects)
-			{
-				message += $"{statusEffect.effectName}, ";
-				count++;
-			}
-
-			if (count == 1)
-				message = $"{RichTextManager.RemoveLastComma(message)} effect";
-			else
-				message = $"{RichTextManager.RemoveLastComma(message)} effects";
-
+		//values from effects logging
+		private string LogDamageFromEffectMessage(CombatLogContext combatLogContext, string message)
+		{
+			message += $"{GetEntityName(combatLogContext, true)} recieved {combatLogContext.DamageDataContext.DamageValue} " +
+				$"damage from {GetEffectName(combatLogContext)} effect";
 			return message;
 		}
 
@@ -108,6 +117,29 @@ namespace Woopsious
 		private string GetRuleAttackTriggerLog(string message)
 		{
 			return message;
+		}
+
+		//helpers
+		private string GetEntityName(CombatLogContext combatLogContext, bool getSourceEntityName)
+		{
+			if (getSourceEntityName)
+			{
+				if (combatLogContext.SourceEntity.EntityData.isPlayer)
+					return "Player";
+				else
+					return $"{combatLogContext.SourceEntity.EntityData.entityName}";
+			}
+			else
+			{
+				if (combatLogContext.TargetEntity.EntityData.isPlayer)
+					return "Player";
+				else
+					return $"{combatLogContext.TargetEntity.EntityData.entityName}";
+			}
+		}
+		private string GetEffectName(CombatLogContext combatLogContext)
+		{
+			return combatLogContext.StatusEffect.effectName;
 		}
 	}
 }

@@ -104,7 +104,7 @@ namespace Woopsious
 			if (damageReflected == 0)
 				damageReflected++;
 
-			damageData.EntityDamageSource.ReceiveDamage(new(this, false, true, damageReflected));
+			damageData.EntityDamageSource.ReceiveDamage(new(this, false, false, true, damageReflected));
 		}
 
 		//update image border highlight

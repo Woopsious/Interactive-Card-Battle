@@ -68,11 +68,13 @@ namespace Woopsious
 		{
 			TurnOrderManager.OnStartTurn += StartTurn;
 			CardHandler.OnPlayerPickedUpCard += OnCardPicked;
+			StatusEffectsHandler.OnStatusEffectChanges += StatusEffectChange;
 		}
 		protected virtual void OnDisable()
 		{
 			TurnOrderManager.OnStartTurn -= StartTurn;
 			CardHandler.OnPlayerPickedUpCard -= OnCardPicked;
+			StatusEffectsHandler.OnStatusEffectChanges -= StatusEffectChange;
 		}
 
 		void OnTriggerEnter2D(Collider2D other)
@@ -154,11 +156,15 @@ namespace Woopsious
 			OnHealthChange?.Invoke((int)health.value, EntityData.maxHealth);
 			ImageHighlightChangeEvent(HighlightState.Neutral);
 			OnDeath();
+
+			if (damageData.FromEffect) return;
+			CombatLogUi.CreateLog(new(CombatLogContext.CombatLogEntry.damage, damageData.EntityDamageSource, this, damageData));
 		}
 		public virtual void ReceiveBlock(DamageData damageData)
 		{
 			block += damageData.BlockValue;
 			OnBlockChange?.Invoke(block);
+			CombatLogUi.CreateLog(new(CombatLogContext.CombatLogEntry.block, damageData.EntityDamageSource, this, damageData));
 		}
 		public virtual void ReceiveHealing(DamageData damageData)
 		{
@@ -167,6 +173,7 @@ namespace Woopsious
 				health.value = (int)healthMax.value;
 
 			OnHealthChange?.Invoke((int)health.value, EntityData.maxHealth);
+			CombatLogUi.CreateLog(new(CombatLogContext.CombatLogEntry.heal, damageData.EntityDamageSource, this, damageData));
 		}
 
 		//helpers
@@ -211,10 +218,23 @@ namespace Woopsious
 			}
 		}
 
-		//applying damage from DoT effects
-		public void ApplyDoTFromEffects(float damage)
+		//Status Effect Changes
+		protected virtual void StatusEffectChange(StatusEffectsData effect, bool wasAdded)
 		{
-			ReceiveDamage(new DamageData(this, false, true, (int)damage));
+			if (wasAdded)
+				CombatLogUi.CreateLog(new(CombatLogContext.CombatLogEntry.statusEffectGained, this, effect));
+			else
+				CombatLogUi.CreateLog(new(CombatLogContext.CombatLogEntry.statusEffectLost, this, effect));
+		}
+
+		//applying damage from DoT effects
+		public void ApplyDoTFromEffects(StatusEffect statusEffect)
+		{
+			DamageData damageData = new(this, true, false, true, (int)statusEffect.effectModifier.value);
+			ReceiveDamage(damageData);
+
+			if (!damageData.FromEffect) return;
+			CombatLogUi.CreateLog(new(CombatLogContext.CombatLogEntry.effectDamage, this, damageData, statusEffect.StatusEffectsData));
 		}
 
 		//applying/removing stat modifiers
@@ -242,7 +262,7 @@ namespace Woopsious
 
 			UpdateStatsAndUi(false, blockToKeep);
 		}
-		void UpdateStatsAndUi(bool newTurn, int blockToKeep)
+		private void UpdateStatsAndUi(bool newTurn, int blockToKeep)
 		{
 			if (newTurn)
 				block = (int)(EntityData.baseBlock + blockBonus.value);
@@ -261,7 +281,7 @@ namespace Woopsious
 		//debugs
 		public void DebugKill()
 		{
-			ReceiveDamage(new DamageData(this, false, true, (int)health.value));
+			ReceiveDamage(new DamageData(this, false, false, true, (int)health.value));
 			OnDeath();
 		}
 

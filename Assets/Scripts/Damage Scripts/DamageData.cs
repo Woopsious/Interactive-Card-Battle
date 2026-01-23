@@ -9,6 +9,7 @@ namespace Woopsious
 	public class DamageData
 	{
 		public Entity EntityDamageSource { get; private set; }
+		public bool FromEffect { get; private set; }
 		public bool DamageReflectable { get; private set; }
 		public bool DamageIgnoresBlock { get; private set; }
 
@@ -61,8 +62,9 @@ namespace Woopsious
 			statusEffectsForSelf = damageData.statusEffectsForSelf;
 		}
 
-		public DamageData(Entity entityDamageSource, bool damageReflectable, bool damageIgnoresBlock, int damageValue) //simple damage
+		public DamageData(Entity entityDamageSource, bool fromEffect, bool damageReflectable, bool damageIgnoresBlock, int damageValue) //simple damage
 		{
+			FromEffect = fromEffect;
 			EntityDamageSource = entityDamageSource;
 			DamageReflectable = damageReflectable;
 			DamageIgnoresBlock = damageIgnoresBlock;

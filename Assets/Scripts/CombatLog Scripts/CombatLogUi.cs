@@ -52,7 +52,7 @@ namespace Woopsious
 			ClearCombatLog();
 		}
 
-		public static void CreateNewCombatLog(CombatLogContext combatLogContext)
+		public static void CreateLog(CombatLogContext combatLogContext)
 		{
 			GameObject go = Instantiate(instance.logMessageTemplate, instance.contentWindow.transform);
 			CombatLogMessageUi combatLogMessage = go.GetComponent<CombatLogMessageUi>();
@@ -68,7 +68,7 @@ namespace Woopsious
 
 		public void DebugCreateCombatLog()
 		{
-			CreateNewCombatLog(new(CombatLogContext.CombatLogEntry.debug));
+			CreateLog(new(CombatLogContext.CombatLogEntry.debug, "Log created via Ui Button"));
 		}
 	}
 }
