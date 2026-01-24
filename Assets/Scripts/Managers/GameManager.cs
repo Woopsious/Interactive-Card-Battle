@@ -1,3 +1,4 @@
+using NUnit.Framework.Constraints;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -91,6 +92,7 @@ namespace Woopsious
 
 		[Header("Debug")]
 		public bool debugGenNewMapAtColumnOne;
+		public List<EntityData> debugEnemiesToFight = new();
 
 		[Header("Player Scriptable Objects")]
 		public List<EntityData> playerClassDataTypes = new();
@@ -117,7 +119,7 @@ namespace Woopsious
 		public static GameState CurrentGameState { get; private set; }
 		public enum GameState
 		{
-			MainMenu, MapView, CardCombat, CardCombatWin, CardCombatLoss
+			MainMenu, MapView, CardCombat, CardCombatWin, CardCombatLoss, debugCombat
 		}
 
 		//GAME EVENTS
@@ -125,7 +127,6 @@ namespace Woopsious
 		public static event Action OnGenerateNewMap;
 
 		//DEBUG GAME EVENTS
-		public static event Action<List<EntityData>> OnDebugTestCardCombatEvent;
 
 		private void Awake()
 		{
@@ -202,13 +203,12 @@ namespace Woopsious
 		}
 
 		//debug start/end card combat
-		public static void DebugStartCardCombatGameState(List<EntityData> entityDatas)
+		public static void DebugStartCardCombatGameState()
 		{
 			PauseGame(false);
-			OnDebugTestCardCombatEvent?.Invoke(entityDatas);
 			CurrentlyVisitedMapNode = MapController.Instance.MapNodeTable[0][0]; //grab first map node in first column
 			CurrentGameState = GameState.CardCombat;
-			OnGameStateChange?.Invoke(CurrentGameState);
+			OnGameStateChange?.Invoke(GameState.debugCombat);
 		}
 
 		public static void PauseGame(bool pause)

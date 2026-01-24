@@ -68,7 +68,7 @@ namespace Woopsious
 			{
 				HideCardCombatUi();
 			}
-			else if (GameManager.GameState.CardCombat == gameState)
+			else if (GameManager.GameState.CardCombat == gameState || GameManager.GameState.debugCombat == gameState)
 			{
 				ShowCardCombatUi();
 			}
@@ -151,7 +151,7 @@ namespace Woopsious
 				Debug.LogError("add entity data to list of entities to fight in inspector");
 				return;
 			}
-			GameManager.DebugStartCardCombatGameState(listOfEntitiesToFight);
+			GameManager.DebugStartCardCombatGameState();
 		}
 		public void DebugEndCombat()
 		{

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
 using Woopsious.AbilitySystem;
 using Woopsious.ComplexStats;
@@ -22,7 +23,7 @@ namespace Woopsious
 		public RuleTrigger trigger;
 		public enum RuleTrigger
 		{
-			Unset, cardBattleStart, attack
+			Unset, cardBattleStart, reaction
 		}
 
 		[Header("Rule Condition")]
@@ -33,9 +34,12 @@ namespace Woopsious
 
 		public bool EvaluateAndApply(RuleContext ruleContext)
 		{
+			Debug.LogError($"rule {ruleName} eval");
 			if (ruleCondition.Evaluate(ruleContext))
 			{
-				ruleOutcome.Apply(ruleContext);
+				if (CombatLogUi.instance != null && trigger == RuleTrigger.reaction)
+					CombatLogUi.CreateLog(new(CombatLogContext.CombatLogEntry.ruleTrigger, this, ruleContext));
+
 				return true;
 			}
 			return false;

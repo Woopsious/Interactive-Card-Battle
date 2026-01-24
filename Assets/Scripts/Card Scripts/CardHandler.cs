@@ -264,7 +264,7 @@ namespace Woopsious
 			ApplyBlockHealAndEffectsToCardOwner();
 			AddDummyCardsIfExists();
 
-			RulesManager.CheckRules(RuleDefinition.RuleTrigger.attack, new(cardOwner, target, DamageData));
+			RulesManager.CheckRules(RuleDefinition.RuleTrigger.reaction, new(cardOwner, target, DamageData));
 
 			CleanUpCard();
 		}

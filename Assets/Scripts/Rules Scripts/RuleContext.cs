@@ -5,7 +5,6 @@ namespace Woopsious
 {
 	public class RuleContext
 	{
-		public string RuleName { get; private set; }
 		public Entity ConditionalEntity { get; private set; }
 		public Entity OutcomeEntity { get; private set; }
 		public DamageData DamageDataContext { get; private set; }

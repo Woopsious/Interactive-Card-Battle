@@ -36,7 +36,7 @@ namespace Woopsious
 
 		private void OnGameStateChange(GameManager.GameState gameState)
 		{
-			if (GameManager.GameState.CardCombat == gameState)
+			if (GameManager.GameState.CardCombat == gameState || GameManager.GameState.debugCombat == gameState)
 			{
 				HidePlayedCard();
 			}

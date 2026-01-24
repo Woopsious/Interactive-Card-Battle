@@ -7,11 +7,24 @@ namespace Woopsious
 	[CreateAssetMenu(fileName = "EntityCondition", menuName = "ScriptableObjects/Rule/EntityCondition")]
 	public class EntityCondition : RuleCondition
 	{
-		public EntityData targetEntity;
+		public bool conditionalCheckOnly;
+		public EntityData conditionalEntityType;
+		public EntityData outcomeEntityType;
 
 		public override bool Evaluate(RuleContext ruleContext)
 		{
-			return ruleContext.ConditionalEntity.EntityData == targetEntity;
+			if (ruleContext.ConditionalEntity == ruleContext.OutcomeEntity) return false;
+
+			if (conditionalCheckOnly && ruleContext.ConditionalEntity.EntityData == conditionalEntityType)
+				return true;
+			else
+			{
+				if (ruleContext.ConditionalEntity.EntityData == conditionalEntityType &&
+						ruleContext.OutcomeEntity.EntityData == outcomeEntityType)
+					return true;
+				else
+					return false;
+			}
 		}
 	}
 }

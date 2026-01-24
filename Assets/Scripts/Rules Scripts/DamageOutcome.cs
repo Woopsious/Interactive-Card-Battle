@@ -12,7 +12,8 @@ namespace Woopsious
 
 		public override void Apply(RuleContext ruleContext)
 		{
-			if (ruleContext.ConditionalEntity == ruleContext.OutcomeEntity) return; //ignore self
+			//ignore self, will need expanding if for instance u get bonus healing on urself whilst under x effect etc...
+			//if (ruleContext.DamageDataContext.EntityDamageSource == ruleContext.ConditionalEntity) return;
 
 			DamageData outcomeDamage = new(ruleContext.ConditionalEntity, damageSettings);
 

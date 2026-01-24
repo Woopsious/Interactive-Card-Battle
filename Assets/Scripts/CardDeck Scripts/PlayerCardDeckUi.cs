@@ -81,7 +81,7 @@ namespace Woopsious
 			{
 				SwitchToCardDeckUi();
 			}
-			else if (GameManager.GameState.CardCombat == gameState)
+			else if (GameManager.GameState.CardCombat == gameState || GameManager.GameState.debugCombat == gameState)
 			{
 				SwitchToDrawPileUi();
 			}

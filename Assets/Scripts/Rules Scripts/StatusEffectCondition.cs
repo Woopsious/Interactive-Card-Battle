@@ -11,7 +11,8 @@ namespace Woopsious
 
 		public override bool Evaluate(RuleContext ruleContext)
 		{
-			foreach (var effect in ruleContext.ConditionalEntity.StatusEffectsHandler.currentStatusEffects)
+			//check outcomeEntity has specific effect
+			foreach (var effect in ruleContext.OutcomeEntity.StatusEffectsHandler.currentStatusEffects)
 			{
 				if (effect.StatusEffectsData == requiredEffect)
 					return true;

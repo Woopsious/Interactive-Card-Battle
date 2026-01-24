@@ -20,7 +20,9 @@ namespace Woopsious
 			foreach (RuleDefinition rule in Instance.rulesList)
 			{
 				if (rule.trigger == ruleTrigger)
+				{
 					rule.EvaluateAndApply(ruleContext);
+				}
 			}
 		}
 	}

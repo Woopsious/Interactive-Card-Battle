@@ -5992,6 +5992,10 @@ MonoBehaviour:
   loadedGameScene:
     m_Handle: 0
   debugGenNewMapAtColumnOne: 0
+  debugEnemiesToFight:
+  - {fileID: 11400000, guid: 75c5b9a050f932a4e9a15618d4e885d1, type: 2}
+  - {fileID: 11400000, guid: 75c5b9a050f932a4e9a15618d4e885d1, type: 2}
+  - {fileID: 11400000, guid: 75c5b9a050f932a4e9a15618d4e885d1, type: 2}
   playerClassDataTypes:
   - {fileID: 11400000, guid: 1a2156b5472ea264cb5a390a3aeaad42, type: 2}
   - {fileID: 11400000, guid: 62067270c29d0254b8250c407b2e4184, type: 2}
@@ -6134,6 +6138,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rulesList:
   - {fileID: 11400000, guid: a759c863d0e4a6841b3a77943f24fbf1, type: 2}
+  - {fileID: 11400000, guid: aa39d6b02a05fb143a0692364e5aef01, type: 2}
 --- !u!1 &1437762037
 GameObject:
   m_ObjectHideFlags: 0

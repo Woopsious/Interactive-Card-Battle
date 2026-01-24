@@ -33,7 +33,6 @@ namespace Woopsious
 		private void OnEnable()
 		{
 			GameManager.OnGameStateChange += OnGameStateChanges;
-			GameManager.OnDebugTestCardCombatEvent += DebugCreateTurnOrder;
 			SpawnManager.OnPlayerSpawned += AddPlayerOnSpawnComplete;
 			SpawnManager.OnEnemySpawned += AddEnemyOnSpawnComplete;
 			Entity.OnEntityDeath += HandleEntityDeaths;
@@ -41,7 +40,6 @@ namespace Woopsious
 		private void OnDisable()
 		{
 			GameManager.OnGameStateChange -= OnGameStateChanges;
-			GameManager.OnDebugTestCardCombatEvent += DebugCreateTurnOrder;
 			SpawnManager.OnPlayerSpawned -= AddPlayerOnSpawnComplete;
 			SpawnManager.OnEnemySpawned -= AddEnemyOnSpawnComplete;
 			Entity.OnEntityDeath -= HandleEntityDeaths;
@@ -57,6 +55,10 @@ namespace Woopsious
 			{
 				CreateTurnOrder(GameManager.CurrentlyVisitedMapNode);
 			}
+			else if (GameManager.GameState.debugCombat == gameState)
+			{
+				DebugCreateTurnOrder(GameManager.instance.debugEnemiesToFight);
+			}	
 		}
 
 		//create and start initial turn order
@@ -91,6 +93,21 @@ namespace Woopsious
 			entityToStartNewRoundOn = entity;
 			currentRound = 1;
 			currentTurn = 1;
+
+			HashSet<(Entity, Entity)> checkedPairs = new HashSet<(Entity, Entity)>();
+
+			foreach (Entity conditionalEntity in turnOrder)
+			{
+				foreach (Entity outcomeEntity in turnOrder)
+				{
+					var pair = (conditionalEntity, outcomeEntity);
+
+					if (checkedPairs.Contains(pair)) continue;
+
+					RulesManager.CheckRules(RuleDefinition.RuleTrigger.cardBattleStart, new(conditionalEntity, outcomeEntity));
+					checkedPairs.Add(pair);
+				}
+			}
 
 			OnNewRoundStartEvent?.Invoke(currentRound);
 			OnStartTurn?.Invoke(entity);
@@ -175,7 +192,7 @@ namespace Woopsious
 
 			foreach (Entity enemy in EnemyEntities())
 			{
-				if (enemy.health.value <= 0)
+				if (enemy.health <= 0)
 					enemiesDead++;
 			}
 

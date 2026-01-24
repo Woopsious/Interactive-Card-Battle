@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a83245cd62a125e409c66cf179bf5b30, type: 3}
-  m_Name: Grapple_Rule
+  m_Name: Wolfpack_Rule
   m_EditorClassIdentifier: 
-  ruleName: Grappled
-  trigger: 2
-  ruleCondition: {fileID: 11400000, guid: 66dc3abb925efb140a6abb81f5adc4fb, type: 2}
-  ruleOutcome: {fileID: 11400000, guid: 6aa0e2d63a332a24c9d2ef2d1ae486ae, type: 2}
+  ruleName: Wolf Pack
+  trigger: 1
+  ruleCondition: {fileID: 11400000, guid: 9231afd867f871d488903da3170499ca, type: 2}
+  ruleOutcome: {fileID: 11400000, guid: 24483c7e588ad3c48bec677372aadb54, type: 2}
