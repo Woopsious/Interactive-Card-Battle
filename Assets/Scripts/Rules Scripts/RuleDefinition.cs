@@ -32,17 +32,13 @@ namespace Woopsious
 		[Header("Rule Outcome")]
 		public RuleOutcome ruleOutcome;      // Can reference any RuleOutcome type (e.g., EntityOutcome, StatusEffectOutcome)
 
-		public bool EvaluateAndApply(RuleContext ruleContext)
+		public bool Evaluate(RuleContext ruleContext)
 		{
-			Debug.LogError($"rule {ruleName} eval");
-			if (ruleCondition.Evaluate(ruleContext))
-			{
-				if (CombatLogUi.instance != null && trigger == RuleTrigger.reaction)
-					CombatLogUi.CreateLog(new(CombatLogContext.CombatLogEntry.ruleTrigger, this, ruleContext));
-
-				return true;
-			}
-			return false;
+			return ruleCondition.Evaluate(ruleContext);
+		}
+		public void Apply(RuleContext ruleContext)
+		{
+			ruleOutcome.Apply(ruleContext);
 		}
 	}
 }

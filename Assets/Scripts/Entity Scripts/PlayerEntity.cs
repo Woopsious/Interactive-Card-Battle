@@ -78,11 +78,17 @@ namespace Woopsious
 		public override void AddStatModifier(StatType statType, StatModifier modifier)
 		{
 			base.AddStatModifier(statType, modifier);
+			energy.AddMatchingModifier(statType, modifier);
+
+			OnEnergyChange?.Invoke((int)energy.value);
 			OnStatChanges?.Invoke();
 		}
 		public override void RemoveStatModifier(StatType statType, UnityEngine.Object modifierSource)
 		{
 			base.RemoveStatModifier(statType, modifierSource);
+			energy.RemoveMatchingModifier(statType, modifierSource);
+
+			OnEnergyChange?.Invoke((int)energy.value);
 			OnStatChanges?.Invoke();
 		}
 

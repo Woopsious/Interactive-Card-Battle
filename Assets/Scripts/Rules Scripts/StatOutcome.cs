@@ -12,6 +12,7 @@ namespace Woopsious
 
 		public override void Apply(RuleContext ruleContext)
 		{
+			Debug.LogError("apply outcome to " + ruleContext.OutcomeEntity.name);
 			ruleContext.OutcomeEntity.AddStatModifier(statType, statModifier);
 		}
 	}

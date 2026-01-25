@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a83245cd62a125e409c66cf179bf5b30, type: 3}
+  m_Name: Test_Rule
+  m_EditorClassIdentifier: 
+  ruleName: Test Rule
+  trigger: 1
+  ruleCondition: {fileID: 11400000, guid: fba5a12e6302a0a46a7056f3c70abd39, type: 2}
+  ruleOutcome: {fileID: 11400000, guid: e7ccb6fd47404bd48b8237f5df32d6da, type: 2}

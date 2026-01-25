@@ -10,9 +10,20 @@ namespace Woopsious
 
 		public List<RuleDefinition> rulesList = new();
 
+		private HashSet<RuleDefinition> alreadyTriggeredRulesThisTurn = new();
+
 		private void Awake()
 		{
 			Instance = this;
+		}
+
+		private void OnEnable()
+		{
+			TurnOrderManager.OnStartTurn += ResetRulesTriggeredThisTurn;
+		}
+		private void OnDisable()
+		{
+			TurnOrderManager.OnStartTurn -= ResetRulesTriggeredThisTurn;
 		}
 
 		public static void CheckRules(RuleTrigger ruleTrigger, RuleContext ruleContext)
@@ -21,8 +32,25 @@ namespace Woopsious
 			{
 				if (rule.trigger == ruleTrigger)
 				{
-					rule.EvaluateAndApply(ruleContext);
+					if (rule.Evaluate(ruleContext))
+					{
+						RecordAndLogTriggeredRulesOnce(rule, ruleContext);
+						rule.Apply(ruleContext);
+					}
 				}
+			}
+		}
+
+		private void ResetRulesTriggeredThisTurn(Entity entity)
+		{
+			alreadyTriggeredRulesThisTurn.Clear();
+		}
+		private static void RecordAndLogTriggeredRulesOnce(RuleDefinition ruleDefinition, RuleContext ruleContext)
+		{
+			if (!Instance.alreadyTriggeredRulesThisTurn.Contains(ruleDefinition))
+			{
+				CombatLogUi.CreateLog(new(CombatLogContext.CombatLogEntry.ruleTrigger, ruleDefinition, ruleContext));
+				Instance.alreadyTriggeredRulesThisTurn.Add(ruleDefinition);
 			}
 		}
 	}
