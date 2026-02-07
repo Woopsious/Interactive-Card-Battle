@@ -1,8 +1,5 @@
 using System.Collections.Generic;
-using System.Data;
 using UnityEngine;
-using Woopsious.AbilitySystem;
-using Woopsious.ComplexStats;
 
 /// <summary>
 /// EXAMPLE OF TYPES OF RULES
@@ -27,18 +24,52 @@ namespace Woopsious
 		}
 
 		[Header("Rule Condition")]
+		public bool hasMultipleConditions;
+		public bool allConditionsNeedToBeMet;
+
 		public RuleCondition ruleCondition;  // Can reference any RuleCondition type (e.g., EntityCondition, StatusEffectCondition)
+		public List<RuleCondition> ruleConditions = new();
 
 		[Header("Rule Outcome")]
+		public bool hasMultipleOutcomes;
+
 		public RuleOutcome ruleOutcome;      // Can reference any RuleOutcome type (e.g., EntityOutcome, StatusEffectOutcome)
+		public List<RuleOutcome> ruleOutcomes = new();
 
 		public bool Evaluate(RuleContext ruleContext)
 		{
-			return ruleCondition.Evaluate(ruleContext);
+			if (!hasMultipleConditions)
+				return ruleCondition.Evaluate(ruleContext);
+			else
+			{
+				if (ruleConditions.Count == 0)
+					Debug.LogError("Rule Conditions list is empty");
+
+				foreach (RuleCondition condition in ruleConditions)
+				{
+					bool conditionResult = condition.Evaluate(ruleContext);
+
+					if (allConditionsNeedToBeMet && conditionResult == false)
+						return false;
+					else if (!allConditionsNeedToBeMet && conditionResult == true)
+						return true;
+				}
+
+				return allConditionsNeedToBeMet;
+			}
 		}
 		public void Apply(RuleContext ruleContext)
 		{
-			ruleOutcome.Apply(ruleContext);
+			if (!hasMultipleOutcomes)
+				ruleOutcome.Apply(ruleContext);
+			else
+			{
+				if (ruleOutcomes.Count == 0)
+					Debug.LogError("Rule Outcomes list is empty");
+
+				foreach (RuleOutcome outcome in ruleOutcomes)
+					outcome.Apply(ruleContext);
+			}
 		}
 	}
 }

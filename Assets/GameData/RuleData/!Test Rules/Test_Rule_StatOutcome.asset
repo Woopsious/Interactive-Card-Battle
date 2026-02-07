@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   statType: {fileID: 11400000, guid: 5e178a2a3f3029844ab5c3aa1dea2821, type: 2}
   statModifier:
-    source: {fileID: 0}
+    source: {fileID: 11400000}
     isPercentage: 0
     value: -2

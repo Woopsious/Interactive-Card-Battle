@@ -14,5 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ruleName: Wolf Pack
   trigger: 1
+  hasMultipleConditions: 0
+  allConditionsNeedToBeMet: 0
   ruleCondition: {fileID: 11400000, guid: 9231afd867f871d488903da3170499ca, type: 2}
+  ruleConditions: []
+  hasMultipleOutcomes: 0
   ruleOutcome: {fileID: 11400000, guid: 24483c7e588ad3c48bec677372aadb54, type: 2}
+  ruleOutcomes: []

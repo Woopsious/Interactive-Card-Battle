@@ -1,7 +1,4 @@
-using System.Collections.Generic;
 using UnityEditor;
-using UnityEngine;
-using static Woopsious.AttackData;
 
 namespace Woopsious
 {
@@ -17,6 +14,12 @@ namespace Woopsious
 		public override void OnInspectorGUI()
 		{
 			//DrawDefaultInspector(); // for other non-HideInInspector fields
+
+			EditorGUI.BeginDisabledGroup(true);
+			EditorGUILayout.PropertyField(serializedObject.FindProperty("m_Script"));
+			EditorGUI.EndDisabledGroup();
+
+			EditorGUILayout.Space();
 
 			// update the current values into the serialized object and propreties
 			serializedObject.Update();

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Woopsious
@@ -5,14 +6,20 @@ namespace Woopsious
 	[CreateAssetMenu(fileName = "PlayerCondition", menuName = "ScriptableObjects/Rule/PlayerCondition")]
 	public class PlayerCondition : RuleCondition
 	{
-		public EntityData conditionalEntityType;
+		public List<EntityData> sourceEntityTypes;
 
 		public override bool Evaluate(RuleContext ruleContext)
 		{
-			if (ruleContext.OutcomeEntity.EntityData.isPlayer && ruleContext.ConditionalEntity.EntityData == conditionalEntityType)
-				return true;
-			else 
+			if (!ruleContext.SourceEntity.EntityData.isPlayer) 
 				return false;
+
+			foreach (EntityData entityData in sourceEntityTypes)
+			{
+				if (ruleContext.SourceEntity.EntityData == entityData)
+					return true;
+			}
+
+			return false;
 		}
 	}
 }

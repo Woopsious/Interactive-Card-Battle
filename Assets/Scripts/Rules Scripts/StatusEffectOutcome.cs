@@ -12,7 +12,7 @@ namespace Woopsious
 
 		public override void Apply(RuleContext ruleContext)
 		{
-			ruleContext.OutcomeEntity.StatusEffectsHandler.AddStatusEffects(effects);
+			ruleContext.TargetEntity.StatusEffectsHandler.AddStatusEffects(effects);
 		}
 	}
 }

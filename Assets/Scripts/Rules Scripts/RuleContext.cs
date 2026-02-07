@@ -5,20 +5,20 @@ namespace Woopsious
 {
 	public class RuleContext
 	{
-		public Entity ConditionalEntity { get; private set; }
-		public Entity OutcomeEntity { get; private set; }
+		public Entity SourceEntity { get; private set; }
+		public Entity TargetEntity { get; private set; }
 		public DamageData DamageDataContext { get; private set; }
 
-		public RuleContext(Entity conditionalEntity, Entity outcomeEntity)
+		public RuleContext(Entity sourceEntity, Entity targetEntity)
 		{
-			ConditionalEntity = conditionalEntity;
-			OutcomeEntity = outcomeEntity;
+			SourceEntity = sourceEntity;
+			TargetEntity = targetEntity;
 			DamageDataContext = null;
 		}
-		public RuleContext(Entity conditionalEntity, Entity outcomeEntity, DamageData damageDataContext)
+		public RuleContext(Entity sourceEntity, Entity targetEntity, DamageData damageDataContext)
 		{
-			ConditionalEntity = conditionalEntity;
-			OutcomeEntity = outcomeEntity;
+			SourceEntity = sourceEntity;
+			TargetEntity = targetEntity;
 			DamageDataContext = damageDataContext;
 		}
 	}

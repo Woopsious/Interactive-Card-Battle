@@ -26,6 +26,12 @@ namespace Woopsious
 		{
 			//DrawDefaultInspector(); // for other non-HideInInspector fields
 
+			EditorGUI.BeginDisabledGroup(true);
+			EditorGUILayout.PropertyField(serializedObject.FindProperty("m_Script"));
+			EditorGUI.EndDisabledGroup();
+
+			EditorGUILayout.Space();
+
 			// update the current values into the serialized object and propreties
 			serializedObject.Update();
 

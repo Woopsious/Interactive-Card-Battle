@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ruleName: Test Rule
   trigger: 1
-  ruleCondition: {fileID: 11400000, guid: fba5a12e6302a0a46a7056f3c70abd39, type: 2}
+  ruleCondition: {fileID: 11400000, guid: 4e847cb4897ba294b8bf5d5d927835d8, type: 2}
   ruleOutcome: {fileID: 11400000, guid: e7ccb6fd47404bd48b8237f5df32d6da, type: 2}

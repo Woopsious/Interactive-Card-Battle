@@ -44,7 +44,7 @@ namespace Woopsious
 			}
 
 			logText.text = message;
-			rectTransform.sizeDelta = new Vector2(300, logText.preferredHeight + 10f);
+			rectTransform.sizeDelta = new Vector2(300, logText.preferredHeight + 20f);
 		}
 
 		//value types logging
@@ -116,8 +116,8 @@ namespace Woopsious
 		}
 		private string LogRuleDamageReactionMessage(CombatLogContext context)
 		{
-			return $"{context.RuleContext.ConditionalEntity.EntityData.name} triggred {context.RuleDefinition.ruleName} rule" +
-				$"on {context.RuleContext.OutcomeEntity.EntityData.name}";
+			return $"{context.RuleContext.SourceEntity.EntityData.name} triggered {context.RuleDefinition.ruleName} rule" +
+				$"on {context.RuleContext.TargetEntity.EntityData.name}";
 		}
 
 		//helpers

@@ -10,8 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 15c6952e9c891814ebe9358bc78c0b14, type: 3}
-  m_Name: WolfPack_Condition
+  m_Name: WolfPackArctic_Condition
   m_EditorClassIdentifier: 
-  conditionalCheckOnly: 0
-  conditionalEntityType: {fileID: 11400000, guid: 75c5b9a050f932a4e9a15618d4e885d1, type: 2}
-  outcomeEntityType: {fileID: 11400000, guid: 75c5b9a050f932a4e9a15618d4e885d1, type: 2}
+  useListVersion: 0
+  sourceCheckOnly: 0
+  sourceEntityType: {fileID: 11400000, guid: cd01539fe583dc74d81e094f51438471, type: 2}
+  targetEntityType: {fileID: 11400000, guid: cd01539fe583dc74d81e094f51438471, type: 2}
+  sourceEntityTypes: []
+  targetEntityTypes: []
