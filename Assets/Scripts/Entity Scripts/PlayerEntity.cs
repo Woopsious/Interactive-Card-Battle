@@ -50,17 +50,17 @@ namespace Woopsious
 
 			energy.ResetStat();
 			cardDrawAmount.ResetStat();
-			OnEnergyChange?.Invoke((int)energy.value);
+			OnEnergyChange?.Invoke((int)energy.Value);
 		}
 		public void UpdateCardsUsed(CardHandler card)
 		{
 			if (!card.PlayerCard) return;
 
-			energy.AddMatchingModifier(energy.statType, new(this, false, card.AttackData.energyCost));
-			cardDrawAmount.AddMatchingModifier(cardDrawAmount.statType, new(this, false, card.AttackData.extraCardsToDraw));
-			OnEnergyChange?.Invoke((int)energy.value);
+			energy.ModifyValue(card.AttackData.energyCost, true);
+			cardDrawAmount.AddModifier(cardDrawAmount.StatType, new(this, false, card.AttackData.extraCardsToDraw));
+			OnEnergyChange?.Invoke((int)energy.Value);
 
-			if (energy.value <= 0)
+			if (energy.Value <= 0)
 			{
 				TurnOrderManager.EndCurrentTurn(this);
 				return;
@@ -78,17 +78,17 @@ namespace Woopsious
 		public override void AddStatModifier(StatType statType, StatModifier modifier)
 		{
 			base.AddStatModifier(statType, modifier);
-			energy.AddMatchingModifier(statType, modifier);
+			energy.AddModifier(statType, modifier);
 
-			OnEnergyChange?.Invoke((int)energy.value);
+			OnEnergyChange?.Invoke((int)energy.Value);
 			OnStatChanges?.Invoke();
 		}
 		public override void RemoveStatModifier(StatType statType, UnityEngine.Object modifierSource)
 		{
 			base.RemoveStatModifier(statType, modifierSource);
-			energy.RemoveMatchingModifier(statType, modifierSource);
+			energy.RemoveModifier(statType, modifierSource);
 
-			OnEnergyChange?.Invoke((int)energy.value);
+			OnEnergyChange?.Invoke((int)energy.Value);
 			OnStatChanges?.Invoke();
 		}
 
@@ -98,7 +98,7 @@ namespace Woopsious
 			if (entity == this) return;
 			if (EntityData.playerClass != EntityData.PlayerClass.Ranger) return;
 
-			int healOnKill = (int)(healthMax.value / EntityData.healOnKillPercentage);
+			int healOnKill = (int)(healthMax.Value / EntityData.healOnKillPercentage);
 			ReceiveHealing(new(ValueTypes.heals, healOnKill));
 		}
 		void RogueReflectDamageReceived(DamageData damageData)

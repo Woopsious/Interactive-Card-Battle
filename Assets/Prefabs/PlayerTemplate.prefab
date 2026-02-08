@@ -600,55 +600,60 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugInitilizeEntity: 0
-  health:
-    statType: {fileID: 11400000, guid: 6c394482485bc2d46a6b900e806824d2, type: 2}
-    baseValue: 0
-    valueModifiers: []
-    valuePercentageModifiers: []
-    value: 0
-  block: 0
-  damageDealtModifier:
-    statType: {fileID: 11400000, guid: ecdaca6f9ab947f4bad45d2dddbb320b, type: 2}
-    baseValue: 0
-    valueModifiers: []
-    valuePercentageModifiers: []
-    value: 0
-  damageRecievedModifier:
-    statType: {fileID: 11400000, guid: 3cab06129ae702840bb6764966e1f755, type: 2}
-    baseValue: 0
-    valueModifiers: []
-    valuePercentageModifiers: []
-    value: 0
   healthMax:
-    statType: {fileID: 11400000, guid: 8723a9b7b8ce00948b42c29c64b43e87, type: 2}
+    StatType: {fileID: 11400000, guid: 8723a9b7b8ce00948b42c29c64b43e87, type: 2}
     baseValue: 0
-    valueModifiers: []
-    valuePercentageModifiers: []
-    value: 0
+    modifiedValue: 0
+    flatValueModifiers: []
+    percentageValueModifiers: []
+  health:
+    StatType: {fileID: 11400000, guid: 6c394482485bc2d46a6b900e806824d2, type: 2}
+    baseValue: 0
+    modifiedValue: 0
+    flatValueModifiers: []
+    percentageValueModifiers: []
+  block:
+    StatType: {fileID: 11400000, guid: 7970db2b5740643458ba4835f55ba755, type: 2}
+    baseValue: 0
+    modifiedValue: 0
+    flatValueModifiers: []
+    percentageValueModifiers: []
+  damageDealtModifier:
+    StatType: {fileID: 11400000, guid: ecdaca6f9ab947f4bad45d2dddbb320b, type: 2}
+    baseValue: 0
+    modifiedValue: 0
+    flatValueModifiers: []
+    percentageValueModifiers: []
+  damageRecievedModifier:
+    StatType: {fileID: 11400000, guid: 3cab06129ae702840bb6764966e1f755, type: 2}
+    baseValue: 0
+    modifiedValue: 0
+    flatValueModifiers: []
+    percentageValueModifiers: []
   damageBonus:
-    statType: {fileID: 11400000, guid: f96f4baef2ebf4542b4dd410c6433df2, type: 2}
+    StatType: {fileID: 11400000, guid: f96f4baef2ebf4542b4dd410c6433df2, type: 2}
     baseValue: 0
-    valueModifiers: []
-    valuePercentageModifiers: []
-    value: 0
+    modifiedValue: 0
+    flatValueModifiers: []
+    percentageValueModifiers: []
   blockBonus:
-    statType: {fileID: 11400000, guid: 84690ce2be6104d4587e630e71862ca9, type: 2}
+    StatType: {fileID: 11400000, guid: 84690ce2be6104d4587e630e71862ca9, type: 2}
     baseValue: 0
-    valueModifiers: []
-    valuePercentageModifiers: []
-    value: 0
+    modifiedValue: 0
+    flatValueModifiers: []
+    percentageValueModifiers: []
   cardDrawAmount:
-    statType: {fileID: 11400000, guid: 911aaa10d629cbe4e90161990881dc17, type: 2}
+    StatType: {fileID: 11400000, guid: 911aaa10d629cbe4e90161990881dc17, type: 2}
     baseValue: 0
-    valueModifiers: []
-    valuePercentageModifiers: []
-    value: 0
+    modifiedValue: 0
+    flatValueModifiers: []
+    percentageValueModifiers: []
   energy:
-    statType: {fileID: 11400000, guid: 5e178a2a3f3029844ab5c3aa1dea2821, type: 2}
+    StatType: {fileID: 11400000, guid: 5e178a2a3f3029844ab5c3aa1dea2821, type: 2}
     baseValue: 0
-    valueModifiers: []
-    valuePercentageModifiers: []
-    value: 0
+    modifiedValue: 0
+    flatValueModifiers: []
+    percentageValueModifiers: []
   statusEffectsToDebugAdd: []
 --- !u!114 &4406105294481225313
 MonoBehaviour:

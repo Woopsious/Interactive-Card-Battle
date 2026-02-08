@@ -105,8 +105,8 @@ namespace Woopsious
 			if (cardOwner != null) //apply entity modifiers
 			{
 				DamageData = new(cardOwner, attackData.DamageData);
-				DamageData.DamageValue = (int)(DamageData.DamageValue + cardOwner.damageBonus.value);
-				DamageData.DamageValue = (int)(DamageData.DamageValue * cardOwner.damageDealtModifier.value);
+				DamageData.DamageValue = (int)(DamageData.DamageValue + cardOwner.damageBonus.Value);
+				DamageData.DamageValue = (int)(DamageData.DamageValue * cardOwner.damageDealtModifier.Value);
 			}
 			else
 				DamageData = new(null, attackData.DamageData);
@@ -132,8 +132,8 @@ namespace Woopsious
 			DummyCard = false;
 
 			DamageData = new(cardOwner, AttackData.DamageData);
-			DamageData.DamageValue = (int)(DamageData.DamageValue + cardOwner.damageBonus.value); //apply bonus damage
-			DamageData.DamageValue = (int)(DamageData.DamageValue * cardOwner.damageDealtModifier.value); //apply damage dealt modifier
+			DamageData.DamageValue = (int)(DamageData.DamageValue + cardOwner.damageBonus.Value); //apply bonus damage
+			DamageData.DamageValue = (int)(DamageData.DamageValue * cardOwner.damageDealtModifier.Value); //apply damage dealt modifier
 
 			UpdateCardDescriptionUi?.Invoke(CardType);
 		}

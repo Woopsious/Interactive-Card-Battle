@@ -1,7 +1,5 @@
 using System;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using Woopsious.AbilitySystem;
 using Woopsious.ComplexStats;
 using Woopsious.AudioSystem;
@@ -18,8 +16,8 @@ namespace Woopsious
 
 		[Header("Runtime Stats")]
 		public Stat healthMax;
-		public int health;
-		public int block;
+		public Stat health;
+		public Stat block;
 
 		[Header("Modifiers %")]
 		public Stat damageDealtModifier;
@@ -27,7 +25,7 @@ namespace Woopsious
 
 		[Header("Modifiers")]
 		public Stat damageBonus;
-		public Stat blockBonus;
+		//public Stat blockBonus;
 
 		//hihglight colurs
 		public enum HighlightState
@@ -98,8 +96,8 @@ namespace Woopsious
 			InitializeStats();
 
 			OnEntityInitialize?.Invoke(EntityData.CreateEntityName(EntityData));
-			OnHealthChange?.Invoke(health, entityData.maxHealth);
-			OnBlockChange?.Invoke(block);
+			OnHealthChange?.Invoke((int)health.Value, (int)healthMax.Value);
+			OnBlockChange?.Invoke((int)block.Value);
 			ImageHighlightChangeEvent(HighlightState.Neutral);
 
 			if (entityData.isPlayer) return;
@@ -110,21 +108,22 @@ namespace Woopsious
 		protected virtual void InitializeStats()
 		{
 			healthMax.InitializeStat(EntityData.maxHealth);
-			healthMax.AddMatchingModifier(healthMax.statType, MapController.Instance.globalModifiers.GetModifierStat(healthMax.statType));
-			health = (int)healthMax.value;
+			healthMax.AddModifier(healthMax.StatType, 
+				MapController.Instance.globalModifiers.GetModifierStat(healthMax.StatType));
 
-			block = EntityData.baseBlock;
+			health.InitializeStat(healthMax.Value);
+			block.InitializeStat(EntityData.baseBlock);
 
 			damageDealtModifier.InitializeStat(1);
-			damageDealtModifier.AddMatchingModifier(
-				damageDealtModifier.statType, MapController.Instance.globalModifiers.GetModifierStat(damageDealtModifier.statType));
+			damageDealtModifier.AddModifier(damageDealtModifier.StatType, 
+				MapController.Instance.globalModifiers.GetModifierStat(damageDealtModifier.StatType));
 
 			damageRecievedModifier.InitializeStat(1);
-			damageRecievedModifier.AddMatchingModifier(
-				damageRecievedModifier.statType, MapController.Instance.globalModifiers.GetModifierStat(damageRecievedModifier.statType));
+			damageRecievedModifier.AddModifier(damageRecievedModifier.StatType, 
+				MapController.Instance.globalModifiers.GetModifierStat(damageRecievedModifier.StatType));
 
 			damageBonus.InitializeStat(0);
-			blockBonus.InitializeStat(0);
+			//blockBonus.InitializeStat(0);
 		}
 
 		//start/end turn events
@@ -132,7 +131,7 @@ namespace Woopsious
 		{
 			if (entity != this) return; //not this entities turn
 
-			UpdateStatsAndUi(true, 0);
+			UpdateBlock(true);
 			StatusEffectsHandler.OnNewTurn(entity.gameObject);
 
 			if (EntityData.isPlayer) return; //if is player shouldnt need to do anything else as other scripts handle it
@@ -149,11 +148,11 @@ namespace Woopsious
 			damageData.DamageValue = GetDamageReceivedModifier(damageData);
 			damageData.DamageValue = GetBlockedDamage(damageData);
 
-			health -= damageData.DamageValue;
+			health.ModifyValue(damageData.DamageValue, false);
 
 			audioHandler.PlayAudio(EntityData.hitSfx, true);
-			OnBlockChange?.Invoke(block);
-			OnHealthChange?.Invoke(health, EntityData.maxHealth);
+			OnBlockChange?.Invoke((int)block.Value);
+			OnHealthChange?.Invoke((int)health.Value, (int)healthMax.Value);
 			ImageHighlightChangeEvent(HighlightState.Neutral);
 			OnDeath();
 
@@ -162,19 +161,15 @@ namespace Woopsious
 		}
 		public virtual void ReceiveBlock(DamageData damageData)
 		{
-			int baseBlock = block -= (int)blockBonus.value;
-			baseBlock += damageData.BlockValue;
-			block = (int)(baseBlock + blockBonus.value);
-			OnBlockChange?.Invoke(block);
+			block.ModifyValue(damageData.BlockValue, true);
+			OnBlockChange?.Invoke((int)block.Value);
 			CombatLogUi.CreateLog(new(CombatLogContext.CombatLogEntry.block, damageData.EntityDamageSource, this, damageData));
 		}
 		public virtual void ReceiveHealing(DamageData damageData)
 		{
-			health += damageData.HealValue;
-			if (health > healthMax.value)
-				health = (int)healthMax.value;
-
-			OnHealthChange?.Invoke(health, EntityData.maxHealth);
+			damageData.HealValue = (int)Mathf.Min(damageData.HealValue, healthMax.Value - health.Value);
+			health.ModifyValue(damageData.HealValue, true);
+			OnHealthChange?.Invoke((int)health.Value, (int)healthMax.Value);
 			CombatLogUi.CreateLog(new(CombatLogContext.CombatLogEntry.heal, damageData.EntityDamageSource, this, damageData));
 		}
 
@@ -189,7 +184,7 @@ namespace Woopsious
 		}
 		int GetDamageReceivedModifier(DamageData damageData)
 		{
-			int damage = (int)(damageData.DamageValue * damageRecievedModifier.value);
+			int damage = (int)(damageData.DamageValue * damageRecievedModifier.Value);
 			return damage;
 		}
 		int GetBlockedDamage(DamageData damageData)
@@ -197,15 +192,17 @@ namespace Woopsious
 			if (damageData.DamageIgnoresBlock)
 				return damageData.DamageValue;
 
-			if (block > damageData.DamageValue)
+			if (block.Value > damageData.DamageValue)
 			{
-				block -= damageData.DamageValue;
+				block.ModifyValue(damageData.DamageValue, false);
 				damageData.DamageValue = 0;
 			}
-			else if (block >= 0)
+			else if (block.Value >= 0)
 			{
-				damageData.DamageValue -= block;
-				block = 0;
+				damageData.DamageValue -= (int)block.Value;
+
+				if (block.Value - damageData.DamageValue < 0) //stop negative block and set to 0
+					block.SetValue(0);
 			}
 			return damageData.DamageValue;
 		}
@@ -213,7 +210,7 @@ namespace Woopsious
 		//entity death
 		void OnDeath()
 		{
-			if (health <= 0)
+			if (health.Value <= 0)
 			{
 				OnEntityDeath?.Invoke(this);
 				gameObject.SetActive(false);
@@ -242,54 +239,51 @@ namespace Woopsious
 		//applying/removing stat modifiers
 		public virtual void AddStatModifier(StatType statType, StatModifier modifier)
 		{
-			int blockToKeep = (int)(block - blockBonus.value);
-
 			IncreaseHealthBasedOnMaxHealthModifiers(statType, modifier);
 
-			damageDealtModifier.AddMatchingModifier(statType, modifier);
-			damageRecievedModifier.AddMatchingModifier(statType, modifier);
+			damageDealtModifier.AddModifier(statType, modifier);
+			damageRecievedModifier.AddModifier(statType, modifier);
 
-			damageBonus.AddMatchingModifier(statType, modifier);
-			blockBonus.AddMatchingModifier(statType, modifier);
+			damageBonus.AddModifier(statType, modifier);
+			block.AddModifier(statType, modifier);
+			//blockBonus.AddModifier(statType, modifier);
 
-			UpdateStatsAndUi(false, blockToKeep);
+			UpdateBlock(false);
 		}
 		public virtual void RemoveStatModifier(StatType statType, UnityEngine.Object modifierSource)
 		{
-			int blockToKeep = (int)(block - blockBonus.value);
-
 			DecreaseHealthBasedOnMaxHealthModifiers(statType, modifierSource);
 
-			damageDealtModifier.RemoveMatchingModifier(statType, modifierSource);
-			damageRecievedModifier.RemoveMatchingModifier(statType, modifierSource);
+			damageDealtModifier.RemoveModifier(statType, modifierSource);
+			damageRecievedModifier.RemoveModifier(statType, modifierSource);
 
-			damageBonus.RemoveMatchingModifier(statType, modifierSource);
-			blockBonus.RemoveMatchingModifier(statType, modifierSource);
+			damageBonus.RemoveModifier(statType, modifierSource);
+			block.RemoveModifier(statType, modifierSource);
+			//blockBonus.RemoveModifier(statType, modifierSource);
 
-			UpdateStatsAndUi(false, blockToKeep);
+			UpdateBlock(false);
 		}
 		private void IncreaseHealthBasedOnMaxHealthModifiers(StatType statType, StatModifier modifier)
 		{
-			float percentageOfCurrentHealth = health / healthMax.value;
-			healthMax.AddMatchingModifier(statType, modifier);
-			health = (int)(healthMax.value * percentageOfCurrentHealth);
-			OnHealthChange(health, (int)healthMax.value);
+			float percentageOfCurrentHealth = health.Value / healthMax.Value;
+			healthMax.AddModifier(statType, modifier);
+			health.SetValue(healthMax.Value * percentageOfCurrentHealth);
+			OnHealthChange?.Invoke((int)health.Value, (int)healthMax.Value);
 		}
 		private void DecreaseHealthBasedOnMaxHealthModifiers(StatType statType, UnityEngine.Object modifierSource)
 		{
-			healthMax.RemoveMatchingModifier(statType, modifierSource);
-			if (health > healthMax.value)
-				health = (int)healthMax.value;
-			OnHealthChange(health, (int)healthMax.value);
+			healthMax.RemoveModifier(statType, modifierSource);
+
+			if (health.Value > healthMax.Value)
+				health.SetValue(healthMax.Value);
+			OnHealthChange?.Invoke((int)health.Value, (int)healthMax.Value);
 		}
-		private void UpdateStatsAndUi(bool newTurn, int blockToKeep)
+		private void UpdateBlock(bool newTurn)
 		{
 			if (newTurn)
-				block = (int)(EntityData.baseBlock + blockBonus.value);
-			else
-				block = (int)(blockToKeep + blockBonus.value);
+				block.ResetModifiedValue();
 
-			OnBlockChange?.Invoke(block);
+			OnBlockChange?.Invoke((int)block.Value);
 		}
 
 		//event calls
@@ -301,7 +295,7 @@ namespace Woopsious
 		//debugs
 		public void DebugKill()
 		{
-			ReceiveDamage(new DamageData(this, false, false, true, health));
+			ReceiveDamage(new DamageData(this, false, false, true, (int)health.Value));
 			OnDeath();
 		}
 

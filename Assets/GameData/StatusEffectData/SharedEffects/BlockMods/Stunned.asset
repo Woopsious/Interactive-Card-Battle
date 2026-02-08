@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Stunned
   m_EditorClassIdentifier: 
   effectName: Stunned
-  statType: {fileID: 11400000, guid: 84690ce2be6104d4587e630e71862ca9, type: 2}
+  statType: {fileID: 11400000, guid: 7970db2b5740643458ba4835f55ba755, type: 2}
   hasStacks: 1
   effectStacks: 1
   maxEffectStacks: 10
