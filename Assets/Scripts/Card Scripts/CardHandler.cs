@@ -42,20 +42,20 @@ namespace Woopsious
 		public event Action<CardInitType, int> InitilzeRewardCardUi;
 		public event Action<CardInitType> UpdateCardDescriptionUi;
 
-		void Awake()
+		private void Awake()
 		{
 			boxCollider = GetComponent<BoxCollider2D>();
 			isBeingDragged = false;
 			touchingPlayerRef = null;
 			touchingEnemyRef = null;
 		}
-		void Update()
+		private void Update()
 		{
 			if (isBeingDragged)
 				FollowMouseCursor();
 		}
 
-		void OnTriggerEnter2D(Collider2D other)
+		private void OnTriggerEnter2D(Collider2D other)
 		{
 			if (other.GetComponent<Entity>() != null)
 				EntityTriggerEnter(other.GetComponent<Entity>());
@@ -64,7 +64,7 @@ namespace Woopsious
 			else if (other.GetComponent<DiscardCardUi>() != null)
 				ReplaceCardTriggerEnter();
 		}
-		void OnTriggerExit2D(Collider2D other)
+		private void OnTriggerExit2D(Collider2D other)
 		{
 			if (other.GetComponent<Entity>() != null)
 				EntityTriggerExit(other.GetComponent<Entity>());
@@ -74,7 +74,7 @@ namespace Woopsious
 				ReplaceCardTriggerExit();
 		}
 
-		bool AttackDataNullCheck(AttackData attackData)
+		private bool AttackDataNullCheck(AttackData attackData)
 		{
 			if (attackData == null)
 			{
@@ -152,14 +152,14 @@ namespace Woopsious
 		}
 
 		//trigger enter/exit funcs
-		void EntityTriggerEnter(Entity entity)
+		private void EntityTriggerEnter(Entity entity)
 		{
 			if (entity.EntityData.isPlayer)
 				touchingPlayerRef = (PlayerEntity)entity;
 			else
 				touchingEnemyRef = entity;
 		}
-		void EntityTriggerExit(Entity entity)
+		private void EntityTriggerExit(Entity entity)
 		{
 			if (entity.EntityData.isPlayer)
 				touchingPlayerRef = null;
@@ -167,26 +167,26 @@ namespace Woopsious
 				touchingEnemyRef = null;
 		}
 
-		void DrawnCardsDeckTriggerEnter()
+		private void DrawnCardsDeckTriggerEnter()
 		{
 			transform.localScale = new Vector2(1, 1);
 		}
-		void DrawnCardsDeckTriggerExit()
+		private void DrawnCardsDeckTriggerExit()
 		{
 			transform.localScale = new Vector2(0.5f, 0.5f);
 		}
 
-		void ReplaceCardTriggerEnter()
+		private void ReplaceCardTriggerEnter()
 		{
 			isBeingDiscarded = true;
 		}
-		void ReplaceCardTriggerExit()
+		private void ReplaceCardTriggerExit()
 		{
 			isBeingDiscarded = false;
 		}
 
 		//player mouse events
-		void FollowMouseCursor()
+		private void FollowMouseCursor()
 		{
 			mousePos = Input.mousePosition;
 			transform.position = new Vector3(mousePos.x, mousePos.y, 0);
@@ -204,7 +204,7 @@ namespace Woopsious
 			PlayerDeselectCard();
 		}
 
-		void PlayerSelectCard()
+		private void PlayerSelectCard()
 		{
 			OnPlayerPickedUpCard?.Invoke(this);
 			isBeingDragged = true;
@@ -216,7 +216,7 @@ namespace Woopsious
 			transform.rotation = new Quaternion(0, 0, 0, 0);
 			mousePos = Input.mousePosition;
 		}
-		void PlayerDeselectCard()
+		private void PlayerDeselectCard()
 		{
 			if (isBeingDiscarded)
 				OnCardDiscarded?.Invoke(this);
@@ -255,7 +255,7 @@ namespace Woopsious
 		}
 
 		//shared actions
-		void UseCardOnTarget(Entity target)
+		private void UseCardOnTarget(Entity target)
 		{
 			if (DamageData.valueTypes == ValueTypes.none)
 				Debug.LogError("Value type not set");
@@ -270,7 +270,7 @@ namespace Woopsious
 		}
 
 		//handle applying value types and status effects to correct entities
-		void ApplyDamageAndEffectsToTarget(Entity target)
+		private void ApplyDamageAndEffectsToTarget(Entity target)
 		{
 			if (DamageData.valueTypes.HasFlag(ValueTypes.damages))
 			{
@@ -307,7 +307,7 @@ namespace Woopsious
 
 			return targets;
 		}
-		void ApplyBlockHealAndEffectsToCardOwner()
+		private void ApplyBlockHealAndEffectsToCardOwner()
 		{
 			if (DamageData.valueTypes.HasFlag(ValueTypes.blocks))
 				cardOwner.ReceiveBlock(DamageData);
@@ -317,14 +317,14 @@ namespace Woopsious
 
 			cardOwner.StatusEffectsHandler.AddStatusEffects(DamageData.statusEffectsForSelf);
 		}
-		void AddDummyCardsIfExists()
+		private void AddDummyCardsIfExists()
 		{
 			if (!AttackData.addDummyCardsForEffects) return;
 			PlayerCardDeckHandler.AddDummyCards(AttackData.effectDummyCards);
 		}
 
 		//clean up card
-		void CleanUpCard()
+		private void CleanUpCard()
 		{
 			if (PlayerCard)
 				OnPlayerCardUsed?.Invoke(this, true);

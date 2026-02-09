@@ -23,6 +23,6 @@ MonoBehaviour:
   isDoT: 0
   timeBetweenDamageTicks: 0
   effectModifier:
-    source: {fileID: 11400000, guid: f96f4baef2ebf4542b4dd410c6433df2, type: 2}
+    source: {fileID: 0}
     isPercentage: 0
     value: 2

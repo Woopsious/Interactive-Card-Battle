@@ -513,42 +513,63 @@ MonoBehaviour:
     modifiedValue: 0
     flatValueModifiers: []
     percentageValueModifiers: []
+    minValueLimit: 0
+    maxValueLimit: 0
+    Value: 0
   health:
     StatType: {fileID: 11400000, guid: 6c394482485bc2d46a6b900e806824d2, type: 2}
     baseValue: 0
     modifiedValue: 0
     flatValueModifiers: []
     percentageValueModifiers: []
+    minValueLimit: 0
+    maxValueLimit: 0
+    Value: 0
   block:
     StatType: {fileID: 11400000, guid: 7970db2b5740643458ba4835f55ba755, type: 2}
     baseValue: 0
     modifiedValue: 0
     flatValueModifiers: []
     percentageValueModifiers: []
-  damageDealtModifier:
-    StatType: {fileID: 11400000, guid: ecdaca6f9ab947f4bad45d2dddbb320b, type: 2}
-    baseValue: 0
-    modifiedValue: 0
-    flatValueModifiers: []
-    percentageValueModifiers: []
-  damageRecievedModifier:
-    StatType: {fileID: 11400000, guid: 3cab06129ae702840bb6764966e1f755, type: 2}
-    baseValue: 0
-    modifiedValue: 0
-    flatValueModifiers: []
-    percentageValueModifiers: []
+    minValueLimit: 0
+    maxValueLimit: 0
+    Value: 0
   damageBonus:
     StatType: {fileID: 11400000, guid: f96f4baef2ebf4542b4dd410c6433df2, type: 2}
     baseValue: 0
     modifiedValue: 0
     flatValueModifiers: []
     percentageValueModifiers: []
-  blockBonus:
+    minValueLimit: 0
+    maxValueLimit: 0
+    Value: 0
+  damageDealtModifier:
+    StatType: {fileID: 11400000, guid: ecdaca6f9ab947f4bad45d2dddbb320b, type: 2}
+    baseValue: 0
+    modifiedValue: 0
+    flatValueModifiers: []
+    percentageValueModifiers: []
+    minValueLimit: 0
+    maxValueLimit: 0
+    Value: 0
+  damageRecievedModifier:
+    StatType: {fileID: 11400000, guid: 3cab06129ae702840bb6764966e1f755, type: 2}
+    baseValue: 0
+    modifiedValue: 0
+    flatValueModifiers: []
+    percentageValueModifiers: []
+    minValueLimit: 0
+    maxValueLimit: 0
+    Value: 0
+  healingRecievedModifier:
     StatType: {fileID: 11400000, guid: 84690ce2be6104d4587e630e71862ca9, type: 2}
     baseValue: 0
     modifiedValue: 0
     flatValueModifiers: []
     percentageValueModifiers: []
+    minValueLimit: 0
+    maxValueLimit: 0
+    Value: 0
 --- !u!114 &837194938984598661
 MonoBehaviour:
   m_ObjectHideFlags: 0

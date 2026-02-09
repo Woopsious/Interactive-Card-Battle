@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Woopsious
 {
-	[CreateAssetMenu(fileName = "Rule", menuName = "ScriptableObjects/Rule")]
+	[CreateAssetMenu(fileName = "Rule", menuName = "ScriptableObjects/Rule/RuleDefinition")]
 	public class RuleDefinition : ScriptableObject
 	{
 		public string ruleName;

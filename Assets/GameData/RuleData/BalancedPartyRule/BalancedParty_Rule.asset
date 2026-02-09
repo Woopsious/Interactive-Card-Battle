@@ -10,16 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a83245cd62a125e409c66cf179bf5b30, type: 3}
-  m_Name: Wolfpack_Rule
+  m_Name: BalancedParty_Rule
   m_EditorClassIdentifier: 
-  ruleName: Wolf Pack
+  ruleName: Balanced Party
   trigger: 1
-  hasMultipleConditions: 1
+  hasMultipleConditions: 0
   allConditionsNeedToBeMet: 0
-  ruleCondition: {fileID: 0}
-  ruleConditions:
-  - {fileID: 11400000, guid: e07c95f594e8b704cb36562fc1f5f70f, type: 2}
-  - {fileID: 11400000, guid: 9231afd867f871d488903da3170499ca, type: 2}
+  ruleCondition: {fileID: 11400000, guid: c69d899e523aaff488e54cf3ca1aef80, type: 2}
+  ruleConditions: []
   hasMultipleOutcomes: 0
-  ruleOutcome: {fileID: 11400000, guid: 24483c7e588ad3c48bec677372aadb54, type: 2}
+  ruleOutcome: {fileID: 11400000, guid: 88db72f29a26e2a42ae3c53bea63e90e, type: 2}
   ruleOutcomes: []

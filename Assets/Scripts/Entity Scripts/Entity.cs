@@ -19,13 +19,13 @@ namespace Woopsious
 		public Stat health;
 		public Stat block;
 
+		[Header("Modifiers")]
+		public Stat damageBonus;
+
 		[Header("Modifiers %")]
 		public Stat damageDealtModifier;
 		public Stat damageRecievedModifier;
-
-		[Header("Modifiers")]
-		public Stat damageBonus;
-		//public Stat blockBonus;
+		public Stat healingRecievedModifier;
 
 		//hihglight colurs
 		public enum HighlightState
@@ -89,7 +89,7 @@ namespace Woopsious
 		public void InitializeEntity(EntityData entityData)
 		{
 			if (entityData == null)
-			return;
+				return;
 			else
 				EntityData = entityData;
 
@@ -114,6 +114,8 @@ namespace Woopsious
 			health.InitializeStat(healthMax.Value);
 			block.InitializeStat(EntityData.baseBlock);
 
+			damageBonus.InitializeStat(0);
+
 			damageDealtModifier.InitializeStat(1);
 			damageDealtModifier.AddModifier(damageDealtModifier.StatType, 
 				MapController.Instance.globalModifiers.GetModifierStat(damageDealtModifier.StatType));
@@ -122,8 +124,9 @@ namespace Woopsious
 			damageRecievedModifier.AddModifier(damageRecievedModifier.StatType, 
 				MapController.Instance.globalModifiers.GetModifierStat(damageRecievedModifier.StatType));
 
-			damageBonus.InitializeStat(0);
-			//blockBonus.InitializeStat(0);
+			healingRecievedModifier.InitializeStat(1);
+			healingRecievedModifier.AddModifier(healingRecievedModifier.StatType,
+				MapController.Instance.globalModifiers.GetModifierStat(healingRecievedModifier.StatType));
 		}
 
 		//start/end turn events
@@ -167,6 +170,7 @@ namespace Woopsious
 		}
 		public virtual void ReceiveHealing(DamageData damageData)
 		{
+			damageData.HealValue = Mathf.RoundToInt(damageData.HealValue * healingRecievedModifier.Value);
 			damageData.HealValue = (int)Mathf.Min(damageData.HealValue, healthMax.Value - health.Value);
 			health.ModifyValue(damageData.HealValue, true);
 			OnHealthChange?.Invoke((int)health.Value, (int)healthMax.Value);
@@ -241,12 +245,12 @@ namespace Woopsious
 		{
 			IncreaseHealthBasedOnMaxHealthModifiers(statType, modifier);
 
+			block.AddModifier(statType, modifier);
+			damageBonus.AddModifier(statType, modifier);
+
 			damageDealtModifier.AddModifier(statType, modifier);
 			damageRecievedModifier.AddModifier(statType, modifier);
-
-			damageBonus.AddModifier(statType, modifier);
-			block.AddModifier(statType, modifier);
-			//blockBonus.AddModifier(statType, modifier);
+			healingRecievedModifier.AddModifier(statType , modifier);
 
 			UpdateBlock(false);
 		}
@@ -254,20 +258,22 @@ namespace Woopsious
 		{
 			DecreaseHealthBasedOnMaxHealthModifiers(statType, modifierSource);
 
+			block.RemoveModifier(statType, modifierSource);
+			damageBonus.RemoveModifier(statType, modifierSource);
+
 			damageDealtModifier.RemoveModifier(statType, modifierSource);
 			damageRecievedModifier.RemoveModifier(statType, modifierSource);
-
-			damageBonus.RemoveModifier(statType, modifierSource);
-			block.RemoveModifier(statType, modifierSource);
-			//blockBonus.RemoveModifier(statType, modifierSource);
+			healingRecievedModifier.RemoveModifier(statType, modifierSource);
 
 			UpdateBlock(false);
 		}
 		private void IncreaseHealthBasedOnMaxHealthModifiers(StatType statType, StatModifier modifier)
 		{
 			float percentageOfCurrentHealth = health.Value / healthMax.Value;
+			float newHealth = Mathf.RoundToInt(healthMax.Value * percentageOfCurrentHealth);
+
 			healthMax.AddModifier(statType, modifier);
-			health.SetValue(healthMax.Value * percentageOfCurrentHealth);
+			health.SetValue(newHealth);
 			OnHealthChange?.Invoke((int)health.Value, (int)healthMax.Value);
 		}
 		private void DecreaseHealthBasedOnMaxHealthModifiers(StatType statType, UnityEngine.Object modifierSource)
@@ -295,7 +301,7 @@ namespace Woopsious
 		//debugs
 		public void DebugKill()
 		{
-			ReceiveDamage(new DamageData(this, false, false, true, (int)health.Value));
+			ReceiveDamage(new DamageData(this, false, false, true, (int)health.Value + 1));
 			OnDeath();
 		}
 

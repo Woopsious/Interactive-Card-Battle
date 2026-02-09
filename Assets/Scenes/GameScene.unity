@@ -1980,7 +1980,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!223 &282823714
 Canvas:
   m_ObjectHideFlags: 0
@@ -2055,6 +2055,11 @@ MonoBehaviour:
       maxModiferValue: 0.25
       modiferValue: 0
     - statToEffect: {fileID: 11400000, guid: 3cab06129ae702840bb6764966e1f755, type: 2}
+      isPercentage: 1
+      minModiferValue: -0.25
+      maxModiferValue: 0.25
+      modiferValue: 0
+    - statToEffect: {fileID: 11400000, guid: 84690ce2be6104d4587e630e71862ca9, type: 2}
       isPercentage: 1
       minModiferValue: -0.25
       maxModiferValue: 0.25

@@ -24,6 +24,9 @@ namespace Woopsious
 			// update the current values into the serialized object and propreties
 			serializedObject.Update();
 
+			EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.ruleName)));
+			EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.trigger)));
+
 			EditorGUILayout.PropertyField(serializedObject.FindProperty(nameof(data.hasMultipleConditions)));
 			EditorGUILayout.Space();
 

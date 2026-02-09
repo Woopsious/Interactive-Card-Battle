@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Spider_Webbed
   m_EditorClassIdentifier: 
   effectName: Webbed
-  statType: {fileID: 11400000, guid: 84690ce2be6104d4587e630e71862ca9, type: 2}
+  statType: {fileID: 11400000, guid: 7970db2b5740643458ba4835f55ba755, type: 2}
   hasStacks: 1
   effectStacks: 1
   maxEffectStacks: 10
@@ -22,6 +22,7 @@ MonoBehaviour:
   effectLifetime: 3
   isDoT: 0
   timeBetweenDamageTicks: 0
-  effectData:
+  effectModifier:
+    source: {fileID: 0}
     isPercentage: 0
-    value: -0.5
+    value: 0

@@ -135,12 +135,12 @@ namespace Woopsious
 			SplitEnemyDataIntoTypes();
 		}
 
-		void OnEnable()
+		private void OnEnable()
 		{
 			SceneManager.sceneLoaded += OnLoadSceneFinish;
 			SceneManager.sceneUnloaded += OnUnloadSceneFinish;
 		}
-		void OnDisable()
+		private void OnDisable()
 		{
 			SceneManager.sceneLoaded -= OnLoadSceneFinish;
 			SceneManager.sceneUnloaded -= OnUnloadSceneFinish;
