@@ -23,6 +23,20 @@ namespace Woopsious
 		///		ARCHITECTURE:
 		///			rules as scriptable objects, RuleSetManager that listenes to events for event based rules (turn start etc...) and can be called 
 		///			for reactive rules like dealing extra damage if enemy x has y buff
+		///			
+		///			rule handler lives on objects (entities) will reevaluate rules every turn (remove rules no longer true from combat start)
+		///			
+		/// ADDING BREAKDOWN OF STATS TO UI
+		/// consider adding this or parts that makes sense to complexStat package
+		///	clickable ui element, hover over enemy/right click enemy will bring up simple stat breakdown:
+		///		+100 health
+		///		+ 5 damage
+		///		+ 30% damage
+		///		each stat will then have a further optional breakdown, exposing individual buffs/debuffs + source of where they come from
+		///		+100 health
+		///			+50 from x 
+		///			+20 from y 
+		///			+30 from z
 		/// 
 		/// WORLD DIFFICULTY AND MAKING IT ENDLESS:
 		/// start world difficulty at 1, then add +1 to it once player defeats the boss at the end then generate new map.

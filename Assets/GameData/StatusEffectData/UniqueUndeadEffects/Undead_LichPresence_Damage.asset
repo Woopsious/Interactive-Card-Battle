@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2126e680802d351469ed727e28045e0d, type: 3}
-  m_Name: Undead_LifeDrained
+  m_Name: Undead_LichPresence_Damage
   m_EditorClassIdentifier: 
-  effectName: Life Drained
-  statType: {fileID: 11400000, guid: 5e178a2a3f3029844ab5c3aa1dea2821, type: 2}
+  effectName: Lich Presence
+  statType: {fileID: 11400000, guid: ecdaca6f9ab947f4bad45d2dddbb320b, type: 2}
   hasStacks: 0
   effectStacks: 0
   maxEffectStacks: 0
   hasLifetime: 1
   isTurnBased: 1
-  effectLifetime: 1
+  effectLifetime: 5
   isDoT: 0
   timeBetweenDamageTicks: 0
   effectModifier:
     source: {fileID: 0}
-    isPercentage: 0
-    value: -2
+    isPercentage: 1
+    value: 0.15

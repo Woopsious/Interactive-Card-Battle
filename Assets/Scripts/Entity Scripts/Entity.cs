@@ -270,9 +270,9 @@ namespace Woopsious
 		private void IncreaseHealthBasedOnMaxHealthModifiers(StatType statType, StatModifier modifier)
 		{
 			float percentageOfCurrentHealth = health.Value / healthMax.Value;
-			float newHealth = Mathf.RoundToInt(healthMax.Value * percentageOfCurrentHealth);
-
 			healthMax.AddModifier(statType, modifier);
+
+			float newHealth = Mathf.RoundToInt(healthMax.Value * percentageOfCurrentHealth);
 			health.SetValue(newHealth);
 			OnHealthChange?.Invoke((int)health.Value, (int)healthMax.Value);
 		}

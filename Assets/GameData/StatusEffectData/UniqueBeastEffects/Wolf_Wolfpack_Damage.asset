@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   effectName: Wolfpack damage
   statType: {fileID: 11400000, guid: f96f4baef2ebf4542b4dd410c6433df2, type: 2}
-  hasStacks: 0
-  effectStacks: 0
-  maxEffectStacks: 0
+  hasStacks: 1
+  effectStacks: 1
+  maxEffectStacks: 3
   hasLifetime: 1
   isTurnBased: 1
   effectLifetime: 5
@@ -25,4 +25,4 @@ MonoBehaviour:
   effectModifier:
     source: {fileID: 0}
     isPercentage: 0
-    value: 2
+    value: 1

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15c6952e9c891814ebe9358bc78c0b14, type: 3}
+  m_Name: LichCommand_Condition
+  m_EditorClassIdentifier: 
+  useListVersion: 1
+  sourceCheckOnly: 0
+  sourceEntityType: {fileID: 0}
+  targetEntityType: {fileID: 0}
+  sourceEntityTypes:
+  - {fileID: 11400000, guid: 0bdadd29705a96949a11ff51cf02ea66, type: 2}
+  targetEntityTypes:
+  - {fileID: 11400000, guid: 95cdd6d927b786649bb02094693953d3, type: 2}
+  - {fileID: 11400000, guid: f32bae752b8881c498ab069d5db55a4e, type: 2}
+  - {fileID: 11400000, guid: 558b413f986b6b9449dde131ec6b17b3, type: 2}
+  - {fileID: 11400000, guid: b1f5e72def15b49449f3393518ec0963, type: 2}
